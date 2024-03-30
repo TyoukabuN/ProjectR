@@ -1,4 +1,4 @@
-﻿namespace TinyGame
+﻿namespace TG
 {
     public interface INumericalControl
     {

@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Define = TinyGame.TEntityDefine;
+using Define = TG.TEntityDefine;
 
-namespace TinyGame
+namespace TG
 {
     public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl
     {

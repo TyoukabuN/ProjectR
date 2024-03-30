@@ -4,7 +4,7 @@ using UnityEngine;
 using Animancer;
 using System;
 
-namespace TinyGame
+namespace TG
 {
     public partial class TEntity: MonoBehaviour, IAnimatorEventReceiver
     {

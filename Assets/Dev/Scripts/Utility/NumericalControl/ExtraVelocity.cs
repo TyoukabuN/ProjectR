@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace TinyGame
+namespace TG
 {
 
     public class ExtraVelocity: ExtraControl

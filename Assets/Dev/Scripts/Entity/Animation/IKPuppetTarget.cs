@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TinyGame
+namespace TG
 {
     public sealed class IKPuppetTarget : MonoBehaviour
     {

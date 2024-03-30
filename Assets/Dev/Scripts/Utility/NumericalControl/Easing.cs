@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace TinyGame
+namespace TG
 {
 	public static class Easing
 	{

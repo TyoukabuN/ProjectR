@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-namespace TinyGame
+namespace TG
 {
     public partial class TEntity : MonoBehaviour
     {

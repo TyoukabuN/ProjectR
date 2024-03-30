@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-namespace TinyGame
+namespace TG
 {
     public interface IActionControl {
         void OnActionControlBegin(ExtraAction extraAction);

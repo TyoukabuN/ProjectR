@@ -2,12 +2,12 @@ using System;
 using UnityEngine;
 using Animancer;
 using UnityEngine.Animations.Rigging;
-using static TinyGame.TEntity;
+using static TG.TEntity;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-namespace TinyGame
+namespace TG
 {
     [DefaultExecutionOrder(1000)]
     [Serializable]

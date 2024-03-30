@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
 
-namespace TinyGame
+namespace TG
 {
     public static class EPlayerState
     {

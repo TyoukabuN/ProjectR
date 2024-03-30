@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-namespace TinyGame
+namespace TG
 {
     public sealed class RigConstraintHandle : MonoBehaviour
     {

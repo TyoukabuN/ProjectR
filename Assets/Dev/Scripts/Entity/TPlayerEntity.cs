@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Define = TinyGame.TEntityDefine;
+using Define = TG.TEntityDefine;
 using System.Text;
 using Sirenix.OdinInspector;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace TinyGame
+namespace TG
 {
     public partial class TPlayerEntity : StateMachineEntity , INumericalControl, IActionControl
     {
@@ -166,10 +166,8 @@ namespace TinyGame
                 this.ExtraActionMapAdd(TPlayerActionType.CreateGhost, dashDuration);
                 //transform.localPosition = transform.localPosition + (Vector3)(dashDirection * 0.05f);
             }
-            int dashVal = 0;
             if (IsDashing())
             {
-                dashVal = 1;
                 dashCounter -= Time.fixedDeltaTime;
                 //跳跃状态下,冲刺效果不结束
                 if (IsJumping())
@@ -186,8 +184,6 @@ namespace TinyGame
                 }
 
             }
-            if (dashCounter < 0 || IsJumping())
-                dashVal = 0;
 
             dashCounterNormalize = Mathf.Clamp(dashCounter / dashDuration, 0, 1);
         }

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using CallbackContext = UnityEngine.InputSystem.InputAction.CallbackContext;
 
-namespace TinyGame
+namespace TG
 {
     [RequireComponent(typeof(PlayerInput))]
     public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl
@@ -94,7 +94,7 @@ namespace TinyGame
             //TODO:先禁掉冲刺
             if (true)
                 return;
-            Input_Dash();
+            //Input_Dash();
         }
         protected void OnFire(CallbackContext value)
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.Events;
 
-namespace TinyGame
+namespace TG
 {
     public static class TEntityDefine
     {

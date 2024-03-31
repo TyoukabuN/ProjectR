@@ -7,7 +7,7 @@ using System.Text;
 
 public class FlagGenerator : EditorWindow
 {
-    [MenuItem("LS_Tool/Flag生成")]
+    [MenuItem("Tools/BitwiseFlags/Flag生成")]
     public static void ShowWindow()
     {
         EditorWindow myself = GetWindow<FlagGenerator>(false, "Flag Generator", true);

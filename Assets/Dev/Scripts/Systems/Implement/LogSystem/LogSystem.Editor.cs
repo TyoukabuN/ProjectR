@@ -1,6 +1,10 @@
+using UnityEngine;
+using System.Diagnostics;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+
 namespace PJR
 {
     public partial class LogSystem : StaticSystem
@@ -26,6 +30,17 @@ namespace PJR
                 Log("////////////////////[ExitingPlayMode]////////////////////");
                 Log("/////////////////////////////////////////////////////////");
             }
+        }
+
+        [MenuItem("Debug/打开LogSystem日志",priority = 200)]
+        public static void OpenLogFile()
+        {
+            Process.Start(GetLogFileOutputPath());
+        }
+        [MenuItem("Debug/打开LogSystem日志文件夹", priority = 201)]
+        public static void OpenLogFileLocation()
+        {
+            Process.Start(Application.persistentDataPath);
         }
 #endif
     }

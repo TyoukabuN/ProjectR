@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PJR;
+using System.Diagnostics;
 
 public class Test : MonoBehaviour
 {
@@ -17,5 +18,6 @@ public class Test : MonoBehaviour
     [Button("Test1")]
     public void Test1()
     {
+        Process.Start(Application.persistentDataPath);
     }
 }

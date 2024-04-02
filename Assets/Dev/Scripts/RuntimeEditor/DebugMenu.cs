@@ -33,7 +33,7 @@ namespace PJR
             }
         }
 
-        [MenuItem("Debug/Launch  #F5", false)]
+        [MenuItem("Debug/Launch  #F5", false,priority = 100)]
         public static void Lanuch()
         {
             if (Application.isPlaying)
@@ -47,7 +47,7 @@ namespace PJR
             RegisterEvent();
         }
 
-        [MenuItem("Debug/Launch包模式 #%F5", false)]
+        [MenuItem("Debug/Launch包模式 #%F5", false, priority = 101)]
         public static void LanuchInABMode()
         {
             EditorUtility.DisplayDialog("Tips", "还没有", "ok");

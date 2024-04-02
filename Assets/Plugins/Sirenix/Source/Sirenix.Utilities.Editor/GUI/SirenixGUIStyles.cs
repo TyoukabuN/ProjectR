@@ -60,7 +60,7 @@ namespace Sirenix.Utilities.Editor
                     }
                     else if (assembly.GetName().Name.Contains("Odin"))
                     {
-                        Debug.Log(assembly.GetName().Name);
+                        //Debug.Log(assembly.GetName().Name);
                     }
                 }
                 catch { }

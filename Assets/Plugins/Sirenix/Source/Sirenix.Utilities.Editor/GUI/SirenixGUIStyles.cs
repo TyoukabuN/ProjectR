@@ -1606,7 +1606,7 @@ namespace Sirenix.Utilities.Editor
             {
                 if (toolbarSeachCancelButton == null)
                 {
-                    toolbarSeachCancelButton = GUI.skin.FindStyle("ToolbarSearchCancelButton");
+                    toolbarSeachCancelButton = GUI.skin.FindStyle("ToolbarSeachCancelButton");
                 }
                 return toolbarSeachCancelButton;
             }
@@ -1625,7 +1625,7 @@ namespace Sirenix.Utilities.Editor
             {
                 if (toolbarSeachTextField == null)
                 {
-                    toolbarSeachTextField = GUI.skin.FindStyle("ToolbarSearchTextField");
+                    toolbarSeachTextField = GUI.skin.FindStyle("ToolbarSeachTextField");
                 }
                 return toolbarSeachTextField;
             }

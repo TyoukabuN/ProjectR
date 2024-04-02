@@ -17,10 +17,12 @@ namespace PJR
         public int category = -1;
         //
         public MotionFlag motionFlag;
+        public Flag256 flag;
         private InputKey(int category, string strValue)
         {
             this.strValue = strValue;
-            motionFlag = new MotionFlag(strValue);
+            //motionFlag = new MotionFlag(strValue);
+            flag = MotionFlag.StringToFlag(strValue);
 
             Cache.CacheWrap(this);
         }
@@ -40,7 +42,6 @@ namespace PJR
         /// <param name="strValue"></param>
         /// <param name="category">不能大于<see cref="Cache.typeInterval"/></param>
         /// <returns></returns>
-
         public static InputKey Register(int category, string strValue)
         {
             if (!Cache.TryGetWrap(strValue, out var wrap))
@@ -48,18 +49,9 @@ namespace PJR
 
             return wrap;
         }
-        public static InputKey Register(string strValue, int category = -1) => Register(category, strValue);
-        /// <summary>
-        /// 注册wrap，兼容旧的ActionSet用
-        /// </summary>
-        /// <param name="enumType">分类用的类型</param>
-        /// <param name="strValue"></param>
-        /// <returns></returns>
-        public static InputKey Register(Type enumType, string strValue)
+        public static InputKey Register(Enum enumValue, string strValue)
         {
-            if (!Cache.TryGetWrap(strValue, out var wrap))
-                wrap = new InputKey(enumType, strValue);
-            return wrap;
+            return Register((int)Enum.ToObject(enumValue.GetType(),enumValue), strValue);
         }
 
         public static class Cache

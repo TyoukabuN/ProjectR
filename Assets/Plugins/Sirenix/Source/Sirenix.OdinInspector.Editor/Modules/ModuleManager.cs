@@ -31,11 +31,6 @@ namespace Sirenix.OdinInspector.Editor.Modules
                 Modules = new List<ModuleDefinition>()
             };
 
-            result.Modules.Add(new UnityMathematicsModuleDefinition()
-            {
-                ModuleManager = result
-            });
-
             result.Modules.Add(new UnityLocalizationModuleDefinition()
             {
                 ModuleManager = result

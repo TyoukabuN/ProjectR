@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Define = TG.TEntityDefine;
+using Define = PJR.TEntityDefine;
 using System.Text;
 using Sirenix.OdinInspector;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace TG
+namespace PJR
 {
     public partial class TPlayerEntity : StateMachineEntity , INumericalControl, IActionControl
     {

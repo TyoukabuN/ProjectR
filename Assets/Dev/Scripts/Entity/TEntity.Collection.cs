@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TG;
+using PJR;
 using UnityEngine;
 
-namespace TG
+namespace PJR
 {
     public partial class TEntity: MonoBehaviour
     {

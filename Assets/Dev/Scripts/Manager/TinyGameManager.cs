@@ -10,7 +10,7 @@ using Sirenix.OdinInspector;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-namespace TG
+namespace PJR
 {
     public enum GameState:int
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.Events;
 
-namespace TG
+namespace PJR
 {
     public static class TEntityDefine
     {

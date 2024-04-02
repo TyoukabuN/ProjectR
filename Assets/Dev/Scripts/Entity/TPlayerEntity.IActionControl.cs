@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TG
+namespace PJR
 {
     public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl
     {

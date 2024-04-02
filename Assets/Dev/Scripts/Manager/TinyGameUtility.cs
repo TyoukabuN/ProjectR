@@ -8,7 +8,7 @@ using UnityEngine.Animations;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-namespace TG
+namespace PJR
 {
     public static class TinyGameUtility
     {

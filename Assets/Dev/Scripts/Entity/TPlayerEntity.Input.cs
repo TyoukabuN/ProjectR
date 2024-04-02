@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using CallbackContext = UnityEngine.InputSystem.InputAction.CallbackContext;
 
-namespace TG
+namespace PJR
 {
     [RequireComponent(typeof(PlayerInput))]
     public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl

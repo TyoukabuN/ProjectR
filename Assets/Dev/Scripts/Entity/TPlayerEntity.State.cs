@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using TG;
+using PJR;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace TG
+namespace PJR
 {
     [RequireComponent(typeof(PlayerInput))]
     public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl

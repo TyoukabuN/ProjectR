@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-namespace TG
+namespace PJR
 {
     public sealed class RigConstraintHandle : MonoBehaviour
     {

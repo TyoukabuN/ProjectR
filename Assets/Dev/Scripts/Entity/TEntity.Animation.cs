@@ -4,7 +4,7 @@ using UnityEngine;
 using Animancer;
 using System;
 
-namespace TG
+namespace PJR
 {
     public partial class TEntity: MonoBehaviour, IAnimatorEventReceiver
     {

@@ -2,12 +2,12 @@ using System;
 using UnityEngine;
 using Animancer;
 using UnityEngine.Animations.Rigging;
-using static TG.TEntity;
+using static PJR.TEntity;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-namespace TG
+namespace PJR
 {
     [DefaultExecutionOrder(1000)]
     [Serializable]
@@ -285,7 +285,7 @@ namespace TG
 
         }
         /// <summary>
-        /// 手部与墙体交互的IK逻辑
+        /// 鎵嬮儴涓庡浣撲氦浜掔殑IK閫昏緫
         /// </summary>
         /// <param name="avatarIKGoal"></param>
         /// <param name="shoulder"></param>
@@ -342,7 +342,7 @@ namespace TG
 
 
         /// <summary>
-        /// 手部与墙体交互的IK逻辑,使用AnimationRigging的TwoBoneIKConstrain
+        /// 鎵嬮儴涓庡浣撲氦浜掔殑IK閫昏緫,浣跨敤AnimationRigging鐨凾woBoneIKConstrain
         /// </summary>
         /// <param name="avatarIKGoal"></param>
         /// <param name="shoulder"></param>

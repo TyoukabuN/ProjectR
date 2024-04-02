@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
 
-namespace TG
+namespace PJR
 {
     public static class EPlayerState
     {

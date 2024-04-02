@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace TG
+namespace PJR
 {
     public class SpriteGhostCreator : MonoBehaviour
     {

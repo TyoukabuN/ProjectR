@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Define = TG.TEntityDefine;
+using Define = PJR.TEntityDefine;
 
-namespace TG
+namespace PJR
 {
     public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl
     {

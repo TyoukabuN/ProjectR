@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TG { 
+namespace PJR { 
     public class AnimatorAgency : MonoBehaviour, IAnimatorEventReceiver
     {
         public IAnimatorEventReceiver animatorEventReceiver;

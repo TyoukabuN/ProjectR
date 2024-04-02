@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TG
+namespace PJR
 {
     public sealed class IKPuppetTarget : MonoBehaviour
     {

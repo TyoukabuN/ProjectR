@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-namespace TG
+namespace PJR
 {
     public interface IActionControl {
         void OnActionControlBegin(ExtraAction extraAction);

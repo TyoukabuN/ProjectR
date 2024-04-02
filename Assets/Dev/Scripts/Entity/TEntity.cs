@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-namespace TG
+namespace PJR
 {
     public partial class TEntity : MonoBehaviour
     {

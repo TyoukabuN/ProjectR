@@ -1,4 +1,4 @@
-﻿namespace TG
+﻿namespace PJR
 {
     public interface INumericalControl
     {

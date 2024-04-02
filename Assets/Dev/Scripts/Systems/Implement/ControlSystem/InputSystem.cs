@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PJR
 {
-    public abstract class StaticSystem
+    public partial class InputSystem : MonoSingletonSystem<InputSystem>
     {
 
     }

@@ -53,6 +53,9 @@ namespace PJR
             EditorUtility.DisplayDialog("Tips", "还没有", "ok");
         }
 
+
+        static void DontDestroyOnLoad(Object obj) => GameObject.DontDestroyOnLoad(obj);
+        static void DestroyImmediate(Object obj) => GameObject.DestroyImmediate(obj);
         /// <summary>
         /// 创建游戏运行的场景和相应的Hierarchy
         /// </summary>
@@ -62,15 +65,21 @@ namespace PJR
             var scene = EditorSceneManager.GetActiveScene();
             //Clear Scene
             foreach (var gobj in scene.GetRootGameObjects())
-            { 
-                LogSystem.Log(gobj.ToString());
-                GameObject.DestroyImmediate(gobj);
+            {
+                if (gobj.name.IndexOf("Test") >= 0)
+                {
+                    DontDestroyOnLoad(gobj);
+                    continue;
+                }
+                DestroyImmediate(gobj);
             }
             //Create Entry
             var gEntry = new GameObject("GameEntry");
-            GameObject.DontDestroyOnLoad(gEntry);
             var entry = gEntry.AddComponent<GameEntry>();
-            //Create InputSystem
+            //TODO:Any setting for entry;
+            DontDestroyOnLoad(gEntry);
+            //Create ControlSystem
+
         }
     }
 }

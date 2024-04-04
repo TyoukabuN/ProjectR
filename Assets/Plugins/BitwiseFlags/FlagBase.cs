@@ -106,7 +106,7 @@ public abstract class FlagBase<FlagType> where FlagType : IBitwiseFlag<FlagType>
     #endregion
 }
 
-public interface IBitwiseFlag<FlagType>
+public interface IBitwiseFlag<FlagType> : IBitwiseFlag
 {
     public FlagType GetEmpty();
     public bool HasAny(FlagType f);
@@ -117,4 +117,8 @@ public interface IBitwiseFlag<FlagType>
     public FlagType FlagComplement();
     public bool Equals(FlagType f2);
     public bool IsEmpty();
+}
+
+public interface IBitwiseFlag
+{ 
 }

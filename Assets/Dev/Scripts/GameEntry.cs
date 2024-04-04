@@ -1,18 +1,23 @@
+using PJR;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameEntry : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
-        
+        try {
+            InitGame();
+        }catch (System.Exception e)
+        {
+            LogSystem.LogError(e.ToString());
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void InitGame()
     {
-        
+        ResourceSystem.instance.Init();
+        InputSystem.instance.Init();
     }
 }

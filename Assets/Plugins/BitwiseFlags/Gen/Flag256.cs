@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-public struct Flag256 : IBitwiseFlag<Flag256>
+public struct Flag256
 {
 	public static readonly Flag256 Empty =
 		new(){
@@ -257,15 +257,15 @@ public struct Flag256 : IBitwiseFlag<Flag256>
 	
 	public static bool operator != (Flag256 f1, Flag256 f2)
 	{
-		if (f1.Value0 != f2.Value0) return true;
-		if (f1.Value1 != f2.Value1) return true;
-		if (f1.Value2 != f2.Value2) return true;
-		if (f1.Value3 != f2.Value3) return true;
-		if (f1.Value4 != f2.Value4) return true;
-		if (f1.Value5 != f2.Value5) return true;
-		if (f1.Value6 != f2.Value6) return true;
-		if (f1.Value7 != f2.Value7) return true;
-		return false;
+		if (f1.Value0 == f2.Value0) return false;
+		if (f1.Value1 == f2.Value1) return false;
+		if (f1.Value2 == f2.Value2) return false;
+		if (f1.Value3 == f2.Value3) return false;
+		if (f1.Value4 == f2.Value4) return false;
+		if (f1.Value5 == f2.Value5) return false;
+		if (f1.Value6 == f2.Value6) return false;
+		if (f1.Value7 == f2.Value7) return false;
+		return true;
 	}
 	
 	public static implicit operator bool(Flag256 f)

@@ -2,33 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonoSingleton<T> : MonoSingleton where T : MonoSingleton
+namespace PJR
 {
-    private static T _instance = null;
-    public static T instance
+    public class MonoSingleton<T> : MonoSingleton where T : MonoSingleton
     {
-        get
+        private static T _instance = null;
+        public static T instance
         {
-            if (_instance == null)
+            get
             {
-                var gobj = new GameObject(typeof(T).Name);
-                DontDestroyOnLoad(gobj);
-                _instance = gobj.AddComponent<T>();
-                gobj.name = $"[{_instance.Name}]";
-                _instance.OnInstantiated();
-                _instance.OnInit();
+                if (_instance == null)
+                {
+                    var gobj = new GameObject(typeof(T).Name);
+                    DontDestroyOnLoad(gobj);
+                    _instance = gobj.AddComponent<T>();
+                    gobj.name = $"[{_instance.Name}]";
+                    _instance.OnInstantiated();
+                }
+                return _instance;
             }
-            return _instance;
         }
     }
-}
 
-public abstract class MonoSingleton : MonoBehaviour
-{ 
-    public virtual string Name { get; }
-    public virtual void OnInstantiated() { }
-    public virtual void OnInit() { }
-    public virtual void OnUpdate() { }
-    public virtual void OnDispose() { }
+    public abstract class MonoSingleton : MonoBehaviour
+    {
+        public virtual string Name { get; }
+        /// <summary>
+        /// invoked before awake
+        /// </summary>
+        public virtual void OnInstantiated() { }
+        public virtual void Init() { }
+        public virtual void OnUpdate() { }
+        public virtual void OnDispose() { }
+    }
 }
-

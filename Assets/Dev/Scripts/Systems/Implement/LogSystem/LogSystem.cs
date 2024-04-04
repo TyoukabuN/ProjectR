@@ -29,17 +29,17 @@ namespace PJR
 
         public static void Log(string content)
         {
-            LogWithTag(content, TAG_COMMON_LOG);
+            Debug.Log(LogWithTag(content, TAG_COMMON_LOG));
         }
         public static void LogWarning(string content)
         {
-            LogWithTag(content, TAG_WARNING_LOG);
+            Debug.LogWarning(LogWithTag(content, TAG_WARNING_LOG));
         }
         public static void LogError(string content)
         {
-            LogWithTag(content, TAG_ERROR_LOG);
+            Debug.LogError(LogWithTag(content, TAG_ERROR_LOG));
         }
-        public static void LogWithTag(string content, params string[] tag)
+        public static string LogWithTag(string content, params string[] tag)
         {
             BeginEdit();
             sb.Append(GetTimeStamp());
@@ -51,16 +51,18 @@ namespace PJR
                 sb.Append(STR_BLANK);
             sb.Append(content);
 
-            EndEdit();
+            return EndEdit();
         }
         static void BeginEdit()
         {
             sb.Clear();
         }
-        static void EndEdit()
+        static string EndEdit()
         {
-            AppendLog(sb.ToString());
+            string str = sb.ToString();
+            AppendLog(str);
             sb.Clear();
+            return str;
         }
         public static string GetTimeStamp()
         {

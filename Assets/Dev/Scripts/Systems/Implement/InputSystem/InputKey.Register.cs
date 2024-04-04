@@ -12,10 +12,15 @@ namespace PJR
         }
         public class RegisterKeys
         {
-            public static InputKey KeyW = Register(KeyCategory.PlayerInput, "KeyW");
-            public static InputKey KeyA = Register(KeyCategory.PlayerInput, "KeyA");
-            public static InputKey KeyS = Register(KeyCategory.PlayerInput, "KeyS");
-            public static InputKey KeyD = Register(KeyCategory.PlayerInput, "KeyD");
+            public static InputKey W = Register(KeyCategory.PlayerInput, "w");
+            public static InputKey A = Register(KeyCategory.PlayerInput, "a");
+            public static InputKey S = Register(KeyCategory.PlayerInput, "s");
+            public static InputKey D = Register(KeyCategory.PlayerInput, "d");
+
+            public static InputKey LeftControl = Register(KeyCategory.PlayerInput, "LeftControl");
+            public static InputKey LeftShift = Register(KeyCategory.PlayerInput, "LeftShift");
+
+            public static InputKey Space = Register(KeyCategory.PlayerInput, "Space");
         }
     }
 }

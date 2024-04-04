@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Collections.Generic;
 
 public class FlagGenerator : EditorWindow
 {
@@ -161,7 +162,7 @@ public class FlagGenerator : EditorWindow
         if (gen)
         {
             gen = false;
-
+            
             if (accordingToByteCount)
             {
                 if (bitCount < 0)
@@ -234,7 +235,8 @@ public class FlagGenerator : EditorWindow
 
             AppendLine("using System;");
             AppendLine("using System.Text;");
-            AppendLine($"public struct {h.className} : IBitwiseFlag<{h.className}>");
+            //AppendLine($"public struct {h.className} : IBitwiseFlag<{h.className}>");
+            AppendLine($"public struct {h.className}");
             AppendLine("{");
             using (Tab())
             {
@@ -246,19 +248,104 @@ public class FlagGenerator : EditorWindow
 
             File.WriteAllText(filePath, h.sb.ToString());
 
+            GenFlagHandle(h,fileRoot);
+
             if (EditorUtility.DisplayDialog("Tips", "需要强制刷新？", "ok"))
             {
                 AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
-            
-                // if (justCreateRoot)
-                // {
-                //     if (EditorUtility.DisplayDialog("Tips", "你可能需要重新按下Ctrl+R", "ok"))
-                //     {
-                //         AssetDatabase.Refresh();
-                //     }
-                // }
             }
         }
+    }
+
+    private void GenFlagHandle(BuildHandle h, string folderPath)
+    {
+        int bits = h.FlagCount * FlagBitwide;
+        string strBits = (bits).ToString();
+        string flagName = $"Flag{strBits}";
+        string className = $"FlagHandle{strBits}";
+        string filePath = Path.Combine(fileRoot, className + Extension);
+
+        var builder = new CSharpScriptBuilder(filePath);
+
+        builder.AppendUsing("System.Collections.Generic");
+
+        using (builder.BeginNameSpace("PJR"))
+        {
+            using (builder.BeginClass(className))
+            {
+                builder.AppendLine($"public Dictionary<string, {flagName}> ActionEnum2Flag => _string2Flag;");
+                builder.AppendLine($"private Dictionary<string, {flagName}> _string2Flag;");
+                builder.AppendLine($"private Dictionary<int, {flagName}> _flagBitIndex2Flag;");
+                builder.AppendLine($"private int _bitCount = -1;");
+                builder.AppendLine($"private const int TotalBitCount = {bits};");
+                builder.AppendLine($"private const int BITUnit = 32;");
+                builder.AppendEmptyLine();
+                builder.AppendLine($"public int category;");
+
+                builder.AppendLine($"public {className}(int category)");
+                builder.AppendLine("{");
+                builder.AppendLine("    this.category = category;");
+                builder.AppendLine($"    _string2Flag = new Dictionary<string, {flagName}>();");
+                builder.AppendLine($"    _flagBitIndex2Flag = new Dictionary<int, {flagName}>();");
+                builder.AppendLine("}");
+
+                builder.AppendLine($"public {flagName} StringToFlag(List<string> keys) => StringToFlag(keys.ToArray());");
+
+                builder.AppendLine($"public {flagName} StringToFlag(params string[] keys)");
+                builder.AppendLine("{");
+                builder.AppendLine($"    var temp = {flagName}.Empty;");
+                builder.AppendLine("    for (int i = 0; i < keys.Length; i++)");
+                builder.AppendLine("        temp |= StringToFlag(keys[i]);");
+                builder.AppendLine("    return temp;");
+                builder.AppendLine("}");
+
+                builder.AppendLine($"public {flagName} StringToFlag(string key)");
+                builder.AppendLine("{");
+                builder.AppendLine($"    var flag = {flagName}.Empty;");
+                builder.AppendLine("    int targetBitIndex = _bitCount + 1;");
+                builder.AppendLine("    if (targetBitIndex > TotalBitCount)");
+                builder.AppendLine("    {");
+                builder.AppendLine("        targetBitIndex = -1;");
+                builder.AppendLine("        return flag;");
+                builder.AppendLine("    }");
+                builder.AppendLine("");
+                builder.AppendLine($"    _string2Flag ??= new Dictionary<string, {flagName}>(TotalBitCount);");
+                builder.AppendLine("");
+                builder.AppendLine("    if (string.IsNullOrEmpty(key))");
+                builder.AppendLine("    {");
+                builder.AppendLine("        targetBitIndex = -1;");
+                builder.AppendLine($"        return {flagName}.Empty;");
+                builder.AppendLine("    }");
+                builder.AppendLine("");
+                builder.AppendLine("    if (!_string2Flag.TryGetValue(key, out flag))");
+                builder.AppendLine("    {");
+                builder.AppendLine("        flag = GetFlagByBitIndex(targetBitIndex);");
+                builder.AppendLine("        _string2Flag[key] = flag;");
+                builder.AppendLine("        _bitCount++;");
+                builder.AppendLine("    }");
+                builder.AppendLine("    return flag;");
+                builder.AppendLine("}");
+
+                builder.AppendLine($"private {flagName} GetFlagByBitIndex(int flagBitIndex)");
+                builder.AppendLine("{");
+                builder.AppendLine($"    _flagBitIndex2Flag ??= new Dictionary<int, {flagName}>(TotalBitCount);");
+                builder.AppendLine($"    if (_flagBitIndex2Flag.TryGetValue(flagBitIndex, out {flagName} res))");
+                builder.AppendLine("        return res;");
+                builder.AppendLine("    int pos = flagBitIndex / BITUnit;");
+                builder.AppendLine($"    var temp = {flagName}.Empty;");
+                using (builder.Tab(false, false))
+                {
+                    ForeachFlag(index =>
+                    {
+                        builder.AppendLine($"if (pos == {index}) temp.Value{index} = (uint)(1 << flagBitIndex);");
+                    });
+                }
+                builder.AppendLine("    _flagBitIndex2Flag[flagBitIndex] = temp;");
+                builder.AppendLine("    return temp;");
+                builder.AppendLine("}");
+            }
+        }
+        builder.Gen();
     }
 
     public void ForeachFlag(Action<int> action)
@@ -393,7 +480,7 @@ public class FlagGenerator : EditorWindow
             AppendLine("return this;");
         }
 
-        AppendLine($"public {h.className} FlagComplement({h.className} f1)");
+        AppendLine($"public {h.className} FlagComplement()");
         using (Tab(true, true))
         {
             ForeachFlag(i => AppendLine($"FlagComplement({i});"));

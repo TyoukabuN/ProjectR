@@ -23,12 +23,12 @@ namespace PJR
         {
             if (state == PlayModeStateChange.ExitingPlayMode)
             {
-                LogSystem.LogError("OnPlayModeStateChanged!");
                 EditorPrefs.SetBool(PJR_DebugMenuKey_Launch, false);
                 EditorPrefs.SetBool(PJR_DebugMenuKey_LaunchInAssetBundleMode, false);
             }
-            else if (state == PlayModeStateChange.EnteredPlayMode)
+            else if (state == PlayModeStateChange.EnteredPlayMode && EditorPrefs.GetBool(PJR_DebugMenuKey_Launch))
             {
+                EditorPrefs.DeleteKey(PJR_DebugMenuKey_Launch);
                 CreateLanuchSceneAndHierarchy();
             }
         }
@@ -41,7 +41,6 @@ namespace PJR
                 EditorApplication.isPlaying = false;
                 return;
             }
-            LogSystem.LogError("Lanuch Excute!");
             EditorApplication.isPlaying = true;
             EditorPrefs.SetBool(PJR_DebugMenuKey_Launch, true);
             RegisterEvent();
@@ -52,7 +51,6 @@ namespace PJR
         {
             EditorUtility.DisplayDialog("Tips", "还没有", "ok");
         }
-
 
         static void DontDestroyOnLoad(Object obj) => GameObject.DontDestroyOnLoad(obj);
         static void DestroyImmediate(Object obj) => GameObject.DestroyImmediate(obj);

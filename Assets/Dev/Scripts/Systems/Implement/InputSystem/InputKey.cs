@@ -16,13 +16,11 @@ namespace PJR
         public int intValue = -1;
         public int category = -1;
         //
-        public MotionFlag motionFlag;
         public Flag256 flag;
         private InputKey(int category, string strValue)
         {
             this.strValue = strValue;
-            //motionFlag = new MotionFlag(strValue);
-            flag = MotionFlag.StringToFlag(strValue);
+            flag = FlagDefine.InputFlag.StringToFlag(strValue);
 
             Cache.CacheWrap(this);
         }
@@ -33,7 +31,8 @@ namespace PJR
             //isEnumType = true;
             this.type = type;
             this.strValue = strValue;
-            motionFlag = new MotionFlag(strValue);
+
+            flag = FlagDefine.InputFlag.StringToFlag(strValue);
             Cache.CacheWrap(this);
         }
         /// <summary>

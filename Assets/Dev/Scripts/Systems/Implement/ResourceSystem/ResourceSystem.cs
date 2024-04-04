@@ -26,27 +26,20 @@ namespace PJR
             return null;
         }
 
-        private List<string> temps = new List<string> ();   
+        private List<string> dones = new List<string> ();   
         void Update()
         {
             if (assetFullName2Loader.Count <= 0)
                 return;
+            UpdateAllLoader(ref dones);
+            ClearDones();
+        }
 
-            for (int i = 0; i < assetFullName2Loader.Count; i++)
+        private void ClearDones()
+        {
+            if (dones.Count > 0)
             {
-                var pair = assetFullName2Loader.ElementAt(i);
-                var loader = pair.Value;
-                loader.Update();
-
-                if (loader.isDone)
-                {
-                    temps.Add(pair.Key);
-                }
-            }
-
-            if (temps.Count > 0)
-            {
-                foreach (var assetFullName in temps)
+                foreach (var assetFullName in dones)
                 {
                     if (assetFullName2Loader.TryGetValue(assetFullName, out var loader))
                     {
@@ -59,7 +52,22 @@ namespace PJR
                         assetFullName2Loader.Remove(assetFullName);
                     }
                 }
-                temps.Clear();
+                dones.Clear();
+            }
+        }
+
+        public void UpdateAllLoader(ref List<string> dones)
+        {
+            for (int i = 0; i < assetFullName2Loader.Count; i++)
+            {
+                var pair = assetFullName2Loader.ElementAt(i);
+                var loader = pair.Value;
+                loader.Update();
+
+                if (loader.isDone)
+                {
+                    dones.Add(pair.Key);
+                }
             }
         }
     }

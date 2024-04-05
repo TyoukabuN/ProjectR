@@ -12,7 +12,7 @@ using UnityEditor;
 
 namespace PJR
 {
-    public partial class TPlayerEntity : StateMachineEntity , INumericalControl, IActionControl
+    public partial class TPlayerEntity : PhysEntity , INumericalControl, IActionControl
     {
         //motion require
         private Rigidbody _rigidbody;
@@ -85,7 +85,7 @@ namespace PJR
         {
             base.Awake();
             Awake_Input();
-            Awake_State();
+            //Awake_State();
         }
 
 
@@ -108,7 +108,6 @@ namespace PJR
                 return;
 
             //Update_Input();
-            Update_State();
             Update_Animation();
         }
         protected void LateUpdate()
@@ -419,7 +418,7 @@ namespace PJR
             builder.AppendLine(string.Format("<color=red>移动输入:{0}</color>", inputAxi.ToString()));
             builder.AppendLine(string.Format("<color=red>速度:{0}</color>", _rigidbody == null ?0:_rigidbody.velocity.ToString()));
             builder.AppendLine(string.Format("<color=red>XZAnima:{0}</color>", inputAxi));
-            builder.AppendLine(string.Format("<color=red>状态:{0}</color>", currentEState.ToString()));
+            //builder.AppendLine(string.Format("<color=red>状态:{0}</color>", currentEState.ToString()));
 
             Handles.Label(transform.position, builder.ToString(), GizmosGUIStyle);
             Handles.color = Color.red;

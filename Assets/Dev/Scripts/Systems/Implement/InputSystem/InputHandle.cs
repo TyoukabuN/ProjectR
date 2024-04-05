@@ -5,20 +5,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public abstract class InputHandle
 {
-    public string name = string.Empty;
     public abstract InputKey.KeyCategory keyCategory { get; }
+    public abstract string inputActionMapName { get; }
 
-    private InputActionMap actionMap;
-    public List<InputActionWrap> wraps;
+    protected InputActionMap actionMap;
+    protected Dictionary<string,InputAction> inputKey2Action = new Dictionary<string, InputAction>();
 
-    private bool isInit = false;
+    protected bool isInit = false;
 
-    public InputHandle(string name)
+    public InputHandle()
     { 
-        this.name = name;   
     }
     public virtual void Init(InputActionMap actionMap)
     {
@@ -26,25 +26,25 @@ public abstract class InputHandle
             return;
         isInit = true;
         this.actionMap = actionMap;
+        inputKey2Action ??= new Dictionary<string, InputAction>();
         //
-        wraps = new List<InputActionWrap>();
         if (InputKey.Cache.TryGetKeys((int)keyCategory, out var inputKeys))
         {
             foreach (var inputkey in inputKeys)
             {
-                wraps.Add(new InputActionWrap(inputkey.Value, actionMap));
+                inputKey2Action[inputkey.Value.strValue] = actionMap.FindAction(inputkey.Value);
             }
         }
     }
-    public struct InputActionWrap
+    public virtual void RegisterCallback(InputKey inputKey, Action<CallbackContext> performed, Action<CallbackContext> canceled)=> RegisterCallback(inputKey.strValue, null, performed, canceled);
+    public virtual void RegisterCallback(InputKey inputKey, Action<CallbackContext> started, Action<CallbackContext> performed, Action<CallbackContext> canceled) => RegisterCallback(inputKey.strValue, started, performed, canceled);
+    public virtual void RegisterCallback(string inputKeyStr, Action<CallbackContext> started, Action<CallbackContext> performed, Action<CallbackContext> canceled)
     {
-        public InputKey inputKey;
-        public InputAction inputAction;
-        public InputActionWrap(InputKey inputKey, InputActionMap actionMap)
-        {
-            this.inputKey = inputKey;
-            inputAction = actionMap.FindAction(inputKey);
-        }
+        if (!inputKey2Action.TryGetValue(inputKeyStr, out var inputAction))
+            return;
+        if (started != null) inputAction.started += started;
+        if (performed != null) inputAction.performed += performed;
+        if (canceled != null) inputAction.canceled += canceled;
     }
 
     public abstract void OnUpdate();

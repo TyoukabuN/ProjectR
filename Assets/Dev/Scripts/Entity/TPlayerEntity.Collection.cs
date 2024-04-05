@@ -6,7 +6,7 @@ using Define = PJR.TEntityDefine;
 
 namespace PJR
 {
-    public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl
+    public partial class TPlayerEntity : PhysEntity, INumericalControl, IActionControl
     {
         [Range(0, 90)] public float maxGroundAngle = 25f;
         private float minGroundDotProduct

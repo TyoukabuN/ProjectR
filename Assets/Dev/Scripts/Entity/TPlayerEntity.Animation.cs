@@ -11,7 +11,7 @@ namespace PJR
 {
     [DefaultExecutionOrder(1000)]
     [Serializable]
-    public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl
+    public partial class TPlayerEntity : PhysEntity, INumericalControl, IActionControl
     {
         public const string CNAME_IDLE = "Idle";
 

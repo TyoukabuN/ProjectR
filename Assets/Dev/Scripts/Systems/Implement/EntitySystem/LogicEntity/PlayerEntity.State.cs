@@ -1,16 +1,17 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Android.Gradle;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace PJR
 {
     public partial class PlayerEntity : LogicEntity
     {
-        public override void Init()
+        protected void Init_State()
         {
-            base.Init();
 
-            Init_Input();
         }
     }
 }

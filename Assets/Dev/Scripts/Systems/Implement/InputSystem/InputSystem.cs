@@ -14,14 +14,12 @@ namespace PJR
         private InputActionAsset inputActionAsset;
         public InputActionAsset InputActionAsset { get => inputActionAsset; }
 
-        private Dictionary<string, InputActionMap> name2InputActionMap;
-        
-        public InputActionMap this[string key]
+        public InputActionMap this[string name]
         {
             get {
-                if (!name2InputActionMap.TryGetValue(key, out var inputActionMap))
+                if (inputActionAsset == null)
                     return null;
-                return inputActionMap;
+                return inputActionAsset.FindActionMap(name);
             }
         }
 
@@ -37,29 +35,25 @@ namespace PJR
         void OnLoadAssetDone(ResourceLoader loader)
         {
             inputActionAsset = loader.GetAsset<InputActionAsset>();
+        }
 
-            name2InputActionMap = new Dictionary<string, InputActionMap>();
-
-            for(int i=0;i<name2InputHandle.Count;i++)
+        public static InputHandle GetInputHandle<T>() where T : InputHandle,new()
+        {
+            if (instance.inputActionAsset == null)
+                return null;
+            var handle = new T();
+            var actionMap = instance.inputActionAsset.FindActionMap(handle.inputActionMapName);
+            if (actionMap == null)
             {
-                var pair = name2InputHandle.ElementAt(i);
-                var handle = pair.Value;
-                var name = pair.Value.name;
-                //
-                var actionMap = inputActionAsset.FindActionMap(name);
-                if (actionMap != null)
-                    handle.Init(actionMap);
-                name2InputActionMap[name] = actionMap;
+                handle = null;
+                return null;
             }
+            handle.Init(actionMap);
+            return handle;
         }
         private void Update()
         {
-            for (int i = 0; i < name2InputHandle.Count; i++)
-            {
-                var pair = name2InputHandle.ElementAt(i);
-                var handle = pair.Value;
-                handle.OnUpdate();
-            }
+
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PJR
 {
-    public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl
+    public partial class TPlayerEntity : PhysEntity, INumericalControl, IActionControl
     {
         public Action<ExtraAction> onActionControlBegin;
         public Action<ExtraAction> onActionControlUpdate;

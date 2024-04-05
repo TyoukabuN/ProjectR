@@ -27,10 +27,10 @@ namespace PJR
         }
         public Phase phase;
 
-        public StateMachineEntity entity;
+        public LogicEntity entity;
 
         public State() {  OnInit(); }
-        public virtual void HandleInput(StateMachineEntity entity) { }
+        public virtual void HandleInput(LogicEntity entity) { }
         public virtual void Update(StateContext stateContext) { }
         public virtual void FixedUpdate(StateContext stateContext) { }
         public virtual bool CanChange(int from) { return true; }
@@ -39,80 +39,15 @@ namespace PJR
         #region Phase
         protected void ToPhaseEnd() { phase = Phase.End; }
         public virtual void OnInit() { }
-        public virtual void OnEnter(StateMachineEntity entity) { phase = Phase.Running; this.entity = entity; }
+        public virtual void OnEnter(LogicEntity entity) { phase = Phase.Running; this.entity = entity; }
         public virtual void OnUpdate() { }
         public virtual void OnChange(int from) { }
         public virtual void OnFinish() { }
         #endregion
 
-        #region Input System Message
-        public virtual void OnMove(InputValue value) { }
-        public virtual void OnLook(InputValue value) { }
-        public virtual void OnRun(InputValue value) { }
-        public virtual void OnJump(InputValue value) { }
-        public virtual void OnDash(InputValue value) { }
-        public virtual void OnFire(InputValue value) { }
-        #endregion
-
         #region Entity Collision
         public virtual void OnGrounded() { }
         #endregion
-    }
-
-    public class StateMachineEntity : PhysEntity
-    {
-        [SerializeField]
-        protected int currentEState = EPlayerState.None;
-
-        protected State[] states;
-        protected StateContext _stateContext;
-
-        protected Dictionary<int, Transition[]> state2transition;
-
-        public StateContext stateContext
-        {
-            get { 
-                if (_stateContext == null)
-                    _stateContext = new StateContext();
-                return _stateContext; 
-            }
-        }
-        protected virtual bool State_Change(int ePlayerState) { return true; }
-
-        protected virtual void Update_State()
-        {
-            State_UpdateContext();
-            if (currentEState != 0)
-            {
-                var state = states[currentEState];
-                if (state != null)
-                {
-                    state.Update(stateContext);
-                    if (CheckTransition(currentEState, out int toState))
-                    {
-                        State_Change(toState);
-                    }
-                }
-            }
-        }
-        protected virtual void State_UpdateContext(){ }
-        public bool CheckTransition(int state,out int toState)
-        {
-            toState = 0; 
-            if (!state2transition.TryGetValue(state, out var transitions))
-                return false;
-            for (int i = 0; i < transitions.Length; i++)
-            {
-                if (transitions[i].Check(states[state])) {
-                    toState = transitions[i].toState;
-                    if (states[toState] == null)
-                        continue;
-                    return true;
-                }
-            }
-            return false;
-        }
-
     }
 
     public interface IPoolItem
@@ -153,7 +88,7 @@ namespace PJR
         public virtual void OnGet() { }
         public virtual void OnRelease() { }
     }
-    public abstract class Transition<TransitionType> : Transition where TransitionType : Transition<TransitionType>
+    public abstract class Transition<TransitionType>: Transition where TransitionType : Transition
     {
         private static Dictionary<Type, Queue<TransitionType>> typeToTransition;
         protected Transition() { }

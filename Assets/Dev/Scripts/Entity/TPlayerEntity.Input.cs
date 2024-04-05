@@ -9,7 +9,7 @@ using CallbackContext = UnityEngine.InputSystem.InputAction.CallbackContext;
 namespace PJR
 {
     [RequireComponent(typeof(PlayerInput))]
-    public partial class TPlayerEntity : StateMachineEntity, INumericalControl, IActionControl
+    public partial class TPlayerEntity : PhysEntity, INumericalControl, IActionControl
     {
         protected bool m_lastCanUp = false;
         public Action<bool> onCanUpChange;
@@ -51,11 +51,11 @@ namespace PJR
             inputAxi = callback.ReadValue<Vector2>();
             if (inputAxi.magnitude > 0)
             {
-                State_Change(EPlayerState.Walk);
+                //State_Change(EPlayerState.Walk);
             }
             else
             {
-                State_Change(EPlayerState.Stand);
+                //State_Change(EPlayerState.Stand);
             }
         }
 
@@ -69,11 +69,11 @@ namespace PJR
             runValue = value.ReadValue<float>();
             if (IsRunning())
             {
-                State_Change(EPlayerState.Running);
+                //State_Change(EPlayerState.Running);
             }
             else
             {
-                State_Change(EPlayerState.Walk);
+                //State_Change(EPlayerState.Walk);
             }
         }
 
@@ -82,7 +82,9 @@ namespace PJR
             if (CanJump())
             {
                 if (Input_Jump())
-                    State_Change(EPlayerState.Jump_Begin);
+                { 
+                    //State_Change(EPlayerState.Jump_Begin);
+                }
             }
             else if (IsHanging())
             {

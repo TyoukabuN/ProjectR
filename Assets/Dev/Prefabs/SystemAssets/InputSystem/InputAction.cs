@@ -15,10 +15,10 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public partial class InputActionWrap1: IInputActionCollection2, IDisposable
+public partial class @InputActionWrap321: IInputActionCollection2, IDisposable
 {
     public InputActionAsset asset { get; }
-    public InputActionWrap1()
+    public @InputActionWrap321()
     {
         asset = InputActionAsset.FromJson(@"{
     ""name"": ""InputAction"",
@@ -265,8 +265,8 @@ public partial class InputActionWrap1: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Run;
     public struct PlayerActions
     {
-        private InputActionWrap1 m_Wrapper;
-        public PlayerActions(InputActionWrap1 wrapper) { m_Wrapper = wrapper; }
+        private @InputActionWrap321 m_Wrapper;
+        public PlayerActions(@InputActionWrap321 wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Run => m_Wrapper.m_Player_Run;

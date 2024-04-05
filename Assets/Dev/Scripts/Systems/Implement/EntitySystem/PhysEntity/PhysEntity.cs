@@ -4,40 +4,16 @@ using System;
 using UnityEngine;
 namespace PJR
 {
-    public partial class TEntity : MonoBehaviour
+    /// <summary>
+    /// Physics Entity
+    /// </summary>
+    public partial class PhysEntity : MonoBehaviour
     {
-
         [HideInInspector] public PlatformEffector2D platformEffector2D;
         [HideInInspector] public SpriteRenderer spriteRenderer;
-        [HideInInspector] public List<Animator> subAnimators = new List<Animator>();
 
         [HideInInspector] public Vector3 floorPoint = Vector3.zero;
         [HideInInspector] public int lastFloorObject = -1;
-
-        private Transform m_ModelRoot = null;
-        [HideInInspector] public Vector3 modelRoot_localPosition = Vector3.zero;
-        [HideInInspector] public Vector3 modelRoot_localEulerAngles = Vector3.zero;
-        [HideInInspector] public Vector3 modelRoot_localScale = Vector3.zero;
-
-        public Transform ModelRoot {
-            get {
-                if (!m_ModelRoot)
-                { 
-                    m_ModelRoot = transform.Find(TEntityDefine.MODEL_ROOT_NAME);
-                    if (m_ModelRoot)
-                    {
-                        modelRoot_localPosition = m_ModelRoot.localPosition;
-                        modelRoot_localEulerAngles = m_ModelRoot.localEulerAngles;
-                        modelRoot_localScale = m_ModelRoot.localScale;
-                    }
-                }
-                return m_ModelRoot;
-            }
-        }
-
-        public Action<float> onUpdateDistanceFromPlayer;
-        public Action<int> onOutOfSight;
-        public Action onAnimationClipEvent;
 
         public bool IsVaild()
         {
@@ -51,6 +27,9 @@ namespace PJR
         public virtual void OnStateChange(GameState state, GameState oldState) { }
 
         protected virtual void Awake()
+        {
+        }
+        public void InitModel()
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             if (spriteRenderer == null)
@@ -89,21 +68,6 @@ namespace PJR
             //
             OnFixedUpdateBegin();
 
-
-            //
-            if (onUpdateDistanceFromPlayer != null)
-            {
-                var dif = Mathf.Abs(TinyGameManager.instance.GetPlayerPos().x - transform.position.x);
-                try
-                {
-                    onUpdateDistanceFromPlayer.Invoke(dif);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
-            }
-            //
         }
 
 

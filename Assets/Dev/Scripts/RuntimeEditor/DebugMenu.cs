@@ -72,6 +72,10 @@ namespace PJR
                 DestroyImmediate(gobj);
             }
             //Create Entry
+            var tips = new GameObject("[带Test开头的Gobj不会被 <Shift + F5> etc 删掉]");
+            DontDestroyOnLoad(tips);
+            tips.transform.SetAsFirstSibling();
+            //
             var gEntry = new GameObject("GameEntry");
             var entry = gEntry.AddComponent<GameEntry>();
             //TODO:Any setting for entry;

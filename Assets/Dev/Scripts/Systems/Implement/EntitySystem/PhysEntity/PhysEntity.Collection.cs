@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace PJR
 {
-    public partial class TEntity: MonoBehaviour
+    public partial class PhysEntity: MonoBehaviour
     {
         [HideInInspector] public BoxCollider boxCollider;
         [HideInInspector] public CapsuleCollider capsuleCollider;

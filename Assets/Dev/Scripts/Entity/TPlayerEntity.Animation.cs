@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Animancer;
 using UnityEngine.Animations.Rigging;
-using static PJR.TEntity;
+using static PJR.PhysEntity;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -458,7 +458,7 @@ namespace PJR
 
     class AttackState
     {
-        public TEntity entity;
+        public PhysEntity entity;
         public AnimancerState attackAnimaState;
         public string[] animaNameSet;
         public float[] exitTimeSet;
@@ -480,7 +480,7 @@ namespace PJR
                 return true;
             return false;
         }
-        public void Init(TEntity entity, string[] animaNameSet, float[] exitTimeSet, Action onEnd)
+        public void Init(PhysEntity entity, string[] animaNameSet, float[] exitTimeSet, Action onEnd)
         {
             this.entity = entity;
             this.attackAnimaState = null;

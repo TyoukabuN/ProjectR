@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static PJR.InputKey;
 
 namespace PJR
 {
@@ -27,6 +28,9 @@ namespace PJR
         public override void Init()
         {
             base.Init();
+            //
+            RegisterKeys.Init();
+            //
             var loader = ResourceSystem.instance.LoadAsset(assetPath, typeof(InputActionAsset));
             loader.OnDone = OnLoadAssetDone;
         }

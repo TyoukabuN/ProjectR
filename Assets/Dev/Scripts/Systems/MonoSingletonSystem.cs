@@ -20,6 +20,9 @@ namespace PJR
             LogSystem.Log($"[System][OnInstantiated] {Name}");
         }
 
+        /// <summary>
+        /// 初始化系统,在<see cref="GameEntry.InitGame"/>调用
+        /// </summary>
         public override void Init()
         {
             base.Init();

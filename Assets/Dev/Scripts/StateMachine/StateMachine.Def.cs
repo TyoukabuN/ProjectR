@@ -59,7 +59,7 @@ namespace PJR
         #endregion
     }
 
-    public class StateMachineEntity : TEntity
+    public class StateMachineEntity : PhysEntity
     {
         [SerializeField]
         protected int currentEState = EPlayerState.None;

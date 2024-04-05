@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace PJR
 {
@@ -19,6 +20,7 @@ namespace PJR
         public Flag256 flag;
         private InputKey(int category, string strValue)
         {
+            this.category = category;
             this.strValue = strValue;
             flag = FlagDefine.InputFlag.StringToFlag(strValue);
 
@@ -43,7 +45,7 @@ namespace PJR
         /// <returns></returns>
         public static InputKey Register(int category, string strValue)
         {
-            if (!Cache.TryGetWrap(strValue, out var wrap))
+            if (!Cache.TryGetKey(strValue, out var wrap))
                 wrap = new InputKey(strValue, category);
 
             return wrap;
@@ -51,6 +53,19 @@ namespace PJR
         public static InputKey Register(Enum enumValue, string strValue)
         {
             return Register((int)Enum.ToObject(enumValue.GetType(),enumValue), strValue);
+        }
+
+        public static implicit operator String(InputKey inputKey)
+        {
+            return inputKey.strValue;
+        }
+        public static implicit operator Flag256(InputKey inputKey)
+        {
+            return inputKey.flag;
+        }
+        public static implicit operator int(InputKey inputKey)
+        {
+            return inputKey.category;
         }
 
         public static class Cache
@@ -64,12 +79,10 @@ namespace PJR
             /// </summary>
             private static int typeInterval = 1000000;
 
-            private static Dictionary<Type, int> type2category = new Dictionary<Type, int>();
             private static Dictionary<int, Dictionary<int, InputKey>> type2wraps = new Dictionary<int, Dictionary<int, InputKey>>();
             private static Dictionary<string, InputKey> string2wrap = new Dictionary<string, InputKey>();
             public static void CacheWrap(InputKey wrap)
             {
-                type2category ??= new Dictionary<Type, int>();
                 type2wraps ??= new Dictionary<int, Dictionary<int, InputKey>>();
                 string2wrap ??= new Dictionary<string, InputKey>();
 
@@ -82,19 +95,8 @@ namespace PJR
                     }
                     string2wrap[wrap.strValue] = wrap;
                 }
-
-                //type 2 category
-                if (wrap.type != null)
-                {
-                    if (!type2category.TryGetValue(wrap.type, out int category))
-                    {
-                        type2category[wrap.type] = category = (++typeCount) * typeInterval;
-                    }
-                    wrap.category = category;
-                }
-
                 //gen cache dic
-                if (wrap.category > 0)
+                if (wrap.category >= 0)
                 {
                     if (!type2wraps.TryGetValue(wrap.category, out var wraps))
                     {
@@ -118,29 +120,13 @@ namespace PJR
                 }
 
             }
-            public static bool TryGetCategory(Type type, out int category)
-            {
-                return type2category.TryGetValue(type, out category);
-            }
-            public static bool TryGetWrap(Type enumType, int enumValue, out InputKey wrap)
-            {
-                wrap = null;
-
-                if (!type2category.TryGetValue(enumType, out int category))
-                    return false;
-
-                if (!type2wraps.TryGetValue(category, out var wraps))
-                    return false;
-
-                return wraps.TryGetValue(enumValue, out wrap);
-            }
-            public static bool TryGetWrap(Enum enumValue, out InputKey wrap)
-            {
-                return TryGetWrap(enumValue.GetType(), (int)(object)enumValue, out wrap);
-            }
-            public static bool TryGetWrap(string strValue, out InputKey wrap)
+            public static bool TryGetKey(string strValue, out InputKey wrap)
             {
                 return string2wrap.TryGetValue(strValue, out wrap);
+            }
+            public static bool TryGetKeys(int category, out Dictionary<int, InputKey> wraps)
+            {
+                return type2wraps.TryGetValue(category, out wraps);
             }
         }
     }

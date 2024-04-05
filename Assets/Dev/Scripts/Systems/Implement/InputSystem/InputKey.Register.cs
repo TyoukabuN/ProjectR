@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace PJR
@@ -12,15 +13,10 @@ namespace PJR
         }
         public class RegisterKeys
         {
-            public static InputKey W = Register(KeyCategory.PlayerInput, "w");
-            public static InputKey A = Register(KeyCategory.PlayerInput, "a");
-            public static InputKey S = Register(KeyCategory.PlayerInput, "s");
-            public static InputKey D = Register(KeyCategory.PlayerInput, "d");
-
-            public static InputKey LeftControl = Register(KeyCategory.PlayerInput, "LeftControl");
-            public static InputKey LeftShift = Register(KeyCategory.PlayerInput, "LeftShift");
-
-            public static InputKey Space = Register(KeyCategory.PlayerInput, "Space");
+            public static InputKey Move = Register(KeyCategory.PlayerInput, "Move");
+            public static InputKey Run = Register(KeyCategory.PlayerInput, "Run");
+            public static InputKey Jump = Register(KeyCategory.PlayerInput, "Jump");
+            public static void Init() { }
         }
     }
 }

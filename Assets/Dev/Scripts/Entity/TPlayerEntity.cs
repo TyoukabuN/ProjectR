@@ -378,11 +378,15 @@ namespace PJR
         [HideInInspector] public static string[] translateColliderMaskNames = new string[] { "Entity" };
         public void SetAsDefaultColliderMask()
         {
+            if (capsuleCollider == null)
+                return;
             capsuleCollider.isTrigger = false;
             ChangeColliderMask(new string[] { "Default", "Entity", "Floor" });
         }
         public void SetAsTranslateColliderMask()
         {
+            if (capsuleCollider == null)
+                return;
             capsuleCollider.isTrigger = true;
             ChangeColliderMask(new string[] { "Default", "Entity", "Floor" });
         }

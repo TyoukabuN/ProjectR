@@ -6,7 +6,11 @@ namespace PJR
 {
     public class MonoSingleton<T> : MonoSingleton where T : MonoSingleton
     {
-        private static T _instance = null;
+        protected static T _instance = null;
+        public static T inst => instance;
+        public static T current => instance;
+        public static T cur => instance;
+
         public static T instance
         {
             get

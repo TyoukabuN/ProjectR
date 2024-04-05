@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using PJR;
 
+
 public class Test : MonoBehaviour
 {
-    [ShowInInspector]
-    public IActionInput actionInput;
-
     [Button("LogProjPaths")]
     public void LogProjPaths()
     {
@@ -21,13 +19,7 @@ public class Test : MonoBehaviour
     public void Test1()
     {
         //Process.Start(Application.persistentDataPath);
-        Debug.Log(GUI.skin.FindStyle("ToolbarSeachTextField"));
+        //Debug.Log(GUI.skin.FindStyle("ToolbarSeachTextField"));
+        EntitySystem.CreatePhysEntity();
     }
-
-
-    public interface IActionInput
-    { 
-    }
-
-    public class CharacterActionInput:IActionInput { }
 }

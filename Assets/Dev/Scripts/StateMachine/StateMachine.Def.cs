@@ -1,192 +1,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using RegisterKeys = PJR.InputKey.RegisterKeys;
 using System;
 
-namespace PJR
+namespace PJR.ScriptStates.Player
 {
-    public static class EPlayerState
-    {
-        public static int None = 0;        
-        public static int Stand = 1;
-        public static int Walk = 2;
-        public static int Running = 3;
-        public static int Jump_Begin = 4;
-        public static int Jump_Falling = 5;
-        public static int Jump_Land = 6;
-        public static int Dushing = 7;
-        public static int End = 8;
-    }
-
-    public abstract class State
-    {
-        public enum Phase
-        { 
-            Running,
-            End,
-        }
-        public Phase phase;
-
-        public LogicEntity entity;
-
-        public State() {  OnInit(); }
-        public virtual void HandleInput(LogicEntity entity) { }
-        public virtual void Update(StateContext stateContext) { }
-        public virtual void FixedUpdate(StateContext stateContext) { }
-        public virtual bool CanChange(int from) { return true; }
-        public virtual float normalizeTime {  get { return 1f; } }
-
-        #region Phase
-        protected void ToPhaseEnd() { phase = Phase.End; }
-        public virtual void OnInit() { }
-        public virtual void OnEnter(LogicEntity entity) { phase = Phase.Running; this.entity = entity; }
-        public virtual void OnUpdate() { }
-        public virtual void OnChange(int from) { }
-        public virtual void OnFinish() { }
-        #endregion
-
-        #region Entity Collision
-        public virtual void OnGrounded() { }
-        #endregion
-    }
-
-    public interface IPoolItem
-    {
-        public void OnGet();
-        public void OnRelease();
-    }
-    public abstract class Transition : IPoolItem
-    {
-        public int toState = -1;
-        public bool inverse = false;
-
-        protected Transition() { }
-        protected Transition(int toState)
-        { 
-            this.toState = toState;
-        }
-        public virtual bool Check(State state) => true;
-
-        public float canExitNormalizeTime = 0;
-        public Transition SetCanExitNormalizeTime(float canExitNormalizeTime = 0f)
-        {
-            this.canExitNormalizeTime = canExitNormalizeTime;
-            return this;
-        }
-        public Transition SetInverse(bool inverse)
-        { 
-            this.inverse = inverse;
-            return this;
-        }
-
-        public Transition SetToState(int toState)
-        { 
-            this.toState = toState;
-            return this;
-        }
-
-        public virtual void OnGet() { }
-        public virtual void OnRelease() { }
-    }
-    public abstract class Transition<TransitionType>: Transition where TransitionType : Transition
-    {
-        private static Dictionary<Type, Queue<TransitionType>> typeToTransition;
-        protected Transition() { }
-        protected Transition(int toState) : base(toState)
-        {
-        }
-        private static Queue<TransitionType> GetQueue()
-        {
-            if (typeToTransition == null)
-                typeToTransition = new Dictionary<Type, Queue<TransitionType>>();
-
-            Type type = typeof(TransitionType);
-            if (!typeToTransition.TryGetValue(typeof(TransitionType), out var queue))
-            {
-                queue = new Queue<TransitionType>();
-                typeToTransition[type] = queue;
-            }
-            return queue;
-        }
-        public static TransitionType Get(int toState)
-        {
-            var list = GetQueue();
-
-            TransitionType transition = null;
-            if (list.Count > 0)
-            { 
-                transition = list.Dequeue();
-            }
-            else
-            { 
-                transition = (TransitionType)Activator.CreateInstance(typeof(TransitionType),true);
-                transition.toState = toState;
-            }
-
-            transition.OnGet();
-            return transition;
-        }
-
-        public static bool Release(TransitionType transition)
-        {
-            if(transition == null)
-                return false;
-            var list = GetQueue();
-            list.Enqueue(transition);
-
-            transition.OnRelease();
-            return true;
-        }
-    }
-    public class Trans_OnGrounded : Transition<Trans_OnGrounded>
+    public class Trans_OnGrounded : ScriptTransition<Trans_OnGrounded>
     {
         protected Trans_OnGrounded() { }
-        public override bool Check(State state)
+        public override bool Check(ScriptState state)
         {
             if (state.normalizeTime < canExitNormalizeTime)
                 return false;
             return state.entity.stateContext.grounded > 0;
         }
     }
-    public class Trans_OnStateFinish : Transition<Trans_OnStateFinish>
+    public class Trans_OnStateFinish : ScriptTransition<Trans_OnStateFinish>
     {
         protected Trans_OnStateFinish() { }
-        public override bool Check(State state)
+        public override bool Check(ScriptState state)
         {
             if (state.normalizeTime < canExitNormalizeTime)
                 return false;
-            return state.phase == State.Phase.End;
+            return state.phase == ScriptState.Phase.End;
         }
     }
-    public class Trans_OnWalking : Transition<Trans_OnWalking>
+    public class Trans_OnWalking : ScriptTransition<Trans_OnWalking>
     {
         protected Trans_OnWalking() { }
-        public override bool Check(State state)
+        public override bool Check(ScriptState state)
         {
-            return state.entity.stateContext.inputAxi.magnitude > 0;
+            return state.inputHandle.ReadValue<Vector2>(RegisterKeys.Move).magnitude > 0;
         }
     }
-    public class Trans_OnRunning : Transition<Trans_OnRunning>
+    public class Trans_OnRunning : ScriptTransition<Trans_OnRunning>
     {
         protected Trans_OnRunning() { }
-        public override bool Check(State state)
+        public override bool Check(ScriptState state)
         {
-            var context = state.entity.stateContext;
-            if (context.inputAxi.magnitude > 0)
+            var inputAxi = state.inputHandle.ReadValue<Vector2>(RegisterKeys.Move);
+            var isRun = state.inputHandle.GetKeyDown(RegisterKeys.Run);
+            if (inputAxi.magnitude > 0)
             {
-                return inverse ? (context.runValue <= 0) : context.runValue > 0;
+                return inverse ? isRun : !isRun;
             }
             return inverse;
         }
-    }
-
-    public class StateContext
-    {
-        public Vector2 inputAxi;
-        public Vector2 mouseDelta;
-        public float runValue;
-        public int grounded;
-        struct State { }
     }
 
     public struct DirectionNameSet { public string F, FL, FR, B, BL, BR; }

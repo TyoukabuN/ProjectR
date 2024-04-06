@@ -1,16 +1,19 @@
-using PJR;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace PJR
+namespace PJR.ScriptStates
 {
     public abstract class ScriptEntityStateMachine : EntityStateMachine
     {
-        public State[] states;
+        public ScriptState[] states;
         public StateContext _stateContext;
+        public LogicEntity ownEntity;
 
-        public Dictionary<int, Transition[]> state2transition;
+        public Dictionary<int, ScriptTransition[]> state2transition;
+
+        public ScriptEntityStateMachine(LogicEntity entity) { 
+            this.ownEntity = entity;    
+        }
+
 
         public StateContext stateContext
         {

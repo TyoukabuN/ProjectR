@@ -1,17 +1,22 @@
 using Animancer;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace PJR
+namespace PJR.ScriptStates.Player
 {
-    #region Transition
-
-    #endregion
-
-    #region State
-
-    public class AnimationState : State { 
+    public static class EPlayerState
+    {
+        public static int None = 0;
+        public static int Stand = 1;
+        public static int Walk = 2;
+        public static int Running = 3;
+        public static int Jump_Begin = 4;
+        public static int Jump_Falling = 5;
+        public static int Jump_Land = 6;
+        public static int Dushing = 7;
+        public static int End = 8;
+    }
+    public class AnimationState : ScriptState
+    {
         protected AnimancerState animancerState;
         public override float normalizeTime
         {
@@ -23,7 +28,7 @@ namespace PJR
             }
         }
     }
-    public class StandState : State
+    public class StandState : ScriptState
     {
         public override void Update(StateContext stateContext)
         {
@@ -35,11 +40,11 @@ namespace PJR
         }
     }
 
-    public class WalkState : State
+    public class WalkState : ScriptState
     {
         public override void Update(StateContext stateContext)
         {
-            var inputAxi = stateContext.inputAxi;
+            var inputAxi = inputHandle.ReadValue<Vector3>(InputKey.RegisterKeys.Move);
             var nameSet = AnimationNameSet.Walk;
             if (inputAxi.magnitude > 0)
             {
@@ -65,11 +70,11 @@ namespace PJR
             return true;
         }
     }
-    public class RunningState : State
+    public class RunningState : ScriptState
     {
         public override void Update(StateContext stateContext)
         {
-            var inputAxi = stateContext.inputAxi;
+            var inputAxi = inputHandle.ReadValue<Vector3>(InputKey.RegisterKeys.Move);
             var nameSet = AnimationNameSet.Dash;
             if (inputAxi.magnitude > 0)
             {
@@ -152,7 +157,7 @@ namespace PJR
         public override void OnEnter(LogicEntity entity)
         {
             base.OnEnter(entity);
-            var moving = entity.stateContext.inputAxi.magnitude > 0;
+            var moving = entity.inputHandle.ReadValue<Vector3>(InputKey.RegisterKeys.Move).magnitude > 0;
             animancerState = entity.physEntity.Animancer_Play(moving ? AnimationNameSet.JUMP_LAND_M : AnimationNameSet.JUMP_LAND_W);
             animancerState.Events.OnEnd = ToPhaseEnd;
         }
@@ -171,6 +176,4 @@ namespace PJR
             return true;
         }
     }
-#endregion
-
 }

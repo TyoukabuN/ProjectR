@@ -1,9 +1,6 @@
-using Microsoft.Win32;
 using PJR;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
@@ -16,7 +13,6 @@ public abstract class InputHandle
     protected Dictionary<string,InputAction> inputKey2Action = new Dictionary<string, InputAction>();
 
     protected bool isInit = false;
-
     public InputHandle()
     { 
     }
@@ -32,7 +28,10 @@ public abstract class InputHandle
         {
             foreach (var inputkey in inputKeys)
             {
-                inputKey2Action[inputkey.Value.strValue] = actionMap.FindAction(inputkey.Value);
+                var inputAction = actionMap.FindAction(inputkey.Value);
+                if (inputAction == null)
+                    continue;
+                inputKey2Action[inputkey.Value.strValue] = inputAction;
             }
         }
     }
@@ -45,6 +44,25 @@ public abstract class InputHandle
         if (started != null) inputAction.started += started;
         if (performed != null) inputAction.performed += performed;
         if (canceled != null) inputAction.canceled += canceled;
+    }
+
+    public virtual bool GetKeyDown(string intputKey)
+    {
+        if (!inputKey2Action.TryGetValue(intputKey, out var inputAction))
+            return false;
+        return inputAction.WasPressedThisFrame();
+    }
+    public virtual bool GetKey(string intputKey)
+    {
+        if (!inputKey2Action.TryGetValue(intputKey, out var inputAction))
+            return false;
+        return inputAction.IsPressed();
+    }
+    public virtual TValue ReadValue<TValue>(string intputKey) where TValue : struct
+    {
+        if (!inputKey2Action.TryGetValue(intputKey, out var inputAction))
+            return default(TValue);
+        return inputAction.ReadValue<TValue>();
     }
 
     public abstract void OnUpdate();

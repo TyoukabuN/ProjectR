@@ -1,9 +1,5 @@
 using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Android.Gradle;
-using UnityEngine;
-using UnityEngine.Assertions;
+using PJR.ScriptStates.Player;
 
 namespace PJR
 {
@@ -11,7 +7,7 @@ namespace PJR
     {
         protected void Init_State()
         {
-
+            stateMachine = new PlayerScriptStateMachine(this);
         }
     }
 }

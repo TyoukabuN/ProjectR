@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PJR;
+using UnityEditor;
 using UnityEngine;
 
 namespace PJR
@@ -20,12 +21,22 @@ namespace PJR
         //
         public virtual bool Grounded { get; }
 
-        protected virtual void Init_Collection()
+        protected virtual void Init_Collection(GameObject avater)
         {
-            boxCollider = GetComponent<BoxCollider>();
-            if (boxCollider == null)
-                boxCollider = GetComponentInChildren<BoxCollider>();
-            capsuleCollider = GetComponent<CapsuleCollider>();
+            avater = avater != null ? avater : this.avater;
+            boxCollider = avater.GetComponent<BoxCollider>();
+            boxCollider = boxCollider == null ? avater.GetComponentInChildren<BoxCollider>() : boxCollider;
+            if (boxCollider != null)
+            {
+                boxCollider = gameObject.CopyComponent(boxCollider) as BoxCollider;
+            }
+            //
+            capsuleCollider = avater.GetComponent<CapsuleCollider>();
+            capsuleCollider = capsuleCollider == null ? avater.GetComponentInChildren<CapsuleCollider>() : capsuleCollider;
+            if (capsuleCollider != null)
+            {
+                capsuleCollider = gameObject.CopyComponent(capsuleCollider) as CapsuleCollider;
+            }
         }
 
         public virtual void OnCollisionEnter(Collision collision)

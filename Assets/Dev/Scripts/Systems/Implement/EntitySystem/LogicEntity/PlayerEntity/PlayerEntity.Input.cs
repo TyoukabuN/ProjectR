@@ -14,5 +14,9 @@ namespace PJR
             inputHandle = InputSystem.GetInputHandle<PlayerInputHandle>();
             if (inputHandle == null) LogSystem.LogError("[PlayerEntity.Init_Input]找不到对应的InputAssetMap");
         }
+        protected void Update_Input()
+        {
+            inputHandle?.OnUpdate();
+        }
     }
 }

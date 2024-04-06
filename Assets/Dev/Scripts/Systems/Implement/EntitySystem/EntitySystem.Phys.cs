@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,14 +29,10 @@ namespace PJR
         }
         private static Dictionary<int,PhysEntity> id2PhysEntity = new Dictionary<int,PhysEntity>();
 
-        public override void Init()
-        { 
-            
-        }
 
         public static PhysEntity CreatePhysEntity()
         {
-            int guid = GetGUID();
+            int guid = GetGUID_Phys();
             var gobj = new GameObject($"Entity_{guid}");
             var entity = gobj.AddComponent<PhysEntity>();
 
@@ -50,7 +47,7 @@ namespace PJR
             id2PhysEntity.TryGetValue(id, out var entity);
             return entity;
         }
-        public static int GetGUID()
+        protected static int GetGUID_Phys()
         {
             return ++s_guid_phys;
         }

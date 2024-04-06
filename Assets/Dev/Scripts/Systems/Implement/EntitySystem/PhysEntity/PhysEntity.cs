@@ -10,7 +10,6 @@ namespace PJR
     public partial class PhysEntity : MonoBehaviour
     {
         [HideInInspector] public PlatformEffector2D platformEffector2D;
-        [HideInInspector] public SpriteRenderer spriteRenderer;
 
         [HideInInspector] public Vector3 floorPoint = Vector3.zero;
         [HideInInspector] public int lastFloorObject = -1;
@@ -29,18 +28,7 @@ namespace PJR
         protected virtual void Awake()
         {
         }
-        public void InitModel()
-        {
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-            if (spriteRenderer == null)
-                spriteRenderer = GetComponent<SpriteRenderer>();
 
-            //
-            m_onFixedUpdateBeginTrigger = true;
-
-            Init_Collection();
-            Init_Animation();
-        }
         protected virtual void Start() {
         }
 

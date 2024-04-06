@@ -20,6 +20,6 @@ public class Test : MonoBehaviour
     {
         //Process.Start(Application.persistentDataPath);
         //Debug.Log(GUI.skin.FindStyle("ToolbarSeachTextField"));
-        EntitySystem.CreatePhysEntity();
+        EntitySystem.CreatePlayer();
     }
 }

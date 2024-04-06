@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,17 +12,17 @@ namespace PJR
         {
             return obj.gameObject.AddComponent<T>();
         }
-
         public static Component AddComponent(this Component obj, System.Type type)
         {
             return obj.gameObject.AddComponent(type);
         }
         public static T TryGetComponent<T>(this Component obj) where T : Component
         {
-            T component = obj.GetComponent<T>();
-            if (component == null)
-                component = obj.AddComponent<T>();
-            return component;
+            return obj.TryGetComponent(typeof(T)) as T; ;
+        }
+        public static Component TryGetComponent(this Component obj, string type)
+        {
+            return obj.TryGetComponent(System.Type.GetType(type));
         }
         public static Component TryGetComponent(this Component obj, System.Type type)
         {
@@ -31,19 +32,13 @@ namespace PJR
             return component;
         }
 
-        public static Component TryGetComponent(this Component obj, string type)
-        {
-            Component component = obj.GetComponent(type);
-            if (component == null)
-                component = obj.AddComponent(System.Type.GetType(type));
-            return component;
-        }
         public static T TryGetComponent<T>(this GameObject obj) where T : Component
         {
-            T component = obj.GetComponent<T>();
-            if (component == null)
-                component = obj.AddComponent<T>();
-            return component;
+            return obj.TryGetComponent(typeof(T)) as T;
+        }
+        public static Component TryGetComponent(this GameObject obj, string type)
+        {
+            return obj.TryGetComponent(System.Type.GetType(type));
         }
         public static Component TryGetComponent(this GameObject obj, System.Type type)
         {
@@ -53,20 +48,15 @@ namespace PJR
             return component;
         }
 
-        public static Component TryGetComponent(this GameObject obj, string type)
-        {
-            Component component = obj.GetComponent(type);
-            if (component == null)
-                component = obj.AddComponent(System.Type.GetType(type));
-            return component;
-        }
+
 
         public static T TryGetComponent<T>(this Transform obj) where T : Component
         {
-            T component = obj.GetComponent<T>();
-            if (component == null)
-                component = obj.AddComponent<T>();
-            return component;
+            return obj.TryGetComponent(typeof(T)) as T;
+        }
+        public static Component TryGetComponent(this Transform obj, string type)
+        {
+            return obj.TryGetComponent(System.Type.GetType(type));
         }
         public static Component TryGetComponent(this Transform obj, System.Type type)
         {
@@ -75,13 +65,17 @@ namespace PJR
                 component = obj.AddComponent(type);
             return component;
         }
-
-        public static Component TryGetComponent(this Transform obj, string type)
+        public static Component CopyComponent<TComponent>(this GameObject destGobj,TComponent originComponent) where TComponent : Component
         {
-            Component component = obj.GetComponent(type);
-            if (component == null)
-                component = obj.AddComponent(System.Type.GetType(type));
-            return component;
+            var type = originComponent.GetType();
+            TComponent copy = destGobj.AddComponent<TComponent>();
+
+            FieldInfo[] fields = type.GetFields();
+            foreach (FieldInfo field in fields)
+            {
+                field.SetValue(copy, field.GetValue(originComponent));
+            }
+            return copy;
         }
     }
 }

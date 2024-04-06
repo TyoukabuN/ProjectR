@@ -10,12 +10,12 @@ namespace PJR
 {
     public class ResourceSystem : MonoSingletonSystem<ResourceSystem>
     {
-        public Dictionary<string,ResourceLoader> assetFullName2Loader = new Dictionary<string, ResourceLoader> ();
-        public ResourceLoader LoadAsset<T>(string assetFullName) where T : System.Type
+        protected static Dictionary<string,ResourceLoader> assetFullName2Loader = new Dictionary<string, ResourceLoader> ();
+        public static ResourceLoader LoadAsset<T>(string assetFullName) where T : UnityEngine.Object 
         {
             return LoadAsset(assetFullName, typeof(T));
         }
-        public ResourceLoader LoadAsset(string assetFullName,Type assetType) 
+        public static ResourceLoader LoadAsset(string assetFullName,Type assetType) 
         {
 #if UNITY_EDITOR
             var loader = new EditorResourceLoader(assetFullName, assetType);
@@ -45,7 +45,12 @@ namespace PJR
                     {
                         if (loader.OnDone != null)
                         {
-                            loader.OnDone(loader);
+                            try { 
+                                loader.OnDone(loader);
+                            }catch (Exception e)
+                            {
+                                LogSystem.LogError($"[{nameof(ResourceSystem.ClearDones)}] {e.ToString()}");
+                            }
                             loader.OnDone = null;
                         };
 

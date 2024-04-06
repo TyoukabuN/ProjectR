@@ -47,9 +47,9 @@ namespace PJR
         [SerializeField] protected bool _keepChildrenConnected = true;
         [SerializeField] protected AnimanerUpdateAproach _animanerUpdateAproach = AnimanerUpdateAproach.Manually;
         protected RigBuilder _rigBuilder;
-        protected override void Init_Animation()
+        protected void Init_Animation()
         {
-            base.Init_Animation();
+            //base.Init_Animation();
 
             _rigBuilder = GetComponentInChildren<RigBuilder>();
 

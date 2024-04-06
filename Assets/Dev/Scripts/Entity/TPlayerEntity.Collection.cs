@@ -27,9 +27,9 @@ namespace PJR
 
         int groundContactCount;
 
-        protected override void Init_Collection()
+        protected void Init_Collection()
         {
-            base.Init_Collection();
+            //base.Init_Collection();
 
             _rigidbody = GetComponent<Rigidbody>();
 

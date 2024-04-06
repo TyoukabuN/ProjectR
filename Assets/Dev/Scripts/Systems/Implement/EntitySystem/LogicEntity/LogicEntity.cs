@@ -7,11 +7,12 @@ namespace PJR
     {
         public PhysEntity physEntity;
         public InputHandle inputHandle;
-        public StateContext stateContext;
+        public EntityContext entityContext;
         public EntityStateMachine stateMachine;
 
         public virtual void Init() { }
         public virtual void Update() { }
         public virtual void Dispose() { }
+        public virtual void OnCreate(EntityContext context) { }
     }
 }

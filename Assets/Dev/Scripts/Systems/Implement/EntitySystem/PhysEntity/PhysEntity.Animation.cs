@@ -26,34 +26,13 @@ namespace PJR
             Action = 1,
         }
 
-        private Transform m_ModelRoot = null;
-        [HideInInspector] public Vector3 modelRoot_localPosition = Vector3.zero;
-        [HideInInspector] public Vector3 modelRoot_localEulerAngles = Vector3.zero;
-        [HideInInspector] public Vector3 modelRoot_localScale = Vector3.zero;
-        public Transform ModelRoot
+        protected virtual void Init_Animation(GameObject avater)
         {
-            get
-            {
-                if (!m_ModelRoot)
-                {
-                    m_ModelRoot = transform.Find(TEntityDefine.MODEL_ROOT_NAME);
-                    if (m_ModelRoot)
-                    {
-                        modelRoot_localPosition = m_ModelRoot.localPosition;
-                        modelRoot_localEulerAngles = m_ModelRoot.localEulerAngles;
-                        modelRoot_localScale = m_ModelRoot.localScale;
-                    }
-                }
-                return m_ModelRoot;
-            }
-        }
-
-        protected virtual void Init_Animation()
-        {
-            mainAnimator = GetComponentInChildren<Animator>();
-            animancer = GetComponentInChildren<AnimancerComponent>();
+            avater = avater != null ? avater : this.avater;
+            mainAnimator = avater.GetComponentInChildren<Animator>();
+            animancer = avater.GetComponentInChildren<AnimancerComponent>();
             //
-            animatorAgency = GetComponentInChildren<AnimatorAgency>();
+            animatorAgency = avater.GetComponentInChildren<AnimatorAgency>();
             animatorAgency.animatorEventReceiver = this;
         }
         protected void Setup_AvaterMask()

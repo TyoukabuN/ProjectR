@@ -343,13 +343,12 @@ namespace PJR
             SetAsDefaultColliderMask();
             m_isTweeningPosY = false;
             m_hanging = false;
-            UpdateModelFlip();
         }
         private Vector3 m_InverseYV3 = new Vector3(1, -1, 1);
         private Vector3 m_NormalYV3 = new Vector3(1, 1, 1);
         public void UpdateModelFlip()
         {
-            spriteRenderer.flipY = m_hanging ? true : false;
+            //spriteRenderer.flipY = m_hanging ? true : false;
             if (ModelRoot)
             {
                 ModelRoot.localPosition = Vector3.Scale(modelRoot_localPosition,m_hanging ? m_InverseYV3 : m_NormalYV3);

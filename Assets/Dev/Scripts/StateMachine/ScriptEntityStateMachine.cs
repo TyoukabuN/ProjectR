@@ -5,7 +5,7 @@ namespace PJR.ScriptStates
     public abstract class ScriptEntityStateMachine : EntityStateMachine
     {
         public ScriptState[] states;
-        public StateContext _stateContext;
+        public EntityContext _stateContext;
         public LogicEntity ownEntity;
 
         public Dictionary<int, ScriptTransition[]> state2transition;
@@ -15,12 +15,12 @@ namespace PJR.ScriptStates
         }
 
 
-        public StateContext stateContext
+        public EntityContext stateContext
         {
             get
             {
                 if (_stateContext == null)
-                    _stateContext = new StateContext();
+                    _stateContext = new EntityContext();
                 return _stateContext;
             }
         }

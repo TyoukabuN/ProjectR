@@ -29,7 +29,7 @@ namespace PJR
             //
             RegisterKeys.Init();
             //
-            var loader = ResourceSystem.instance.LoadAsset(assetPath, typeof(InputActionAsset));
+            var loader = ResourceSystem.LoadAsset(assetPath, typeof(InputActionAsset));
             loader.OnDone = OnLoadAssetDone;
         }
         void OnLoadAssetDone(ResourceLoader loader)

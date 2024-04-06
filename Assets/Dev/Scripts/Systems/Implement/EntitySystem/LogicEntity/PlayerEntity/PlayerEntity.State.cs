@@ -8,6 +8,11 @@ namespace PJR
         protected void Init_State()
         {
             stateMachine = new PlayerScriptStateMachine(this);
+            stateMachine.Init();
+        }
+        protected void Update_State()
+        {
+            stateMachine?.Update();
         }
     }
 }

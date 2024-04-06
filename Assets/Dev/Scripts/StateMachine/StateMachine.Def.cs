@@ -13,7 +13,7 @@ namespace PJR.ScriptStates.Player
         {
             if (state.normalizeTime < canExitNormalizeTime)
                 return false;
-            return state.entity.stateContext.grounded > 0;
+            return state.entity.entityContext.grounded > 0;
         }
     }
     public class Trans_OnStateFinish : ScriptTransition<Trans_OnStateFinish>

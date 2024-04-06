@@ -30,7 +30,7 @@ namespace PJR.ScriptStates.Player
     }
     public class StandState : ScriptState
     {
-        public override void Update(StateContext stateContext)
+        public override void Update(EntityContext stateContext)
         {
             entity.physEntity.Animancer_Play(AnimationNameSet.IDLE);
         }
@@ -42,7 +42,7 @@ namespace PJR.ScriptStates.Player
 
     public class WalkState : ScriptState
     {
-        public override void Update(StateContext stateContext)
+        public override void Update(EntityContext stateContext)
         {
             var inputAxi = inputHandle.ReadValue<Vector3>(InputKey.RegisterKeys.Move);
             var nameSet = AnimationNameSet.Walk;
@@ -72,7 +72,7 @@ namespace PJR.ScriptStates.Player
     }
     public class RunningState : ScriptState
     {
-        public override void Update(StateContext stateContext)
+        public override void Update(EntityContext stateContext)
         {
             var inputAxi = inputHandle.ReadValue<Vector3>(InputKey.RegisterKeys.Move);
             var nameSet = AnimationNameSet.Dash;

@@ -2002,7 +2002,7 @@ GameObject:
   - component: {fileID: 2302112157195749642}
   - component: {fileID: 5343576710381242537}
   m_Layer: 0
-  m_Name: ClazyRunner
+  m_Name: DefaultPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

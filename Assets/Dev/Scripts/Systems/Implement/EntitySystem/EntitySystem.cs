@@ -7,6 +7,32 @@ namespace PJR
 {
     public partial class EntitySystem : MonoSingletonSystem<EntitySystem>
     {
-        
+        public override void Init()
+        {
+
+        }
+
+        public static bool Valid()
+        {
+            if (!Application.isPlaying)
+            { 
+                Debug.LogError("[EntitySystem] Invoke system function not in Playmode");
+                return false;
+            }
+            return true;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            foreach (var pair in id2LogicEntity) 
+            {
+                var entity = pair.Value;
+                if (entity == null)
+                    continue;
+                entity.Update();
+            }
+        }
     }
 }

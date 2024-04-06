@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
+using System.Collections.Generic;
 
 // Using simple actions with callbacks.
 public class SimpleController_UsingActions : MonoBehaviour
@@ -15,12 +16,19 @@ public class SimpleController_UsingActions : MonoBehaviour
     public InputAction lookAction;
     public InputAction fireAction;
 
+    public List<InputAction> actions;
+
     private bool m_Charging;
 
     private Vector2 m_Rotation;
 
     public void Awake()
     {
+        actions = new List<InputAction>() {
+            moveAction,
+            lookAction,
+            fireAction
+        };
         // We could use `fireAction.triggered` in Update() but that makes it more difficult to
         // implement the charging mechanism. So instead we use the `started`, `performed`, and
         // `canceled` callbacks to run the firing logic right from within the action.

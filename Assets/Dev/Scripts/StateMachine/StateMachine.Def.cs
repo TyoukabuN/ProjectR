@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using RegisterKeys = PJR.InputKey.RegisterKeys;
+using PJR.Input;
 using System;
 
 namespace PJR.ScriptStates.Player

@@ -33,6 +33,10 @@ namespace PJR
         }
 
         protected virtual void Update() {
+            if (!_avatarLoadDone)
+                return;
+            Update_Animation(Time.deltaTime);
+            Update_Collection();
         }
 
         public virtual void OnDestroy() {
@@ -55,7 +59,6 @@ namespace PJR
                 return;
             //
             OnFixedUpdateBegin();
-
         }
 
 

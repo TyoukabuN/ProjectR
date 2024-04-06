@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static PJR.InputKey;
+using PJR.Input;
+using Sirenix.OdinInspector;
 
 namespace PJR
 {
@@ -23,18 +24,30 @@ namespace PJR
             }
         }
 
+        [ShowInInspector]
+        private List<InputAction> actions;
+
         public override void Init()
         {
             base.Init();
+            actions = new List<InputAction>();
             //
             RegisterKeys.Init();
             //
-            var loader = ResourceSystem.LoadAsset(assetPath, typeof(InputActionAsset));
-            loader.OnDone = OnLoadAssetDone;
+            //给测试的
+            if (inputActionAsset == null)
+            { 
+                var loader = ResourceSystem.LoadAsset(assetPath, typeof(InputActionAsset));
+                loader.OnDone = OnLoadAssetDone;
+            }
         }
         void OnLoadAssetDone(ResourceLoader loader)
         {
-            inputActionAsset = loader.GetAsset<InputActionAsset>();
+            inputActionAsset = loader.GetRawAsset<InputActionAsset>();
+
+            //TODO:后面需要分类型 因为有Gamepad和Keyboardmouse之分
+            if (!inputActionAsset.enabled)
+                inputActionAsset.Enable();
         }
 
         public static InputHandle GetInputHandle<T>() where T : InputHandle,new()
@@ -49,11 +62,18 @@ namespace PJR
                 return null;
             }
             handle.Init(actionMap);
+
+            foreach ( var action in handle.InputKey2Action) {
+                if (action.Value == null || instance.actions.Contains(action.Value))
+                    continue;
+                instance.actions.Add(action.Value);
+            }
+
             return handle;
         }
-        private void Update()
+        public override void Update()
         {
-
+            base.Update();
         }
     }
 }

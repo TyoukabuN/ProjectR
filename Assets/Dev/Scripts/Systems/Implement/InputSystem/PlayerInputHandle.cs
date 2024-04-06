@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.InputSystem.InputAction;
+using PJR.Input;
 
 namespace PJR
 {
     public class PlayerInputHandle : InputHandle
     {
-        public override InputKey.KeyCategory keyCategory => InputKey.KeyCategory.PlayerInput;
+        public override KeyCategory keyCategory => KeyCategory.PlayerInput;
         public override string inputActionMapName => "Player";
         public override void Init(InputActionMap actionMap)
         {
@@ -17,6 +13,7 @@ namespace PJR
         }
         public override void OnUpdate()
         {
+            base.OnUpdate();
         }
     }
 }

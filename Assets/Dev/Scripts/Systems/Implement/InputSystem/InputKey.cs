@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace PJR
+namespace PJR.Input
 {
     [Serializable]
     public partial class InputKey

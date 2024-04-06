@@ -45,9 +45,8 @@ namespace PJR
         };
 
         [SerializeField] protected bool _keepChildrenConnected = true;
-        [SerializeField] protected AnimanerUpdateAproach _animanerUpdateAproach = AnimanerUpdateAproach.Manually;
         protected RigBuilder _rigBuilder;
-        protected void Init_Animation()
+        protected void Init_Animation() 
         {
             //base.Init_Animation();
 
@@ -75,7 +74,7 @@ namespace PJR
                 if (_animanerUpdateAproach == AnimanerUpdateAproach.Manually)
                     animancer.Playable.PauseGraph();
 
-                Setup_AvaterMask();
+                Setup_AvatarMask();
 
                 animancer.Animator.applyRootMotion = false;
             }

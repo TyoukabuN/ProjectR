@@ -21,22 +21,26 @@ namespace PJR
         //
         public virtual bool Grounded { get; }
 
-        protected virtual void Init_Collection(GameObject avater)
+        protected virtual void Init_Collection(GameObject avatar)
         {
-            avater = avater != null ? avater : this.avater;
-            boxCollider = avater.GetComponent<BoxCollider>();
-            boxCollider = boxCollider == null ? avater.GetComponentInChildren<BoxCollider>() : boxCollider;
+            avatar = avatar != null ? avatar : this.avatar;
+            boxCollider = avatar.GetComponent<BoxCollider>();
+            boxCollider = boxCollider == null ? avatar.GetComponentInChildren<BoxCollider>() : boxCollider;
             if (boxCollider != null)
             {
                 boxCollider = gameObject.CopyComponent(boxCollider) as BoxCollider;
             }
             //
-            capsuleCollider = avater.GetComponent<CapsuleCollider>();
-            capsuleCollider = capsuleCollider == null ? avater.GetComponentInChildren<CapsuleCollider>() : capsuleCollider;
+            capsuleCollider = avatar.GetComponent<CapsuleCollider>();
+            capsuleCollider = capsuleCollider == null ? avatar.GetComponentInChildren<CapsuleCollider>() : capsuleCollider;
             if (capsuleCollider != null)
             {
                 capsuleCollider = gameObject.CopyComponent(capsuleCollider) as CapsuleCollider;
             }
+        }
+
+        protected virtual void Update_Collection()
+        { 
         }
 
         public virtual void OnCollisionEnter(Collision collision)

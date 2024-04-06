@@ -26,10 +26,18 @@ namespace PJR
                 EditorPrefs.SetBool(PJR_DebugMenuKey_Launch, false);
                 EditorPrefs.SetBool(PJR_DebugMenuKey_LaunchInAssetBundleMode, false);
             }
-            else if (state == PlayModeStateChange.EnteredPlayMode && EditorPrefs.GetBool(PJR_DebugMenuKey_Launch))
+            else if (state == PlayModeStateChange.EnteredPlayMode )
             {
-                EditorPrefs.DeleteKey(PJR_DebugMenuKey_Launch);
-                CreateLanuchSceneAndHierarchy();
+                if (EditorPrefs.GetBool(PJR_DebugMenuKey_Launch))
+                { 
+                    EditorPrefs.DeleteKey(PJR_DebugMenuKey_Launch);
+                    CreateLanuchSceneAndHierarchy();
+                }
+                else if(AnyGameObjectNamed("[Debug]"))
+                {
+                    EditorPrefs.DeleteKey(PJR_DebugMenuKey_Launch);
+                    CreateLanuchSceneAndHierarchy();
+                }
             }
         }
 
@@ -64,7 +72,7 @@ namespace PJR
             //Clear Scene
             foreach (var gobj in scene.GetRootGameObjects())
             {
-                if (gobj.name.IndexOf("Test") >= 0)
+                if (gobj.name.IndexOf("Test") == 0)
                 {
                     DontDestroyOnLoad(gobj);
                     continue;
@@ -72,16 +80,30 @@ namespace PJR
                 DestroyImmediate(gobj);
             }
             //Create Entry
-            var tips = new GameObject("[带Test开头的Gobj不会被 <Shift + F5> etc 删掉]");
-            DontDestroyOnLoad(tips);
-            tips.transform.SetAsFirstSibling();
+            //GenTips();
             //
             var gEntry = new GameObject("GameEntry");
             var entry = gEntry.AddComponent<GameEntry>();
             //TODO:Any setting for entry;
             DontDestroyOnLoad(gEntry);
             //Create ControlSystem
-
+        }
+        static bool AnyGameObjectNamed(string name)
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            if (scene == null)
+                return false;
+            //Clear Scene
+            foreach (var gobj in scene.GetRootGameObjects())
+                if (gobj.name == name)
+                    return true;
+            return false;
+        }
+        static void GenTips()
+        {
+            var tips = new GameObject("[带Test开头的Gobj不会被 <Shift + F5> etc 删掉]");
+            DontDestroyOnLoad(tips);
+            tips.transform.SetAsFirstSibling();
         }
     }
 }

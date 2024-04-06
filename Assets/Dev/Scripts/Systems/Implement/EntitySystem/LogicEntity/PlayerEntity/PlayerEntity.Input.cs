@@ -1,9 +1,4 @@
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Android.Gradle;
-using UnityEngine;
-using UnityEngine.Assertions;
+using PJR.Input;
 
 namespace PJR
 {
@@ -12,11 +7,19 @@ namespace PJR
         protected void Init_Input()
         {
             inputHandle = InputSystem.GetInputHandle<PlayerInputHandle>();
-            if (inputHandle == null) LogSystem.LogError("[PlayerEntity.Init_Input]找不到对应的InputAssetMap");
+            if (inputHandle == null)
+            { 
+                LogSystem.LogError("[PlayerEntity.Init_Input]鎵句笉鍒板搴旂殑InputAssetMap");
+                return;
+            }
         }
         protected void Update_Input()
         {
             inputHandle?.OnUpdate();
+        }
+        protected void LateUpdate_Input()
+        {
+            inputHandle?.OnLateUpdate();
         }
     }
 }

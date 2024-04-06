@@ -15,6 +15,7 @@ public class Test : MonoBehaviour
         LogSystem.Log(Application.consoleLogPath);
         LogSystem.Log(Application.streamingAssetsPath);
     }
+
     [Button("Test1")]
     public void Test1()
     {

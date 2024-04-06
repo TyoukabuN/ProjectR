@@ -16,7 +16,7 @@ namespace PJR
         {
             if (!Application.isPlaying)
             { 
-                Debug.LogError("[EntitySystem] Invoke system function not in Playmode");
+                LogSystem.LogError("[EntitySystem] Invoke system function not in Playmode");
                 return false;
             }
             return true;
@@ -32,6 +32,19 @@ namespace PJR
                 if (entity == null)
                     continue;
                 entity.Update();
+            }
+        }
+
+        public override void LateUpdate()
+        {
+            base.LateUpdate();
+
+            foreach (var pair in id2LogicEntity)
+            {
+                var entity = pair.Value;
+                if (entity == null)
+                    continue;
+                entity.LateUpdate();
             }
         }
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 using Animancer;
 using System;
 using Sirenix.OdinInspector;
+using UnityEngine.Animations.Rigging;
 
 namespace PJR
 {
@@ -15,7 +16,11 @@ namespace PJR
         [BoxGroup("动画相关")] public List<AnimancerComponent> subAnimancers = new List<AnimancerComponent>();
         [BoxGroup("动画相关")] public AnimatorAgency animatorAgency;
         [BoxGroup("动画相关")] public AnimatiomClipTransitionSet animationClipTransitionSet;
-        [BoxGroup("动画相关")] private List<AvatarMask> avatarMasks;
+        [BoxGroup("动画相关")] public List<AvatarMask> avatarMasks;
+        [BoxGroup("动画相关")] public RigBuilder rigBuilder;
+        [BoxGroup("动画相关")] public bool keepChildrenConnected = true;
+        [BoxGroup("动画相关")] public AnimanerUpdateAproach _animanerUpdateAproach = AnimanerUpdateAproach.Manually;
+
         public Action onAnimationClipEvent;
 
 
@@ -25,26 +30,89 @@ namespace PJR
             Base = 0,
             Action = 1,
         }
-
-        protected virtual void Init_Animation(GameObject avater)
+        /// <summary>
+        /// 初始化动画引用
+        /// </summary>
+        /// <param name="avatar"></param>
+        protected virtual void Init_Animation_Reference(GameObject avatar)
         {
-            avater = avater != null ? avater : this.avater;
-            mainAnimator = avater.GetComponentInChildren<Animator>();
-            animancer = avater.GetComponentInChildren<AnimancerComponent>();
-            //
-            animatorAgency = avater.GetComponentInChildren<AnimatorAgency>();
+            avatar = avatar != null ? avatar : this.avatar;
+            mainAnimator = avatar.GetComponentInChildren<Animator>();
+            animancer = avatar.GetComponentInChildren<AnimancerComponent>();
+            animatorAgency = avatar.GetComponentInChildren<AnimatorAgency>();
             animatorAgency.animatorEventReceiver = this;
+
         }
-        protected void Setup_AvaterMask()
+        /// <summary>
+        /// 初始化动画集
+        /// </summary>
+        /// <param name="clipSet"></param>
+        protected virtual void Init_Animation_ClipSet(AnimatiomClipTransitionSet clipSet)
+        {
+            animationClipTransitionSet = clipSet != null ? clipSet : animationClipTransitionSet;
+
+            rigBuilder = GetComponentInChildren<RigBuilder>();
+
+            if (animancer != null)
+            {
+                //IK Target
+                //https://kybernetik.com.au/animancer/docs/examples/integration/animation-rigging/#ik-targets
+                if (rigBuilder != null)
+                {
+                    animancer.InitializePlayable(rigBuilder.graph);
+                    animancer.Playable.KeepChildrenConnected = keepChildrenConnected;
+                    animancer.Layers[0].ApplyAnimatorIK = true;
+
+                    foreach (var layer in rigBuilder.layers)
+                    {
+                        layer.active = false;
+                    }
+                }
+                //为了解决Rebind问题
+                //https://kybernetik.com.au/animancer/docs/examples/integration/animation-rigging/#limitations
+                if (animationClipTransitionSet)
+                {
+                    foreach (var pair in animationClipTransitionSet.clips)
+                    {
+                        animancer.Layers[0].GetOrCreateState(pair.Value);
+                    }
+                }
+
+                if (_animanerUpdateAproach == AnimanerUpdateAproach.Manually)
+                    animancer.Playable.PauseGraph();
+
+                Setup_AvatarMask();
+
+                animancer.Animator.applyRootMotion = false;
+            }
+
+            //Animation_InitIK();
+        }
+
+        protected virtual void Update_Animation(float deltaTime)
+        {
+            if (_animanerUpdateAproach == AnimanerUpdateAproach.Manually)
+            {
+                animancer?.Evaluate(deltaTime);
+            }
+        }
+        /// <summary>
+        /// 设置模型动画图层蒙版
+        /// </summary>
+        protected void Setup_AvatarMask()
         {
             if (animancer == null)
                 return;
 
-            for (int layerIndex = 0; layerIndex < avatarMasks.Count; layerIndex++)
-            {
-                animancer.Layers[layerIndex].SetMask(avatarMasks[layerIndex]);
+            if (avatarMasks != null)
+            { 
+                for (int layerIndex = 0; layerIndex < avatarMasks.Count; layerIndex++)
+                {
+                    animancer.Layers[layerIndex].SetMask(avatarMasks[layerIndex]);
+                }
             }
         }
+
         public void Animator_SetEnabled(bool enabled)
         {
             if (mainAnimator)//|| !animator.HasState(layerIndex, stateId)
@@ -194,6 +262,4 @@ namespace PJR
         }
         #endregion
     }
-
-
 }

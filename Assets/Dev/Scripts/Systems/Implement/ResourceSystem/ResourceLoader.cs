@@ -33,11 +33,12 @@ namespace PJR
             assetName = Path.GetFileName(assetFullName);
         }
 
-        public Object GetAsset()
+        public Object GetRawAsset()
         {
+            //TODO:加个实例化，加引用计数
             return asset;
         }
-        public T GetAsset<T>()
+        public T GetRawAsset<T>()
         {
             return (T)asset;
         }

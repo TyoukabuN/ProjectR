@@ -1,5 +1,6 @@
 using Animancer;
 using UnityEngine;
+using PJR.Input;
 
 namespace PJR.ScriptStates.Player
 {
@@ -33,6 +34,8 @@ namespace PJR.ScriptStates.Player
         public override void Update(EntityContext stateContext)
         {
             entity.physEntity.Animancer_Play(AnimationNameSet.IDLE);
+            if(inputHandle.GetKeyDown(RegisterKeys.Jump))
+                LogSystem.Log(inputHandle.GetKeyDown(RegisterKeys.Jump));
         }
         public override bool CanChange(int from)
         {
@@ -44,7 +47,7 @@ namespace PJR.ScriptStates.Player
     {
         public override void Update(EntityContext stateContext)
         {
-            var inputAxi = inputHandle.ReadValue<Vector3>(InputKey.RegisterKeys.Move);
+            var inputAxi = inputHandle.ReadValue<Vector3>(RegisterKeys.Move);
             var nameSet = AnimationNameSet.Walk;
             if (inputAxi.magnitude > 0)
             {
@@ -74,7 +77,7 @@ namespace PJR.ScriptStates.Player
     {
         public override void Update(EntityContext stateContext)
         {
-            var inputAxi = inputHandle.ReadValue<Vector3>(InputKey.RegisterKeys.Move);
+            var inputAxi = inputHandle.ReadValue<Vector3>(RegisterKeys.Move);
             var nameSet = AnimationNameSet.Dash;
             if (inputAxi.magnitude > 0)
             {
@@ -157,7 +160,7 @@ namespace PJR.ScriptStates.Player
         public override void OnEnter(LogicEntity entity)
         {
             base.OnEnter(entity);
-            var moving = entity.inputHandle.ReadValue<Vector3>(InputKey.RegisterKeys.Move).magnitude > 0;
+            var moving = entity.inputHandle.ReadValue<Vector3>(RegisterKeys.Move).magnitude > 0;
             animancerState = entity.physEntity.Animancer_Play(moving ? AnimationNameSet.JUMP_LAND_M : AnimationNameSet.JUMP_LAND_W);
             animancerState.Events.OnEnd = ToPhaseEnd;
         }

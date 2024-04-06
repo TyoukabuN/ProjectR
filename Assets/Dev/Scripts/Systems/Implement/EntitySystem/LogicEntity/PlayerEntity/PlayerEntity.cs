@@ -9,12 +9,18 @@ namespace PJR
         public override void OnCreate(EntityContext context)
         { 
             var physEntity = EntitySystem.CreatePhysEntity();
-            physEntity.CreateAvater(context.assetFullName);
-            physEntity.onAvaterLoadDone += OnAvaterLoadDone;
+
+            var assetNames = new AvatarAssetNames()
+            {
+                modelName = "Assets/Art/Character/GlazyRunner/Prefabs/Avater_DefaultPlayer.prefab",
+                animationClipSet = "Assets/Art/Character/GlazyRunner/Animations/AnimatiomClipTransitionSet.asset"
+            };
+            physEntity.CreateAvatar(assetNames);
+            physEntity.onAvatarLoadDone += OnAvatarLoadDone;
             //
             this.physEntity = physEntity;
         }
-        void OnAvaterLoadDone(PhysEntity physEntity)
+        void OnAvatarLoadDone(PhysEntity physEntity)
         {
             if (physEntity != this.physEntity)
                 return;
@@ -29,6 +35,12 @@ namespace PJR
 
             Update_Input();
             Update_State();
+        }
+        public override void LateUpdate()
+        {
+            base.LateUpdate();
+
+            LateUpdate_Input();
         }
     }
 }

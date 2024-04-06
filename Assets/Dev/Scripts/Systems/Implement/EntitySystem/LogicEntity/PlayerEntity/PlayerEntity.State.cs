@@ -13,6 +13,6 @@ namespace PJR
         protected void Update_State()
         {
             stateMachine?.Update();
-        }
+        }        
     }
 }

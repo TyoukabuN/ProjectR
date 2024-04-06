@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PJR.Input;
 using PJR.ScriptStates;
 using PJR.ScriptStates.Player;
 
@@ -54,7 +55,6 @@ namespace PJR.ScriptStates.Player
                 ScriptTransition<Trans_OnStateFinish>.Get(EPlayerState.Stand),
 
             };
-
             State_Change(EPlayerState.Stand);
         }
 

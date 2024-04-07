@@ -1,10 +1,22 @@
+using PJR.Input;
+using PJR.ScriptStates.Player;
 using System.Collections.Generic;
+using UnityEditor;
 
 namespace PJR.ScriptStates
 {
-    public abstract class ScriptEntityStateMachine : EntityStateMachine
+    public abstract class ScriptEntityStateMachine<TEntityScriptState> : EntityStateMachine where TEntityScriptState : EntityScriptState
     {
-        public ScriptState[] states;
+        public virtual EntityScriptState CurrentState { 
+            get
+            {
+                if (states == null)
+                    return null;
+                return states[CurrentEState];
+            }
+        }
+
+        public TEntityScriptState[] states;
         public EntityContext _stateContext;
         public LogicEntity ownEntity;
 
@@ -29,28 +41,30 @@ namespace PJR.ScriptStates
         public override void Update()
         {
             UpdateContext();
-            if (CurrentState != 0)
+            if (CurrentEState != 0)
             {
-                var state = states[CurrentState];
+                var state = states[CurrentEState];
                 if (state != null)
                 {
                     state.Update(stateContext);
-                    if (CheckTransition(CurrentState, out int toState))
+                    if (CheckTransition(CurrentEState, out int toState))
                     {
                         State_Change(toState);
                     }
                 }
             }
         }
-        public override void UpdateContext() { }
-        public bool CheckTransition(int state, out int toState)
+        public bool CheckTransition(int eState, out int toState)
         {
             toState = 0;
-            if (!state2transition.TryGetValue(state, out var transitions))
+            if (!state2transition.TryGetValue(eState, out var transitions))
                 return false;
             for (int i = 0; i < transitions.Length; i++)
             {
-                if (transitions[i].Check(states[state]))
+                var state = states[eState];
+                if (state == null || !state.IsValid())
+                    continue;
+                if (transitions[i].Check(state))
                 {
                     toState = transitions[i].toState;
                     if (states[toState] == null)

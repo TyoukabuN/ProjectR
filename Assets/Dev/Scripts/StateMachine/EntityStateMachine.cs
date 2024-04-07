@@ -6,7 +6,7 @@ namespace PJR
 {
     public abstract class EntityStateMachine
     {
-        public abstract int CurrentState { get; }
+        public abstract int CurrentEState { get; }
         public abstract void Init();
         public abstract void Update();
         public abstract bool State_Change(int ePlayerState);

@@ -13,7 +13,10 @@ namespace PJR
 
         [SerializeField]
         private InputActionAsset inputActionAsset;
-        public InputActionAsset InputActionAsset { get => inputActionAsset; }
+        public InputActionAsset @InputActionAsset { get => inputActionAsset; }        
+        [SerializeField]
+        private PlayerInput playerInput;
+        public PlayerInput @PlayerInput { get => playerInput; }
 
         public InputActionMap this[string name]
         {
@@ -34,7 +37,7 @@ namespace PJR
             //
             RegisterKeys.Init();
             //
-            //给测试的
+            //缁欐祴璇曠殑
             if (inputActionAsset == null)
             { 
                 var loader = ResourceSystem.LoadAsset(assetPath, typeof(InputActionAsset));
@@ -45,9 +48,21 @@ namespace PJR
         {
             inputActionAsset = loader.GetRawAsset<InputActionAsset>();
 
-            //TODO:后面需要分类型 因为有Gamepad和Keyboardmouse之分
+            playerInput = instance.gameObject.TryGetComponent<PlayerInput>();
+            //TODO:鍚庨潰闇�瑕佸垎绫诲瀷 鍥犱负鏈塆amepad鍜孠eyboardmouse涔嬪垎
             if (!inputActionAsset.enabled)
+            {
+                playerInput.actions = inputActionAsset;
                 inputActionAsset.Enable();
+
+                playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
+                playerInput.defaultControlScheme = "KeyboardMouse";
+
+                var gamepad = inputActionAsset.FindControlScheme("Gamepad");
+                if (gamepad != null)
+                {
+                }
+            }
         }
 
         public static InputHandle GetInputHandle<T>() where T : InputHandle,new()

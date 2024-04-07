@@ -4,19 +4,19 @@ using PJR.Input;
 
 namespace PJR.ScriptStates.Player
 {
-    public static class EPlayerState
+    public enum EPlayerState
     {
-        public static int None = 0;
-        public static int Stand = 1;
-        public static int Walk = 2;
-        public static int Running = 3;
-        public static int Jump_Begin = 4;
-        public static int Jump_Falling = 5;
-        public static int Jump_Land = 6;
-        public static int Dushing = 7;
-        public static int End = 8;
+        None = 0,
+        Stand = 1,
+        Walk = 2,
+        Running = 3,
+        Jump_Begin = 4,
+        Jump_Falling = 5,
+        Jump_Land = 6,
+        Dushing = 7,
+        End = 8,
     }
-    public class AnimationState : ScriptState
+    public class AnimationState : EntityScriptState
     {
         protected AnimancerState animancerState;
         public override float normalizeTime
@@ -29,13 +29,11 @@ namespace PJR.ScriptStates.Player
             }
         }
     }
-    public class StandState : ScriptState
+    public class StandState : EntityScriptState
     {
         public override void Update(EntityContext stateContext)
         {
             entity.physEntity.Animancer_Play(AnimationNameSet.IDLE);
-            if(inputHandle.GetKeyDown(RegisterKeys.Jump))
-                LogSystem.Log(inputHandle.GetKeyDown(RegisterKeys.Jump));
         }
         public override bool CanChange(int from)
         {
@@ -43,11 +41,11 @@ namespace PJR.ScriptStates.Player
         }
     }
 
-    public class WalkState : ScriptState
+    public class WalkState : EntityScriptState
     {
         public override void Update(EntityContext stateContext)
         {
-            var inputAxi = inputHandle.ReadValue<Vector3>(RegisterKeys.Move);
+            var inputAxi = stateContext.inputAxi;
             var nameSet = AnimationNameSet.Walk;
             if (inputAxi.magnitude > 0)
             {
@@ -68,16 +66,21 @@ namespace PJR.ScriptStates.Player
                 entity.physEntity.Animancer_Play(AnimationNameSet.IDLE);
             }
         }
+        public override void OnUpdateVelocity(KCCContext context)
+        {
+            base.OnUpdateVelocity(context);
+            context.outputVelocity = context.direction * 3f;
+        }
         public override bool CanChange(int from)
         {
             return true;
         }
     }
-    public class RunningState : ScriptState
+    public class RunningState : EntityScriptState
     {
         public override void Update(EntityContext stateContext)
         {
-            var inputAxi = inputHandle.ReadValue<Vector3>(RegisterKeys.Move);
+            var inputAxi = stateContext.inputAxi;
             var nameSet = AnimationNameSet.Dash;
             if (inputAxi.magnitude > 0)
             {
@@ -102,6 +105,11 @@ namespace PJR.ScriptStates.Player
         {
             return true;
         }
+        public override void OnUpdateVelocity(KCCContext context)
+        {
+            base.OnUpdateVelocity(context);
+            context.outputVelocity = context.direction * 3f * 2.5f;
+        }
     }
 
     public class JumpBeginState : AnimationState
@@ -125,7 +133,7 @@ namespace PJR.ScriptStates.Player
         }
         public override bool CanChange(int from)
         {
-            if (from == EPlayerState.Stand || from == EPlayerState.Walk || from == EPlayerState.Running)
+            if (from == (int)EPlayerState.Stand || from == (int)EPlayerState.Walk || from == (int)EPlayerState.Running)
                 return entity.physEntity.Grounded;
 
             return true;
@@ -141,7 +149,7 @@ namespace PJR.ScriptStates.Player
         }
         public override bool CanChange(int from)
         {
-            if (from == EPlayerState.Stand || from == EPlayerState.Walk || from == EPlayerState.Running)
+            if (from == (int)EPlayerState.Stand || from == (int)EPlayerState.Walk || from == (int)EPlayerState.Running)
             {
                 return entity.physEntity.Grounded;
             }
@@ -171,7 +179,7 @@ namespace PJR.ScriptStates.Player
         }
         public override bool CanChange(int from)
         {
-            if (from == EPlayerState.Stand || from == EPlayerState.Walk || from == EPlayerState.Running)
+            if (from == (int)EPlayerState.Stand || from == (int)EPlayerState.Walk || from == (int)EPlayerState.Running)
             {
                 return entity.physEntity.Grounded;
             }

@@ -397,42 +397,6 @@ namespace PJR
         private GUIStyle GizmosGUIStyle = null;
         StringBuilder builder;
 
-        void OnDrawGizmos()
-        {
-            if (!isDebug)
-                return;
-            if (GizmosGUIStyle == null)
-            {
-                GUIStyle style = new GUIStyle();
-                style.richText = true;
-                GizmosGUIStyle = style;
-            }
-            if (builder == null) { 
-                builder = new StringBuilder();
-            }
-            builder.Clear();
-
-            builder.AppendLine(string.Format("<color=red>跳跃:{0}/{1}</color>", jumpCounter.ToString(), jumpableTimes.ToString()));
-            builder.AppendLine(string.Format("<color=red>着地:{0}</color>", Grounded.ToString()));
-            builder.AppendLine(string.Format("<color=red>移动输入:{0}</color>", inputAxi.ToString()));
-            builder.AppendLine(string.Format("<color=red>速度:{0}</color>", _rigidbody == null ?0:_rigidbody.velocity.ToString()));
-            builder.AppendLine(string.Format("<color=red>XZAnima:{0}</color>", inputAxi));
-            //builder.AppendLine(string.Format("<color=red>状态:{0}</color>", currentEState.ToString()));
-
-            Handles.Label(transform.position, builder.ToString(), GizmosGUIStyle);
-            Handles.color = Color.red;
-
-            Gizmos.color = Color.blue;
-            var from = transform.position;
-            from.y += 0.5f;
-            Gizmos.DrawLine(from, from + forward);
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(from, from + right);
-            //Gizmos.DrawWireSphere(transform.position + groundedOffset, groundedRadius);
-
-
-            Animation_OnDrawGizmos();
-        }
 #endif
 
         public Rect GetRect(ref float x, ref float y, ref float w, ref float h)

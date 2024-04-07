@@ -9,7 +9,7 @@ namespace PJR.ScriptStates.Player
     public class Trans_OnGrounded : ScriptTransition<Trans_OnGrounded>
     {
         protected Trans_OnGrounded() { }
-        public override bool Check(ScriptState state)
+        public override bool Check(EntityScriptState state)
         {
             if (state.normalizeTime < canExitNormalizeTime)
                 return false;
@@ -19,33 +19,34 @@ namespace PJR.ScriptStates.Player
     public class Trans_OnStateFinish : ScriptTransition<Trans_OnStateFinish>
     {
         protected Trans_OnStateFinish() { }
-        public override bool Check(ScriptState state)
+        public override bool Check(EntityScriptState state)
         {
             if (state.normalizeTime < canExitNormalizeTime)
                 return false;
-            return state.phase == ScriptState.Phase.End;
+            return state.phase == EntityScriptState.Phase.End;
         }
     }
     public class Trans_OnWalking : ScriptTransition<Trans_OnWalking>
     {
         protected Trans_OnWalking() { }
-        public override bool Check(ScriptState state)
+        public override bool Check(EntityScriptState state)
         {
-            return state.inputHandle.ReadValue<Vector2>(RegisterKeys.Move).magnitude > 0;
+            var inputAxi = state.inputHandle.ReadValue<Vector2>(RegisterKeys.Move);
+            return !inverse ? inputAxi.magnitude > 0.003f : inputAxi.magnitude <= 0.003f;
         }
     }
     public class Trans_OnRunning : ScriptTransition<Trans_OnRunning>
     {
         protected Trans_OnRunning() { }
-        public override bool Check(ScriptState state)
+        public override bool Check(EntityScriptState state)
         {
             var inputAxi = state.inputHandle.ReadValue<Vector2>(RegisterKeys.Move);
-            var isRun = state.inputHandle.GetKeyDown(RegisterKeys.Run);
+            var isRun = state.inputHandle.GetKey(RegisterKeys.Run);
             if (inputAxi.magnitude > 0)
             {
-                return inverse ? isRun : !isRun;
+                return !inverse ? isRun : !isRun;
             }
-            return inverse;
+            return false;
         }
     }
 

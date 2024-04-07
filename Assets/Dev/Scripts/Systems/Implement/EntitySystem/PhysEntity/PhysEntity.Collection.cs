@@ -24,18 +24,20 @@ namespace PJR
         protected virtual void Init_Collection(GameObject avatar)
         {
             avatar = avatar != null ? avatar : this.avatar;
-            boxCollider = avatar.GetComponent<BoxCollider>();
+            var boxCollider = avatar.GetComponent<BoxCollider>();
             boxCollider = boxCollider == null ? avatar.GetComponentInChildren<BoxCollider>() : boxCollider;
             if (boxCollider != null)
             {
-                boxCollider = gameObject.CopyComponent(boxCollider) as BoxCollider;
+                this.boxCollider = gameObject.CopyComponent(boxCollider) as BoxCollider;
+                DestroyImmediate(boxCollider);
             }
             //
-            capsuleCollider = avatar.GetComponent<CapsuleCollider>();
+            var capsuleCollider = avatar.GetComponent<CapsuleCollider>();
             capsuleCollider = capsuleCollider == null ? avatar.GetComponentInChildren<CapsuleCollider>() : capsuleCollider;
             if (capsuleCollider != null)
             {
-                capsuleCollider = gameObject.CopyComponent(capsuleCollider) as CapsuleCollider;
+                this.capsuleCollider = gameObject.CopyComponent(capsuleCollider) as CapsuleCollider;
+                DestroyImmediate(capsuleCollider);
             }
         }
 

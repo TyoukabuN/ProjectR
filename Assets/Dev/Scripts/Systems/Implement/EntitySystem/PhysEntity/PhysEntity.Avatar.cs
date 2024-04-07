@@ -1,5 +1,6 @@
 ﻿using Animancer;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -8,14 +9,13 @@ namespace PJR
 {
     public partial class PhysEntity : MonoBehaviour
     {
-        protected bool _avatarLoadDone = false;
-        public bool AvatarLoadDone => _avatarLoadDone;
+        [BoxGroup("Avatar"), ReadOnly] protected bool _avatarLoadDone = false;
+        [BoxGroup("Avatar")] public bool AvatarLoadDone => _avatarLoadDone;
 
-
-        private Transform m_ModelRoot = null;
-        [HideInInspector] public Vector3 modelRoot_localPosition = Vector3.zero;
-        [HideInInspector] public Vector3 modelRoot_localEulerAngles = Vector3.zero;
-        [HideInInspector] public Vector3 modelRoot_localScale = Vector3.zero;
+        [BoxGroup("Avatar"), ReadOnly] private Transform m_ModelRoot = null;
+        [BoxGroup("Avatar"), ReadOnly] public Vector3 modelRoot_localPosition = Vector3.zero;
+        [BoxGroup("Avatar"), ReadOnly] public Vector3 modelRoot_localEulerAngles = Vector3.zero;
+        [BoxGroup("Avatar"), ReadOnly] public Vector3 modelRoot_localScale = Vector3.zero;
         public Transform ModelRoot
         {
             get
@@ -33,13 +33,13 @@ namespace PJR
                 return m_ModelRoot;
             }
         }
+
         #region reference
 
-        public GameObject avatar;
-        public Transform avatarTran => avatar?.transform;
+        [BoxGroup("Avatar"), ReadOnly] public GameObject avatar;
+        [BoxGroup("Avatar"), ReadOnly] public Transform avatarTran => avatar?.transform;
 
         #endregion
-
 
         #region callback
 
@@ -48,8 +48,7 @@ namespace PJR
 
         #endregion
 
-
-        private AvatarAssetNames _assetNames;
+        [BoxGroup("Avatar")] private AvatarAssetNames _assetNames;
         /// <summary>
         /// 模型所需的asset的名字
         /// </summary>
@@ -135,7 +134,6 @@ namespace PJR
             animationClipTransitionSet = asset;
             Init_Animation_ClipSet(asset);
         }
-
         /// <summary>
         /// 全部加载完成
         /// </summary>
@@ -159,6 +157,7 @@ namespace PJR
 
             Init_Collection(avatar);
             Init_Animation_Reference(avatar);
+            Init_KCC(avatar);
         }
     }
 }

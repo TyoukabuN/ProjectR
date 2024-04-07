@@ -1,7 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEditor;
+
 namespace PJR
 {
     /// <summary>
@@ -62,8 +63,6 @@ namespace PJR
         }
 
 
-
-
         [HideInInspector] public bool m_onFixedUpdateBeginTrigger = true;
         [HideInInspector] public Action onFixedUpdateBegin;
 
@@ -108,6 +107,14 @@ namespace PJR
                     Debug.LogError(e.ToString());
                 }
             }
+        }
+
+        public Action onDrawGizmos;
+
+        void OnDrawGizmos()
+        {
+            if(onDrawGizmos != null)
+                onDrawGizmos.Invoke();
         }
     }
 }

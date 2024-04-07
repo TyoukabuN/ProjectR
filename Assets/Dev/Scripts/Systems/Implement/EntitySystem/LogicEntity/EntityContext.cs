@@ -10,7 +10,7 @@ namespace PJR
 
         public Vector2 inputAxi;
         public Vector2 mouseDelta;
-        public float runValue;
+        public int runValue;
         public int grounded = 1;
         struct State { }
     }

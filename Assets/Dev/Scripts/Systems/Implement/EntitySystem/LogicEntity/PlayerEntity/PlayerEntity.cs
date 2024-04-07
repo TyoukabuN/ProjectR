@@ -1,6 +1,10 @@
+using PJR.ScriptStates.Player;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 namespace PJR
 {
@@ -17,8 +21,11 @@ namespace PJR
             };
             physEntity.CreateAvatar(assetNames);
             physEntity.onAvatarLoadDone += OnAvatarLoadDone;
+            physEntity.onDrawGizmos += OnDrawGizmos;
             //
             this.physEntity = physEntity;
+            this.gameObject = physEntity.gameObject;
+            this.transform = physEntity.transform;
         }
         void OnAvatarLoadDone(PhysEntity physEntity)
         {
@@ -32,7 +39,7 @@ namespace PJR
         public override void Update()
         {
             base.Update();
-
+             
             Update_Input();
             Update_State();
         }
@@ -42,5 +49,45 @@ namespace PJR
 
             LateUpdate_Input();
         }
+
+#if UNITY_EDITOR
+        private GUIStyle GizmosGUIStyle = null;
+        StringBuilder builder;
+
+        public void OnDrawGizmos()
+        {
+            if (GizmosGUIStyle == null)
+            {
+                GUIStyle style = new GUIStyle();
+                style.richText = true;
+                GizmosGUIStyle = style;
+            }
+            if (builder == null)
+            {
+                builder = new StringBuilder();
+            }
+            builder.Clear();
+
+            //builder.AppendLine(string.Format("<color=red>跳跃:{0}/{1}</color>", jumpCounter.ToString(), jumpableTimes.ToString()));
+            //builder.AppendLine(string.Format("<color=red>着地:{0}</color>", Grounded.ToString()));
+            //builder.AppendLine(string.Format("<color=red>移动输入:{0}</color>", inputAxi.ToString()));
+            //builder.AppendLine(string.Format("<color=red>速度:{0}</color>", _rigidbody == null ? 0 : _rigidbody.velocity.ToString()));
+            //builder.AppendLine(string.Format("<color=red>XZAnima:{0}</color>", inputAxi));
+            if(scriptStateMachine != null)
+                builder.AppendLine(string.Format("<color=red>状态:{0}</color>", (EPlayerState)scriptStateMachine?.CurrentEState));
+
+            Handles.Label(transform.position, builder.ToString(), GizmosGUIStyle);
+            Handles.color = Color.red;
+
+            Gizmos.color = Color.blue;
+            var from = transform.position;
+            from.y += 0.5f;
+            Gizmos.DrawLine(from, from + transform.forward);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(from, from + transform.right);
+            //Gizmos.DrawWireSphere(transform.position + groundedOffset, groundedRadius);
+
+        }
+#endif
     }
 }

@@ -18,7 +18,7 @@ namespace PJR.ScriptStates
         {
             this.toState = toState;
         }
-        public virtual bool Check(ScriptState state) => true;
+        public virtual bool Check(EntityScriptState state) => true;
 
         public float canExitNormalizeTime = 0;
         public ScriptTransition SetCanExitNormalizeTime(float canExitNormalizeTime = 0f)

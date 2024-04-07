@@ -1,9 +1,9 @@
-using PJR;
 using System;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 using PJR.Input;
+using UnityEngine;
 
 public abstract class InputHandle
 {
@@ -52,7 +52,6 @@ public abstract class InputHandle
     public void OnActionCanceled(CallbackContext context)
     { 
     }
-
     public virtual void RegisterCallback(InputKey inputKey, Action<CallbackContext> performed, Action<CallbackContext> canceled)=> RegisterCallback(inputKey.strValue, null, performed, canceled);
     public virtual void RegisterCallback(InputKey inputKey, Action<CallbackContext> started, Action<CallbackContext> performed, Action<CallbackContext> canceled) => RegisterCallback(inputKey.strValue, started, performed, canceled);
     public virtual void RegisterCallback(string inputKeyStr, Action<CallbackContext> started, Action<CallbackContext> performed, Action<CallbackContext> canceled)
@@ -63,7 +62,6 @@ public abstract class InputHandle
         if (performed != null) inputAction.performed += performed;
         if (canceled != null) inputAction.canceled += canceled;
     }
-
     public virtual InputAction FindAction(InputKey intputKey, bool throwIfNotFound = false) => FindAction(intputKey.strValue, throwIfNotFound);
     public virtual InputAction FindAction(string intputKey, bool throwIfNotFound = false)
     {
@@ -87,5 +85,13 @@ public abstract class InputHandle
             return default(TValue);
         return inputAction.ReadValue<TValue>();
     }
-
+    public virtual Vector2 ReadValueVec2(string intputKey, bool normalize = false)
+    {
+        if (!inputKey2Action.TryGetValue(intputKey, out var inputAction))
+            return Vector2.zero;
+        Vector2 value = inputAction.ReadValue<Vector2>();
+        if (normalize)
+            value = value.normalized * Mathf.Min(value.magnitude, 1);
+        return value;
+    }
 }

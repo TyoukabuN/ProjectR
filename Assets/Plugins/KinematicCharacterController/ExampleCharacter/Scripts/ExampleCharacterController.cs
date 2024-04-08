@@ -285,7 +285,7 @@ namespace KinematicCharacterController.Examples
                 case CharacterState.Default:
                     {
                         // Ground movement
-                        if (Motor.GroundingStatus.IsStableOnGround)
+                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
                             float currentVelocityMagnitude = currentVelocity.magnitude;
 
@@ -325,6 +325,10 @@ namespace KinematicCharacterController.Examples
                                     if (Vector3.Dot(currentVelocityOnInputsPlane, addedVelocity) > 0f)
                                     {
                                         addedVelocity = Vector3.ProjectOnPlane(addedVelocity, currentVelocityOnInputsPlane.normalized);
+                                    }
+                                    else
+                                    {
+                                        Debug.Log(321);
                                     }
                                 }
 

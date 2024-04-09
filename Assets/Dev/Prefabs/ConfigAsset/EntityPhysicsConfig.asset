@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7b6b3fd91bc4e84ab3a0ce3ea31cbd3, type: 3}
-  m_Name: CharacterPhysicsConfig
+  m_Name: EntityPhysicsConfig
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,7 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  GroundedMoveSpeed: 3
-  AirGroundedSpeed: 3
+  MaxGroundedMoveSpeed: 3
+  GroundedMoveACCSpeed: 1
+  MaxAirMoveSpeed: 15
+  AirAccelerationSpeed: 15
   JumpUpSpeed: 5
   Gravity: {x: 0, y: -10, z: 0}

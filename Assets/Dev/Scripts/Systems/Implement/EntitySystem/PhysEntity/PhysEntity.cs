@@ -2,6 +2,8 @@
 using System;
 using UnityEngine;
 using UnityEditor;
+using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
 
 namespace PJR
 {
@@ -10,6 +12,9 @@ namespace PJR
     /// </summary>
     public partial class PhysEntity : MonoBehaviour
     {
+        [ShowInInspector]
+        [BoxGroup("逻辑引用"), ReadOnly] public LogicEntity logicEntity;
+
         [HideInInspector] public PlatformEffector2D platformEffector2D;
 
         [HideInInspector] public Vector3 floorPoint = Vector3.zero;

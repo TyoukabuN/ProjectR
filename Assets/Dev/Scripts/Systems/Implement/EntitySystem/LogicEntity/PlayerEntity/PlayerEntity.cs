@@ -2,30 +2,47 @@ using PJR.ScriptStates.Player;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
+using Sirenix.Utilities.Editor;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace PJR
 {
     public partial class PlayerEntity : LogicEntity
     {
+        public EntityPhysicsConfigAsset _physicsConfig;
+        public EntityPhysicsConfigAsset PhysicsConfig => _physicsConfig;
         public override void OnCreate(EntityContext context)
         { 
             var physEntity = EntitySystem.CreatePhysEntity();
 
             var assetNames = new AvatarAssetNames()
             {
-                modelName = "Assets/Art/Character/GlazyRunner/Prefabs/Avater_DefaultPlayer.prefab",
-                animationClipSet = "Assets/Art/Character/GlazyRunner/Animations/AnimatiomClipTransitionSet.asset"
+                modelName = "Avater_DefaultPlayer.prefab",
+                animationClipSet = "AnimatiomClipTransitionSet.asset"
             };
+
+            if (ResourceSystem.TryGetAsset("EntityPhysicsConfig.asset", out var loader))
+                _physicsConfig = loader.GetRawAsset<EntityPhysicsConfigAsset>();
+            else
+                LogSystem.LogError("PlayerEntity.OnCreate 加载 EntityPhysicsConfig 失败");
+
+            //
             physEntity.CreateAvatar(assetNames);
+            physEntity.logicEntity = this;
             physEntity.onAvatarLoadDone += OnAvatarLoadDone;
             physEntity.onDrawGizmos += OnDrawGizmos;
             //
             this.physEntity = physEntity;
             this.gameObject = physEntity.gameObject;
             this.transform = physEntity.transform;
+
+#if UNITY_EDITOR
+            GUIHelper.PingObject(physEntity);
+#endif
         }
         void OnAvatarLoadDone(PhysEntity physEntity)
         {

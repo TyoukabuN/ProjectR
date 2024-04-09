@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 using System.Linq;
 using Unity.VisualScripting;
 
@@ -10,20 +11,46 @@ namespace PJR
 {
     public class ResourceSystem : MonoSingletonSystem<ResourceSystem>
     {
-        protected static Dictionary<string,ResourceLoader> assetFullName2Loader = new Dictionary<string, ResourceLoader> ();
+        public static Dictionary<string,ResourceLoader> assetFullName2Loader = new Dictionary<string, ResourceLoader> ();
+
+        public static Dictionary<string,ResourceLoader> assetame2Loader = new Dictionary<string, ResourceLoader> ();
         public static ResourceLoader LoadAsset<T>(string assetFullName) where T : UnityEngine.Object 
         {
             return LoadAsset(assetFullName, typeof(T));
         }
         public static ResourceLoader LoadAsset(string assetFullName,Type assetType) 
         {
+            string assetName = Path.GetFileName(assetFullName);
 #if UNITY_EDITOR
-            var loader = new EditorResourceLoader(assetFullName, assetType);
-            assetFullName2Loader.Add(assetFullName, loader);
+            if (!assetame2Loader.TryGetValue(assetFullName, out var loader))
+            {
+                assetFullName2Loader.TryGetValue(assetFullName, out loader);
+            }
+
+            if (loader == null)
+            { 
+                loader = new EditorResourceLoader(assetFullName, assetType);
+                assetFullName2Loader[assetFullName] = loader;
+                assetame2Loader[assetName] = loader;
+            }
+
             return loader;
 #endif
             //TODO:LoadAsset
             return null;
+        }
+
+        /// <summary>
+        /// 尝试用名字获取loader
+        /// </summary>
+        /// <param name="assetName"></param>
+        /// <param name="loader"></param>
+        /// <returns>loader != null并且loader.isDone返回true</returns>
+        public static bool TryGetAsset(string assetName,out ResourceLoader loader)
+        {
+            if (assetame2Loader.TryGetValue(assetName, out loader) && loader.isDone)
+                return true;
+            return false;
         }
 
         private List<string> dones = new List<string> ();   
@@ -46,8 +73,10 @@ namespace PJR
                         if (loader.OnDone != null)
                         {
                             try { 
-                                loader.OnDone(loader);
-                            }catch (Exception e)
+                                loader.OnDone.Invoke(loader);
+                                loader.OnDone = null;
+                            }
+                            catch (Exception e)
                             {
                                 LogSystem.LogError($"[{nameof(ResourceSystem.ClearDones)}] {e.ToString()}");
                             }

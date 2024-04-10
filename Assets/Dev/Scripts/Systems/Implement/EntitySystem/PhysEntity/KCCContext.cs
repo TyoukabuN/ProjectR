@@ -1,6 +1,7 @@
 using KinematicCharacterController;
 using PJR.Input;
 using System.Collections.Generic;
+using System.Security.Permissions;
 using UnityEngine;
 
 namespace PJR
@@ -10,6 +11,8 @@ namespace PJR
         //refs
         public PhysEntity physEntity = null;
         public KinematicCharacterMotor motor = null;
+        //config
+        public EntityPhysicsConfigAsset physConfig = null;
         //input value
         public Vector2 inputAxi = Vector2.zero;
         public Vector3 direction = Vector2.one;
@@ -22,6 +25,10 @@ namespace PJR
         public Quaternion outputRotation = Quaternion.identity;
         //time
         public float deltaTime = 0f;
+
+        //field
+        public EntityPhysicsConfigAsset phys => physConfig;
+        
         public void ExecuteCommandBuffer()
         { 
         }

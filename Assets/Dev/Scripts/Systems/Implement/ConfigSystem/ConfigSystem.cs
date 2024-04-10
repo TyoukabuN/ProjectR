@@ -1,29 +1,21 @@
 using System;
 using System.Collections.Generic;
-using Hunter;
 using System.IO;
 using UnityEngine;
-using UnityEditor.VersionControl;
+using PJR.Profile;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace LS.Game
+namespace PJR
 {
-    public class ConfigSystem //: MonoSystem<ConfigSystem>
+    public class ConfigSystem : StaticSystem
     {
-        //protected override string SystemName => "ConfigSystem";
-
         private static string ResourceLocalPath = "ConfigAssets";
         
         public static Dictionary<string, ConfigAsset> name2configAsset;
         
-        // protected override void AwakeInternal()
-        // {
-            //LoadAllConfigAssets();
-        //}
-
         public static string GetAssetPath(string assetName)
         {
             return Path.Combine(ResourceLocalPath, assetName);
@@ -102,29 +94,6 @@ namespace LS.Game
             }
 #endif
             return asset;
-        }
-    }
-
-    public class Cost :System.IDisposable
-    {
-        public string name = String.Empty;
-        private DateTime beginStamp;
-
-        public Cost()
-        {
-            beginStamp = System.DateTime.Now;
-        }
-        public Cost(string name):this()
-        {
-            this.name = name;
-        }
-
-        public void Dispose()
-        {
-            if(string.IsNullOrEmpty(name))
-                Debug.Log($"[Cost]: {(System.DateTime.Now - beginStamp).TotalMilliseconds} ms");
-            else
-                Debug.Log($"[Cost][{name}]: {(System.DateTime.Now - beginStamp).TotalMilliseconds} ms");
         }
     }
 }

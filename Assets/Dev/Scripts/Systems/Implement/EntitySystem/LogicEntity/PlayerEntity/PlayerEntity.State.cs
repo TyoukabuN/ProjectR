@@ -26,6 +26,7 @@ namespace PJR
             var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move, true);
             context.inputAxi = inputAxi;
             context.direction = Quaternion.Euler(0, physEntity.transform.eulerAngles.y, 0) * new Vector3(inputAxi.x, 0, inputAxi.y);
+            context.physConfig = _physicsConfig;
 
             scriptStateMachine.CurrentState?.OnUpdateVelocity(context);
         }

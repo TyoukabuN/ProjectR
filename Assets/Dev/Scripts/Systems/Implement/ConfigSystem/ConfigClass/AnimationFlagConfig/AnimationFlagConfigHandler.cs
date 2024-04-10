@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.Serialization;
-using LS.Game;
+using PJR;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;

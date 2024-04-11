@@ -20,7 +20,7 @@ namespace PJR.ScriptStates
         public EntityContext _stateContext;
         public LogicEntity ownEntity;
 
-        public Dictionary<int, ScriptTransition[]> state2transition;
+        public Dictionary<int, List<ScriptTransition>> state2transition;
 
         public ScriptEntityStateMachine(LogicEntity entity) { 
             this.ownEntity = entity;    
@@ -59,7 +59,7 @@ namespace PJR.ScriptStates
             toState = 0;
             if (!state2transition.TryGetValue(eState, out var transitions))
                 return false;
-            for (int i = 0; i < transitions.Length; i++)
+            for (int i = 0; i < transitions.Count; i++)
             {
                 var state = states[eState];
                 if (state == null || !state.IsValid())

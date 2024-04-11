@@ -8,11 +8,7 @@ namespace PJR
 
         public AvatarAssetNames avatarAssetNames;
 
-        public Vector2 inputAxi;
-        public Vector2 mouseDelta;
-        public int runValue;
-        public int grounded = 1;
-        struct State { }
+        public int jumpCount = 0;
     }
 
     public class  AvatarAssetNames

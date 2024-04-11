@@ -28,5 +28,6 @@ MonoBehaviour:
   MaxAirMoveSpeed: 15
   AirAccelerationSpeed: 15
   JumpUpSpeed: 5
-  Gravity: {x: 0, y: -10, z: 0}
+  JumpableTime: 2
+  Gravity: {x: 0, y: -20, z: 0}
   SpeedDamping: 0.1

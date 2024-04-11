@@ -19,6 +19,11 @@ namespace PJR
         public Action<KCCContext> onUpdateVelocity;
         public Action<KCCContext> onUpdateRotation;
 
+        //
+        public virtual bool Grounded => motor.GroundingStatus.IsStableOnGround;
+        public virtual CharacterGroundingReport GroundingStatus => motor.GroundingStatus;
+
+
         protected virtual void Init_KCC(GameObject avatar)
         {
             rigidbody = gameObject.TryGetComponent<Rigidbody>();
@@ -88,6 +93,7 @@ namespace PJR
             var context = new KCCContext { 
                 physEntity = this,
                 inputVelocity = currentVelocity,
+                outputVelocity = currentVelocity,
                 motor = motor,
                 deltaTime = deltaTime,
             };

@@ -19,6 +19,7 @@ public class EntityPhysicsConfigAsset : SerializedScriptableObject
 
     [Title("跳跃")]
     [LabelText("跳跃上升速度")] public float JumpUpSpeed = 5f;
+    [LabelText("可跳跃次数")] public int JumpableTime = 2;
 
     [Title("其他")]
     [LabelText("重力加速度")] public Vector3 Gravity = new Vector3(0, -10f, 0);

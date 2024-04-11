@@ -13,7 +13,8 @@ namespace PJR.ScriptStates.Player
         {
             if (state.normalizeTime < canExitNormalizeTime)
                 return false;
-            return state.entity.entityContext.grounded > 0;
+            var grounded = state.entity.physEntity.motor.GroundingStatus.IsStableOnGround;
+            return !inverse ? grounded : !grounded;
         }
     }
     public class Trans_OnStateFinish : ScriptTransition<Trans_OnStateFinish>
@@ -47,6 +48,18 @@ namespace PJR.ScriptStates.Player
                 return !inverse ? isRun : !isRun;
             }
             return false;
+        }
+    }
+    public class Trans_Jumping : ScriptTransition<Trans_Jumping>
+    {
+        protected Trans_Jumping() { }
+        public override bool Check(EntityScriptState state)
+        {
+            var canJump = true;
+            canJump &= state.inputHandle.HasAnyFlag(RegisterKeys.Jump);
+            canJump &= state.entity.entityContext.jumpCount < state.entity.physicsConfig.JumpableTime;
+
+            return !inverse ? canJump : !canJump;
         }
     }
 

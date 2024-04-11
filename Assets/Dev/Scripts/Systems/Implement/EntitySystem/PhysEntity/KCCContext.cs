@@ -26,7 +26,7 @@ namespace PJR
         //time
         public float deltaTime = 0f;
         //field
-        public EntityPhysicsConfigAsset phys => physConfig;
+        public EntityPhysicsConfigAsset cfg => physConfig;
         public void ExecuteCommandBuffer()
         { 
         }

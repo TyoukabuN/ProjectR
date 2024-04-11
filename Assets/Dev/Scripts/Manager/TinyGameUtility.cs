@@ -213,34 +213,24 @@ namespace PJR
         }
         public static void ResetPlayerPosition(float floorCheckRange,Vector2 floorCheckOffset, Vector2 offset)
         {
-            if (TinyGameManager.instance == null)
-                return;
-            var player = TinyGameManager.instance.player;
-            if (player == null)
-                return;
+            //if (TinyGameManager.instance == null)
+            //    return;
+            //var player = TinyGameManager.instance.player;
+            //if (player == null)
+            //    return;
 
-            Vector2 pos = TinyGameManager.instance.cameraSpot.position;
+            //Vector2 pos = TinyGameManager.instance.cameraSpot.position;
 
-            player.ClearTweenerPosY();
+            //player.ClearTweenerPosY();
 
-            float dis = floorCheckRange;
-            Vector2 rayOrigin = new Vector2(player.transform.position.x, player.transform.position.y + dis) + floorCheckOffset;
-//            RaycastHit2D res = Physics2D.Raycast(rayOrigin, Vector3.down, dis * 1.1f, TBlockUtility.FloorLayer);
-//            if (res)
-//            {
-//#if UNITY_EDITOR
-//                Debug.DrawLine(rayOrigin, rayOrigin + (Vector2.down * dis * 1.1f), Color.blue, 1f);
-//#endif
-//                pos = res.point;
-//                pos += new Vector2(0, player.capsuleCollider2d.size.y / 2) + player.capsuleCollider2d.offset;
-//            }
+            //float dis = floorCheckRange;
+            //Vector2 rayOrigin = new Vector2(player.transform.position.x, player.transform.position.y + dis) + floorCheckOffset;
 
-            //
-            //偏移
-            pos += offset;
-            player.transform.position = pos;
-            //设置镜头点
-            TinyGameManager.instance.cameraSpot.position = player.transform.position;
+            ////偏移
+            //pos += offset;
+            //player.transform.position = pos;
+            ////设置镜头点
+            //TinyGameManager.instance.cameraSpot.position = player.transform.position;
         }
 
         public static void SetTranslationOffsetEx(this ParentConstraint parentConstraint, int index, Vector3 value)

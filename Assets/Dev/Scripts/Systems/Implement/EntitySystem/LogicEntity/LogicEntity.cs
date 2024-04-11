@@ -12,6 +12,7 @@ namespace PJR
         public InputHandle inputHandle;
         public EntityContext entityContext;
         public ScriptEntityStateMachine<EntityScriptState> scriptStateMachine;
+        public EntityPhysicsConfigAsset physicsConfig;
 
         public virtual void Init() { }
         public virtual void Update() { }

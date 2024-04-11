@@ -92,18 +92,18 @@ namespace PJR
             }
         }
         //entity
-        private TPlayerEntity m_player;
-        public TPlayerEntity player {
-            get {
-                if (!m_player && entityRoot) {
-                    foreach (var entity in entityRoot.GetComponentsInChildren<TPlayerEntity>()) {
-                        if (entity.gameObject.tag == "Player")
-                            m_player = entity;
-                    }
-                }
-                return m_player;
-            }
-        }
+        //private TPlayerEntity m_player;
+        //public TPlayerEntity player {
+        //    get {
+        //        if (!m_player && entityRoot) {
+        //            foreach (var entity in entityRoot.GetComponentsInChildren<TPlayerEntity>()) {
+        //                if (entity.gameObject.tag == "Player")
+        //                    m_player = entity;
+        //            }
+        //        }
+        //        return m_player;
+        //    }
+        //}
         [HideInInspector] public Transform cameraSpot = null;
         public float hangingCameraSpotYFactor = 1.5f;
 
@@ -143,17 +143,17 @@ namespace PJR
                 blockRootTail = blockRequire.Find("Tail");
                 blockRootOrigin = blockRequire.Find("Origin");
             }
-            if (entityRoot)
-            {
-                foreach (var entity in entityRoot.GetComponentsInChildren<TPlayerEntity>())
-                {
-                    if (entity.gameObject.tag == "Player") {
-                        m_player = entity ;
-                        if (blockRootOrigin)
-                            m_player.gameObject.transform.position = blockRootOrigin.position;
-                    }
-                }
-            }
+            //if (entityRoot)
+            //{
+            //    foreach (var entity in entityRoot.GetComponentsInChildren<TPlayerEntity>())
+            //    {
+            //        if (entity.gameObject.tag == "Player") {
+            //            m_player = entity ;
+            //            if (blockRootOrigin)
+            //                m_player.gameObject.transform.position = blockRootOrigin.position;
+            //        }
+            //    }
+            //}
             if (cameraRoot)
             {
                 cameraSpot = cameraRoot.Find("CameraSpot");
@@ -162,8 +162,8 @@ namespace PJR
                 virtualCameras = new List<CinemachineVirtualCamera>(cameraRoot.GetComponentsInChildren<CinemachineVirtualCamera>());
                 foreach (var camera in virtualCameras)
                 {
-                    if(player)
-                        camera.Follow = cameraSpot;
+                    //if(player)
+                    //    camera.Follow = cameraSpot;
                     VirtualCameraSwitcher.Register(camera);
                 }
                 cinemachineBrain = GetComponentInChildren<CinemachineBrain>();
@@ -286,8 +286,9 @@ namespace PJR
         public string CameraInitializeToRunning = "ZoomOutRunningCamera";
         public void CallEntitysOnStateChange(GameState state, GameState oldState)
         {
-            if(player != null)
-                player.OnStateChange(state, oldState);
+            //if(player != null)
+            //    player.OnStateChange(state, oldState);
+
             //if (platformBlockRoots == null)
             //    return;
             //foreach (var blockRoot in platformBlockRoots)
@@ -322,10 +323,10 @@ namespace PJR
         {
             get { return IsState(GameState.End); }
         }
-        public Vector3 GetPlayerPos()
-        {
-            return player.transform.position;
-        }
+        //public Vector3 GetPlayerPos()
+        //{
+        //    return player.transform.position;
+        //}
 
         // Update is called once per frame
         void FixedUpdate()

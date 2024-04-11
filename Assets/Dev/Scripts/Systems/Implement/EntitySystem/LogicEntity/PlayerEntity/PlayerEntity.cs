@@ -13,8 +13,7 @@ namespace PJR
 {
     public partial class PlayerEntity : LogicEntity
     {
-        public EntityPhysicsConfigAsset _physicsConfig;
-        public EntityPhysicsConfigAsset PhysicsConfig => _physicsConfig;
+        public EntityPhysicsConfigAsset PhysicsConfig => physicsConfig;
         public override void OnCreate(EntityContext context)
         { 
             var physEntity = EntitySystem.CreatePhysEntity();
@@ -26,7 +25,7 @@ namespace PJR
             };
 
             if (ResourceSystem.TryGetAsset("EntityPhysicsConfig.asset", out var loader))
-                _physicsConfig = loader.GetRawAsset<EntityPhysicsConfigAsset>();
+                physicsConfig = loader.GetRawAsset<EntityPhysicsConfigAsset>();
             else
                 LogSystem.LogError("PlayerEntity.OnCreate 加载 EntityPhysicsConfig 失败");
 
@@ -88,7 +87,7 @@ namespace PJR
             //builder.AppendLine(string.Format("<color=red>跳跃:{0}/{1}</color>", jumpCounter.ToString(), jumpableTimes.ToString()));
             //builder.AppendLine(string.Format("<color=red>着地:{0}</color>", Grounded.ToString()));
             //builder.AppendLine(string.Format("<color=red>移动输入:{0}</color>", inputAxi.ToString()));
-            //builder.AppendLine(string.Format("<color=red>速度:{0}</color>", _rigidbody == null ? 0 : _rigidbody.velocity.ToString()));
+            builder.AppendLine(string.Format("<color=red>速度:{0}</color>", physEntity == null ? 0 : physEntity.motor.BaseVelocity.ToString()));
             //builder.AppendLine(string.Format("<color=red>XZAnima:{0}</color>", inputAxi));
             if(scriptStateMachine != null)
                 builder.AppendLine(string.Format("<color=red>状态:{0}</color>", (EPlayerState)scriptStateMachine?.CurrentEState));

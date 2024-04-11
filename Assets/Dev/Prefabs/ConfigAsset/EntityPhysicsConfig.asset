@@ -21,9 +21,12 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  MaxGroundedMoveSpeed: 3
-  GroundedMoveACCSpeed: 1
+  MaxGroundedMoveSpeed: 2
+  GroundedMoveACCSpeed: 20
+  ACCMaxGroundedMoveSpeed: 5
+  ACCGroundedMoveACCSpeed: 20
   MaxAirMoveSpeed: 15
   AirAccelerationSpeed: 15
   JumpUpSpeed: 5
   Gravity: {x: 0, y: -10, z: 0}
+  SpeedDamping: 0.1

@@ -14,7 +14,7 @@ namespace PJR
 
             //get taraget speed
             float targetVelocity = ctx.phys.MaxGroundedMoveSpeed;
-            if (ctx.inputKeyActive.TryGetValue(RegisterKeys.Run, out var running) && running)
+            if (ctx.inputHandle.HasAnyFlag(RegisterKeys.Run))
                 targetVelocity = ctx.phys.ACCMaxGroundedMoveSpeed;
 
             if (output > ctx.phys.MaxGroundedMoveSpeed)

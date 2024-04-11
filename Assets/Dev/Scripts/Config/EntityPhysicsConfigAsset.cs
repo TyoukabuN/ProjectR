@@ -10,8 +10,8 @@ public class EntityPhysicsConfigAsset : SerializedScriptableObject
     [LabelText("地面最大移动速度")] public float MaxGroundedMoveSpeed = 3f;
     [LabelText("地面移动加速度")] public float GroundedMoveACCSpeed = 1f;
 
-    [LabelText("加速时地面最大移动速度")] public float ACCMaxGroundedMoveSpeed = 3f;
-    [LabelText("加速时地面移动加速度")] public float ACCGroundedMoveACCSpeed = 1f;
+    [LabelText("加速时地面最大移动速度")] public float ACCMaxGroundedMoveSpeed = 5f;
+    [LabelText("加速时地面移动加速度")] public float ACCGroundedMoveACCSpeed = 3f;
 
     [Title("空中移动")]
     [LabelText("空中最大移动速度")] public float MaxAirMoveSpeed = 15f;

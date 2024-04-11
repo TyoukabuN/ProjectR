@@ -77,6 +77,7 @@ namespace PJR
                 physEntity = this,
                 inputRotation = currentRotation,
                 motor = motor,
+                deltaTime = deltaTime,
             };
             if (onUpdateRotation != null)
                 onUpdateRotation.Invoke(context);
@@ -88,6 +89,7 @@ namespace PJR
                 physEntity = this,
                 inputVelocity = currentVelocity,
                 motor = motor,
+                deltaTime = deltaTime,
             };
             if (onUpdateVelocity != null)
                 onUpdateVelocity.Invoke(context);

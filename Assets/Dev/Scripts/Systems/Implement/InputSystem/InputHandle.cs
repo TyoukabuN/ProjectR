@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 using PJR.Input;
 using UnityEngine;
+using PJR;
 
 public abstract class InputHandle
 {
@@ -34,6 +35,19 @@ public abstract class InputHandle
 
     public InputHandle()
     { 
+    }
+
+    public virtual bool HasAnyFlag(InputKey inputKey)
+    {
+        return InputFlag.HasAny(inputKey);
+    }
+    public virtual bool HasAllFlag(InputKey inputKey)
+    {
+        return InputFlag.HasAll(inputKey);
+    }
+    public virtual bool HasKey(InputKey inputKey)
+    {
+        return _inputRecord.TryGetValue(inputKey,out var boolValue) && boolValue;
     }
     public virtual void Init(InputActionMap actionMap)
     {

@@ -69,7 +69,8 @@ namespace PJR.ScriptStates.Player
         public override void OnUpdateVelocity(KCCContext context)
         {
             base.OnUpdateVelocity(context);
-            context.outputVelocity = context.direction * 3f;
+
+            PlayerControlUtil.GroundedMove(context);
         }
         public override bool CanChange(int from)
         {

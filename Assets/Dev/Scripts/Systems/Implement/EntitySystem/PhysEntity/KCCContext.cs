@@ -14,9 +14,9 @@ namespace PJR
         //config
         public EntityPhysicsConfigAsset physConfig = null;
         //input value
+        public InputHandle inputHandle = null;
         public Vector2 inputAxi = Vector2.zero;
         public Vector3 direction = Vector2.one;
-        public Dictionary<InputKey,bool> inputKeyActive = new Dictionary<InputKey,bool>(3);
         //velocity
         public Vector3 inputVelocity = Vector3.zero;
         public Vector3 outputVelocity = Vector3.zero;
@@ -25,10 +25,8 @@ namespace PJR
         public Quaternion outputRotation = Quaternion.identity;
         //time
         public float deltaTime = 0f;
-
         //field
         public EntityPhysicsConfigAsset phys => physConfig;
-        
         public void ExecuteCommandBuffer()
         { 
         }

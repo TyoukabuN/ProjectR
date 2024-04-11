@@ -16,7 +16,22 @@ public abstract class InputHandle
     protected Dictionary<string,InputAction> inputKey2Action = new Dictionary<string, InputAction>();
     public Dictionary<string, InputAction> InputKey2Action => inputKey2Action;
 
+    private Flag256 _inputFlag;
+    /// <summary>
+    /// 记录输入的flag
+    /// 用flag会快点,但是不直观,每10000次,比dic快4,5倍
+    /// 但是两个都会记录
+    /// </summary>
+    public Flag256 InputFlag => _inputFlag;
+    private Dictionary<InputKey, bool> _inputRecord = new Dictionary<InputKey, bool>();
+    /// <summary>
+    /// 记录输入的dic
+    /// dic慢点但是最直观
+    /// </summary>
+    private Dictionary<InputKey, bool> InputRecord => _inputRecord;
+
     protected bool isInit = false;
+
     public InputHandle()
     { 
     }
@@ -36,21 +51,34 @@ public abstract class InputHandle
                 if (inputAction == null)
                     continue;
                 inputKey2Action[inputkey.Value.strValue] = inputAction;
+
+                inputAction.started += context => {
+                    OnActionStarted(context,inputkey.Value);
+                };
+                inputAction.performed += context => {
+                    OnActionPerformed(context,inputkey.Value);
+                };
+                inputAction.canceled += context => {
+                    OnActionCanceled(context,inputkey.Value);
+                };
             }
         }
     }
     public virtual void OnUpdate() { }
     public virtual void OnLateUpdate() { }
 
-    //TODO:后面所有的callback都走这里，找个地方存起来
-    public void OnActionStarted(CallbackContext context)
-    { 
+    public void OnActionStarted(CallbackContext context, InputKey inputkey)
+    {
     }
-    public void OnActionPerformed(CallbackContext context)
-    { 
+    public void OnActionPerformed(CallbackContext context, InputKey inputkey)
+    {
+        _inputFlag |= inputkey.flag;
+        _inputRecord[inputkey] = true;
     }
-    public void OnActionCanceled(CallbackContext context)
-    { 
+    public void OnActionCanceled(CallbackContext context, InputKey inputkey)
+    {
+        _inputFlag &= ~inputkey.flag;
+        _inputRecord[inputkey] = false;
     }
     public virtual void RegisterCallback(InputKey inputKey, Action<CallbackContext> performed, Action<CallbackContext> canceled)=> RegisterCallback(inputKey.strValue, null, performed, canceled);
     public virtual void RegisterCallback(InputKey inputKey, Action<CallbackContext> started, Action<CallbackContext> performed, Action<CallbackContext> canceled) => RegisterCallback(inputKey.strValue, started, performed, canceled);

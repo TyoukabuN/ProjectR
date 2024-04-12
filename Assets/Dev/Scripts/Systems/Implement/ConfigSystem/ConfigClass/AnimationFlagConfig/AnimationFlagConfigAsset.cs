@@ -11,23 +11,19 @@ using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 #endif
 
-[HelpURL("https://docs.qq.com/doc/DY3NUQm5obkFodG5p")]
 //[CreateAssetMenu(fileName = "AnimationFlagConfigAsset", menuName = "Configs/AnimationFlagConfigAsset", order = 8)]
 public class AnimationFlagConfigAsset : ConfigAsset<int, AnimationFlagConfigItem>
 {
 #if UNITY_EDITOR
     [OnInspectorGUI]
     [PropertyOrder(-1)]
-    public void OnInspectorGUI()
-    {
-        EditorGUILayout.HelpBox("不要在这个界面添加啊或者删除配置\n点击加号左边的按钮，进入List显示模式后，再进行添加和删除",MessageType.Warning);
-    }
     [MenuItem("Assets/Create/ConfigsAsset/AnimationFlagConfigAsset")]
     public static void CreateAnimationFlagConfigAsset()
     {
         string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
         if (AssetDatabase.IsValidFolder(assetPath))
         {
+            GameObject gameObject = new GameObject(assetPath);
             AnimationFlagConfigAsset asset = ScriptableObject.CreateInstance<AnimationFlagConfigAsset>();
             asset.items = new List<AnimationFlagConfigItem>();
             var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath(assetPath + "/AnimationFlagConfigAsset.asset");

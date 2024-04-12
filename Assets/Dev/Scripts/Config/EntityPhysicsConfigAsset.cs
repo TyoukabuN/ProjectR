@@ -2,8 +2,12 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PJR;
 
-[CreateAssetMenu(menuName = "配置/角色物理配置", fileName = "EntityPhysicsConfig")]
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class EntityPhysicsConfigAsset : SerializedScriptableObject
 {
     [Title("地面移动")]
@@ -24,4 +28,12 @@ public class EntityPhysicsConfigAsset : SerializedScriptableObject
     [Title("其他")]
     [LabelText("重力加速度")] public Vector3 Gravity = new Vector3(0, -10f, 0);
     [LabelText("速度衰减系数")] public float SpeedDamping = 0.1f;
+
+#if UNITY_EDITOR
+    [MenuItem("Assets/PJR/创建配置/实体物理数值配置")]
+    public static void CreateConstConfigAsset()
+    {
+        CSConfigHelper.CreateScriptableObject<EntityPhysicsConfigAsset>();
+    }
+#endif
 }

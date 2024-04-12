@@ -14,8 +14,12 @@ public abstract class ConfigAsset<IdType,ItemType> : ConfigAsset
 
     public int id;
 
-    [TableList]
-    [ListDrawerSettings(CustomAddFunction = "AddElement", CustomRemoveIndexFunction = "RemoveAt")]
+    [ListDrawerSettings(
+        CustomAddFunction = "AddElement", 
+        CustomRemoveIndexFunction = "RemoveAt",
+        OnBeginListElementGUI = "OnBeginListElementGUI",
+        OnEndListElementGUI = "OnEndListElementGUI"
+    )]
     public List<ItemType> items;
 
 #if UNITY_EDITOR
@@ -28,7 +32,18 @@ public abstract class ConfigAsset<IdType,ItemType> : ConfigAsset
         AssetDatabase.SaveAssets();
         AnimationFlagConfig.OnAssetDirty();
     }
+    public virtual void OnBeginListElementGUI(int index) { }
+    public virtual void OnEndListElementGUI(int index) { }
 #endif 
+}
+public abstract class TableListConfigAsset<ItemType> : ConfigAsset
+{
+    [TableList]
+    public List<ItemType> items;
+}
+public abstract class ListConfigAsset<ItemType> : ConfigAsset
+{
+    public List<ItemType> items;
 }
 
 public abstract class ConfigAsset : SerializedScriptableObject
@@ -38,41 +53,3 @@ public abstract class ConfigAsset : SerializedScriptableObject
         return true;
     }
 }
-
-[OdinSerializeType]
-public class IdConfigPair<TKey, TValue>
-{
-    [OdinSerialize] private TKey key;
-    [OdinSerialize] private TValue value;
-
-    public IdConfigPair(TKey key, TValue value)
-    {
-        this.key = key;
-        this.value = value;
-    }
-
-    public TKey Key
-    {
-        get => this.key;
-    }
-
-    public TValue Value
-    {
-        get => this.value;
-    }
-    
-    public override string ToString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.Append('[');
-        if ((object) this.Key != null)
-            sb.Append(this.Key.ToString());
-        sb.Append(", ");
-        if ((object) this.Value != null)
-            sb.Append(this.Value.ToString());
-        sb.Append(']');
-        return sb.ToString();
-    }
-}
-
-

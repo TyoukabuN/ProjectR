@@ -256,7 +256,6 @@ namespace Sirenix.OdinInspector.Editor
         public OdinMenuTree(bool supportsMultiSelect)
             : this(supportsMultiSelect, new OdinMenuStyle())
         {
-            Debug.Log("[New OdinMenuTree]");
         }
 
         /// <summary>

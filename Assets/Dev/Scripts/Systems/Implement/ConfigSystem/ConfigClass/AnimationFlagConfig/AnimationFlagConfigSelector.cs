@@ -57,7 +57,7 @@ public class AnimationFlagConfigSelector : OdinMenuEditorWindow
 
         UpdateSelection();
 
-        base.OnGUI();
+        base.OnImGUI();
          
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("刷新配置")) {
@@ -70,7 +70,6 @@ public class AnimationFlagConfigSelector : OdinMenuEditorWindow
     protected override OdinMenuTree BuildMenuTree()
     {
         tree = new OdinMenuTree();
-        tree.Config.SelectFirstWhenBuildTree = false;
         tree.Selection.SelectionChanged += OnItemSelectionChange;
         tree.Selection.SupportsMultiSelect = true;
 

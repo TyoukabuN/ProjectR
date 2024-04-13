@@ -100,7 +100,7 @@ public class AnimationFlagConfigHandler
     [OnInspectorInit]
     public void OnInspectorInit(InspectorProperty property)
     {
-        _host = property.GetFirstParentOfValue<ScriptableObject>(5);
+        //_host = property.GetFirstParentOfValue<ScriptableObject>(5);
 #if FLAG_DEBUG
         if (_host != null)
             Debug.Log($"[OnInspectorInit] {_host}");

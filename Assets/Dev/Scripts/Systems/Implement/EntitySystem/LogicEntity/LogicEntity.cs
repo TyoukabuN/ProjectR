@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PJR
 {
-    public abstract class LogicEntity 
+    public abstract class LogicEntity : INumericalControl
     {
         public PhysEntity physEntity;
         public GameObject gameObject;

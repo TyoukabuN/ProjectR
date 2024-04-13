@@ -7,7 +7,7 @@ namespace PJR
 {
     public class ExtraControl
     {
-        public float duration = 0.8f;
+        public float duration = 1f;
         public Action onBegin;
         public Action onComplete;
         public Action<ExtraControl> onUpdate;
@@ -40,11 +40,11 @@ namespace PJR
         }
         public virtual bool IsValid()
         {
-            if (IsResident())
+            if (IsPersistent())
                 return true;
             return counter > 0;
         }
-        public virtual bool IsResident()
+        public virtual bool IsPersistent()
         {
             return duration < 0;
         }
@@ -55,22 +55,19 @@ namespace PJR
             counter -= deltaTime;
             if (!IsValid())
                 counter = 0;
-            if (IsResident())
+            if (IsPersistent())
                 Reset();
             if (!IsValid()) OnComplete(); 
         }
         public virtual void OnUpdate()
         {
-            if (onUpdate != null)
+            try
             {
-                try
-                {
-                    onUpdate.Invoke(this);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
+                onUpdate?.Invoke(this);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
             }
         }
 
@@ -79,16 +76,13 @@ namespace PJR
             if (!m_onBeginTrigger)
                 return;
             m_onBeginTrigger = false;
-            if (onBegin != null)
+            try
             {
-                try
-                {
-                    onBegin.Invoke();
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
+                onBegin?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
             }
         }
         public virtual void OnComplete()
@@ -96,16 +90,13 @@ namespace PJR
             if (!m_onCompleteTrigger)
                 return;
             m_onCompleteTrigger = false;
-            if (onComplete != null)
+            try
             {
-                try
-                {
-                    onComplete.Invoke();
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
+                onComplete?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
             }
         }
     }

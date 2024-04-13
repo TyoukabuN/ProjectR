@@ -19,7 +19,7 @@ public class Test : MonoBehaviour
     }
 
     private LogicEntity player = null;
-    [Button("Test1")]
+    [Button("GenPlayer")]
     public void Test1()
     {
         //Process.Start(Application.persistentDataPath);
@@ -30,5 +30,22 @@ public class Test : MonoBehaviour
             player = null;
         }
         player = EntitySystem.CreatePlayer();
+    }
+
+    public string key = string.Empty;
+    public Vector3 Force = Vector3.zero;
+    public float Duration = 0.333f;
+    public float Damp = -1f;
+    [ShowInInspector]
+    public Easing.Ease easing = Easing.Ease.Linear;
+
+    [Button("AddForce")]
+    public void AddForce()
+    {
+        if (player != null)
+        {
+            var controller = player.AddExtraVelocity(key,Force, Duration, Damp);
+            controller.easeType = easing;
+        }
     }
 }

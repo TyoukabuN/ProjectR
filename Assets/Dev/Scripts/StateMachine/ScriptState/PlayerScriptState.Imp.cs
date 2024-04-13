@@ -154,6 +154,7 @@ namespace PJR.ScriptStates.Player
             if (requireJump)
             { 
                 requireJump = !requireJump;
+                entity.entityData.AddJumpCount();
                 PlayerControlFunc.EnterToAir(context);
                 phase = Phase.End;
             }
@@ -197,6 +198,7 @@ namespace PJR.ScriptStates.Player
             var moving = entity.inputHandle.ReadValueVec2(RegisterKeys.Move).magnitude > 0;
             animancerState = entity.physEntity.Animancer_Play(moving ? AnimationNameSet.JUMP_LAND_M : AnimationNameSet.JUMP_LAND_W);
             animancerState.Events.OnEnd = ToPhaseEnd;
+            entity.entityData.RevertJumpCount();
         }
         public override void OnChange(int from)
         {

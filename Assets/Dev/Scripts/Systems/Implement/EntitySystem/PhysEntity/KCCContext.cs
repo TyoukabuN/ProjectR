@@ -19,8 +19,7 @@ namespace PJR
         public Vector3 inputAxiVec3 = Vector3.zero;
         public Vector3 direction = Vector3.one;
         //velocity
-        public Vector3 inputVelocity = Vector3.zero;
-        public Vector3 outputVelocity = Vector3.zero;
+        public Vector3 currentVelocity = Vector3.zero;
         //quaternion
         public Quaternion inputRotation = Quaternion.identity;
         public Quaternion outputRotation = Quaternion.identity;

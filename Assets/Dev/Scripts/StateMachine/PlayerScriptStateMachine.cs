@@ -40,18 +40,7 @@ namespace PJR.ScriptStates.Player
                 ScriptTransition<Trans_OnWalking>.Get((int)EPlayerState.Stand).SetInverse(true),
             };
 
-            AddTransTo<Trans_Jumping>(EPlayerState.Jump_Begin,
-                new int[] {
-                    (int)EPlayerState.Stand,
-                    (int)EPlayerState.Walk,
-                    (int)EPlayerState.Running 
-                });
-            AddTransTo<Trans_OnGrounded>(EPlayerState.Jump_Falling,
-                new int[] {
-                    (int)EPlayerState.Stand,
-                    (int)EPlayerState.Walk,
-                    (int)EPlayerState.Running 
-                },true);
+
 
             states[(int)EPlayerState.Jump_Begin] = new JumpBeginState();
             state2transition[(int)EPlayerState.Jump_Begin] = new List<ScriptTransition>
@@ -73,6 +62,26 @@ namespace PJR.ScriptStates.Player
                 ScriptTransition<Trans_OnWalking>.Get((int)EPlayerState.Walk),
                 ScriptTransition<Trans_OnStateFinish>.Get((int)EPlayerState.Stand),
             };
+
+            //判断不在地面上的转换
+            AddTransTo<Trans_OnGrounded>(EPlayerState.Jump_Falling,
+                new int[] {
+                    (int)EPlayerState.Stand,
+                    (int)EPlayerState.Walk,
+                    (int)EPlayerState.Running,
+                    (int)EPlayerState.Jump_Land
+                }, true);
+
+            //可以进入跳跃状态的转换
+            AddTransTo<Trans_JumpInputed>(EPlayerState.Jump_Begin,
+            new int[] {
+                (int)EPlayerState.Stand,
+                (int)EPlayerState.Walk,
+                (int)EPlayerState.Running,
+                (int)EPlayerState.Jump_Falling,
+                (int)EPlayerState.Jump_Land,
+            });
+
             State_Change((int)EPlayerState.Stand);
         }
 

@@ -106,7 +106,7 @@ namespace PJR
                 value.target = target;
                 repo.Add(key, value);
             }
-            else if(!coverExist && !value.IsResident())
+            else if(!coverExist && !value.IsPersistent())
             {
                 duration += value.counter >= 0 ? value.counter : 0;
             }

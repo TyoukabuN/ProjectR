@@ -9,6 +9,15 @@ namespace PJR
         public AvatarAssetNames avatarAssetNames;
 
         public int jumpCount = 0;
+
+        public void AddJumpCount()
+        {
+            jumpCount++;
+        }
+        public void RevertJumpCount()
+        {
+            jumpCount = 0;
+        }
     }
 
     public class  AvatarAssetNames

@@ -16,24 +16,43 @@ namespace PJR
         /// <param name="ctx"></param>
         public static void GroundedMove(KCCContext ctx)
         {
-            var output = ctx.inputVelocity;
-            var currentVelocityMagnitude = ctx.inputVelocity.magnitude;
-            float targetVelocity = ctx.cfg.MaxGroundedMoveSpeed;
+            var output = ctx.currentVelocity;
+            //
+            //当前速度
+            var inputVelocity = ctx.currentVelocity;
+            //当前速度大小
+            var currentVelocityMagnitude = ctx.currentVelocity.magnitude;
+            //目标速度
+            float targetVelocityMagnitude = ctx.cfg.MaxGroundedMoveSpeed;
             if (ctx.inputHandle.HasAnyFlag(RegisterKeys.Run))
-                targetVelocity = ctx.cfg.ACCMaxGroundedMoveSpeed;
+                targetVelocityMagnitude = ctx.cfg.ACCMaxGroundedMoveSpeed;
+            //输入方向
             Vector3 inputAxiVec3 = ctx.inputAxiVec3;
-
+            bool AnyInputAxi = inputAxiVec3.magnitude > 0;
+            //当前有些地面法线
             Vector3 effectiveGroundNormal = ctx.motor.GroundingStatus.GroundNormal;
 
-            output = ctx.motor.GetDirectionTangentToSurface(output, effectiveGroundNormal) * currentVelocityMagnitude;
+            ////计算输入方向
+            var currentDir = ctx.motor.GetDirectionTangentToSurface(inputVelocity, effectiveGroundNormal);// * currentVelocityMagnitude;
+            Vector3 reorientedInputDir = ctx.motor.GetDirectionTangentToSurface(inputAxiVec3, effectiveGroundNormal);
 
-            Vector3 reorientedInput = ctx.motor.GetDirectionTangentToSurface(inputAxiVec3, effectiveGroundNormal);
+            Vector3 finalDir = Vector3.Lerp(currentDir, reorientedInputDir, 1f - Mathf.Exp(-ctx.cfg.OrientationSharpness * ctx.deltaTime));
 
-            Vector3 targetMovementVelocity = reorientedInput * targetVelocity;
 
-            output = Vector3.Lerp(output, targetMovementVelocity, 1f - Mathf.Exp(-15 * ctx.deltaTime));
-            ctx.outputVelocity = output;
+            ////计算速度大小
+            float finalVelocityMagnitude = currentVelocityMagnitude;
+            if (finalVelocityMagnitude > targetVelocityMagnitude)
+            {
+                //减速
+                finalVelocityMagnitude = Mathf.Lerp(currentVelocityMagnitude, targetVelocityMagnitude, 1f - Mathf.Exp(-ctx.cfg.SpeedDamping * ctx.deltaTime));
+            }
+            else if(AnyInputAxi)
+            {
+                //加速
+                finalVelocityMagnitude += ctx.deltaTime * ctx.cfg.GroundedMoveACCSpeed;
+            }
 
+            ctx.currentVelocity = finalDir * finalVelocityMagnitude;
             ////get taraget speed
             //if (ctx.inputHandle.HasAnyFlag(RegisterKeys.Run))
             //    targetVelocity = ctx.cfg.ACCMaxGroundedMoveSpeed;
@@ -58,7 +77,7 @@ namespace PJR
         /// <param name="ctx"></param>
         public static void EnterToAir(KCCContext ctx)
         {
-            var output = ctx.inputVelocity;
+            var output = ctx.currentVelocity;
             var motor = ctx.motor;
 
             float JumpUpSpeed = ctx.cfg.JumpUpSpeed;
@@ -70,7 +89,7 @@ namespace PJR
             }
 
             output += (jumpDirection * JumpUpSpeed) - Vector3.Project(output, motor.CharacterUp);
-            ctx.outputVelocity = output;
+            ctx.currentVelocity = output;
 
             motor.ForceUnground();
         }
@@ -81,7 +100,7 @@ namespace PJR
         /// <param name="ctx"></param>
         public static void OnAir(KCCContext ctx)
         {
-            var output = ctx.inputVelocity;
+            var output = ctx.currentVelocity;
             var cfg = ctx.cfg;
 
             if (ctx.inputAxiVec3.sqrMagnitude > 0f)
@@ -104,10 +123,6 @@ namespace PJR
                     {
                         addedVelocity = Vector3.ProjectOnPlane(addedVelocity, currentVelocityOnInputsPlane.normalized);
                     }
-                    else
-                    {
-                        Debug.Log(321);
-                    }
                 }
 
                 // Prevent air-climbing sloped walls
@@ -126,7 +141,7 @@ namespace PJR
             //重力
             output += cfg.Gravity * ctx.deltaTime;
             output *= (1f / (1f + (cfg.SpeedDamping * ctx.deltaTime)));
-            ctx.outputVelocity = output;
+            ctx.currentVelocity = output;
         }
     }
 }

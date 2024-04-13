@@ -29,7 +29,9 @@ namespace PJR
 
         [Title("其他")]
         [LabelText("重力加速度")] public Vector3 Gravity = new Vector3(0, -10f, 0);
-        [LabelText("速度衰减系数")] public float SpeedDamping = 0.1f;
+        [LabelText("速度衰减系数")] public float SpeedDamping = 10f;
+        [LabelText("转向系数")] public float OrientationSharpness = 10f;
+        
 
 #if UNITY_EDITOR
         [MenuItem("Assets/PJR/创建配置/实体物理数值配置")]

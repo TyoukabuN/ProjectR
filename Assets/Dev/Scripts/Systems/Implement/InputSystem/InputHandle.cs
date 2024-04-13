@@ -25,6 +25,7 @@ namespace PJR
         /// 记录输入的flag
         /// 用flag会快点,但是不直观,每10000次,比dic快4,5倍
         /// 但是两个都会记录
+        /// 这里的记录相当于GetKey，但是GetKeyDown之类的只关注这一帧是否按下某个key的需求，还需要别的处理
         /// </summary>
         public Flag256 InputFlag => _inputFlag;
         private Dictionary<InputKey, bool> _inputRecord = new Dictionary<InputKey, bool>();

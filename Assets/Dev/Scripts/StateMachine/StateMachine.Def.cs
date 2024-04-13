@@ -50,13 +50,13 @@ namespace PJR.ScriptStates.Player
             return false;
         }
     }
-    public class Trans_Jumping : ScriptTransition<Trans_Jumping>
+    public class Trans_JumpInputed : ScriptTransition<Trans_JumpInputed>
     {
-        protected Trans_Jumping() { }
+        protected Trans_JumpInputed() { }
         public override bool Check(EntityScriptState state)
         {
             var canJump = true;
-            canJump &= state.inputHandle.HasAnyFlag(RegisterKeys.Jump);
+            canJump &= state.inputHandle.GetKeyDown(RegisterKeys.Jump);
             canJump &= state.entity.entityData.jumpCount < state.entity.physicsConfig.JumpableTime;
 
             return !inverse ? canJump : !canJump;

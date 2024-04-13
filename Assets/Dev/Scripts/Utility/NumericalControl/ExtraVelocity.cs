@@ -6,8 +6,8 @@ namespace PJR
 
     public class ExtraVelocity: ExtraControl
     {
-        public Vector2 force;
-        public Vector2 forceDamped;
+        public Vector3 force;
+        private Vector3 _forceDamped;
         /// <summary>
         /// 衰减
         ///[=-1 ] 时 使用counterNormalize作为衰减系数 linear
@@ -16,40 +16,40 @@ namespace PJR
         /// </summary>
         private float damp = 0f;
 
-        public Vector2 velocity
+        public Vector3 velocity
         {
             get
             {
                 if (!IsValid())
-                    return Vector2.zero;
+                    return Vector3.zero;
                 if (damp <= -1)
                     return force * counterNormalize;
                 if (damp == 0)
                     return force;
-                return forceDamped;
+                return _forceDamped;
             }
         }
-        public ExtraVelocity(Vector2 force, float duration, float damp):base(duration)
+        public ExtraVelocity(Vector3 force, float duration, float damp):base(duration)
         {
             Init(force, duration, damp);
         }
-        public void Init(Vector2 force, float duration, float damp)
+        public void Init(Vector3 force, float duration, float damp)
         {
             base.Init(duration);
             this.force = force;
             this.damp = damp;
-            this.forceDamped = force;
+            this._forceDamped = force;
         }
         public override void Reset()
         {
             base.Reset();
-            this.forceDamped = force;
+            this._forceDamped = force;
         }
 
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
-            forceDamped -= forceDamped * damp * deltaTime;
+            _forceDamped -= _forceDamped * damp * deltaTime;
         }
     }
     public static class ExtraVelocityExtension
@@ -95,15 +95,21 @@ namespace PJR
             m_MapDict.Remove(obj);
         }
 
-        public static void AddExtraVelocity(this INumericalControl target, Vector2 force, float duration, float damp = -1)
+        public static void AddExtraVelocity(this INumericalControl target, Vector3 force, float duration, float damp = -1)
         {
             var repo = RegisterExtraVelocity(target);
             if (repo == null)
                 return;
             repo.Add(new ExtraVelocity(force, duration, damp));
         }
-        public static ExtraVelocity ExtraVelocityMapAdd(this INumericalControl target, string key, Vector2 force, float duration, float damp = -1, bool coverExist = true)
+        public static ExtraVelocity AddExtraVelocity(this INumericalControl target, string key, Vector3 force, float duration, float damp = -1, bool coverExist = true)
         {
+            return target.AddExtraVelocityWithKey(key, force, duration, damp, coverExist);
+        }
+        public static ExtraVelocity AddExtraVelocityWithKey(this INumericalControl target, string key, Vector3 force, float duration, float damp = -1, bool coverExist = true)
+        {
+            if (string.IsNullOrEmpty(key))
+                return null;
             var repo = RegisterExtraVelocityMap(target);
             if (repo == null)
                 return null;
@@ -122,12 +128,17 @@ namespace PJR
             return value;
         }
 
-        public static Vector2 UpdateExtraVelocity(this INumericalControl target, float deltaTime = 0)
+        public static Vector3 UpdateExtraVelocity(this INumericalControl target, float deltaTime, out Vector3 vel)
+        {
+            vel = UpdateExtraVelocity(target, deltaTime);
+            return vel;
+        }
+        public static Vector3 UpdateExtraVelocity(this INumericalControl target, float deltaTime = 0)
         {
             var list = RegisterExtraVelocity(target);
             var map = RegisterExtraVelocityMap(target);
 
-            Vector2 extendVelocity = Vector2.zero;
+            Vector3 extendVelocity = Vector3.zero;
 
             if (list != null)
             { 
@@ -173,6 +184,7 @@ namespace PJR
 
             return extendVelocity;
         }
+
         public static void ExtendVelocityMapRemove(this INumericalControl target, string key)
         {
             var repo = RegisterExtraVelocityMap(target);

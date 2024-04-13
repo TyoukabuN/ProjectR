@@ -77,17 +77,18 @@ namespace PJR
         }
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
         {
+
             var context = new KCCContext { 
                 physEntity = this,
-                inputVelocity = currentVelocity,
-                outputVelocity = currentVelocity,
+                currentVelocity = currentVelocity,
                 motor = motor,
                 deltaTime = deltaTime,
             };
+
             if (onUpdateVelocity != null)
                 onUpdateVelocity.Invoke(context);
 
-            currentVelocity = context.outputVelocity;
+            currentVelocity = context.currentVelocity;
         }
         public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
         {

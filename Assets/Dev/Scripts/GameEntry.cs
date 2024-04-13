@@ -11,19 +11,20 @@ public class GameEntry : MonoBehaviour
         "Assets/Art/Character/GlazyRunner/Prefabs/Avater_DefaultPlayer.prefab",
         "Assets/Art/Character/GlazyRunner/Animations/AnimatiomClipTransitionSet.asset",
         "Assets/Dev/Prefabs/ConfigAsset/EntityPhysicsConfig.asset",
+        "Assets/Dev/Prefabs/ConfigAsset/EntityAttributeConfigAsset.asset",
     };
     void Start()
     {
-        StartCoroutine(Preload());
+        ResourceSystem.instance.Init();
+        StartCoroutine(PreloadGameResource());
     }
 
     void InitGame()
     {
-        ResourceSystem.instance.Init();
         InputSystem.instance.Init();
     }
 
-    IEnumerator Preload()
+    IEnumerator PreloadGameResource()
     {
         for (int i = 0; i < PreloadAssets.Length; i++)
         { 

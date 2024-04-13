@@ -16,8 +16,8 @@ namespace PJR
 
         public List<ICharacterController> ICharacterControllers;
 
-        public Action<KCCContext> onUpdateVelocity;
-        public Action<KCCContext> onUpdateRotation;
+        public Action<KCContext> onUpdateVelocity;
+        public Action<KCContext> onUpdateRotation;
 
         //
         public virtual bool Grounded => motor.GroundingStatus.IsStableOnGround;
@@ -78,7 +78,7 @@ namespace PJR
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
         {
 
-            var context = new KCCContext { 
+            var context = new KCContext { 
                 physEntity = this,
                 currentVelocity = currentVelocity,
                 motor = motor,
@@ -92,7 +92,7 @@ namespace PJR
         }
         public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
         {
-            var context = new KCCContext
+            var context = new KCContext
             {
                 physEntity = this,
                 inputRotation = currentRotation,

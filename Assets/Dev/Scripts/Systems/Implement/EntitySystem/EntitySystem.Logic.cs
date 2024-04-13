@@ -30,6 +30,12 @@ namespace PJR
             return player;
         }
 
+
+        public static List<LogicEntity> GetEntitys()
+        {
+            return null;
+        }
+
         /// <summary>
         /// 用id获取已生成的实体
         /// </summary>

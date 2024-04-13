@@ -14,7 +14,7 @@ namespace PJR
         /// 地面上移动
         /// </summary>
         /// <param name="ctx"></param>
-        public static void GroundedMove(KCCContext ctx)
+        public static void GroundedMove(KCContext ctx)
         {
             var output = ctx.currentVelocity;
             //
@@ -75,7 +75,7 @@ namespace PJR
         /// 进入空中
         /// </summary>
         /// <param name="ctx"></param>
-        public static void EnterToAir(KCCContext ctx)
+        public static void EnterToAir(KCContext ctx)
         {
             var output = ctx.currentVelocity;
             var motor = ctx.motor;
@@ -98,7 +98,7 @@ namespace PJR
         /// 空中移动
         /// </summary>
         /// <param name="ctx"></param>
-        public static void OnAir(KCCContext ctx)
+        public static void OnAir(KCContext ctx)
         {
             var output = ctx.currentVelocity;
             var cfg = ctx.cfg;

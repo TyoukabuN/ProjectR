@@ -19,8 +19,8 @@ namespace PJR.ScriptStates
 
         #region Entity Collision
         public virtual void OnGrounded() { }
-        public virtual void OnUpdateVelocity(KCCContext context) { }
-        public virtual void OnUpdateRotation(KCCContext context) { }
+        public virtual void OnUpdateVelocity(KCContext context) { }
+        public virtual void OnUpdateRotation(KCContext context) { }
         #endregion
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace PJR
 { 
-    public class KCCContext 
+    public class KCContext 
     {
         //refs
         public PhysEntity physEntity = null;

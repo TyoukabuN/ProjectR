@@ -39,7 +39,7 @@ namespace PJR.ScriptStates.Player
         {
             return true;
         }
-        public override void OnUpdateVelocity(KCCContext context)
+        public override void OnUpdateVelocity(KCContext context)
         {
             base.OnUpdateVelocity(context);
 
@@ -72,7 +72,7 @@ namespace PJR.ScriptStates.Player
                 entity.physEntity.Animancer_Play(AnimationNameSet.IDLE);
             }
         }
-        public override void OnUpdateVelocity(KCCContext context)
+        public override void OnUpdateVelocity(KCContext context)
         {
             base.OnUpdateVelocity(context);
 
@@ -112,7 +112,7 @@ namespace PJR.ScriptStates.Player
         {
             return true;
         }
-        public override void OnUpdateVelocity(KCCContext context)
+        public override void OnUpdateVelocity(KCContext context)
         {
             base.OnUpdateVelocity(context);
 
@@ -147,7 +147,7 @@ namespace PJR.ScriptStates.Player
 
             return true;
         }
-        public override void OnUpdateVelocity(KCCContext context)
+        public override void OnUpdateVelocity(KCContext context)
         {
             base.OnUpdateVelocity(context);
 
@@ -177,7 +177,7 @@ namespace PJR.ScriptStates.Player
 
             return true;
         }
-        public override void OnUpdateVelocity(KCCContext context)
+        public override void OnUpdateVelocity(KCContext context)
         {
             base.OnUpdateVelocity(context);
 

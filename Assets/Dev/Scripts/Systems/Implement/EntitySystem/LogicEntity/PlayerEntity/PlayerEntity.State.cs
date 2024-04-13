@@ -25,7 +25,7 @@ namespace PJR
             physEntity.onUpdateRotation -= OnUpdateRotation;
         }
 
-        protected void OnUpdateVelocity(KCCContext context)
+        protected void OnUpdateVelocity(KCContext context)
         {
             if (scriptStateMachine == null) 
                 return;
@@ -46,7 +46,7 @@ namespace PJR
                 context.motor.ForceUnground();
             context.currentVelocity += extraVec3;
         }
-        protected void OnUpdateRotation(KCCContext context)
+        protected void OnUpdateRotation(KCContext context)
         {
             if (scriptStateMachine == null) 
                 return;

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6de3e4cd6bbe76e41b987936de9e8925, type: 3}
-  m_Name: ConfigAssetType
+  m_Script: {fileID: 11500000, guid: fca64f12666670d4081c16df0b78e9d5, type: 3}
+  m_Name: EntityAttributeConfigAsset
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,4 +21,10 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  items: []
+  PlayerAtk: 0
+  PlayerAtkInterval: 0
+  HitStunTime: 0
+  RepelTime: 0
+  BlowUpTime: 0
+  GetUpImbaTime: 0
+  ImbaTime: 0

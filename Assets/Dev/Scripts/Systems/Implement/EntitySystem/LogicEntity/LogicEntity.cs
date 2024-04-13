@@ -4,20 +4,20 @@ using UnityEngine;
 
 namespace PJR
 {
-    public abstract class LogicEntity : IDisposable
+    public abstract class LogicEntity 
     {
         public PhysEntity physEntity;
         public GameObject gameObject;
         public Transform transform;
         public InputHandle inputHandle;
-        public EntityContext entityContext;
+        public EntityContext entityData;
         public ScriptEntityStateMachine<EntityScriptState> scriptStateMachine;
         public EntityPhysicsConfigAsset physicsConfig;
 
         public virtual void Init() { }
         public virtual void Update() { }
         public virtual void LateUpdate() { }
-        public virtual void Dispose() { }
+        public virtual void Destroy() { }
         public virtual void OnCreate(EntityContext context) { }
     }
 }

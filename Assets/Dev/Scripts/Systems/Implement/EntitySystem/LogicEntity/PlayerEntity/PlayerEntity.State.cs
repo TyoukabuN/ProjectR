@@ -18,15 +18,23 @@ namespace PJR
             scriptStateMachine?.Update();
         }
 
+        protected void Destroy_State()
+        {
+            physEntity.onUpdateVelocity -= OnUpdateVelocity;
+            physEntity.onUpdateRotation -= OnUpdateRotation;
+        }
+
         protected void OnUpdateVelocity(KCCContext context)
         {
             if (scriptStateMachine == null) 
                 return;
 
-            var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move, true);
+            var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move);
             context.inputAxi = inputAxi;
+            context.inputAxiVec3 = Vector3.ClampMagnitude(new Vector3(inputAxi.x, 0f, inputAxi.y), 1f);
+            context.direction = context.inputAxiVec3;
             context.inputHandle = inputHandle;
-            context.direction = Quaternion.Euler(0, physEntity.transform.eulerAngles.y, 0) * new Vector3(inputAxi.x, 0, inputAxi.y);
+            //context.direction = Quaternion.Euler(0, physEntity.transform.eulerAngles.y, 0) * new Vector3(inputAxi.x, 0, inputAxi.y);
             context.physConfig = physicsConfig;
 
             scriptStateMachine.CurrentState?.OnUpdateVelocity(context);

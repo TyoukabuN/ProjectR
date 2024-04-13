@@ -19,6 +19,7 @@ namespace PJR
             { typeof(IntConstConfig).FullName,"Int常数配置"},
             { typeof(FloatConstConfig).FullName,"Float常数配置"},
             { typeof(CurveConstConfig).FullName,"曲线常数配置"},
+            { typeof(EntityAttributeConfigAsset).FullName,"实体属性配置"},
         };
     }
 }

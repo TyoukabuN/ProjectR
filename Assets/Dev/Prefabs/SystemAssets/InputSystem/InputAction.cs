@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public partial class @InputActionWrap321: IInputActionCollection2, IDisposable
+public partial class @InputActionWrap321: IInputActionCollection2
 {
     public InputActionAsset asset { get; }
     public @InputActionWrap321()
@@ -201,7 +201,7 @@ public partial class @InputActionWrap321: IInputActionCollection2, IDisposable
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
     }
 
-    public void Dispose()
+    public void Destroy()
     {
         UnityEngine.Object.Destroy(asset);
     }

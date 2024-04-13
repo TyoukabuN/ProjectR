@@ -13,7 +13,7 @@ namespace PJR
     {
 
 #if UNITY_EDITOR
-        [MenuItem("Assets/PJR/创建配置/常数配置")]
+        [MenuItem("Assets/PJR/创建配置/混合常数配置")]
         public static void CreateConstConfigAsset()
         {
             CSConfigHelper.CreateTableListConfigAsset<MixConstConfig, MixConstConfigItem>();

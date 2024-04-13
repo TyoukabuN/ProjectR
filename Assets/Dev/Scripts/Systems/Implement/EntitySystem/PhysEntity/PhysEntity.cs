@@ -20,6 +20,8 @@ namespace PJR
         [HideInInspector] public Vector3 floorPoint = Vector3.zero;
         [HideInInspector] public int lastFloorObject = -1;
 
+        public int physEntityId = -1;
+
         public bool IsVaild()
         {
             //if (TinyGameManager.instance == null)
@@ -67,6 +69,10 @@ namespace PJR
             OnFixedUpdateBegin();
         }
 
+        public virtual void Destroy()
+        { 
+            animancer.Stop();
+        }
 
         [HideInInspector] public bool m_onFixedUpdateBeginTrigger = true;
         [HideInInspector] public Action onFixedUpdateBegin;

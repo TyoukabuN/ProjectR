@@ -11,7 +11,7 @@ namespace PJR
         private static Dictionary<int, LogicEntity> id2LogicEntity = new Dictionary<int, LogicEntity>();
 
         /// <summary>
-        /// 创建Player实体
+        /// 鍒涘缓Player瀹炰綋
         /// </summary>
         /// <param name="assetFullName"></param>
         /// <returns></returns>
@@ -23,7 +23,7 @@ namespace PJR
             context.logicEntityID = GetGUID();
             //
             PlayerEntity player = new PlayerEntity();
-            player.entityContext = context; 
+            player.entityData = context; 
             player.OnCreate(context);
 
             id2LogicEntity[context.logicEntityID] = player;
@@ -31,7 +31,7 @@ namespace PJR
         }
 
         /// <summary>
-        /// 用id获取已生成的实体
+        /// 鐢╥d鑾峰彇宸茬敓鎴愮殑瀹炰綋
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -41,6 +41,19 @@ namespace PJR
                 return null;
             id2LogicEntity.TryGetValue(id, out var entity);
             return entity;
+        }
+
+        public static bool DestroyEntity(int id)
+        {
+            return DestroyEntity(GetEntity(id));
+        }
+        public static bool DestroyEntity(LogicEntity logicEntity) 
+        { 
+            if(logicEntity == null)
+                return false;
+            logicEntity.Destroy();
+            id2LogicEntity.Remove(logicEntity.entityData.logicEntityID);
+            return true;
         }
 
         protected static int GetGUID()

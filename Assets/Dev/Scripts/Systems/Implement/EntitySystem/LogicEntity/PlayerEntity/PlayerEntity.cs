@@ -66,6 +66,16 @@ namespace PJR
             LateUpdate_Input();
         }
 
+        public override void Destroy()
+        {
+            base.Destroy();
+
+            Destroy_Input();
+            Destroy_State();
+
+            EntitySystem.DestroyPhysEntity(physEntity);
+        }
+
 #if UNITY_EDITOR
         private GUIStyle GizmosGUIStyle = null;
         StringBuilder builder;

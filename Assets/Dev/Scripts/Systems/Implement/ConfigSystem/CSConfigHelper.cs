@@ -17,7 +17,7 @@ namespace PJR
             {
                 ConfigAssetType asset = ScriptableObject.CreateInstance<ConfigAssetType>();
                 asset.items = new List<ItemType>();
-                var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"{assetPath}/{nameof(ConfigAssetType)}.asset");
+                var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"{assetPath}/{typeof(ConfigAssetType).Name}.asset");
                 UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
             }
         }
@@ -28,18 +28,18 @@ namespace PJR
             {
                 ConfigAssetType asset = ScriptableObject.CreateInstance<ConfigAssetType>();
                 asset.items = new List<ItemType>();
-                var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"{assetPath}/{nameof(ConfigAssetType)}.asset");
+                var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"{assetPath}/{typeof(ConfigAssetType).Name}.asset");
                 UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
             }
         }
 
-        public static void CreateScriptableObject<Type>() where Type : SerializedScriptableObject
+        public static void CreateScriptableObject<ConfigAssetType>() where ConfigAssetType : SerializedScriptableObject
         {
             string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
             if (AssetDatabase.IsValidFolder(assetPath))
             {
-                Type asset = ScriptableObject.CreateInstance<Type>();
-                var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"{assetPath}/{nameof(Type)}.asset");
+                ConfigAssetType asset = ScriptableObject.CreateInstance<ConfigAssetType>();
+                var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"{assetPath}/{typeof(ConfigAssetType).Name}.asset");
                 UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
             }
         }

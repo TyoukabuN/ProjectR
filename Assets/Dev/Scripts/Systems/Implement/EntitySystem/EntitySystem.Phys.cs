@@ -12,7 +12,7 @@ namespace PJR
         private static Transform s_EntityRoot;
 
         /// <summary>
-        /// 物理实体在根节点
+        /// 鐗╃悊瀹炰綋鍦ㄦ牴鑺傜偣
         /// </summary>
         public static Transform EntityRoot
         {
@@ -38,6 +38,7 @@ namespace PJR
 
             gobj.transform.SetParent(EntityRoot, false);
 
+            entity.physEntityId = guid;
             id2PhysEntity[guid] = entity;
             return entity;
         }
@@ -47,6 +48,24 @@ namespace PJR
             id2PhysEntity.TryGetValue(id, out var entity);
             return entity;
         }
+        public static bool DestroyPhysEntity(int id)
+        {
+            return DestroyPhysEntity(GetPhysEntity(id));
+        }
+        public static bool DestroyPhysEntity(PhysEntity entity)
+        {
+            if (entity == null)
+                return false;
+
+            id2PhysEntity.Remove(entity.physEntityId);
+
+            entity.Destroy();
+
+            GameObject.DestroyImmediate(entity.gameObject);
+
+            return true;
+        }
+
         protected static int GetGUID_Phys()
         {
             return ++s_guid_phys;

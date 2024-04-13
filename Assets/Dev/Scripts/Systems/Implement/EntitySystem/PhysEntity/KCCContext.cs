@@ -16,7 +16,8 @@ namespace PJR
         //input value
         public InputHandle inputHandle = null;
         public Vector2 inputAxi = Vector2.zero;
-        public Vector3 direction = Vector2.one;
+        public Vector3 inputAxiVec3 = Vector3.zero;
+        public Vector3 direction = Vector3.one;
         //velocity
         public Vector3 inputVelocity = Vector3.zero;
         public Vector3 outputVelocity = Vector3.zero;

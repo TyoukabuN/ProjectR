@@ -18,14 +18,17 @@ public class Test : MonoBehaviour
         LogSystem.Log(Application.streamingAssetsPath);
     }
 
+    private LogicEntity player = null;
     [Button("Test1")]
     public void Test1()
     {
         //Process.Start(Application.persistentDataPath);
         //Debug.Log(GUI.skin.FindStyle("ToolbarSeachTextField"));
-        EntitySystem.CreatePlayer();
+        if (player != null)
+        {
+            EntitySystem.DestroyEntity(player);
+            player = null;
+        }
+        player = EntitySystem.CreatePlayer();
     }
-
-  
-
 }

@@ -57,7 +57,7 @@ namespace PJR.ScriptStates.Player
         {
             var canJump = true;
             canJump &= state.inputHandle.HasAnyFlag(RegisterKeys.Jump);
-            canJump &= state.entity.entityContext.jumpCount < state.entity.physicsConfig.JumpableTime;
+            canJump &= state.entity.entityData.jumpCount < state.entity.physicsConfig.JumpableTime;
 
             return !inverse ? canJump : !canJump;
         }

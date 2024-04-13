@@ -13,6 +13,10 @@ namespace PJR
                 return;
             }
         }
+        protected void Destroy_Input()
+        { 
+            inputHandle.Destroy();
+        }
         protected void Update_Input()
         {
             inputHandle?.OnUpdate();

@@ -6,7 +6,7 @@ using UnityEngine;
 
 [System.Serializable]
 [InlineEditor]
-public class TestDataItem : SerializedScriptableObject
+public class TestDataItem : ScriptableObject
 {
     [LabelText("ID")]
     public int id;

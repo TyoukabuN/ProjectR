@@ -27,18 +27,14 @@ namespace PJR
         public static void LogWarning(object content) => LogWarning(content.ToString());
         public static void LogError(object content) => LogError(content.ToString());
 
-        public static void Log(string content)
-        {
-            Debug.Log(LogWithTag(content, TAG_COMMON_LOG));
-        }
-        public static void LogWarning(string content)
-        {
-            Debug.LogWarning(LogWithTag(content, TAG_WARNING_LOG));
-        }
-        public static void LogError(string content)
-        {
-            Debug.LogError(LogWithTag(content, TAG_ERROR_LOG));
-        }
+        public static void Log(string tag,string content)=> Debug.Log(LogWithTag(content, TAG_COMMON_LOG, tag));
+        public static void LogWarning(string tag,string content)=> Debug.LogWarning(LogWithTag(content, TAG_COMMON_LOG, tag));
+        public static void LogError(string tag,string content)=> Debug.LogError(LogWithTag(content, TAG_COMMON_LOG, tag));
+
+        public static void Log(string content) => Debug.Log(LogWithTag(content, TAG_COMMON_LOG));
+        public static void LogWarning(string content) => Debug.LogWarning(LogWithTag(content, TAG_COMMON_LOG));
+        public static void LogError(string content) => Debug.LogError(LogWithTag(content, TAG_COMMON_LOG));
+
         public static string LogWithTag(string content, params string[] tag)
         {
             BeginEdit();

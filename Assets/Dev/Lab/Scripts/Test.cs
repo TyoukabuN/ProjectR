@@ -5,7 +5,7 @@ using UnityEngine;
 using PJR;
 using static UnityEditor.Progress;
 using UnityEditor;
-
+using JetBrains.Annotations;
 
 public class Test : MonoBehaviour
 {
@@ -16,6 +16,11 @@ public class Test : MonoBehaviour
         LogSystem.Log(Application.persistentDataPath);
         LogSystem.Log(Application.consoleLogPath);
         LogSystem.Log(Application.streamingAssetsPath);
+    }
+    [Button("GetComp")]
+    public void Test321()
+    {
+        Debug.Log(gameObject.GetComponentInChildren<Collider>());
     }
 
     private LogicEntity player = null;

@@ -1,10 +1,11 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 [InlineProperty]
 [System.Serializable]
-public class AnimationFlagConfigItem : SerializedScriptableObject
+public class AnimationFlagConfigItem : ScriptableObject
 {
     [ValidateInput("id_valid", "动画id需要大于0, 主手武器id需要是10000的倍数")]
     [LabelText("id")]

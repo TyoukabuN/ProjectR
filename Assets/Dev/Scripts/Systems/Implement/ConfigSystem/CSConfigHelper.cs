@@ -33,7 +33,7 @@ namespace PJR
             }
         }
 
-        public static void CreateScriptableObject<ConfigAssetType>() where ConfigAssetType : SerializedScriptableObject
+        public static void CreateScriptableObject<ConfigAssetType>() where ConfigAssetType : ScriptableObject
         {
             string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
             if (AssetDatabase.IsValidFolder(assetPath))

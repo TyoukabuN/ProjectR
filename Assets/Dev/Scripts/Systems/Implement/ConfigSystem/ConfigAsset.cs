@@ -4,6 +4,7 @@ using Sirenix.Serialization;
 using System.Text;
 using System;
 using UnityEngine.Serialization;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -46,7 +47,7 @@ public abstract class ListConfigAsset<ItemType> : ConfigAsset
     public List<ItemType> items;
 }
 
-public abstract class ConfigAsset : SerializedScriptableObject
+public abstract class ConfigAsset : ScriptableObject
 {
     public virtual bool FromJson(string assetPath)
     {

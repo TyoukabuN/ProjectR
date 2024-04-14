@@ -74,7 +74,7 @@ namespace PJR
             {
                 if (gobj.name.IndexOf("Test") == 0)
                 {
-                    DontDestroyOnLoad(gobj);
+                    //DontDestroyOnLoad(gobj);
                     continue;
                 }
                 DestroyImmediate(gobj);

@@ -18,12 +18,6 @@ public class GameEntry : MonoBehaviour
         ResourceSystem.instance.Init();
         StartCoroutine(PreloadGameResource());
     }
-
-    void InitGame()
-    {
-        InputSystem.instance.Init();
-    }
-
     IEnumerator PreloadGameResource()
     {
         for (int i = 0; i < PreloadAssets.Length; i++)
@@ -35,7 +29,6 @@ public class GameEntry : MonoBehaviour
 
         yield return null;
     }
-
     void OnPreloadDone()
     {
         try
@@ -47,6 +40,11 @@ public class GameEntry : MonoBehaviour
             LogSystem.LogError(e.ToString());
         }
     }
+    void InitGame()
+    {
+        InputSystem.instance.Init();
+        SceneSystem.instance.Init();
 
-
+        SceneSystem.CheckReadyInGameScene();
+    }
 }

@@ -6,7 +6,7 @@ using Sirenix.Serialization;
 using Sirenix.OdinInspector;
 
 [CreateAssetMenu(menuName = "Custom/AnimatiomClipSet", fileName = "AnimatiomClipSet")]
-public class AnimatiomClipSet : SerializedScriptableObject
+public class AnimatiomClipSet : ScriptableObject
 {
     [NonSerialized, OdinSerialize] 
     [DictionaryDrawerSettings(KeyLabel = "Name", ValueLabel = "Clip")]

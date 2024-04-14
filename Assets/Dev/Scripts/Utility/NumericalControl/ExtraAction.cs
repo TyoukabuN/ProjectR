@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+
 namespace PJR
 {
     public interface IActionControl {
@@ -114,7 +115,7 @@ namespace PJR
             return value;
         }
 
-        public static ExtraAction ExtraActionMapAdd(this IActionControl target, TPlayerActionType actionType, float duration)
+        public static ExtraAction ExtraActionMapAdd(this IActionControl target, TActionType actionType, float duration)
         {
             return ExtraActionMapAdd(target, (int)actionType, duration);
         }
@@ -162,7 +163,7 @@ namespace PJR
             if(isComplete)
                 target.OnActionControlRemove(value);
         }
-        public static void ExtraActionMapRemove(this IActionControl target, TPlayerActionType actionType, bool isComplete = true)
+        public static void ExtraActionMapRemove(this IActionControl target, TActionType actionType, bool isComplete = true)
         {
             ExtraActionMapRemove(target, (int)actionType, isComplete);
         }
@@ -174,7 +175,7 @@ namespace PJR
             return repo.ContainsKey(key);
         }
 
-        public static ExtraAction GetExtraActionMap(this IActionControl target, TPlayerActionType actionType)
+        public static ExtraAction GetExtraActionMap(this IActionControl target, TActionType actionType)
         {
             return GetExtraActionMap(target, (int)actionType);
         }
@@ -187,7 +188,7 @@ namespace PJR
             repo.TryGetValue(key, out taction);
             return taction;
         }
-        public static bool ExtraActionMapExist(this IActionControl target, TPlayerActionType actionType)
+        public static bool ExtraActionMapExist(this IActionControl target, TActionType actionType)
         {
             return ExtraActionMapExist(target,(int)actionType);
         }

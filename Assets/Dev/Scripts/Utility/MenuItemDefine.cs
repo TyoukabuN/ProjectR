@@ -2,6 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnityInputReceiver : MonoBehaviour
+public static class MenuItemDefine
 {
 }

@@ -13,7 +13,8 @@ namespace PJR
     public partial class PhysEntity : MonoBehaviour
     {
         [ShowInInspector]
-        [BoxGroup("逻辑引用"), ReadOnly] public LogicEntity logicEntity;
+        [NonSerialized]
+        [BoxGroup("逻辑引用"), ReadOnly] public LogicEntity logicEntity = null;
 
         [HideInInspector] public PlatformEffector2D platformEffector2D;
 

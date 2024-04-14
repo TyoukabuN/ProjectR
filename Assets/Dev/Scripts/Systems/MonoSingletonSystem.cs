@@ -7,21 +7,23 @@ namespace PJR
 {
     public abstract class MonoSingletonSystem<T> : MonoSingleton<T> where T : MonoSingleton
     {
+        public static List<MonoSingletonSystem<T>> list;
         public override string Name { 
             get { return typeof(T).Name; }
         }
-
         /// <summary>
-        /// ÊµÀı»¯ÏµÍ³ÊµÀıºóµ÷ÓÃ£¬ÔÚAwakeÖ®Ç°
+        /// å®ä¾‹åŒ–ç³»ç»Ÿå®ä¾‹åè°ƒç”¨ï¼Œåœ¨Awakeä¹‹å‰
         /// </summary>
         public override void OnInstantiated()
         {
             base.OnInstantiated();
+            MonoSingletonSystem.RegisterSystem(_instance);
+
             LogSystem.Log($"[System][OnInstantiated] {Name}");
         }
 
         /// <summary>
-        /// ³õÊ¼»¯ÏµÍ³,ÔÚ<see cref="GameEntry.InitGame"/>µ÷ÓÃ
+        /// åˆå§‹åŒ–ç³»ç»Ÿ,åœ¨<see cref="GameEntry.InitGame"/>è°ƒç”¨
         /// </summary>
         public override void Init()
         {
@@ -29,5 +31,22 @@ namespace PJR
             LogSystem.Log($"[System][Init]{typeof(T).Name}");
         }
     }
+
+    /// <summary>
+    /// å•ä¾‹ç³»ç»Ÿ
+    /// </summary>
+    public class MonoSingletonSystem
+    {
+        public static List<MonoSingleton> systems;
+        public static void RegisterSystem(MonoSingleton systemInstance)
+        {
+            systems ??= new List<MonoSingleton>();
+            systems.Add(systemInstance);
+        }
+
+        public static void Clear()
+        {
+            systems?.ForEach(instance => instance.Clear());
+        }
+    }
 }
- 

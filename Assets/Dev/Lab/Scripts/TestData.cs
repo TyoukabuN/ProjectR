@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class TestData : SerializedScriptableObject
+public class TestData : ScriptableObject
 {
     //[ListDrawerSettings(
     //  CustomAddFunction = "AddElement",

@@ -10,7 +10,7 @@ using UnityEditor;
 
 namespace PJR
 {
-    public class EntityPhysicsConfigAsset : SerializedScriptableObject
+    public class EntityPhysicsConfigAsset : ScriptableObject
     {
         [Title("地面移动")]
         [LabelText("地面最大移动速度")] public float MaxGroundedMoveSpeed = 3f;

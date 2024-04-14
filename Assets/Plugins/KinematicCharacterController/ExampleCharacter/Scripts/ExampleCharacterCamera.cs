@@ -38,11 +38,11 @@ namespace KinematicCharacterController.Examples
         public float ObstructionSharpness = 10000f;
         public List<Collider> IgnoredColliders = new List<Collider>();
 
-        public Transform Transform { get; private set; }
-        public Transform FollowTransform { get; private set; }
+        public Transform Transform;// { get; private set; }
+        public Transform FollowTransform;//{ get; private set; }
 
         public Vector3 PlanarDirection { get; set; }
-        public float TargetDistance { get; set; }
+        public float TargetDistance = 3;// { get; set; }
 
         private bool _distanceIsObstructed;
         private float _currentDistance;

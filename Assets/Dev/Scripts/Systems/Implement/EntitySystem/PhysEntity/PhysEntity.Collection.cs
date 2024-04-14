@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using PJR;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,26 +12,28 @@ namespace PJR
     {
         [HideInInspector] public BoxCollider boxCollider;
         [HideInInspector] public CapsuleCollider capsuleCollider;
+        [HideInInspector] public Collider attachedCollider;
 
         public Action<Collision> onCollisionEnter;
-        public Action<Collision> onCollisionExit;
         public Action<Collision> onCollisionStay;
+        public Action<Collision> onCollisionExit;
         public Action<Collider> onTriggerEnter;
+        public Action<Collider> onTriggerStay;
         public Action<Collider> onTriggerExit;
 
         protected virtual void Init_Collection(GameObject avatar)
         {
             avatar = avatar != null ? avatar : this.avatar;
-            var boxCollider = avatar.GetComponent<BoxCollider>();
-            boxCollider = boxCollider == null ? avatar.GetComponentInChildren<BoxCollider>() : boxCollider;
+            attachedCollider = avatar.GetComponentInChildren<Collider>();
+
+            var boxCollider = avatar.GetComponentInChildren<BoxCollider>();
             if (boxCollider != null)
             {
                 this.boxCollider = gameObject.CopyComponent(boxCollider) as BoxCollider;
                 DestroyImmediate(boxCollider);
             }
             //
-            var capsuleCollider = avatar.GetComponent<CapsuleCollider>();
-            capsuleCollider = capsuleCollider == null ? avatar.GetComponentInChildren<CapsuleCollider>() : capsuleCollider;
+            var capsuleCollider = avatar.GetComponentInChildren<CapsuleCollider>();
             if (capsuleCollider != null)
             {
                 this.capsuleCollider = gameObject.CopyComponent(capsuleCollider) as CapsuleCollider;
@@ -42,75 +45,40 @@ namespace PJR
         { 
         }
 
-        public virtual void OnCollisionEnter(Collision collision)
+        public void InvokeCallback<TParam>(Action<TParam> callback, TParam param)
         {
-            if (onCollisionEnter != null)
+            try
             {
-                try
-                {
-                    onCollisionEnter.Invoke(collision);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
+                callback?.Invoke(param);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
             }
         }
-        public virtual void OnCollisionExit(Collision collision)
+        protected virtual void OnCollisionEnter(Collision collision)
         {
-            if (onCollisionExit != null)
-            {
-                try
-                {
-                    onCollisionExit.Invoke(collision);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
-            }
+            InvokeCallback(onCollisionEnter, collision);
         }
-        private void OnCollisionStay(Collision collision)
+        protected virtual void OnCollisionStay(Collision collision)
         {
-            if (onCollisionStay != null)
-            {
-                try
-                {
-                    onCollisionStay.Invoke(collision);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
-            }
+            InvokeCallback(onCollisionStay, collision);
         }
-        public virtual void OnTriggerEnter(Collider collider)
+        protected virtual void OnCollisionExit(Collision collision)
         {
-            if (onTriggerEnter != null)
-            {
-                try
-                {
-                    onTriggerEnter.Invoke(collider);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
-            }
+            InvokeCallback(onCollisionExit, collision);
         }
-        public virtual void OnTriggerExit(Collider collider)
+        protected virtual void OnTriggerEnter(Collider other)
         {
-            if (onTriggerExit != null)
-            {
-                try
-                {
-                    onTriggerExit.Invoke(collider);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
-            }
+            InvokeCallback(onTriggerEnter, other);
+        }
+        protected virtual void OnTriggerStay(Collider other)
+        {
+            InvokeCallback(onTriggerStay, other);
+        }
+        protected virtual void OnTriggerExit(Collider other)
+        {
+            InvokeCallback(onTriggerExit, other);
         }
 
         public bool IsColliderVaild(Collider2D collider)
@@ -118,20 +86,6 @@ namespace PJR
             if (collider == null || collider.gameObject == null)
                 return false;
             return true;
-        }
-
-        public static float RaycastHit2DDistance = 100f;
-        public Collider2D GetCurrentFloorCollider()
-        {
-            var res = GetCurrentFloorHit();
-            if (!res)
-                return null;
-            return res.collider;
-        }
-        public RaycastHit2D GetCurrentFloorHit()
-        {
-            float dis = RaycastHit2DDistance;
-            return new RaycastHit2D();
         }
     }
 }

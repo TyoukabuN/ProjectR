@@ -11,7 +11,7 @@ using UnityEditor;
 #endif
 
 //[CreateAssetMenu(menuName = "Custom/AnimatiomClipTransitionSet", fileName = "AnimatiomClipTransitionSet")]
-public class AnimatiomClipTransitionSet : SerializedScriptableObject
+public class AnimatiomClipTransitionSet : ScriptableObject
 {
     [NonSerialized, OdinSerialize]
     [DictionaryDrawerSettings(KeyLabel = "Name", ValueLabel = "Clip")]
@@ -28,7 +28,7 @@ public class AnimatiomClipTransitionSet : SerializedScriptableObject
             UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
             return;
         }
-        //´ÓclipsetÖÐ´´½¨
+        //ä»Žclipsetä¸­åˆ›å»º
         var clipSet = AssetDatabase.LoadAssetAtPath<AnimatiomClipSet>(assetPath) as AnimatiomClipSet;
         if (clipSet != null && clipSet.clips !=null)
         {

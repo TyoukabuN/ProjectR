@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace PJR
 {
-
     public class ExtraVelocity: ExtraControl
     {
+        public const string tooltip = "[=-1 ] 时 使用counterNormalize作为衰减系数\n" +
+                "[=0 ] 时;不衰减\n" +
+                "[>0 ] 时;为线性衰减forceDamped -= forceDamped * damp * deltaTime";
+
         public Vector3 force;
         private Vector3 _forceDamped;
         /// <summary>

@@ -9,7 +9,7 @@ using UnityEditor;
 
 namespace PJR
 {
-    public class EntityAttributeConfigAsset : SerializedScriptableObject
+    public class EntityAttributeConfigAsset : ScriptableObject
     {
 
         [Title("攻击")]

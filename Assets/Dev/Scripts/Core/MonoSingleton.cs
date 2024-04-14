@@ -38,6 +38,9 @@ namespace PJR
         /// </summary>
         public virtual void OnInstantiated() { }
         public virtual void Init() { }
+        public virtual void Clear() { }
+
+        //unity messages
         public virtual void OnEnable() {}
         public virtual void Awake() {}
         public virtual void Start() {}

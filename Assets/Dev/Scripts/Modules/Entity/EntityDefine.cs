@@ -6,9 +6,23 @@ using UnityEngine.Events;
 
 namespace PJR
 {
-    public static class TEntityDefine
+    public static class EntityDefine
     {
+        public enum LogicEntityType { 
+            Empty = 0,
+            Player = 1,
+            Trap = 2,
+        }
+        /// <summary>
+        /// 物理实体下的模型节点
+        /// </summary>
         public static string MODEL_ROOT_NAME = "ModelRoot";
+
+        /// <summary>
+        /// 场景根节点下的陷阱节点
+        /// </summary>
+        public static string SCENE_ROOT_NAME_TRAP = "Traps";
+
         //KD stand for key define
         public static readonly string KD_DASH_TRIGGER = "DashTrigger";
         public static readonly string KD_ANTIGRAVITY = "AntiGravity";

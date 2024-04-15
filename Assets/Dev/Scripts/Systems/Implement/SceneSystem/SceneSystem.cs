@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Security.Policy;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace PJR
 
         public GameObject sceneRoot = null;
         public EnvSetting envSetting = null;
+        //Roots
+        public Transform SceneTrapRoot = null;
 
         public override void Init()
         {
@@ -30,11 +33,16 @@ namespace PJR
             SceneManager.sceneUnloaded += OnSceneUnloaded;
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
         }
-        public static void CheckReadyInGameScene()
+
+        /// <summary>
+        /// 检查不是已经在一个合格游戏场景中
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckReadyInValidGameScene()
         {
             var currentScene = SceneManager.GetActiveScene();
             if (currentScene == null)
-                return;
+                return false; ;
             foreach (var gobj in currentScene.GetRootGameObjects())
             {
                 if (gobj.tag == "SceneRoot")
@@ -46,9 +54,40 @@ namespace PJR
             }
 
             if (instance.sceneRoot == null)
-                return;
+                return false;
 
             instance.OnActiveSceneChanged(currentScene, currentScene);
+            return true;
+        }
+
+        /// <summary>
+        /// 还没有写场景加载,不知道放哪里待用好
+        /// </summary>
+        /// <param name="sceneRoot"></param>
+        public void OnEnterScene(GameObject sceneRoot = null)
+        {
+            sceneRoot = sceneRoot == null ? instance.sceneRoot : sceneRoot;
+            GenSceneEntity();
+        }
+
+        /// <summary>
+        /// 生成场景中的实体
+        /// </summary>
+        /// <param name="sceneRoot"></param>
+        public void GenSceneEntity(GameObject sceneRoot = null)
+        {
+            sceneRoot = sceneRoot == null ? instance.sceneRoot : sceneRoot;
+            if (sceneRoot == null)
+                return;
+            //Trap
+            SceneTrapRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_TRAP);
+            var trapHosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
+            foreach (var host in trapHosts)
+            {
+                if (host.configAsset == null)
+                    continue;
+                EntitySystem.CreateTrapEntity(host);
+            }
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

@@ -10,7 +10,7 @@ namespace PJR
         public GameObject gameObject;
         public Transform transform;
         public InputHandle inputHandle;
-        public EntityContext entityData;
+        public EntityContext entityContext;
         public ScriptEntityStateMachine<EntityScriptState> scriptStateMachine;
         public EntityPhysicsConfigAsset physicsConfig;
 

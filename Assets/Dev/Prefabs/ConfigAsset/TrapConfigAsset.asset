@@ -15,7 +15,7 @@ MonoBehaviour:
   type: 0
   CanTriggerTimes: -1
   entityPhaseEvents:
-  - entityPhase: 0
-    blockRootEvents:
+  - entityPhase: 3
+    events:
     - actionType: 0
       trapActionEventParam: {fileID: 11400000, guid: c78781600394f894992ddf0114a9e0f2, type: 2}

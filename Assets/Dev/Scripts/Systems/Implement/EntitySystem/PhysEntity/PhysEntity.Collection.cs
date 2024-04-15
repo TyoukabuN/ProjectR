@@ -11,6 +11,7 @@ namespace PJR
     public partial class PhysEntity: MonoBehaviour
     {
         [HideInInspector] public BoxCollider boxCollider;
+        [HideInInspector] public SphereCollider sphereCollider;
         [HideInInspector] public CapsuleCollider capsuleCollider;
         [HideInInspector] public Collider attachedCollider;
 
@@ -30,13 +31,30 @@ namespace PJR
             if (boxCollider != null)
             {
                 this.boxCollider = gameObject.CopyComponent(boxCollider) as BoxCollider;
+                this.boxCollider.size = boxCollider.size;
+                this.boxCollider.center = boxCollider.center;
+                this.boxCollider.isTrigger = boxCollider.isTrigger;
                 DestroyImmediate(boxCollider);
+            }
+            //
+            var sphereCollider = avatar.GetComponentInChildren<SphereCollider>();
+            if (sphereCollider != null)
+            {
+                this.sphereCollider = gameObject.CopyComponent(sphereCollider) as SphereCollider;
+                this.sphereCollider.center = sphereCollider.center;
+                this.sphereCollider.radius = sphereCollider.radius;
+                this.sphereCollider.isTrigger = sphereCollider.isTrigger;
+                DestroyImmediate(sphereCollider);
             }
             //
             var capsuleCollider = avatar.GetComponentInChildren<CapsuleCollider>();
             if (capsuleCollider != null)
             {
                 this.capsuleCollider = gameObject.CopyComponent(capsuleCollider) as CapsuleCollider;
+                this.capsuleCollider.center = capsuleCollider.center;
+                this.capsuleCollider.height = capsuleCollider.height;
+                this.capsuleCollider.radius = capsuleCollider.radius;
+                this.capsuleCollider.isTrigger = capsuleCollider.isTrigger;
                 DestroyImmediate(capsuleCollider);
             }
         }

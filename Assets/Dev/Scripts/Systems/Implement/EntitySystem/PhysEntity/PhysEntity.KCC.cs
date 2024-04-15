@@ -26,13 +26,16 @@ namespace PJR
 
         protected virtual void Init_KCC(GameObject avatar)
         {
+            IgnoredColliders = new List<Collider>();
+            ICharacterControllers = new List<ICharacterController>();
+
+            if (!physRequire.kinematicCharacterMotor)
+                return;
+
             rigidbody = gameObject.TryGetComponent<Rigidbody>();
 
             motor = gameObject.TryGetComponent<KinematicCharacterMotor>();
             motor.CharacterController = this;
-
-            IgnoredColliders = new List<Collider>();
-            ICharacterControllers = new List<ICharacterController>();
         }
         public void AfterCharacterUpdate(float deltaTime)
         {

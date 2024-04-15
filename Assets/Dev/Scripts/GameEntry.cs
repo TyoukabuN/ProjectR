@@ -1,18 +1,12 @@
 using PJR;
 using PJR;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameEntry : MonoBehaviour
 {
-    public static string[] PreloadAssets =
-{
-        "Assets/Art/Character/GlazyRunner/Prefabs/Avater_DefaultPlayer.prefab",
-        "Assets/Art/Character/GlazyRunner/Animations/AnimatiomClipTransitionSet.asset",
-        "Assets/Dev/Prefabs/ConfigAsset/EntityPhysicsConfig.asset",
-        "Assets/Dev/Prefabs/ConfigAsset/EntityAttributeConfigAsset.asset",
-    };
     void Start()
     {
         ResourceSystem.instance.Init();
@@ -20,9 +14,9 @@ public class GameEntry : MonoBehaviour
     }
     IEnumerator PreloadGameResource()
     {
-        for (int i = 0; i < PreloadAssets.Length; i++)
+        for (int i = 0; i < ResourceDefine.Assets.Length; i++)
         { 
-            string assetFullName = PreloadAssets[i];
+            string assetFullName = ResourceDefine.Assets[i];
             yield return ResourceSystem.LoadAsset<UnityEngine.Object>(assetFullName);
         }
         OnPreloadDone();
@@ -45,6 +39,13 @@ public class GameEntry : MonoBehaviour
         InputSystem.instance.Init();
         SceneSystem.instance.Init();
 
-        SceneSystem.CheckReadyInGameScene();
+        OnInitGame();
+    }
+
+    void OnInitGame()
+    {
+        if (SceneSystem.CheckReadyInValidGameScene()) { 
+            SceneSystem.instance.OnEnterScene();
+        }
     }
 }

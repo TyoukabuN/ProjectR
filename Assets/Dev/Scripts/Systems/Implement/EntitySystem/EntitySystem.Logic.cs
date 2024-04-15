@@ -10,27 +10,6 @@ namespace PJR
         private static int s_guid_logic = -1;
         private static Dictionary<int, LogicEntity> id2LogicEntity = new Dictionary<int, LogicEntity>();
 
-        /// <summary>
-        /// 创建Player实体
-        /// </summary>
-        /// <param name="assetFullName"></param>
-        /// <returns></returns>
-        public static LogicEntity CreatePlayer(EntityContext context = null)
-        {
-            if(!Valid())
-                return null;
-            context ??=new EntityContext();
-            context.logicEntityID = GetGUID();
-            //
-            PlayerEntity player = new PlayerEntity();
-            player.entityData = context; 
-            player.OnCreate(context);
-
-            id2LogicEntity[context.logicEntityID] = player;
-            return player;
-        }
-
-
         public static List<LogicEntity> GetEntitys()
         {
             return null;
@@ -58,7 +37,7 @@ namespace PJR
             if(logicEntity == null)
                 return false;
             logicEntity.Destroy();
-            id2LogicEntity.Remove(logicEntity.entityData.logicEntityID);
+            id2LogicEntity.Remove(logicEntity.entityContext.LogicEntityID);
             return true;
         }
 

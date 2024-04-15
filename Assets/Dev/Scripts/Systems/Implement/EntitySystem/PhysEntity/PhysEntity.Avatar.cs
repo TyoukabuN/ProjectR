@@ -22,7 +22,7 @@ namespace PJR
             {
                 if (!m_ModelRoot)
                 {
-                    var gobj = new GameObject(TEntityDefine.MODEL_ROOT_NAME);
+                    var gobj = new GameObject(EntityDefine.MODEL_ROOT_NAME);
                     gobj.transform.parent = this.transform;
                     m_ModelRoot = gobj.transform;
                     //
@@ -63,6 +63,32 @@ namespace PJR
             if (assetNames == null)
                 return;
             this._assetNames = assetNames;
+
+            BeginLoadAsset();
+        }
+        /// <summary>
+        /// 根据avatar所需的assetNames加载/创建avatar
+        /// </summary>
+        /// <param name="assetNames"></param>
+        public void CreateAvatar(LogicEntity logicEntity)
+        {
+            if (logicEntity == null)
+                return;
+            this.logicEntity = logicEntity;
+            this._assetNames = logicEntity.entityContext.avatarAssetNames;
+
+            BeginLoadAsset();
+        }
+
+        public void SetTransformByEntityContext(EntityContext context)
+        {
+            transform.position = context.originPosition;
+            transform.eulerAngles = context.originRotation;
+            transform.localScale = context.originScale;
+        }
+
+        void BeginLoadAsset()
+        {
             _avatarLoadDone = false;
             StartCoroutine(LoadAssets());
         }
@@ -75,24 +101,30 @@ namespace PJR
         {
             //TODO:弄成单独部位的加载器
             //模型
-            var loader_avatar = ResourceSystem.LoadAsset<GameObject>(_assetNames.modelName);
-            if (loader_avatar == null)
-            {
-                LogSystem.LogError($"[{nameof(LoadAssets)}] Failure to load avatar asset");
-                yield return null;
+            if (!string.IsNullOrEmpty(_assetNames.modelName))
+            { 
+                var loader_avatar = ResourceSystem.LoadAsset<GameObject>(_assetNames.modelName);
+                if (loader_avatar == null)
+                {
+                    LogSystem.LogError($"[{nameof(LoadAssets)}] Failure to load avatar asset");
+                    yield return null;
+                }
+                yield return loader_avatar;
+                OnLoadAvatarLoadDone(loader_avatar);
             }
-            yield return loader_avatar;
-            OnLoadAvatarLoadDone(loader_avatar);
 
-            //动画集
-            var loader_clipSet = ResourceSystem.LoadAsset<AnimatiomClipTransitionSet>(_assetNames.animationClipSet);
-            if (loader_clipSet == null)
+            if (!string.IsNullOrEmpty(_assetNames.animationClipSet))
             {
-                LogSystem.LogError($"[{nameof(LoadAssets)}] Failure to load {nameof(AnimatiomClipTransitionSet)} asset");
-                yield return null;
+                //动画集
+                var loader_clipSet = ResourceSystem.LoadAsset<AnimatiomClipTransitionSet>(_assetNames.animationClipSet);
+                if (loader_clipSet == null)
+                {
+                    LogSystem.LogError($"[{nameof(LoadAssets)}] Failure to load {nameof(AnimatiomClipTransitionSet)} asset");
+                    yield return null;
+                }
+                yield return loader_clipSet;
+                OnLoadClipSetDone(loader_clipSet);
             }
-            yield return loader_clipSet; 
-            OnLoadClipSetDone(loader_clipSet);
 
             OnLoadAllLoadDone();
         }
@@ -152,8 +184,8 @@ namespace PJR
         protected void InitAvatar(GameObject avatar)
         {
             avatar.transform.SetParent(ModelRoot, false);
-            avatar.transform.localPosition = Vector3.zero;
-            avatar.transform.rotation = Quaternion.identity;
+
+            SetTransformByEntityContext(logicEntity.entityContext);
 
             Init_Collection(avatar);
             Init_Animation_Reference(avatar);

@@ -40,6 +40,11 @@ public class CSharpScriptBuilder
     }
 
     #region Appends
+
+    public void Append(string str)
+    {
+        sb.Append(str);
+    }
     public void AppendEmptyLine()
     {
         sb.AppendLine(TabStr());

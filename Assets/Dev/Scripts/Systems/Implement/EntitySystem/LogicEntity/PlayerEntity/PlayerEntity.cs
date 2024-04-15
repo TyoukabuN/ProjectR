@@ -18,7 +18,7 @@ namespace PJR
         { 
             var physEntity = EntitySystem.CreatePhysEntity();
 
-            var assetNames = new AvatarAssetNames()
+            context.avatarAssetNames = new AvatarAssetNames()
             {
                 modelName = "Avater_DefaultPlayer.prefab",
                 animationClipSet = "AnimatiomClipTransitionSet.asset"
@@ -30,7 +30,7 @@ namespace PJR
                 LogSystem.LogError("PlayerEntity.OnCreate 加载 EntityPhysicsConfig 失败");
 
             //
-            physEntity.CreateAvatar(assetNames);
+            physEntity.CreateAvatar(this);
             physEntity.logicEntity = this;
             physEntity.onAvatarLoadDone += OnAvatarLoadDone;
             physEntity.onDrawGizmos += OnDrawGizmos;

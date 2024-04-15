@@ -1,15 +1,32 @@
 using UnityEngine;
+using LogicEntityType = PJR.EntityDefine.LogicEntityType;
 
 namespace PJR
 {
     public class EntityContext
     {
-        public int logicEntityID = -1;
+        public int LogicEntityID { 
+            get { return logicEntityID; }
+            set { 
+                logicEntityID = value;
+                logicEntityIDStr = logicEntityID.ToString(); 
+            }
+        }
+        protected int logicEntityID = -1;
+
+        public string LogicEntityIDStr { get => logicEntityIDStr; set => logicEntityIDStr = value; }
+
+        private string logicEntityIDStr = string.Empty;
+
+
+        public LogicEntityType entityType = LogicEntityType.Empty;
 
         public AvatarAssetNames avatarAssetNames;
+        public Vector3 originPosition = Vector3.zero;
+        public Vector3 originRotation = Vector3.zero;
+        public Vector3 originScale = Vector3.zero;
 
         public int jumpCount = 0;
-
         public void AddJumpCount()
         {
             jumpCount++;

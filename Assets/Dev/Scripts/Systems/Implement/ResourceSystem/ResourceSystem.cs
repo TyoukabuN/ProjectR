@@ -16,10 +16,15 @@ namespace PJR
         public static Dictionary<string,ResourceLoader> assetame2Loader = new Dictionary<string, ResourceLoader> ();
         public static ResourceLoader LoadAsset<T>(string assetFullName) where T : UnityEngine.Object 
         {
+            if(string.IsNullOrEmpty(assetFullName))
+                return null;
             return LoadAsset(assetFullName, typeof(T));
         }
         public static ResourceLoader LoadAsset(string assetFullName,Type assetType) 
         {
+            if (string.IsNullOrEmpty(assetFullName))
+                return null;
+
             string assetName = Path.GetFileName(assetFullName);
 #if UNITY_EDITOR
             if (!assetame2Loader.TryGetValue(assetFullName, out var loader))

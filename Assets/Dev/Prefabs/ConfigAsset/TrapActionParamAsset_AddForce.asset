@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f495589fcb4dee43936d5b69660b057, type: 3}
   m_Name: TrapActionParamAsset_AddForce
   m_EditorClassIdentifier: 
-  force: {x: 0, y: 3, z: -1}
-  duration: 0.333
+  force: {x: 0, y: 3.4, z: -4.42}
+  duration: 0.133
   damp: -1
   easing: 15

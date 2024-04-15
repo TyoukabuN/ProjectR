@@ -5,21 +5,22 @@ using Animancer;
 using System;
 using Sirenix.OdinInspector;
 using UnityEngine.Animations.Rigging;
+using System.Linq;
 
 namespace PJR
 {
     public partial class PhysEntity: MonoBehaviour, IAnimatorEventReceiver
     {
-        [BoxGroup("¶¯»­Ïà¹Ø")] public Animator mainAnimator;
-        [BoxGroup("¶¯»­Ïà¹Ø")] public List<Animator> subAnimators = new List<Animator>();
-        [BoxGroup("¶¯»­Ïà¹Ø")] public AnimancerComponent animancer;
-        [BoxGroup("¶¯»­Ïà¹Ø")] public List<AnimancerComponent> subAnimancers = new List<AnimancerComponent>();
-        [BoxGroup("¶¯»­Ïà¹Ø")] public AnimatorAgency animatorAgency;
-        [BoxGroup("¶¯»­Ïà¹Ø")] public AnimatiomClipTransitionSet animationClipTransitionSet;
-        [BoxGroup("¶¯»­Ïà¹Ø")] public List<AvatarMask> avatarMasks;
-        [BoxGroup("¶¯»­Ïà¹Ø")] public RigBuilder rigBuilder;
-        [BoxGroup("¶¯»­Ïà¹Ø")] public bool keepChildrenConnected = true;
-        [BoxGroup("¶¯»­Ïà¹Ø")] public AnimanerUpdateAproach _animanerUpdateAproach = AnimanerUpdateAproach.Manually;
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public Animator mainAnimator;
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public List<Animator> subAnimators = new List<Animator>();
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public AnimancerComponent animancer;
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public List<AnimancerComponent> subAnimancers = new List<AnimancerComponent>();
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public AnimatorAgency animatorAgency;
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public AnimatiomClipTransitionSet animationClipTransitionSet;
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public List<AvatarMask> avatarMasks;
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public RigBuilder rigBuilder;
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public bool keepChildrenConnected = true;
+        [BoxGroup("åŠ¨ç”»ç›¸å…³")] public AnimanerUpdateAproach _animanerUpdateAproach = AnimanerUpdateAproach.Manually;
 
         public Action onAnimationClipEvent;
 
@@ -31,7 +32,7 @@ namespace PJR
             Action = 1,
         }
         /// <summary>
-        /// ³õÊ¼»¯¶¯»­ÒıÓÃ
+        /// åˆå§‹åŒ–åŠ¨ç”»å¼•ç”¨
         /// </summary>
         /// <param name="avatar"></param>
         protected virtual void Init_Animation_Reference(GameObject avatar)
@@ -40,11 +41,11 @@ namespace PJR
             mainAnimator = avatar.GetComponentInChildren<Animator>();
             animancer = avatar.GetComponentInChildren<AnimancerComponent>();
             animatorAgency = avatar.GetComponentInChildren<AnimatorAgency>();
-            animatorAgency.animatorEventReceiver = this;
-
+            if(animatorAgency != null)
+                animatorAgency.animatorEventReceiver = this;
         }
         /// <summary>
-        /// ³õÊ¼»¯¶¯»­¼¯
+        /// åˆå§‹åŒ–åŠ¨ç”»é›†
         /// </summary>
         /// <param name="clipSet"></param>
         protected virtual void Init_Animation_ClipSet(AnimatiomClipTransitionSet clipSet)
@@ -68,7 +69,7 @@ namespace PJR
                         layer.active = false;
                     }
                 }
-                //ÎªÁË½â¾öRebindÎÊÌâ
+                //ä¸ºäº†è§£å†³Rebindé—®é¢˜
                 //https://kybernetik.com.au/animancer/docs/examples/integration/animation-rigging/#limitations
                 if (animationClipTransitionSet)
                 {
@@ -97,7 +98,7 @@ namespace PJR
             }
         }
         /// <summary>
-        /// ÉèÖÃÄ£ĞÍ¶¯»­Í¼²ãÃÉ°æ
+        /// è®¾ç½®æ¨¡å‹åŠ¨ç”»å›¾å±‚è’™ç‰ˆ
         /// </summary>
         protected void Setup_AvatarMask()
         {
@@ -135,7 +136,11 @@ namespace PJR
             clip = null;
             if (animationClipTransitionSet == null || animationClipTransitionSet.clips == null)
                 return false;
-            return animationClipTransitionSet.clips.TryGetValue(clipName, out clip);
+            int index = animationClipTransitionSet.clips.FindIndex(pair => pair.Key == clipName);
+            if (index == -1)
+                return false;
+            clip = animationClipTransitionSet.clips[index].Value;
+            return true;
         }
         public AnimancerState Animancer_Play(string clipName)
         {

@@ -23,6 +23,8 @@ namespace PJR
 
         public int physEntityId = -1;
 
+        public PhysEntityComponentRequire physRequire = PhysEntityComponentRequire.Default;
+
         public bool IsVaild()
         {
             //if (TinyGameManager.instance == null)

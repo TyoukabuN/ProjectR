@@ -32,9 +32,9 @@ namespace PJR
     public enum TEntityPhase
     {
         None = 0,
-        OnCollisionEnter2D = 1,
-        OnCollisionExit2D = 2,
-        OnTriggerEnter2D = 3,
+        OnCollisionEnter = 1,
+        OnCollisionExit = 2,
+        OnTriggerEnter = 3,
         OnUpdateDistanceFromPlayer = 4,
         OnFixedUpdateBegin = 5,
         OnCallbackFromLua = 6,
@@ -88,13 +88,6 @@ namespace PJR
         [LabelText("触发事件的Entity周期")]
         public TEntityPhase entityPhase = TEntityPhase.None;
         [LabelText("事件列表")]
-        public List<TActionEvent> blockRootEvents = new List<TActionEvent>();
-        //
-        //public int intValue = 0;
-        //public float floatValue = 0f;
-        //public string stringValue = string.Empty;
-        //public bool boolValue = false;
-        ////
-        //public bool triggered = false;
+        public List<TActionEvent> events = new List<TActionEvent>();
     }
 }

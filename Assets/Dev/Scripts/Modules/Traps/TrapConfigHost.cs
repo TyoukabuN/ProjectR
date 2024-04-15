@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PJR
 {
-    public class TrapConfigHost : MonoBehaviour
+    public class TrapConfigHost : EntityConfigHost
     {
         public TrapConfigAsset configAsset;
     }

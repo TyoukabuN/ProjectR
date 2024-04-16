@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public partial class @SimpleControls: IInputActionCollection2
+public partial class @SimpleControls: IInputActionCollection2, IDisposable
 {
     public InputActionAsset asset { get; }
     public @SimpleControls()
@@ -167,7 +167,7 @@ public partial class @SimpleControls: IInputActionCollection2
         m_gameplay_look = m_gameplay.FindAction("look", throwIfNotFound: true);
     }
 
-    public void Destroy()
+    public void Dispose()
     {
         UnityEngine.Object.Destroy(asset);
     }

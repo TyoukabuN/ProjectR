@@ -12,8 +12,8 @@ public class ConstraintTest : MonoBehaviour
     public Transform own = null;
     public Transform own_anchor = null;
 
-    public Transform attached = null;
-    public Transform attached_offset = null;
+    public Transform target = null;
+    public Transform target_offset = null;
 
     public bool usingAnchor = false;
 
@@ -29,35 +29,32 @@ public class ConstraintTest : MonoBehaviour
 
         _own = GameObject.Instantiate(own.gameObject);
 
-        Vector3 point = attached_offset.position;
+        Vector3 offset = target_offset.position;
 
-        if (attached != null)
+        if (target != null)
         {
             Vector3 posOffset = Vector3.zero;
-            Vector3 rotOffset = _own.transform.eulerAngles;
+            //Vector3 rotOffset = _own.transform.eulerAngles;
+            var targetRot = target.transform.rotation;
+            var targetRotInverse = Quaternion.Inverse(targetRot);
+
+            Vector3 rotOffset = (targetRotInverse * _own.transform.rotation).eulerAngles;
+
             var anchor = _own.GetComponentInChildren<Anchor>()?.transform;
+            if (usingAnchor && anchor != null)
+            {
+                //rotOffset = (targetRotInverse * anchor.rotation * _own.transform.rotation).eulerAngles;
+            }
 
-
-            //Vector3 vec3 =  attached.worldToLocalMatrix * new Vector4(point.x, point.y, point.z,1);
-            Vector3 vec3 =  point - attached.position;
-            vec3 = attached.rotation * vec3;
-
-
-            posOffset += vec3;
-            //posOffset += attached.worldToLocalMatrix.MultiplyPoint(point);
+            posOffset += targetRotInverse * (offset - target.position);
 
             if (usingAnchor && anchor != null)
             {
-                //posOffset += attached.worldToLocalMatrix.MultiplyVector(_own.transform.position - anchor.position);
-                vec3 = _own.transform.position - anchor.position;
-                vec3 = attached.worldToLocalMatrix * vec3;
-                //vec3 = attached.rotation * vec3;
-                posOffset += vec3;
-                //rotOffset = (anchor.rotation * Quaternion.Euler(rotOffset.x, rotOffset.y, rotOffset.z)).eulerAngles;
+                posOffset += targetRotInverse * (_own.transform.position - anchor.position);
             }
 
 
-            if (TryAddParentConstraint(_own.transform, attached, posOffset, rotOffset, out var inst))
+            if (TryAddParentConstraint(_own.transform, target, posOffset, rotOffset, out var inst))
             {
                 parentConstraint = inst;
             }
@@ -66,10 +63,10 @@ public class ConstraintTest : MonoBehaviour
 
     private void Update()
     {
-        if (attached_offset != null)
+        if (target_offset != null)
         {
-            Debug.Log(attached_offset.position);
-            Debug.Log(attached.worldToLocalMatrix);
+            Debug.Log(target_offset.position);
+            Debug.Log(target.worldToLocalMatrix);
         }
     }
 

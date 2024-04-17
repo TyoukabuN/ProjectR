@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 16374068}
   - component: {fileID: 16374067}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: Cameras
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -593,7 +593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Test_Trap.prefab
+  AssetName: Avater_Test_Trap.prefab
   configAsset: {fileID: 11400000, guid: f82d1e9d05c86994ca0f5952510f032c, type: 2}
 --- !u!4 &665802286
 Transform:
@@ -865,7 +865,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1009035156}
   m_Layer: 0
-  m_Name: Env
+  m_Name: Grounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1104,7 +1104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1239982687}
   m_Layer: 0
-  m_Name: Lighting
+  m_Name: Lights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1655,7 +1655,7 @@ GameObject:
   - component: {fileID: 1660479149}
   - component: {fileID: 1660479150}
   m_Layer: 0
-  m_Name: TestScene
+  m_Name: TestSceneRoot
   m_TagString: SceneRoot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

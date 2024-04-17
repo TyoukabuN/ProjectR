@@ -35,28 +35,7 @@ namespace PJR
         {
             var phys = collider.GetComponent<PhysEntity>();
             if (phys != null && phys.logicEntity != null)
-            {
-                foreach (var phareEvt in configAsset.entityPhaseEvents)
-                {
-                    if (phareEvt.entityPhase != TEntityPhase.OnTriggerEnter)
-                        continue;
-                    foreach (var evt in phareEvt.events)
-                    {
-                        if (evt.actionType == TActionType.AddForce)
-                        {
-                            var param = evt.trapActionEventParam as TrapActionParamAsset_AddForce;
-                            if (param == null)
-                                continue;
-                            var controller = phys.logicEntity.AddExtraVelocity(
-                                entityContext.LogicEntityIDStr, 
-                                param.force, 
-                                param.duration,
-                                param.damp);
-                            controller.easeType = param.easing;
-                        }
-                    }
-                }
-            }
+                configAsset.TryExecutePhaseEvent(TEntityPhase.OnTriggerEnter, phys.logicEntity);
         }
 
         public void OnDrawGizmos()

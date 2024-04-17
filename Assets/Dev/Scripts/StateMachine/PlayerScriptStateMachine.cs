@@ -60,7 +60,8 @@ namespace PJR.ScriptStates.Player
             {
                 ScriptTransition<Trans_OnRunning>.Get((int)EPlayerState.Running),
                 ScriptTransition<Trans_OnWalking>.Get((int)EPlayerState.Walk),
-                ScriptTransition<Trans_OnGrounded>.Get((int)EPlayerState.Stand),
+                //ScriptTransition<Trans_OnGrounded>.Get((int)EPlayerState.Stand),
+                ScriptTransition<Trans_OnStateFinish>.Get((int)EPlayerState.Stand).SetCanExitNormalizeTime(0.667f),
             };
 
             //判断不在地面上的转换

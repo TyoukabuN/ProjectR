@@ -197,14 +197,15 @@ namespace PJR.ScriptStates.Player
             base.OnEnter(entity);
             var moving = entity.inputHandle.ReadValueVec2(RegisterKeys.Move).magnitude > 0;
             animancerState = entity.physEntity.Animancer_Play(moving ? AnimationNameSet.JUMP_LAND_M : AnimationNameSet.JUMP_LAND_W);
-            animancerState.Events.OnEnd = ToPhaseEnd;
+            //animancerState.Events.OnEnd = ToPhaseEnd;
             entity.entityContext.RevertJumpCount();
+            ToPhaseEnd();
         }
-        public override void OnChange(int from)
-        {
-            if (animancerState != null)
-                animancerState.Events.OnEnd = null;
-        }
+        //public override void OnChange(int from)
+        //{
+        //    if (animancerState != null)
+        //        animancerState.Events.OnEnd = null;
+        //}
         public override bool CanChange(int from)
         {
             if (from == (int)EPlayerState.Stand || from == (int)EPlayerState.Walk || from == (int)EPlayerState.Running)
@@ -213,6 +214,12 @@ namespace PJR.ScriptStates.Player
             }
 
             return true;
+        }
+
+        public override void OnUpdateVelocity(KCContext context)
+        {
+            base.OnUpdateVelocity(context);
+            PlayerControlFunc.GroundedMove(context);
         }
     }
 }

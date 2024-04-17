@@ -34,7 +34,7 @@ namespace PJR
                 FloatConstConfig config = (FloatConstConfig) Selection.activeObject;
 
                 string assetName = Selection.activeObject.name;
-                string assetPath = $"Assets/Dev/Scripts/ConfigWrap/Gen/{Selection.activeObject.name}.Gen.cs";
+                string assetPath = $"Assets/Dev/Scripts/Config/ConfigWrap/Gen/{Selection.activeObject.name}.Gen.cs";
 
                 var builder = new CSharpScriptBuilder(assetPath);
                 using (builder.BeginNameSpace("PJR"))

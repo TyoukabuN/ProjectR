@@ -11,6 +11,8 @@ public class Shooter : MonoBehaviour
     public float radius = 3f;
     public float forceMag = 3f;
 
+    public Avatar avatar;
+
     [Button("Shoot")]
     public void Shoot()
     {

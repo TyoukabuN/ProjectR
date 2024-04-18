@@ -1305,6 +1305,7 @@ MonoBehaviour:
   target: {fileID: 333126690}
   radius: 8
   forceMag: 800
+  avatar: {fileID: 0}
 --- !u!4 &654999559
 Transform:
   m_ObjectHideFlags: 0
@@ -2279,7 +2280,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1212740168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2297,6 +2298,9 @@ MonoBehaviour:
   target: {fileID: 1777268592}
   target_offset: {fileID: 89677730}
   usingAnchor: 0
+  avatar: {fileID: 9000000, guid: e4f5d30c6efccd6429d3131773e45b0e, type: 3}
+  animator: {fileID: 0}
+  humanTemplate: {fileID: 0}
 --- !u!4 &1212740169
 Transform:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -18,6 +19,12 @@ public class ConstraintTest : MonoBehaviour
     public bool usingAnchor = false;
 
     private GameObject _own = null;
+
+
+    public Avatar avatar = null;
+    public Animator animator = null;
+
+    public HumanTemplate humanTemplate = null;
 
     [Button("AttachedTest")]
     public void Attached()
@@ -57,6 +64,19 @@ public class ConstraintTest : MonoBehaviour
             if (TryAddParentConstraint(_own.transform, target, posOffset, rotOffset, out var inst))
             {
                 parentConstraint = inst;
+            }
+        }
+    }
+
+    [Button("AvatarTest")]
+    public void AvatarTest()
+    {
+        if (animator != null)
+        {
+            for (int i = (int)HumanBodyBones.Hips; i < (int)HumanBodyBones.LastBone; i++)
+            {
+                var boneTrans = animator.GetBoneTransform((HumanBodyBones)i);
+                Debug.Log(boneTrans);
             }
         }
     }

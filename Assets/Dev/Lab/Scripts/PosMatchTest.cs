@@ -172,9 +172,10 @@ public class PosMatchTest : MonoBehaviour
         //**这种方法比较直观
         //在计算玩世界坐标之后在通过 worldPositionStays = true的方式来SetParent
         //SetParent还可以设置其他offset
-        _weapon.rotation = hand.rotation * rotInv_handle * _weapon.rotation;
-        _weapon.position = hand.position + _weapon.position - _handle.position;
-        _weapon.SetParent(hand, worldPositionStays: true);
+        //_weapon.rotation = hand.rotation * rotInv_handle * _weapon.rotation;
+        //_weapon.position = hand.position + _weapon.position - _handle.position;
+        //_weapon.SetParent(hand, worldPositionStays: true);
+        _weapon.SetParentWithAnchor(hand, _handle);
     }
     [Button("Test8_Not SetParent[WorldSpace]")]
     public void Test8()

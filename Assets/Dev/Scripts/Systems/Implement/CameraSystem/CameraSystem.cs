@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PJR
 { 
-    public class CameraSystem : MonoSingletonSystem<CameraSystem>
+    public partial class CameraSystem : MonoSingletonSystem<CameraSystem>
     {
         static List<CinemachineVirtualCamera> cameras = new List<CinemachineVirtualCamera>();
 

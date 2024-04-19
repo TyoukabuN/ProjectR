@@ -7,6 +7,8 @@ namespace PJR
 {
     public partial class EntitySystem : MonoSingletonSystem<EntitySystem>
     {
+        public PlayerEntity localPlayer = null;
+        public static PlayerEntity LocalPlayer => inst.localPlayer;
         /// <summary>
         /// 创建Player实体
         /// </summary>
@@ -26,6 +28,8 @@ namespace PJR
             logicEntity.OnCreate(context);
 
             id2LogicEntity[context.LogicEntityID] = logicEntity;
+
+            inst.localPlayer = logicEntity;
             return logicEntity;
         }
 

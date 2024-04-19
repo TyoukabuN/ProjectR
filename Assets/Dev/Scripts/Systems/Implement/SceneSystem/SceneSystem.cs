@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace PJR
 {
-    public class SceneSystem : MonoSingletonSystem<SceneSystem>
+    public partial class SceneSystem : MonoSingletonSystem<SceneSystem>
     {
         public static event UnityAction<Scene, LoadSceneMode> onSceneLoaded;
         public static event UnityAction<Scene> onSceneUnloaded;
@@ -26,6 +26,7 @@ namespace PJR
         public EnvSetting envSetting = null;
         //Roots
         public Transform SceneTrapRoot = null;
+
 
         public override void Init()
         {
@@ -67,27 +68,8 @@ namespace PJR
         public void OnEnterScene(GameObject sceneRoot = null)
         {
             sceneRoot = sceneRoot == null ? instance.sceneRoot : sceneRoot;
-            GenSceneEntity();
-        }
 
-        /// <summary>
-        /// 生成场景中的实体
-        /// </summary>
-        /// <param name="sceneRoot"></param>
-        public void GenSceneEntity(GameObject sceneRoot = null)
-        {
-            sceneRoot = sceneRoot == null ? instance.sceneRoot : sceneRoot;
-            if (sceneRoot == null)
-                return;
-            //Trap
-            SceneTrapRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_TRAP);
-            var trapHosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
-            foreach (var host in trapHosts)
-            {
-                if (host.configAsset == null)
-                    continue;
-                EntitySystem.CreateTrapEntity(host);
-            }
+            GenSceneEntity();
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

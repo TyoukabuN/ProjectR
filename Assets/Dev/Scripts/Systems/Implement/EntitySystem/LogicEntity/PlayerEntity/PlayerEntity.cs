@@ -48,6 +48,8 @@ namespace PJR
             if (physEntity != this.physEntity)
                 return;
 
+            CameraSystem.CreatePlayerCamera(this);
+
             Init_Input();
             Init_State();
         }

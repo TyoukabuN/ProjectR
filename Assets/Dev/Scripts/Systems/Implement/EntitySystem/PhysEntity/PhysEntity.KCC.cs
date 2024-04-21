@@ -78,9 +78,22 @@ namespace PJR
         public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
         {
         }
+        public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
+        {
+            var context = new KCContext
+            {
+                physEntity = this,
+                currentRotation = currentRotation,
+                motor = motor,
+                deltaTime = deltaTime,
+            };
+            if (onUpdateRotation != null)
+                onUpdateRotation.Invoke(context);
+
+            currentRotation = context.currentRotation;
+        }
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
         {
-
             var context = new KCContext { 
                 physEntity = this,
                 currentVelocity = currentVelocity,
@@ -93,17 +106,6 @@ namespace PJR
 
             currentVelocity = context.currentVelocity;
         }
-        public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
-        {
-            var context = new KCContext
-            {
-                physEntity = this,
-                inputRotation = currentRotation,
-                motor = motor,
-                deltaTime = deltaTime,
-            };
-            if (onUpdateRotation != null)
-                onUpdateRotation.Invoke(context);
-        }
+
     }
 }

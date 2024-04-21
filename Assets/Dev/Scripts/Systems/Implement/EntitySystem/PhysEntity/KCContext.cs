@@ -16,13 +16,14 @@ namespace PJR
         //input value
         public InputHandle inputHandle = null;
         public Vector2 inputAxi = Vector2.zero;
-        public Vector3 inputAxiVec3 = Vector3.zero;
+        public Vector3 rawMoveInputVector = Vector3.zero;
+        public Vector3 moveInputVector = Vector3.forward;
+        public Vector3 lookInputVector = Vector3.forward;
         public Vector3 direction = Vector3.one;
         //velocity
         public Vector3 currentVelocity = Vector3.zero;
         //quaternion
-        public Quaternion inputRotation = Quaternion.identity;
-        public Quaternion outputRotation = Quaternion.identity;
+        public Quaternion currentRotation = Quaternion.identity;
         //time
         public float deltaTime = 0f;
         //field

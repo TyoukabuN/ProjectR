@@ -17,6 +17,7 @@ namespace PJR
         [LabelText("衰减系数")][PropertyTooltip(ExtraVelocity.tooltip)] public float damp = -1f;
         [InlineButton("ShowEasingHelpUrl","曲线示例")]
         [LabelText("衰减曲线")] public Easing.Ease easing = Easing.Ease.Linear;
+        [LabelText("强制移动阻断输入")] public bool blockInput = false;
 
 #if UNITY_EDITOR
         public static void ShowEasingHelpUrl()

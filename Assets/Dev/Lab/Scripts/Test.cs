@@ -44,6 +44,8 @@ public class Test : MonoBehaviour
     [ShowInInspector]
     public Easing.Ease easing = Easing.Ease.Linear;
 
+    public GameObject gobjTest;
+
     [Button("AddForce")]
     public void AddForce()
     {

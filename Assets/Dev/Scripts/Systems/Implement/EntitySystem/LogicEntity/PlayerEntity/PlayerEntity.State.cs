@@ -24,18 +24,39 @@ namespace PJR
             physEntity.onUpdateVelocity -= OnUpdateVelocity;
             physEntity.onUpdateRotation -= OnUpdateRotation;
         }
+        protected void OnUpdateRotation(KCContext context)
+        {
+            if (scriptStateMachine == null)
+                return;
 
+            CopyInputKCContent(context);
+
+            var currentRotation = context.currentRotation;
+
+            if (context.lookInputVector.sqrMagnitude > 0f && physicsConfig.OrientationSharpness > 0f)
+            {
+                // Smoothly interpolate from current to target look direction
+                Vector3 smoothedLookInputDirection = Vector3.Slerp(context.motor.CharacterForward, context.lookInputVector, 1 - Mathf.Exp(-physicsConfig.OrientationSharpness * context.deltaTime)).normalized;
+
+                // Set the current rotation (which will be used by the KinematicCharacterMotor)
+                currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, context.motor.CharacterUp);
+            }
+
+            Vector3 currentUp = (currentRotation * Vector3.up);
+            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up, 1 - Mathf.Exp(-physicsConfig.OrientationSharpness * context.deltaTime));
+            currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
+
+            context.currentRotation = currentRotation;
+
+            scriptStateMachine.CurrentState?.OnUpdateRotation(context);
+        }
         protected void OnUpdateVelocity(KCContext context)
         {
             if (scriptStateMachine == null) 
                 return;
 
-            var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move);
-            context.inputAxi = inputAxi;
-            context.inputAxiVec3 = Vector3.ClampMagnitude(new Vector3(inputAxi.x, 0f, inputAxi.y), 1f);
-            context.direction = context.inputAxiVec3;
-            context.inputHandle = inputHandle;
-            //context.direction = Quaternion.Euler(0, physEntity.transform.eulerAngles.y, 0) * new Vector3(inputAxi.x, 0, inputAxi.y);
+            CopyInputKCContent(context);
+
             context.physConfig = physicsConfig;
 
             //状态的速度控制
@@ -46,12 +67,6 @@ namespace PJR
                 context.motor.ForceUnground();
             context.currentVelocity += extraVec3;
         }
-        protected void OnUpdateRotation(KCContext context)
-        {
-            if (scriptStateMachine == null) 
-                return;
 
-            scriptStateMachine.CurrentState?.OnUpdateRotation(context);
-        }
     }
 }

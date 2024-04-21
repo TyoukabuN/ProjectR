@@ -16,3 +16,4 @@ MonoBehaviour:
   duration: 0.133
   damp: -1
   easing: 15
+  blockInput: 1

@@ -27,7 +27,7 @@ namespace PJR
             if (ctx.inputHandle.HasAnyFlag(RegisterKeys.Run))
                 targetVelocityMagnitude = ctx.cfg.ACCMaxGroundedMoveSpeed;
             //输入方向
-            Vector3 inputAxiVec3 = ctx.inputAxiVec3;
+            Vector3 inputAxiVec3 = ctx.moveInputVector;
             bool AnyInputAxi = inputAxiVec3.magnitude > 0;
             //当前有些地面法线
             Vector3 effectiveGroundNormal = ctx.motor.GroundingStatus.GroundNormal;
@@ -103,9 +103,9 @@ namespace PJR
             var output = ctx.currentVelocity;
             var cfg = ctx.cfg;
 
-            if (ctx.inputAxiVec3.sqrMagnitude > 0f)
+            if (ctx.moveInputVector.sqrMagnitude > 0f)
             {
-                Vector3 addedVelocity = ctx.inputAxiVec3 * cfg.AirAccelerationSpeed * ctx.deltaTime;
+                Vector3 addedVelocity = ctx.moveInputVector * cfg.AirAccelerationSpeed * ctx.deltaTime;
 
                 Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(output, ctx.motor.CharacterUp);
 

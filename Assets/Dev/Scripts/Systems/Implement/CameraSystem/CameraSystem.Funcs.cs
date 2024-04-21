@@ -8,11 +8,11 @@ namespace PJR
 { 
     public partial class CameraSystem : MonoSingletonSystem<CameraSystem>
     {
-        private GameObject cameraRoot;
-        private Camera mainCamera;
-        private CinemachineBrain cinemachineBrain;
+        public GameObject cameraRoot;
+        public Camera mainCamera;
+        public CinemachineBrain cinemachineBrain;
 
-        private CinemachineVirtualCamera mainVCamera;
+        public CinemachineVirtualCamera mainVCamera;
         public static void CreatePlayerCamera(PlayerEntity playerEntity)
         {
             if (inst.mainCamera != null)
@@ -37,10 +37,26 @@ namespace PJR
                 //body
                 var transposer = inst.mainVCamera.AddCinemachineComponent<CinemachineTransposer>();
                 transposer.m_BindingMode = CinemachineTransposer.BindingMode.WorldSpace;
-                transposer.m_FollowOffset = new Vector3(0, 1.65f, -4.35f);
+                transposer.m_FollowOffset = new Vector3(0, 1.65f, 0f);
                 //aim
                 var composer = inst.mainVCamera.AddCinemachineComponent<CinemachineComposer>();
                 composer.m_TrackedObjectOffset = new Vector3(0, 1, 0);
+                //path
+                CinemachineSmoothPath path = null;
+                var sceneRoot = SceneSystem.instance.sceneRoot;
+                if (sceneRoot != null)
+                {
+                    Transform raceCameraPathGobj = sceneRoot.transform.Find("Cameras/RaceCameraPath");
+                    if (raceCameraPathGobj != null)
+                        path = raceCameraPathGobj.GetComponent<CinemachineSmoothPath>();
+                }
+
+                if (path != null)
+                { 
+                    var ext = inst.mainVCamera.AddComponent<ConemachineDollyDirectionBaseCameraOffset>();
+                    ext.m_Path = path;
+                    inst.mainVCamera.AddExtension(ext);
+                }
             }
         }
 

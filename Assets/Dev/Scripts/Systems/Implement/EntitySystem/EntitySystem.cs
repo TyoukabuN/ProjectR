@@ -22,9 +22,9 @@ namespace PJR
             return true;
         }
 
-        public override void Update()
+        public override void OnUpdate()
         {
-            base.Update();
+            base.OnUpdate();
 
             foreach (var pair in id2LogicEntity) 
             {

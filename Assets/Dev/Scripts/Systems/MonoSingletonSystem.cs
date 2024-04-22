@@ -7,7 +7,6 @@ namespace PJR
 {
     public abstract class MonoSingletonSystem<T> : MonoSingleton<T> where T : MonoSingleton
     {
-        public static List<MonoSingletonSystem<T>> list;
         public override string Name { 
             get { return typeof(T).Name; }
         }
@@ -17,7 +16,8 @@ namespace PJR
         public override void OnInstantiated()
         {
             base.OnInstantiated();
-            MonoSingletonSystem.RegisterSystem(_instance);
+
+            SystemHandler.instance.RegisterSystem(_instance);
 
             LogSystem.Log($"[System][OnInstantiated] {Name}");
         }
@@ -29,24 +29,6 @@ namespace PJR
         {
             base.Init();
             LogSystem.Log($"[System][Init]{typeof(T).Name}");
-        }
-    }
-
-    /// <summary>
-    /// 单例系统
-    /// </summary>
-    public class MonoSingletonSystem
-    {
-        public static List<MonoSingleton> systems;
-        public static void RegisterSystem(MonoSingleton systemInstance)
-        {
-            systems ??= new List<MonoSingleton>();
-            systems.Add(systemInstance);
-        }
-
-        public static void Clear()
-        {
-            systems?.ForEach(instance => instance.Clear());
         }
     }
 }

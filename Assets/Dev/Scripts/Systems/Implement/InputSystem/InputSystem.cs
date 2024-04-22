@@ -86,9 +86,9 @@ namespace PJR
 
             return handle;
         }
-        public override void Update()
+        public override void OnUpdate()
         {
-            base.Update();
+            base.OnUpdate();
         }
     }
 }

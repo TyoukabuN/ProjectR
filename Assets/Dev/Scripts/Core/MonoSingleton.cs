@@ -45,6 +45,7 @@ namespace PJR
         public virtual void Awake() {}
         public virtual void Start() {}
         public virtual void Update() { }
+        public virtual void OnUpdate() { }
         public virtual void LateUpdate() { }
         public virtual void OnDisable() { }
         public virtual void OnDestroy() { }

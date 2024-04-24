@@ -27,6 +27,15 @@ ModelImporter:
   - first:
       74: -6326239019376290995
     second: Slime_Jump_End
+  - first:
+      74: 995097492572389845
+    second: Slime_Jump_Air
+  - first:
+      74: 1885440794893118122
+    second: Slime_Run
+  - first:
+      74: 5356576884460427086
+    second: Slime_Walk
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -100,7 +109,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 0
+  importAnimation: 1
   humanDescription:
     serializedVersion: 3
     human: []

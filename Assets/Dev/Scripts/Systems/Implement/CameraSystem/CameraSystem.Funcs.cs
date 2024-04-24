@@ -55,6 +55,7 @@ namespace PJR
                 { 
                     var ext = inst.mainVCamera.AddComponent<ConemachineDollyDirectionBaseCameraOffset>();
                     ext.m_Path = path;
+                    ext.m_PositionUnits = CinemachinePathBase.PositionUnits.Normalized;
                     inst.mainVCamera.AddExtension(ext);
                 }
             }

@@ -45,6 +45,31 @@ namespace PJR
                 return;
             }
         }
+
+        public static void CreateFromClips(List<AnimationClip> clips, string prefix, string folderPath)
+        {
+            if (clips == null || clips.Count <= 0)
+                return;
+            if (string.IsNullOrEmpty(prefix))
+                return; 
+            if (string.IsNullOrEmpty(folderPath))
+                return;
+            if (AssetDatabase.IsValidFolder(folderPath))
+            {
+                AnimatiomClipTransitionSet asset = ScriptableObject.CreateInstance<AnimatiomClipTransitionSet>();
+                asset.clips = new List<AnimatiomClipSet.KeyValuePair<string, ClipTransition>>();
+                string _prefix = $"{prefix}_";
+                foreach (var clip in clips)
+                {
+                    string key = clip.name.Replace(_prefix, string.Empty);
+                    asset.clips.Add(AnimatiomClipSet.KeyValuePair<string, ClipTransition>.Create(key, new ClipTransition { Clip = clip }));
+                }
+
+                var uniqueFileName = ($"{folderPath}/{prefix}_ClipTransitionSet.asset");
+                UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
+                return;
+            }
+        }
 #endif
     }
 }

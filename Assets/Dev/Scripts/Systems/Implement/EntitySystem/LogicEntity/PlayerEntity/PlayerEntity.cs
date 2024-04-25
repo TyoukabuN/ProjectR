@@ -20,8 +20,8 @@ namespace PJR
 
             context.avatarAssetNames = new AvatarAssetNames()
             {
-                modelName = "Avater_DefaultPlayer.prefab",
-                animationClipSet = "AnimatiomClipTransitionSet.asset"
+                modelName = "Avater_Slime.prefab",
+                animationClipSet = "Slime_ClipTransitionSet.asset"
             };
 
             if (ResourceSystem.TryGetAsset("EntityPhysicsConfig.asset", out var loader))

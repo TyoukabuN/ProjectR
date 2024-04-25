@@ -36,6 +36,7 @@ namespace PJR
 
             motor = gameObject.TryGetComponent<KinematicCharacterMotor>();
             motor.CharacterController = this;
+            motor.SetCapsuleDimensions(CapsuleRadius, CapsuleHeight, CapsuleYOffset);
         }
         public void AfterCharacterUpdate(float deltaTime)
         {

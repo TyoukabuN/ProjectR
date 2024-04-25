@@ -55,17 +55,18 @@ namespace PJR.ScriptStates.Player
             var nameSet = AnimationNameSet.Walk;
             if (inputAxi.magnitude > 0)
             {
-                if (Mathf.Abs(inputAxi.x) <= 0.001f)
-                {
-                    entity.physEntity.Animancer_Play(inputAxi.y > 0 ? nameSet.F : nameSet.B);
-                }
-                else
-                {
-                    if (inputAxi.y > 0)
-                        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.FR : nameSet.FL);
-                    else
-                        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.BR : nameSet.BL);
-                }
+                //if (Mathf.Abs(inputAxi.x) <= 0.001f)
+                //{
+                //    entity.physEntity.Animancer_Play(inputAxi.y > 0 ? nameSet.F : nameSet.B);
+                //}
+                //else
+                //{
+                //    if (inputAxi.y > 0)
+                //        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.FR : nameSet.FL);
+                //    else
+                //        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.BR : nameSet.BL);
+                //}
+                entity.physEntity.Animancer_Play(AnimationNameSet.WALK);
             }
             else
             {
@@ -91,17 +92,18 @@ namespace PJR.ScriptStates.Player
             var nameSet = AnimationNameSet.Dash;
             if (inputAxi.magnitude > 0)
             {
-                if (Mathf.Abs(inputAxi.x) <= 0.001f)
-                {
-                    entity.physEntity.Animancer_Play(inputAxi.y > 0 ? nameSet.F : nameSet.B);
-                }
-                else
-                {
-                    if (inputAxi.y > 0)
-                        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.FR : nameSet.FL);
-                    else
-                        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.BR : nameSet.BL);
-                }
+                //if (Mathf.Abs(inputAxi.x) <= 0.001f)
+                //{
+                //    entity.physEntity.Animancer_Play(inputAxi.y > 0 ? nameSet.F : nameSet.B);
+                //}
+                //else
+                //{
+                //    if (inputAxi.y > 0)
+                //        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.FR : nameSet.FL);
+                //    else
+                //        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.BR : nameSet.BL);
+                //}
+                entity.physEntity.Animancer_Play(AnimationNameSet.RUN);
             }
             else
             {
@@ -132,7 +134,8 @@ namespace PJR.ScriptStates.Player
         {
             base.OnEnter(entity);
             requireJump = true;
-            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_START, 0, FadeMode.FromStart);
+            //animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_START, 0, FadeMode.FromStart);
+            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP, 0, FadeMode.FromStart);
             //animancerState.Events.OnEnd = Animation_OnJumpStartEnd;
         }
         public override void OnChange(int from)
@@ -196,7 +199,8 @@ namespace PJR.ScriptStates.Player
         {
             base.OnEnter(entity);
             var moving = entity.inputHandle.ReadValueVec2(RegisterKeys.Move).magnitude > 0;
-            animancerState = entity.physEntity.Animancer_Play(moving ? AnimationNameSet.JUMP_LAND_M : AnimationNameSet.JUMP_LAND_W);
+            //animancerState = entity.physEntity.Animancer_Play(moving ? AnimationNameSet.JUMP_LAND_M : AnimationNameSet.JUMP_LAND_W);
+            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_END);
             //animancerState.Events.OnEnd = ToPhaseEnd;
             entity.entityContext.RevertJumpCount();
             ToPhaseEnd();

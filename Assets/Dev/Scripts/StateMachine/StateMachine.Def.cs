@@ -69,11 +69,14 @@ namespace PJR.ScriptStates.Player
     {
         public const string IDLE = "Idle";
 
+        public const string JUMP = "Jump";
         public const string JUMP_START = "Jump_Start";
         public const string JUMP_KEEP = "Jump_Keep";
+        public const string JUMP_END = "Jump_End";
         public const string JUMP_LAND_W = "Jump_Land_Wait";
         public const string JUMP_LAND_M = "Jump_Land_Move";
 
+        public const string WALK = "Walk";
         public const string WALK_F = "Walk_Front";
         public const string WALK_FL = "Walk_Front_L";
         public const string WALK_FR = "Walk_Front_R";
@@ -81,6 +84,7 @@ namespace PJR.ScriptStates.Player
         public const string WALK_BL = "Walk_Back_L";
         public const string WALK_BR = "Walk_Back_R";
 
+        public const string RUN = "Run";
         public const string DASH_F = "Dash_Front";
         public const string DASH_FL = "Dash_Front_L";
         public const string DASH_FR = "Dash_Front_R";

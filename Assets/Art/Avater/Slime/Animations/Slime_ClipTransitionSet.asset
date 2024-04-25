@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fc12927ec7b04c4aa1311bfb9addb25, type: 3}
+  m_Name: Slime_ClipTransitionSet
+  m_EditorClassIdentifier: 
+  clips:
+  - Key: Idle
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 0d0b38d80cba59b49ba1554b5896da52, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Run
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 1df0ae9a8867efa4881f514a6161e20d, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump_Start
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 241f7eb80d831554286093fae0fee500, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 0d0b38d80cba59b49ba1554b5896da52, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump_Air
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: dde5ffc19769ca04d8d0cb5ca20ea530, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump_End
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 56f8a0b1c8a8ff543870e4933ba019eb, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Walk
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: d44ede69af78bd24582c11050fe9417a, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN

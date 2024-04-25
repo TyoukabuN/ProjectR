@@ -8,6 +8,8 @@ namespace PJR
 			"Assets/Art/Avater/Player/GlazyRunner/Animations/AnimatiomClipTransitionSet.asset",
 			"Assets/Art/Avater/Player/GlazyRunner/Prefabs/Avater_DefaultPlayer.prefab",
 			"Assets/Art/Avater/Player/GlazyRunner/Prefabs/CLazy.prefab",
+			"Assets/Art/Avater/Slime/Animations/Slime_ClipTransitionSet.asset",
+			"Assets/Art/Avater/Slime/Models/Avater_Slime.prefab",
 			"Assets/Art/Avater/Trap/Test_Trap/Prefabs/Avater_Test_Trap.prefab",
 			"Assets/Dev/Prefabs/ConfigAsset/EntityAttributeConfigAsset.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/EntityPhysicsConfig.asset",

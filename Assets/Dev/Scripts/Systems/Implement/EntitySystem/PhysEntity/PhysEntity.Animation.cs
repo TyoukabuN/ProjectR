@@ -40,6 +40,7 @@ namespace PJR
             avatar = avatar != null ? avatar : this.avatar;
             mainAnimator = avatar.GetComponentInChildren<Animator>();
             animancer = avatar.GetComponentInChildren<AnimancerComponent>();
+            mainAnimator.applyRootMotion = false;
             animatorAgency = avatar.GetComponentInChildren<AnimatorAgency>();
             if(animatorAgency != null)
                 animatorAgency.animatorEventReceiver = this;

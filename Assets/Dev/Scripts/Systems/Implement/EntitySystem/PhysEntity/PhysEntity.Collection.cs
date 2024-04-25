@@ -22,6 +22,10 @@ namespace PJR
         public Action<Collider> onTriggerStay;
         public Action<Collider> onTriggerExit;
 
+        public float CapsuleRadius;
+        public float CapsuleHeight;
+        public float CapsuleYOffset;
+
         protected virtual void Init_Collection(GameObject avatar)
         {
             avatar = avatar != null ? avatar : this.avatar;
@@ -50,14 +54,21 @@ namespace PJR
             var capsuleCollider = avatar.GetComponentInChildren<CapsuleCollider>();
             if (capsuleCollider != null)
             {
-                this.capsuleCollider = gameObject.CopyComponent(capsuleCollider) as CapsuleCollider;
+                this.capsuleCollider = gameObject.AddComponent<CapsuleCollider>();
                 this.capsuleCollider.center = capsuleCollider.center;
                 this.capsuleCollider.height = capsuleCollider.height;
                 this.capsuleCollider.radius = capsuleCollider.radius;
                 this.capsuleCollider.isTrigger = capsuleCollider.isTrigger;
+
+                CapsuleYOffset = capsuleCollider.center.y;
+                CapsuleRadius = capsuleCollider.radius;
+                CapsuleHeight = capsuleCollider.height;
+
                 DestroyImmediate(capsuleCollider);
             }
         }
+
+
 
         protected virtual void Update_Collection()
         { 

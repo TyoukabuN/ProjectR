@@ -11,7 +11,7 @@ namespace PJR
     public partial class PhysEntity : MonoBehaviour , ICharacterController
     {
         [BoxGroup("运动控制")] public KinematicCharacterMotor motor;
-        [BoxGroup("运动控制")] public Rigidbody rigidbody;
+        [BoxGroup("运动控制")] public new Rigidbody rigidbody;
         [BoxGroup("运动控制")] public List<Collider> IgnoredColliders;
 
         public List<ICharacterController> ICharacterControllers;

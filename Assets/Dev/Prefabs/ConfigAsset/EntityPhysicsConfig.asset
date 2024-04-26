@@ -18,8 +18,8 @@ MonoBehaviour:
   ACCGroundedMoveACCSpeed: 20
   MaxAirMoveSpeed: 15
   AirAccelerationSpeed: 15
-  JumpUpSpeed: 1
+  JumpUpSpeed: 7
   JumpableTime: 2
-  Gravity: {x: 0, y: -20, z: 0}
+  Gravity: {x: 0, y: -40, z: 0}
   SpeedDamping: 4
-  OrientationSharpness: 50
+  OrientationSharpness: 40

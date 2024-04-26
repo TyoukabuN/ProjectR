@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace PJR.Input
 {
@@ -70,15 +68,6 @@ namespace PJR.Input
 
         public static class Cache
         {
-            /// <summary>
-            /// 类型自动申请大类防止重复
-            /// </summary>
-            private static int typeCount = 0;
-            /// <summary>
-            /// 大类间隔
-            /// </summary>
-            private static int typeInterval = 1000000;
-
             private static Dictionary<int, Dictionary<int, InputKey>> type2wraps = new Dictionary<int, Dictionary<int, InputKey>>();
             private static Dictionary<string, InputKey> string2wrap = new Dictionary<string, InputKey>();
             public static void CacheWrap(InputKey wrap)
@@ -90,8 +79,8 @@ namespace PJR.Input
                 if (!string.IsNullOrEmpty(wrap.strValue))
                 {
                     if (string2wrap.ContainsKey(wrap.strValue))
-                    {
-                        Debug.LogWarning($"[EntityActionTagWrap][Cache] 重复Cache  [strValue]:{wrap.strValue}");
+                    { 
+                        LogSystem.LogError($"[EntityActionTagWrap][Cache] 重复Cache  [strValue]:{wrap.strValue}");
                     }
                     string2wrap[wrap.strValue] = wrap;
                 }
@@ -104,19 +93,11 @@ namespace PJR.Input
                         type2wraps[wrap.category] = wraps;
                     }
 
-                    //cache intValue
-                    if (wrap.intValue >= 0)
-                    {
-                        if (wraps.ContainsKey(wrap.intValue))
-                        {
-                            Debug.LogWarning($"[EntityActionTagWrap][Cache] 重复Cache  [Type]:{wrap.type} [enumValue]:{wrap.enumValue}");
-                        }
-                        wraps[wrap.intValue] = wrap;
-                    }
-                    else //other
-                    {
-                        wraps[wraps.Count] = wrap;
-                    }
+                    wraps[wraps.Count] = wrap;
+                }
+                else
+                {
+                    LogSystem.LogError($"[EntityActionTagWrap][Cache] 错误category  [category]:{wrap.category}");
                 }
 
             }

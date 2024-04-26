@@ -20,27 +20,7 @@ MonoBehaviour:
         _NormalizedTimes: []
         _Callbacks: []
         _Names: []
-      _Clip: {fileID: 7400000, guid: 0d0b38d80cba59b49ba1554b5896da52, type: 2}
-      _Speed: 1
-      _NormalizedStartTime: NaN
-  - Key: Run
-    Value:
-      _FadeDuration: 0.25
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 1df0ae9a8867efa4881f514a6161e20d, type: 2}
-      _Speed: 1
-      _NormalizedStartTime: NaN
-  - Key: Jump_Start
-    Value:
-      _FadeDuration: 0.25
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 241f7eb80d831554286093fae0fee500, type: 2}
+      _Clip: {fileID: 7400000, guid: 53c744ed18645354bae14fbaf1cd88b4, type: 2}
       _Speed: 1
       _NormalizedStartTime: NaN
   - Key: Jump
@@ -73,6 +53,26 @@ MonoBehaviour:
       _Clip: {fileID: 7400000, guid: 56f8a0b1c8a8ff543870e4933ba019eb, type: 2}
       _Speed: 1
       _NormalizedStartTime: NaN
+  - Key: Jump_Start
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 241f7eb80d831554286093fae0fee500, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Run
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 1df0ae9a8867efa4881f514a6161e20d, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
   - Key: Walk
     Value:
       _FadeDuration: 0.25
@@ -81,5 +81,35 @@ MonoBehaviour:
         _Callbacks: []
         _Names: []
       _Clip: {fileID: 7400000, guid: d44ede69af78bd24582c11050fe9417a, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Fall
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: afe229c947696d24aa5e47404f729c8f, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Fall_Keep
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 7dd487df9296ac34f98f4c08791fb14e, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Fall_Start
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: ed53fca1a0b083a42b6600c220292d4f, type: 2}
       _Speed: 1
       _NormalizedStartTime: NaN

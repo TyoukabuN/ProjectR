@@ -63,6 +63,16 @@ namespace PJR.ScriptStates.Player
         }
     }
 
+    public class Trans_Falling : ScriptTransition<Trans_Falling> 
+    {
+        protected Trans_Falling() { }
+        public override bool Check(EntityScriptState state)
+        {
+            bool falling = state.entity.physEntity.motor.BaseVelocity.y < 0;
+            return !inverse ? falling : !falling;
+        }
+    }
+
     public struct DirectionNameSet { public string F, FL, FR, B, BL, BR; }
 
     public static class AnimationNameSet 

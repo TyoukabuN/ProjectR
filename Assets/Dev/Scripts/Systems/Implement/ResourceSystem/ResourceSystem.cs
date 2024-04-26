@@ -36,13 +36,14 @@ namespace PJR
             { 
                 loader = new EditorResourceLoader(assetFullName, assetType);
                 assetFullName2Loader[assetFullName] = loader;
-                assetame2Loader[assetName] = loader;
+                assetame2Loader[assetName] = loader; 
             }
 
             return loader;
-#endif
+#else
             //TODO:LoadAsset
             return null;
+#endif
         }
 
         /// <summary>

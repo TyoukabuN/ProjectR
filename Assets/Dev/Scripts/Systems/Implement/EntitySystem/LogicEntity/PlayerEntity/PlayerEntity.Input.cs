@@ -5,6 +5,15 @@ namespace PJR
 {
     public partial class PlayerEntity : LogicEntity
     {
+        public enum OrientationMethod
+        {
+            TowardsCamera,
+            TowardsMovement,
+        }
+
+        public OrientationMethod orientationMethod = OrientationMethod.TowardsMovement;
+
+
         public KCContext _inputKCContent = null;
         public KCContext InputKCContent { 
             get {
@@ -47,11 +56,16 @@ namespace PJR
                 {
                     cameraPlanarDirection = Vector3.ProjectOnPlane(CameraRotation * Vector3.up, context.motor.CharacterUp).normalized;
                 }
-                context.lookInputVector = cameraPlanarDirection;
 
                 Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, context.motor.CharacterUp);
 
                 context.moveInputVector = cameraPlanarRotation * context.rawMoveInputVector;
+
+                if(orientationMethod == OrientationMethod.TowardsCamera)
+                    context.lookInputVector = cameraPlanarDirection;
+                else if(orientationMethod == OrientationMethod.TowardsMovement)
+                    context.lookInputVector = context.moveInputVector.normalized;
+
             }
 
             context.direction = context.moveInputVector;

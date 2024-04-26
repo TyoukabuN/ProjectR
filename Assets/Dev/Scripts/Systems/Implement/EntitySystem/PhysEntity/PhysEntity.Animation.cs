@@ -24,7 +24,6 @@ namespace PJR
 
         public Action onAnimationClipEvent;
 
-
         [Serializable]
         public enum AnimationLayerType : int
         {
@@ -39,11 +38,17 @@ namespace PJR
         {
             avatar = avatar != null ? avatar : this.avatar;
             mainAnimator = avatar.GetComponentInChildren<Animator>();
-            animancer = avatar.GetComponentInChildren<AnimancerComponent>();
-            mainAnimator.applyRootMotion = false;
-            animatorAgency = avatar.GetComponentInChildren<AnimatorAgency>();
-            if(animatorAgency != null)
-                animatorAgency.animatorEventReceiver = this;
+            if (mainAnimator != null)
+            { 
+                mainAnimator.applyRootMotion = false;
+
+                var animeRoot = mainAnimator.gameObject;
+                animancer = animeRoot.TryGetComponent<AnimancerComponent>();
+                //
+                animatorAgency = animeRoot.TryGetComponent<AnimatorAgency>();
+                if(animatorAgency != null)
+                    animatorAgency.animatorEventReceiver = this;
+            }
         }
         /// <summary>
         /// 初始化动画集
@@ -166,7 +171,6 @@ namespace PJR
             }
             return null;
         }
-
         #endregion
 
 

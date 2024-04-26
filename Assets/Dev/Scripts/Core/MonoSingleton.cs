@@ -40,12 +40,8 @@ namespace PJR
         public virtual void Init() { }
         public virtual void Clear() { }
 
-        //unity messages
-        public virtual void OnEnable() {}
-        public virtual void Awake() {}
-        public virtual void Start() {}
-        public virtual void Update() { }
         public virtual void OnUpdate() { }
+        //unity messages
         public virtual void LateUpdate() { }
         public virtual void OnDisable() { }
         public virtual void OnDestroy() { }

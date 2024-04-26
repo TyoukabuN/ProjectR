@@ -235,62 +235,7 @@ namespace PJR
             }
         }
 
-        ///// <summary>
-        ///// 设置Owner<para/>
-        ///// 不一定需要设置Owner
-        ///// </summary>
-        ///// <param name="monoEntity"></param>
-        //public virtual void SetOwner(LogicEntity monoEntity)
-        //{
-        //    OwnerEntity = monoEntity;
-        //    contactBox.SetupOwner(this);
-        //}
-
-        //public void SetCollisionLayer(int layerIndex,bool alsoGameObjectLayer = false)
-        //{
-        //    if (contactBox == null)
-        //        return;
-        //    contactBox.allowContactLayer = 1 <<layerIndex;
-        //    if(alsoGameObjectLayer)
-        //        gameObject.layer = layerIndex;
-        //    if (collider != null)
-        //    { 
-        //        //collider.includeLayers = 1 << layerIndex;
-        //        //collider.excludeLayers = ~collider.includeLayers;
-        //    }
-        //}
-
-        //public void SetCollisionLayer(LayerMask layerMask)
-        //{
-        //    if (contactBox == null)
-        //        return;
-        //    contactBox.allowContactLayer = layerMask;
-        //    if (collider != null)
-        //    { 
-        //        //collider.includeLayers = layerMask;
-        //        //collider.excludeLayers = ~collider.includeLayers;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 设置碰撞标记位
-        ///// </summary>
-        ///// <param name="allowContactSelfEntity">允许对自身接触</param>
-        ///// <param name="allowInnerUnitCollision">允许对自身碰撞</param>
-        ///// <param name="allowInnerTeamCollision">允许对同队他人碰撞</param>
-        ///// <param name="allowExternTeamCollision">允许对不同队他人碰撞</param>
-        //public virtual void SetCollisionFlag(
-        //    bool allowContactSelfEntity, 
-        //    bool allowInnerUnitCollision, 
-        //    bool allowInnerTeamCollision, 
-        //    bool allowExternTeamCollision)
-        //{
-        //    contactBox.allowContactSelfEntity = allowContactSelfEntity;
-        //    contactBox.allowInnerUnitCollision = allowInnerUnitCollision;
-        //    contactBox.allowInnerTeamCollision = allowInnerTeamCollision;
-        //    contactBox.allowExternTeamCollision = allowExternTeamCollision;
-        //}
-        public Collider collider { 
+        public new virtual Collider collider { 
             get { 
                 return shape == FieldShape.Sphere ? sphereCollider : boxCollider; 
             } 
@@ -336,20 +281,6 @@ namespace PJR
                 return time < duration;
             }
         }
-
-        //public IEnumerable<ICollisionBox> Boxes {
-        //    get { yield return contactBox; }
-        //}
-
-        //public Transform Transform => gameObject.transform;
-
-        //public void AddBox(ICollisionBox box)
-        //{
-        //}
-
-        //public void RemoveBox(ICollisionBox box)
-        //{
-        //}
         #endregion
 
         public virtual void OnRadiusChanged()

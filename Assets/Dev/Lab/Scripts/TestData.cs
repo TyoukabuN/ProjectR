@@ -11,7 +11,7 @@ public class TestData : ScriptableObject
     //  CustomAddFunction = "AddElement",
     //  CustomRemoveIndexFunction = "RemoveAt"
     //)]
-    [ListDrawerSettings(Expanded = true)]
+    [ListDrawerSettings]
     public List<TestDataItem> items = new List<TestDataItem>();
 
     [OnInspectorGUI]

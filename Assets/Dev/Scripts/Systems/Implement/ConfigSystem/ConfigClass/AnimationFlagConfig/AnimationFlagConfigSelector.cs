@@ -44,7 +44,7 @@ public class AnimationFlagConfigSelector : OdinMenuEditorWindow
     }
 
     private static string Select_Tips = "至少选择一个State Id";
-    protected override void OnGUI()
+    protected override void OnImGUI()
     {
         this.MenuWidth = position.width;
 

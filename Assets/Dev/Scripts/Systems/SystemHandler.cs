@@ -22,7 +22,7 @@ namespace PJR
         {
             systems?.ForEach(instance => instance.Clear());
         }
-        public override void Update()
+        void Update()
         {
             systems?.ForEach(instance => instance.OnUpdate());
         }

@@ -51,12 +51,12 @@ public class AnimationFlagConfigItem : ScriptableObject
         return new KeyValuePair<int, AnimationFlagConfigItem>(item.id, item);
     }
 
-    public string ToString()
+    public new string ToString()
     {
         var sb = new System.Text.StringBuilder();
 
         sb.AppendLine($"[ToString] {this.GetType().Name} = ");
-        sb.AppendLine($"{{");
+        sb.AppendLine($"{{"); 
 
         foreach (FieldInfo field in this.GetType().GetFields())
         {

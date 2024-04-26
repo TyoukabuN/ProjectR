@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using PJR;
+using UnityEngine.WSA;
 
 public static class ModelImportUtil
 {
@@ -31,19 +31,28 @@ public static class ModelImportUtil
             else if(!string.IsNullOrEmpty(AssetDatabase.CreateFolder(Path.GetDirectoryName(dir), "Animations")))
                 dir = animaFolder;
 
+            //抽取
+            List<string> clipPaths = new List<string>();
             var clips = AssetDatabase.LoadAllAssetsAtPath(assetPath).Where(item => item is AnimationClip);
             try
             {
                 foreach (var clip in clips)
-                    CopyOrCreateClip(clip, dir);
+                { 
+                    var clipPath = CopyOrCreateClip(clip, dir);
+                    if(!string.IsNullOrEmpty(clipPath))
+                        clipPaths.Add(clipPath);
+                }
             }
-            finally {
-                importer.importAnimation = false;
-                AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(obj), ImportAssetOptions.ForceUpdate);
-                AssetDatabase.StopAssetEditing();
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh( ImportAssetOptions.ForceUpdate);
-            }
+            finally { }
+            importer.importAnimation = false;
+            AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(obj), ImportAssetOptions.ForceUpdate);
+
+            AssetDatabase.StopAssetEditing();
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+
+            //生成clipSet
+            CreateClipTransitionSet(clipPaths);
         }
     }
     [MenuItem("Assets/PJR/美术工具/提取动画", true)]
@@ -81,10 +90,37 @@ public static class ModelImportUtil
         AnimatiomClipTransitionSet.CreateFromClips(clips, prefix, folder);
     }
 
-    private static void CopyOrCreateClip(Object clip, string exportFolder)
+    public static void CreateClipTransitionSet(List<string> clipPaths)
+    {
+        string folder = string.Empty;
+        string prefix = string.Empty;
+        var clips = new List<AnimationClip>();
+        foreach (var assetPath in clipPaths)
+        {
+            var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(assetPath);
+            if (clip == null)
+                continue;
+            clips.Add(clip);
+            //
+            if (string.IsNullOrEmpty(prefix))
+            {
+                int index = clip.name.IndexOf("_");
+                if (index > 0)
+                {
+                    prefix = clip.name.Substring(0, index);
+                }
+            }
+            //
+            if (string.IsNullOrEmpty(folder) && AssetDatabase.IsValidFolder(Path.GetDirectoryName(assetPath)))
+                folder = Path.GetDirectoryName(assetPath);
+        }
+        AnimatiomClipTransitionSet.CreateFromClips(clips, prefix, folder);
+    }
+
+    private static string CopyOrCreateClip(Object clip, string exportFolder)
     {
         if (clip.name.StartsWith("__preview__"))
-            return;
+            return string.Empty;
 
         var instance = Object.Instantiate(clip);
         AnimationClip newAnim = instance as AnimationClip;
@@ -113,6 +149,7 @@ public static class ModelImportUtil
         {
             AssetDatabase.CreateAsset(newAnim, exportPath);
         }
+        return exportPath;
     }
 
     public static bool GetImporter<T>(Object selectedObject,out T importer)where T : AssetImporter

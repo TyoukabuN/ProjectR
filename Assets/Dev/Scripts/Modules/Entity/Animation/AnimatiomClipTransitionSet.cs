@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.Serialization;
 using Sirenix.OdinInspector;
 using Animancer;
 using System.IO;
@@ -27,7 +26,7 @@ namespace PJR
             {
                 ScriptableObject asset = ScriptableObject.CreateInstance<AnimatiomClipTransitionSet>();
                 var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath(assetPath + "/AnimatiomClipTransitionSet.asset");
-                UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
+                AssetDatabase.CreateAsset(asset, uniqueFileName);
                 return;
             }
             //从clipset中创建
@@ -41,7 +40,7 @@ namespace PJR
                     asset.clips.Add(AnimatiomClipSet.KeyValuePair<string, ClipTransition>.Create(pair.Key, new ClipTransition { Clip = pair.Value }));
                 }
                 var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath(Path.GetDirectoryName(assetPath) + "/AnimatiomClipTransitionSet.asset");
-                UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
+                AssetDatabase.CreateAsset(asset, uniqueFileName);
                 return;
             }
         }
@@ -66,7 +65,9 @@ namespace PJR
                 }
 
                 var uniqueFileName = ($"{folderPath}/{prefix}_ClipTransitionSet.asset");
-                UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
+                AssetDatabase.DeleteAsset(uniqueFileName);
+                AssetDatabase.Refresh();
+                AssetDatabase.CreateAsset(asset, uniqueFileName);
                 return;
             }
         }

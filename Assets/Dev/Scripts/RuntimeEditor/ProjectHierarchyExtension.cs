@@ -42,9 +42,9 @@ namespace PJR
             {"Assets/Art/Audio/Oggs",new GUIContent("声音ogg文件")},
             {"Assets/Art/Audio/Prefabs",new GUIContent("声音场景放置预置")},
 
-            {"Assets/Art/Avater",new GUIContent("模型")},
-            {"Assets/Art/Avater/Player",new GUIContent("玩家角色")},
-            {"Assets/Art/Avater/Trap",new GUIContent("机关陷阱")},
+            {"Assets/Art/Avatar",new GUIContent("模型")},
+            {"Assets/Art/Avatar/Player",new GUIContent("玩家角色")},
+            {"Assets/Art/Avatar/Trap",new GUIContent("机关陷阱")},
 
             {"Assets/Art/Effect",new GUIContent("特效")},
 

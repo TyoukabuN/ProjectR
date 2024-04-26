@@ -135,7 +135,7 @@ namespace PJR.ScriptStates.Player
             base.OnEnter(entity);
             requireJump = true;
             //animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_START, 0, FadeMode.FromStart);
-            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP, 0, FadeMode.FromStart);
+            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_START, 0, FadeMode.FromStart);
             //animancerState.Events.OnEnd = Animation_OnJumpStartEnd;
         }
         public override void OnChange(int from)

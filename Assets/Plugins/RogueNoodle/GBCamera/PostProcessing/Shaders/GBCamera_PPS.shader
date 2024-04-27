@@ -98,6 +98,7 @@ Shader "RogueNoodle/GBCamera_PPS"
 
 				float4 color = tex2Dlod( _Palette, float4( appendResult3, 0, 0.0) );
 				color.rgb = lerp( tex2D( _MainTex, appendResult18 ) , color.rgb , _PaletteOn);
+				color.rgb = lerp( color.rgb , 0.0 , ( 1.0 - _Fade ));
 				color.a = 1;
 				
 				return color;

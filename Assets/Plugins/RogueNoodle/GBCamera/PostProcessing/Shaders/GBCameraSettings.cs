@@ -10,6 +10,8 @@ public sealed class GBCameraSettings : PostProcessEffectSettings
 {
 	[Tooltip( "Palette" )]
 	public TextureParameter _Palette = new TextureParameter {  };
+    [Tooltip("PaletteOn")]
+    public BoolParameter _PaletteOn = new BoolParameter { value = true };
 	[Tooltip( "Res X" )]
 	public FloatParameter _ResX = new FloatParameter { value = 160f };
 	[Tooltip( "Res Y" )]
@@ -24,10 +26,11 @@ public sealed class GBCameraPPSRenderer : PostProcessEffectRenderer<GBCameraSett
 	{
 		var sheet = context.propertySheets.Get( Shader.Find( "RogueNoodle/GBCamera_PPS" ) );
 		if(settings._Palette.value != null) sheet.properties.SetTexture( "_Palette", settings._Palette );
-		sheet.properties.SetFloat("_PaletteOn", settings._Palette.overrideState? 1 : 0);
-		sheet.properties.SetFloat( "_ResX", settings._ResX );
+		sheet.properties.SetFloat("_PaletteOn", settings._PaletteOn.value? 1 : 0);
+        sheet.properties.SetFloat( "_ResX", settings._ResX );
 		sheet.properties.SetFloat( "_ResY", settings._ResY );
 		sheet.properties.SetFloat( "_Fade", settings._Fade );
+		Debug.Log(settings._Palette.overrideState);
 		context.command.BlitFullscreenTriangle( context.source, context.destination, sheet, 0 );
 	}
 }

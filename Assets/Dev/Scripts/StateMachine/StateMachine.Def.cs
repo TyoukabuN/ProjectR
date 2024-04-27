@@ -77,14 +77,17 @@ namespace PJR.ScriptStates.Player
 
     public static class AnimationNameSet 
     {
-        public const string IDLE = "Idle";
+        public const string Idle = "Idle";
 
-        public const string JUMP = "Jump";
-        public const string JUMP_START = "Jump_Start";
-        public const string JUMP_KEEP = "Jump_Keep";
-        public const string JUMP_END = "Jump_End";
-        public const string JUMP_LAND_W = "Jump_Land_Wait";
-        public const string JUMP_LAND_M = "Jump_Land_Move";
+        public const string Jump = "Jump";
+        public const string Jump_Air_Start = "Jump_Air_Start";
+        public const string Jump_Start = "Jump_Start";
+        public const string Jump_Fall_Start = "Jump_Fall_Start";
+        public const string Jump_Fall_Loop = "Jump_Fall_Loop";
+        public const string Jump_Land = "Jump_Land";
+
+        public const string Jump_Land_Wait = "Jump_Land_Wait";
+        public const string Jump_Land_Move = "Jump_Land_Move";
 
         public const string WALK = "Walk";
         public const string WALK_F = "Walk_Front";

@@ -33,7 +33,7 @@ namespace PJR.ScriptStates.Player
     {
         public override void Update(EntityContext stateContext)
         {
-            entity.physEntity.Animancer_Play(AnimationNameSet.IDLE);
+            entity.physEntity.Animancer_Play(AnimationNameSet.Idle);
         }
         public override bool CanChange(int from)
         {
@@ -70,7 +70,7 @@ namespace PJR.ScriptStates.Player
             }
             else
             {
-                entity.physEntity.Animancer_Play(AnimationNameSet.IDLE);
+                entity.physEntity.Animancer_Play(AnimationNameSet.Idle);
             }
         }
         public override void OnUpdateVelocity(KCContext context)
@@ -107,7 +107,7 @@ namespace PJR.ScriptStates.Player
             }
             else
             {
-                entity.physEntity.Animancer_Play(AnimationNameSet.IDLE);
+                entity.physEntity.Animancer_Play(AnimationNameSet.Idle);
             }
         }
         public override bool CanChange(int from)
@@ -127,15 +127,16 @@ namespace PJR.ScriptStates.Player
         public bool requireJump = false;
         protected void Animation_OnJumpStartEnd()
         {
-            //if (!entity.physEntity.Grounded) entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_KEEP, 0, FadeMode.FromStart);
         }
 
         public override void OnEnter(LogicEntity entity)
         {
             base.OnEnter(entity);
             requireJump = true;
-            //animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_START, 0, FadeMode.FromStart);
-            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_START, 0, FadeMode.FromStart);
+            if (entity.physEntity.Grounded)
+                animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.Jump_Start, 0, FadeMode.FromStart);
+            else
+                animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.Jump_Air_Start, 0, FadeMode.FromStart);
             //animancerState.Events.OnEnd = Animation_OnJumpStartEnd;
         }
         public override void OnChange(int from)
@@ -160,7 +161,13 @@ namespace PJR.ScriptStates.Player
                 entity.entityContext.AddJumpCount();
                 PlayerControlFunc.EnterToAir(context);
                 phase = Phase.End;
-            }
+            }else
+                PlayerControlFunc.OnAir(context);
+        }
+        public override void Update(EntityContext entityContext)
+        {
+            base.Update(entityContext);
+            LogSystem.Log(normalizeTime);
         }
     }
     public class JumpFallingState : AnimationState
@@ -169,7 +176,7 @@ namespace PJR.ScriptStates.Player
         {
             base.OnEnter(entity);
 
-            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_KEEP, 0, FadeMode.FromStart);
+            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.Jump_Fall_Loop);
         }
         public override bool CanChange(int from)
         {
@@ -193,14 +200,14 @@ namespace PJR.ScriptStates.Player
         protected void Animation_OnJumpStartEnd()
         {
             if (!entity.physEntity.Grounded)
-                entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_KEEP, 0, FadeMode.FromStart);
+                entity.physEntity.Animancer_Play(AnimationNameSet.Jump_Fall_Loop);
         }
         public override void OnEnter(LogicEntity entity)
         {
             base.OnEnter(entity);
             var moving = entity.inputHandle.ReadValueVec2(RegisterKeys.Move).magnitude > 0;
             //animancerState = entity.physEntity.Animancer_Play(moving ? AnimationNameSet.JUMP_LAND_M : AnimationNameSet.JUMP_LAND_W);
-            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.JUMP_END);
+            animancerState = entity.physEntity.Animancer_Play(AnimationNameSet.Jump_Land);
             //animancerState.Events.OnEnd = ToPhaseEnd;
             entity.entityContext.RevertJumpCount();
             ToPhaseEnd();

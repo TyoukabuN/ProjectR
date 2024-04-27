@@ -88,7 +88,9 @@ namespace PJR
                 jumpDirection = ctx.motor.GroundingStatus.GroundNormal;
             }
 
-            output += (jumpDirection * JumpUpSpeed) - Vector3.Project(output, motor.CharacterUp);
+            //output += (jumpDirection * JumpUpSpeed) - Vector3.Project(output, motor.CharacterUp);
+            output.y = 0;
+            output += (jumpDirection * JumpUpSpeed);
             ctx.currentVelocity = output;
 
             motor.ForceUnground();

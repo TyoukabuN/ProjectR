@@ -66,6 +66,7 @@ namespace PJR.ScriptStates
                     continue;
                 if (transitions[i].Check(state))
                 {
+                    LogSystem.Log(transitions[i].ToString());
                     toState = transitions[i].toState;
                     if (states[toState] == null)
                         continue;

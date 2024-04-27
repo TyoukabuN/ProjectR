@@ -7,19 +7,25 @@ namespace PJR
 {
     public static class TrapFunc
     {
-        public static void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity)
+        public static void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
         {
-            if (evt.actionType == TActionType.AddForce)
+            if (evt.trapMethod.ActionType == TActionType.AddForce)
             {
-                var param = evt.trapActionEventParam as TrapActionParamAsset_AddForce;
-                if (param == null)
+                var method = evt.trapMethod as TrapMethod_AddForce;
+                if (method == null)
                     return;
-                var controller = trapEntity.AddExtraVelocity(
-                    trapEntity.entityContext.LogicEntityIDStr,
-                    param.force,
-                    param.duration,
-                    param.damp);
-                controller.easeType = param.easing;
+
+                Vector3 dir = trapEntity.transform.position - targetEntity.transform.position;
+                dir = Vector3.ProjectOnPlane(dir, trapEntity.transform.up);
+                dir.Normalize();
+                Quaternion rot = Quaternion.LookRotation(dir,Vector3.up);
+
+                var controller = targetEntity.AddExtraVelocity(
+                    targetEntity.entityContext.LogicEntityIDStr,
+                    rot * method.force,
+                    method.duration,
+                    method.damp);
+                controller.easeType = method.easing;
             }
         }
     }

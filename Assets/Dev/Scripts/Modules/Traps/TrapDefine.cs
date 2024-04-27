@@ -44,16 +44,28 @@ namespace PJR
     [Serializable]
     public class TActionEvent
     {
-        [LabelText("类型")]
-        public TActionType actionType = TActionType.AddForce;
         [ShowInInspector]
-        [LabelText("事件参数文件")]
-        public TrapActionParamAsset trapActionEventParam = null;
+        [SerializeReference]
+        [LabelText("实现方法")]
+        public TrapMethod trapMethod;
     }
 
     [Serializable]
-    public class AddForce : TrapActionParamAsset
+    public abstract class TrapMethod
     {
+        [ShowInInspector]
+        [DisableIf("@true")]
+        public abstract TActionType ActionType { get; }
+
+        public abstract bool HasDirection { get; }
+        public abstract Vector3 Direction { get; }
+    }
+    public class TrapMethod_AddForce : TrapMethod
+    {
+        public override TActionType ActionType => TActionType.AddForce;
+        public override bool HasDirection => true;
+        public override Vector3 Direction => force;
+
         [LabelText("力")] public Vector3 force = Vector3.zero;
         [LabelText("持续时间")] public float duration = 0.333f;
         [LabelText("衰减系数")][PropertyTooltip(ExtraVelocity.tooltip)] public float damp = -1f;

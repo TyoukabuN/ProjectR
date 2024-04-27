@@ -121,6 +121,8 @@ namespace PJR.ScriptStates.Player
                 states[(int)currentEState].OnChange(ePlayerState);
             }
             currentEState = ePlayerState;
+            EPlayerState estate = (EPlayerState)currentEState;
+            LogSystem.Log(estate.ToString());
             states[(int)currentEState].OnEnter(ownEntity);
             return true;
         }

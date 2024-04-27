@@ -49,13 +49,13 @@ namespace PJR
             Init();
             return phase2Event.TryGetValue(entityPhase, out phaseEvent);
         }
-        public bool TryExecutePhaseEvent(TEntityPhase entityPhase, LogicEntity targetEntity)
+        public bool TryExecutePhaseEvent(TEntityPhase entityPhase, LogicEntity trapEntity, LogicEntity targetEntity)
         {
             Init();
             if (!TryGetPhaseEvent(entityPhase, out var entityPhaseEvent))
                 return false;
             
-            ExecuteActionEvents(entityPhaseEvent.events, targetEntity);
+            ExecuteActionEvents(entityPhaseEvent.events, trapEntity, targetEntity);
             return true;
         }
 
@@ -63,27 +63,15 @@ namespace PJR
         /// 各种陷阱方法触发的地方
         /// </summary>
         /// <param name="events"></param>
-        /// <param name="targetEntity">陷阱的目标</param>
-        private void ExecuteActionEvents(List<TActionEvent> events, LogicEntity targetEntity)
+        /// <param name="targetEntity">触发陷阱的目标</param>
+        private void ExecuteActionEvents(List<TActionEvent> events, LogicEntity trapEntity, LogicEntity targetEntity)
         {
             for (int i = 0; i < events.Count; i++)
             {
                 var evt = events[i];
                 if (evt == null)
                     continue;
-                TrapFunc.ExecuteActionEvent(evt, targetEntity);
-                if (evt.actionType == TActionType.AddForce)
-                {
-                    var param = evt.trapActionEventParam as TrapActionParamAsset_AddForce;
-                    if (param == null)
-                        continue;
-                    var controller = targetEntity.AddExtraVelocity(
-                        targetEntity.entityContext.LogicEntityIDStr,
-                        param.force,
-                        param.duration,
-                        param.damp);
-                    controller.easeType = param.easing;
-                }
+                TrapFunc.ExecuteActionEvent(evt, trapEntity, targetEntity);
             }
         }
     }

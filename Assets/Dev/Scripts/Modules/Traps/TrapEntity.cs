@@ -35,7 +35,7 @@ namespace PJR
         {
             var phys = collider.GetComponent<PhysEntity>();
             if (phys != null && phys.logicEntity != null)
-                configAsset.TryExecutePhaseEvent(TEntityPhase.OnTriggerEnter, phys.logicEntity);
+                configAsset.TryExecutePhaseEvent(TEntityPhase.OnTriggerEnter,this, phys.logicEntity);
         }
 
         public void OnDrawGizmos()

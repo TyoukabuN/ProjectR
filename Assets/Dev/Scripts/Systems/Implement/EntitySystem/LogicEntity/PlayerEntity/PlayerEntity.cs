@@ -20,7 +20,7 @@ namespace PJR
 
             context.avatarAssetNames = new AvatarAssetNames()
             {
-                modelName = "Avater_Slime.prefab",
+                modelName = "Avatar_Slime.prefab",
                 animationClipSet = "Slime_ClipTransitionSet.asset"
             };
 

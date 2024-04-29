@@ -30,7 +30,6 @@ public sealed class GBCameraPPSRenderer : PostProcessEffectRenderer<GBCameraSett
         sheet.properties.SetFloat( "_ResX", settings._ResX );
 		sheet.properties.SetFloat( "_ResY", settings._ResY );
 		sheet.properties.SetFloat( "_Fade", settings._Fade );
-		Debug.Log(settings._Palette.overrideState);
 		context.command.BlitFullscreenTriangle( context.source, context.destination, sheet, 0 );
 	}
 }

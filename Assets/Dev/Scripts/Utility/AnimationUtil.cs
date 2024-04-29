@@ -41,6 +41,7 @@ namespace PJR
             public AnimationCurve localScaaleY;
             public AnimationCurve localScaaleZ;
 
+            TransformValueRecord transRecord = null;
             public TransformCurveHandle(AnimationClip animationClip, string path)
             {
                 if (animationClip == null || string.IsNullOrEmpty(path))
@@ -74,9 +75,12 @@ namespace PJR
             {
                 if (target == null) return;
 
-                Vector3 localPosition = Vector3.zero;
-                Quaternion localRotation = Quaternion.identity;
-                Vector3 localScale = Vector3.zero;
+                if (transRecord == null)
+                    transRecord = TransformUtil.RecordTransformValue(target);
+
+                Vector3 localPosition = transRecord.localPosition;
+                Quaternion localRotation = transRecord.localRotation;
+                Vector3 localScale = transRecord.localScale;
 
                 if (localPositionX != null) localPosition.x = localPositionX.Evaluate(time);
                 if (localPositionY != null) localPosition.y = localPositionY.Evaluate(time);
@@ -94,6 +98,13 @@ namespace PJR
                 target.localPosition = localPosition;
                 target.localRotation = localRotation;
                 target.localScale = localScale;
+            }
+
+            public void Revert(Transform transform)
+            {
+                if (transRecord == null)
+                    return;
+                transRecord.Revert(transform);
             }
         }
     }

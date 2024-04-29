@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.Searcher.Searcher.AnalyticsEvent;
 
 [ExecuteAlways]
 public class AnimationTest : MonoBehaviour
@@ -13,6 +14,9 @@ public class AnimationTest : MonoBehaviour
     public AnimationClip animationClip;
 
     public float elapsedTime = 0f;
+
+    [ShowInInspector]
+    public ChildClass classRef;
 
     private void Update()
     {
@@ -49,4 +53,38 @@ public class AnimationTest : MonoBehaviour
             EditorApplication.isPlaying = true;
         }
     }
+
+    public enum EventFrameType
+    {
+        OneFrame,
+        Continue,
+    }
+
+    [ShowInInspector]
+    [ShowInInlineEditors]
+    public class ChildClass
+    {
+        //[HideInInspector]
+        //private EventFrameType type;
+        //public virtual EventFrameType EventType
+        //{
+        //    get { return type; }
+        //    protected set { type = value; }
+        //}
+    }
+
+    public class BaseClass
+    {
+        [SerializeField]
+        [HideInInspector]
+        private EventFrameType eventType;
+
+        [ShowInInspector]
+        public virtual EventFrameType EventType { 
+            get { return eventType; }
+            protected set { eventType = value; }
+        }
+    }
 }
+
+

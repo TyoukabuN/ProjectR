@@ -11,20 +11,20 @@ namespace PJR
     public partial class ProjectHierarchyExtension : MonoBehaviour
     {
         static Dictionary<string, GUIContent> s_HierarchyDesc = new Dictionary<string, GUIContent>()
-    {
-        {"SceneRoot",new GUIContent("场景根对象")},
-        {"Navigation",new GUIContent("导航寻路相关")},
-        {"Background",new GUIContent("远景天空盒等")},
-        {"Grounds",new GUIContent("地面")},
-        {"Buildings",new GUIContent("建筑")},
-        {"Plants",new GUIContent("植物")},
-        {"Effects",new GUIContent("特效")},
-        {"Lights",new GUIContent("灯光")},
-        {"Cameras",new GUIContent("相机")},
-        {"Animations",new GUIContent("动画预制")},
-        {"Procedure",new GUIContent("程序控制")},
-        {"Traps",new GUIContent("陷阱预设")},
-    };
+        {
+            {"SceneRoot",new GUIContent("场景根对象")},
+            {"Navigation",new GUIContent("导航寻路相关")},
+            {"Background",new GUIContent("远景天空盒等")},
+            {"Grounds",new GUIContent("地面")},
+            {"Buildings",new GUIContent("建筑")},
+            {"Plants",new GUIContent("植物")},
+            {"Effects",new GUIContent("特效")},
+            {"Lights",new GUIContent("灯光")},
+            {"Cameras",new GUIContent("相机")},
+            {"Animations",new GUIContent("动画预制")},
+            {"Procedure",new GUIContent("程序控制")},
+            {"Traps",new GUIContent("陷阱预设")},
+        };
 
         private static void OnHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
         {

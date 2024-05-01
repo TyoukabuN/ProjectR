@@ -1,7 +1,6 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace PJR
@@ -70,8 +69,16 @@ namespace PJR
             {
                 var evt = events[i];
                 if (evt == null)
+                {
+                    LogSystem.LogError($"evt == null");
                     continue;
-                TrapFunc.ExecuteActionEvent(evt, trapEntity, targetEntity);
+                }
+                if (evt.trapMethod == null)
+                {
+                    LogSystem.LogError($"evt.trapMethod == null");
+                    continue;
+                }
+                evt.trapMethod.ExecuteActionEvent(evt, trapEntity, targetEntity);
             }
         }
     }

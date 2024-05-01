@@ -21,7 +21,6 @@ namespace PJR
             context.avatarAssetNames = new AvatarAssetNames()
             {
                 modelName = "Avatar_Slime.prefab",
-                animationClipSet = "Slime_ClipTransitionSet.asset"
             };
 
             if (ResourceSystem.TryGetAsset("EntityPhysicsConfig.asset", out var loader))

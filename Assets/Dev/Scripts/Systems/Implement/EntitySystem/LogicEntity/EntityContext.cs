@@ -24,7 +24,7 @@ namespace PJR
 
         public Vector3 originPosition = Vector3.zero;
         public Vector3 originRotation = Vector3.zero;
-        public Vector3 originScale = Vector3.zero;
+        public Vector3 originScale = Vector3.one;
 
         public int jumpCount = 0;
         public void AddJumpCount()
@@ -40,9 +40,11 @@ namespace PJR
     /// <summary>
     /// 构建Avatar所需的各种资源的assetPath
     /// </summary>
-    public class  AvatarAssetNames
+    public class AvatarAssetNames
     {
-        public string modelName;
-        public string animationClipSet;
+        public static AvatarAssetNames Empty = new AvatarAssetNames();
+        //
+        public string modelName = string.Empty;
+        public string animationClipSet = string.Empty;
     }
 }

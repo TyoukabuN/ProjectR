@@ -23,7 +23,9 @@ namespace PJR
             //Player
             if (EntitySystem.LocalPlayer == null)
             {
-                EntitySystem.CreatePlayer();
+                var entityContext = new EntityContext();
+                entityContext.originPosition = PlayBornPoint.transform.position;
+                EntitySystem.CreatePlayer(entityContext);
             }
             //Trap
             SceneTrapRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_TRAP);

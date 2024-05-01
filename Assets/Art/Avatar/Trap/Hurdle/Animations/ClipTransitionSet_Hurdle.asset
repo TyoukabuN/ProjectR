@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fc12927ec7b04c4aa1311bfb9addb25, type: 3}
+  m_Name: ClipTransitionSet_Hurdle
+  m_EditorClassIdentifier: 
+  clips:
+  - Key: Action_1
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: b2b6988147a6ba84a9b72e0c68c9714e, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Idle
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 8a8077d56b8e9cc44963489c80314e34, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN

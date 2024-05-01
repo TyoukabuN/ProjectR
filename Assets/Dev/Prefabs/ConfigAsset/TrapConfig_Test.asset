@@ -17,14 +17,14 @@ MonoBehaviour:
   - entityPhase: 3
     events:
     - trapMethod:
-        rid: 8156717736068382722
+        rid: 7174546505089941504
   references:
     version: 2
     RefIds:
-    - rid: 8156717736068382722
+    - rid: 7174546505089941504
       type: {class: TrapMethod_AddForce, ns: PJR, asm: Assembly-CSharp}
       data:
-        force: {x: 0, y: 1.5, z: -1.326}
+        force: {x: 0, y: 0, z: 0}
         duration: 0.333
         damp: -1
-        easing: 15
+        easing: 1

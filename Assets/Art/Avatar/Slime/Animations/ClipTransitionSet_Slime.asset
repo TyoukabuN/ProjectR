@@ -10,9 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fc12927ec7b04c4aa1311bfb9addb25, type: 3}
-  m_Name: Slime_ClipTransitionSet
+  m_Name: ClipTransitionSet_Slime
   m_EditorClassIdentifier: 
   clips:
+  - Key: Attack
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 669aad172f2b5a7418dc3d48cf457ece, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
   - Key: Idle
     Value:
       _FadeDuration: 0.25
@@ -83,6 +93,26 @@ MonoBehaviour:
       _Clip: {fileID: 7400000, guid: 241f7eb80d831554286093fae0fee500, type: 2}
       _Speed: 1
       _NormalizedStartTime: NaN
+  - Key: Roll_Loop
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: a7889a57425e36a4f928d25ef08aa8b1, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Roll_Reverse_Loop
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 8242e90b76ee1104a908daaa0f00b657, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
   - Key: Run
     Value:
       _FadeDuration: 0.25
@@ -103,33 +133,13 @@ MonoBehaviour:
       _Clip: {fileID: 7400000, guid: d44ede69af78bd24582c11050fe9417a, type: 2}
       _Speed: 1
       _NormalizedStartTime: NaN
-  - Key: Attack
+  - Key: Stumble
     Value:
       _FadeDuration: 0.25
       _Events:
         _NormalizedTimes: []
         _Callbacks: []
         _Names: []
-      _Clip: {fileID: 7400000, guid: 669aad172f2b5a7418dc3d48cf457ece, type: 2}
-      _Speed: 1
-      _NormalizedStartTime: NaN
-  - Key: Roll_Loop
-    Value:
-      _FadeDuration: 0.25
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: a7889a57425e36a4f928d25ef08aa8b1, type: 2}
-      _Speed: 1
-      _NormalizedStartTime: NaN
-  - Key: Roll_Reverse_Loop
-    Value:
-      _FadeDuration: 0.25
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: 8242e90b76ee1104a908daaa0f00b657, type: 2}
+      _Clip: {fileID: 7400000, guid: 945523ea8711cac479ff537186c19e67, type: 2}
       _Speed: 1
       _NormalizedStartTime: NaN

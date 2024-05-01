@@ -19,5 +19,6 @@ namespace PJR
         public virtual void LateUpdate() { }
         public virtual void Destroy() { }
         public virtual void OnCreate(EntityContext context) { }
+        public virtual void EnterState(int state) { }
     }
 }

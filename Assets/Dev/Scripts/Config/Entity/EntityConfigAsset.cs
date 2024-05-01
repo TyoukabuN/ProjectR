@@ -1,10 +1,9 @@
-using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace PJR
 {
+    [Serializable]
     public abstract class EntityConfigAsset : ScriptableObject
     {
     }

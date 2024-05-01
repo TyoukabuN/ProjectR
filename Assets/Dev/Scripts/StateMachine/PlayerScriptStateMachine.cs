@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using PJR.Input;
 using PJR.ScriptStates;
@@ -7,6 +8,7 @@ namespace PJR.ScriptStates.Player
 {
     public class PlayerScriptStateMachine : ScriptEntityStateMachine<EntityScriptState>
     {
+        public override Type StateType => typeof(EPlayerState);
         public override int CurrentEState => currentEState;
 
         private int currentEState = (int)EPlayerState.None;
@@ -14,13 +16,13 @@ namespace PJR.ScriptStates.Player
 
         public override void Init()
         {
-            int length = (int)(int)EPlayerState.End - 1;
+            int length = (int)EPlayerState.End;
             states = new EntityScriptState[length];
             state2transition = new Dictionary<int, List<ScriptTransition>>();
 
             //
-            states[(int)EPlayerState.Stand] = new StandState();
-            state2transition[(int)EPlayerState.Stand] = new List<ScriptTransition>
+            states[(int)EPlayerState.Idle] = new StandState();
+            state2transition[(int)EPlayerState.Idle] = new List<ScriptTransition>
             {
                 ScriptTransition<Trans_OnRunning>.Get((int)EPlayerState.Running),
                 ScriptTransition<Trans_OnWalking>.Get((int)EPlayerState.Walk),
@@ -30,14 +32,14 @@ namespace PJR.ScriptStates.Player
             state2transition[(int)EPlayerState.Walk] = new List<ScriptTransition>
             {
                 ScriptTransition<Trans_OnRunning>.Get((int)EPlayerState.Running),
-                ScriptTransition<Trans_OnWalking>.Get((int)EPlayerState.Stand).SetInverse(true),
+                ScriptTransition<Trans_OnWalking>.Get((int)EPlayerState.Idle).SetInverse(true),
             };
 
             states[(int)EPlayerState.Running] = new RunningState();
             state2transition[(int)EPlayerState.Running] = new List<ScriptTransition>
             {
                 ScriptTransition<Trans_OnRunning>.Get((int)EPlayerState.Walk).SetInverse(true),
-                ScriptTransition<Trans_OnWalking>.Get((int)EPlayerState.Stand).SetInverse(true),
+                ScriptTransition<Trans_OnWalking>.Get((int)EPlayerState.Idle).SetInverse(true),
             };
 
 
@@ -60,30 +62,35 @@ namespace PJR.ScriptStates.Player
             {
                 ScriptTransition<Trans_OnRunning>.Get((int)EPlayerState.Running),
                 ScriptTransition<Trans_OnWalking>.Get((int)EPlayerState.Walk),
-                //ScriptTransition<Trans_OnGrounded>.Get((int)EPlayerState.Stand),
-                ScriptTransition<Trans_OnStateFinish>.Get((int)EPlayerState.Stand).SetCanExitNormalizeTime(0.667f),
+                ScriptTransition<Trans_OnStateFinish>.Get((int)EPlayerState.Idle).SetCanExitNormalizeTime(0.667f),
             };
 
-            //判断不在地面上的转换
+            states[(int)EPlayerState.Stumble] = new StumbleState();
+            state2transition[(int)EPlayerState.Stumble] = new List<ScriptTransition>
+            {
+                ScriptTransition<Trans_OnStateFinish>.Get((int)EPlayerState.Idle).SetCanExitNormalizeTime(0.85f),
+            };
+
+            //判断[在空中]上的转换
             AddTransTo<Trans_OnGrounded>(EPlayerState.Jump_Falling,
                 new int[] {
-                    (int)EPlayerState.Stand,
+                    (int)EPlayerState.Idle,
                     (int)EPlayerState.Walk,
                     (int)EPlayerState.Running,
-                    (int)EPlayerState.Jump_Land
+                    (int)EPlayerState.Jump_Land,
                 }, true);
 
             //可以进入跳跃状态的转换
             AddTransTo<Trans_JumpInputed>(EPlayerState.Jump_Begin,
             new int[] {
-                (int)EPlayerState.Stand,
+                (int)EPlayerState.Idle,
                 (int)EPlayerState.Walk,
                 (int)EPlayerState.Running,
                 (int)EPlayerState.Jump_Falling,
                 (int)EPlayerState.Jump_Land,
             });
 
-            State_Change((int)EPlayerState.Stand);
+            State_Change((int)EPlayerState.Idle);
         }
 
         public void AddTransTo<TransitionType>(EPlayerState toState,int[] states, bool inverse = false) where TransitionType : ScriptTransition
@@ -113,7 +120,10 @@ namespace PJR.ScriptStates.Player
             if (ePlayerState == (int)EPlayerState.None)
                 return false;
             if (states[(int)ePlayerState] == null)
+            {
+                LogSystem.LogError($"Find not state {Enum.ToObject(StateType, ePlayerState)}");
                 return false;
+            }
             if (states[(int)currentEState] != null)
             {
                 if (!states[(int)currentEState].CanChange(ePlayerState))

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Dev/Scripts/Config/Entity/Trap/TrapActionParamAsset_SpeedUp.cs.meta
+guid: b8428fa6f2a3dbf458363f79f39d580d
+========
 guid: 689fe1673d06e1c49b58c6b7e656f936
+>>>>>>>> master:Assets/Dev/Scripts/Modules/Entity/EntityAnimationDefine.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

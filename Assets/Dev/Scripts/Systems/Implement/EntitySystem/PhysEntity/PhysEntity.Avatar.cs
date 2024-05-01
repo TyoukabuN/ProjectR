@@ -48,11 +48,33 @@ namespace PJR
 
         #endregion
 
-        [BoxGroup("Avatar")] private AvatarAssetNames _assetNames;
+
+        #region AssetNams
+        [BoxGroup("Avatar")] private AvatarAssetNames _assetNames = AvatarAssetNames.Empty;
         /// <summary>
         /// 模型所需的asset的名字
         /// </summary>
         public AvatarAssetNames AssetNames { get => _assetNames; set => _assetNames = value; }
+
+        public string ModelName => AssetNames.modelName;
+        public string AnimationClipSetName
+        {
+            get { 
+                string assetName = AssetNames.animationClipSet;
+                if(!string.IsNullOrEmpty(assetName))
+                    return assetName;
+                if (!string.IsNullOrEmpty(ModelName) && ModelName.IndexOf("Avatar_") == 0)
+                {
+                    string avatarName = ModelName.Replace("Avatar_", "").Replace(".prefab", "");
+                    if (string.IsNullOrEmpty(avatarName))
+                        return string.Empty;
+                    AssetNames.animationClipSet = string.Format(EntityDefine.AnimationSetFormat, avatarName);
+                    return AssetNames.animationClipSet;
+                }
+                return string.Empty;
+            }
+        }
+        #endregion
 
         /// <summary>
         /// 根据avatar所需的assetNames加载/创建avatar
@@ -101,7 +123,7 @@ namespace PJR
         {
             //TODO:弄成单独部位的加载器
             //模型
-            if (!string.IsNullOrEmpty(_assetNames.modelName))
+            if (!string.IsNullOrEmpty(ModelName))
             { 
                 var loader_avatar = ResourceSystem.LoadAsset<GameObject>(_assetNames.modelName);
                 if (loader_avatar == null)
@@ -113,7 +135,7 @@ namespace PJR
                 OnLoadAvatarLoadDone(loader_avatar);
             }
 
-            if (!string.IsNullOrEmpty(_assetNames.animationClipSet))
+            if (!string.IsNullOrEmpty(AnimationClipSetName))
             {
                 //动画集
                 var loader_clipSet = ResourceSystem.LoadAsset<AnimatiomClipTransitionSet>(_assetNames.animationClipSet);

@@ -14,6 +14,12 @@ namespace PJR
             physEntity.onUpdateVelocity += OnUpdateVelocity;
             physEntity.onUpdateRotation += OnUpdateRotation;
         }
+
+        public override void EnterState(int state)
+        {
+            base.EnterState(state);
+            scriptStateMachine.State_Change(state);
+        }
         protected void Update_State()
         {
             scriptStateMachine?.Update();
@@ -24,29 +30,17 @@ namespace PJR
             physEntity.onUpdateVelocity -= OnUpdateVelocity;
             physEntity.onUpdateRotation -= OnUpdateRotation;
         }
+        protected void FillKCContext(KCContext context)
+        {
+            CopyInputKCContent(context);
+            context.physConfig = physicsConfig;
+        }
         protected void OnUpdateRotation(KCContext context)
         {
             if (scriptStateMachine == null)
                 return;
 
-            CopyInputKCContent(context);
-
-            var currentRotation = context.currentRotation;
-
-            if (context.lookInputVector.sqrMagnitude > 0f && physicsConfig.OrientationSharpness > 0f)
-            {
-                // Smoothly interpolate from current to target look direction
-                Vector3 smoothedLookInputDirection = Vector3.Slerp(context.motor.CharacterForward, context.lookInputVector, 1 - Mathf.Exp(-physicsConfig.OrientationSharpness * context.deltaTime)).normalized;
-
-                // Set the current rotation (which will be used by the KinematicCharacterMotor)
-                currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, context.motor.CharacterUp);
-            }
-
-            Vector3 currentUp = (currentRotation * Vector3.up);
-            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up, 1 - Mathf.Exp(-physicsConfig.OrientationSharpness * context.deltaTime));
-            currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
-
-            context.currentRotation = currentRotation;
+            FillKCContext(context);
 
             scriptStateMachine.CurrentState?.OnUpdateRotation(context);
         }
@@ -55,9 +49,7 @@ namespace PJR
             if (scriptStateMachine == null) 
                 return;
 
-            CopyInputKCContent(context);
-
-            context.physConfig = physicsConfig;
+            FillKCContext(context);
 
             //状态的速度控制
             scriptStateMachine.CurrentState?.OnUpdateVelocity(context);

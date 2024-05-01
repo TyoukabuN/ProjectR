@@ -64,7 +64,7 @@ namespace PJR
                     asset.clips.Add(AnimatiomClipSet.KeyValuePair<string, ClipTransition>.Create(key, new ClipTransition { Clip = clip }));
                 }
 
-                var uniqueFileName = ($"{folderPath}/{prefix}_ClipTransitionSet.asset");
+                var uniqueFileName = ($"{folderPath}/ClipTransitionSet_{prefix}.asset");
                 AssetDatabase.DeleteAsset(uniqueFileName);
                 AssetDatabase.Refresh();
                 AssetDatabase.CreateAsset(asset, uniqueFileName);

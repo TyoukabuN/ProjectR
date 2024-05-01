@@ -19,7 +19,7 @@ namespace PJR
             if (!Valid())
                 return null;
             var guid = GetGUID();
-            context = new EntityContext();
+            context = context == null ? new EntityContext() : context;
             context.entityType = EntityDefine.LogicEntityType.Player;
             context.LogicEntityID = guid;
 

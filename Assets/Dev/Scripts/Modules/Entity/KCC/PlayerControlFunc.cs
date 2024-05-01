@@ -2,6 +2,7 @@ using PJR.Input;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.AddressableAssets.Build.BuildPipelineTasks.GenerateLocationListsTask;
 
 namespace PJR
 {
@@ -53,22 +54,19 @@ namespace PJR
             }
 
             ctx.currentVelocity = finalDir * finalVelocityMagnitude;
-            ////get taraget speed
-            //if (ctx.inputHandle.HasAnyFlag(RegisterKeys.Run))
-            //    targetVelocity = ctx.cfg.ACCMaxGroundedMoveSpeed;
+        }
 
-            //if (currentVelocityMagnitude > ctx.cfg.MaxGroundedMoveSpeed)
-            //{
-            //    //dampping
-            //    currentVelocityMagnitude = Mathf.Lerp(currentVelocityMagnitude, targetVelocity, ctx.cfg.SpeedDamping);
-            //}
-            //else
-            //{
-            //    //acc
-            //    currentVelocityMagnitude += ctx.deltaTime * ctx.cfg.GroundedMoveACCSpeed;
-            //}
+        /// <summary>
+        /// 地面上移动
+        /// </summary>
+        /// <param name="ctx"></param>
+        public static void InHurt(KCContext ctx)
+        {
+            var output = ctx.currentVelocity;
+            output += ctx.cfg.Gravity * ctx.deltaTime;
+            output *= (1f / (1f + (ctx.cfg.SpeedDampingInHurt * ctx.deltaTime)));
 
-           // ctx.outputVelocity = ctx.direction * currentVelocityMagnitude;
+            ctx.currentVelocity = output;
         }
 
         /// <summary>
@@ -144,6 +142,27 @@ namespace PJR
             output += cfg.Gravity * ctx.deltaTime;
             output *= (1f / (1f + (cfg.SpeedDamping * ctx.deltaTime)));
             ctx.currentVelocity = output;
+        }
+
+
+        public static void CommonRotation(KCContext context)
+        {
+            var currentRotation = context.currentRotation;
+
+            if (context.lookInputVector.sqrMagnitude > 0f && context.cfg.OrientationSharpness > 0f)
+            {
+                // Smoothly interpolate from current to target look direction
+                Vector3 smoothedLookInputDirection = Vector3.Slerp(context.motor.CharacterForward, context.lookInputVector, 1 - Mathf.Exp(-context.cfg.OrientationSharpness * context.deltaTime)).normalized;
+
+                // Set the current rotation (which will be used by the KinematicCharacterMotor)
+                currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, context.motor.CharacterUp);
+            }
+
+            Vector3 currentUp = (currentRotation * Vector3.up);
+            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up, 1 - Mathf.Exp(-context.cfg.OrientationSharpness * context.deltaTime));
+            currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
+
+            context.currentRotation = currentRotation;
         }
     }
 }

@@ -26,6 +26,7 @@ namespace PJR
         public EnvSetting envSetting = null;
         //Roots
         public Transform SceneTrapRoot = null;
+        public Transform PlayBornPoint = null;
 
         public Transform SceneItemRoot = null;
 
@@ -58,6 +59,7 @@ namespace PJR
             if (instance.sceneRoot == null)
                 return false;
 
+            instance.PlayBornPoint = instance.sceneRoot.transform.Find("Procedure/PlayBornPoint");
             instance.OnActiveSceneChanged(currentScene, currentScene);
             return true;
         }

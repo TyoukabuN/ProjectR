@@ -29,6 +29,12 @@ namespace PJR
         /// </summary>
         public static string SCENE_ROOT_NAME_ITEM = "Items";
 
+        public static string ModelNamePrefix = "Avatar";
+        public static string AnimationSetPrefix = "ClipTransitionSet";
+
+        public static string ModelNameFormat = "Avatar_{0}.prefab";
+        public static string AnimationSetFormat = "ClipTransitionSet_{0}.asset";
+
         //KD stand for key define
         public static readonly string KD_DASH_TRIGGER = "DashTrigger";
         public static readonly string KD_ANTIGRAVITY = "AntiGravity";

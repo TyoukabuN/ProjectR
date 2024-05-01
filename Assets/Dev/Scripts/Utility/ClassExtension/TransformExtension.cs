@@ -15,4 +15,19 @@ public static class TransformExtension
         transform.position = parent.position + transform.position - anchor.position;
         transform.SetParent(parent, worldPositionStays: true);
     }
+
+    public static string CopyPath(this Transform transform)
+    {
+        var path = string.Empty;
+        if (transform == null)
+            return path;
+        if (transform.parent == null)
+            path = transform.name;
+        else
+        {
+            path = CopyPath(transform.parent);
+            if (!string.IsNullOrEmpty(path)) path = $"{path}/{transform.name}";
+        }
+        return path;
+    }
 }

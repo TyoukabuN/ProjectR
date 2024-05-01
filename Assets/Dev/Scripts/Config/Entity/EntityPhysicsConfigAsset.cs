@@ -29,7 +29,8 @@ namespace PJR
 
         [Title("其他")]
         [LabelText("重力加速度")] public Vector3 Gravity = new Vector3(0, -10f, 0);
-        [LabelText("速度衰减系数")] public float SpeedDamping = 10f;
+        [LabelText("速度衰减系数")] public float SpeedDamping = 4f;
+        [LabelText("速度衰减系数(被受伤害时)")] public float SpeedDampingInHurt = 8f;
         [LabelText("转向系数")] public float OrientationSharpness = 10f;
         
 

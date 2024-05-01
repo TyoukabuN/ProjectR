@@ -1,10 +1,7 @@
 #if UNITY_EDITOR
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.Linq;
 
 namespace PJR
 {
@@ -38,6 +35,18 @@ namespace PJR
                 EditorGUI.LabelField(selectionRect, content, GetLabelStyle(true));
             }
         }
+
+        [MenuItem("GameObject/PJR/Copy Path", false)]
+        public static void CopyPath()
+        {
+            var path = TransformExtension.CopyPath(Selection.activeGameObject?.transform);
+            Debug.Log(path);
+            var textEditor = new TextEditor();
+            textEditor.text = path;
+            textEditor.OnFocus();
+            textEditor.Copy();
+        }
     }
 }
 #endif
+

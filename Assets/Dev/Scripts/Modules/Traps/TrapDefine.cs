@@ -25,6 +25,7 @@ namespace PJR
     public enum TActionType : int
     {
         [LabelText("其他实体施力")] AddForce = 0,
+        [LabelText("绊倒")] Stumble = 1,
         [LabelText("广播游戏事件")] DispatchEvent = 24,
         [LabelText("实体加速")] SpeedUp = 48,
     }
@@ -60,29 +61,9 @@ namespace PJR
 
         public abstract bool HasDirection { get; }
         public abstract Vector3 Direction { get; }
-    }
-    public class TrapMethod_AddForce : TrapMethod
-    {
-        public override TActionType ActionType => TActionType.AddForce;
-        public override bool HasDirection => true;
-        public override Vector3 Direction => force;
 
-        [LabelText("力")] public Vector3 force = Vector3.zero;
-        [LabelText("持续时间")] public float duration = 0.333f;
-        [LabelText("衰减系数")][PropertyTooltip(ExtraVelocity.tooltip)] public float damp = -1f;
-        [LabelText("衰减曲线")] public Easing.Ease easing = Easing.Ease.Linear;
+        public abstract void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity);
     }
-
-    public enum DampType {
-        
-        NormalizeTime,
-        NoAttenuation,
-        Factor,
-        ///[=-1 ] 时 使用counterNormalize作为衰减系数 linear
-        ///[= 0 ] 时;不衰减
-        ///[> 0 ] 时;为线性衰减forceDamped -= forceDamped * damp * deltaTime
-    }
-
 
     public enum ValueChangeApproach
     {

@@ -6,7 +6,8 @@ namespace PJR
 {
     public class ItemEntity : LogicEntity
     {
-        public ItemBase itemBase;
+        public ItemConfig config;
+        public ItemBase itembase;
         public override void OnCreate(EntityContext context)
         {
             var physEntity = EntitySystem.CreatePhysEntity();
@@ -32,10 +33,12 @@ namespace PJR
         {
             var phys = collider.GetComponent<PhysEntity>();
             if (phys != null && phys.logicEntity != null)
-                //configAsset.TryExecutePhaseEvent(TEntityPhase.OnTriggerEnter, this, phys.logicEntity);
-                if(itemBase == null)
-                    itemBase = new ItemBase();
-                itemBase.ExcuteFunc();
+                config.ExecutePhaseEvent(TEntityPhase.OnTriggerEnter, this, phys.logicEntity);
+
+        }
+        public override void Destroy()
+        {
+            GameObject.Destroy(this.gameObject);
         }
     }
 }

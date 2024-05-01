@@ -1,13 +1,36 @@
+using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace PJR
 {
-    public class ItemBase 
+    public class ItemBase :MonoBehaviour
     {
-        public void ExcuteFunc()
+        [LabelText("再生次数")]
+        [Tooltip("<=0为无限次数，>0对应次数")]
+        public int CanRegenerateTimes;
+        public ItemConfig itemconfig;
+        public bool isMugen => itemconfig.CanRegenerateTimes < 1;
+        [LabelText("再生间隔")]
+        public float interval;
+        protected virtual void GenFunc()
         {
-            Debug.Log("ItemBase_ExcuteFunc");
+
+        }
+        public virtual IEnumerator CountDown(Action action)
+        {
+            yield return new WaitForSeconds(interval);
+            action();
+        }
+    }
+    public class ScriptTypeRestrictionAttribute : PropertyAttribute
+    {
+        public System.Type allowedType;
+
+        public ScriptTypeRestrictionAttribute(System.Type allowedType)
+        {
+            this.allowedType = allowedType;
         }
     }
 }

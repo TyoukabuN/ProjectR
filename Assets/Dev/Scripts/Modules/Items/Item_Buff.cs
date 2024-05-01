@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace PJR
 {
-    public class ItemConfigHost : EntityConfigHost
+    public class Item_Buff : ItemBase
     {
-        public ItemConfig config;
+        private void Start()
+        {
+            
+        }
     }
 }
 

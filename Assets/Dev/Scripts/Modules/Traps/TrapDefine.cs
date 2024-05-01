@@ -26,8 +26,8 @@ namespace PJR
     {
         [LabelText("其他实体施力")] AddForce = 0,
         [LabelText("绊倒")] Stumble = 1,
+        [LabelText("实体加速")] SpeedUp = 2,
         [LabelText("广播游戏事件")] DispatchEvent = 24,
-        [LabelText("实体加速")] SpeedUp = 48,
     }
 
     [Serializable]

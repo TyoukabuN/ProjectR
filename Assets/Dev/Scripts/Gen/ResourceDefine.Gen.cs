@@ -4,6 +4,7 @@ namespace PJR
 	{
 		public static string[] Assets = 
 		{
+			"Assets/Art/Avatar/Item/Prefabs/Avater_Test_Item.prefab",
 			"Assets/Art/Avatar/Player/GlazyRunner/Animations/AnimatiomClipSet.asset",
 			"Assets/Art/Avatar/Player/GlazyRunner/Animations/AnimatiomClipTransitionSet.asset",
 			"Assets/Art/Avatar/Player/GlazyRunner/Prefabs/Avater_DefaultPlayer.prefab",
@@ -14,13 +15,14 @@ namespace PJR
 			"Assets/Art/Avatar/Trap/Hurdle/Models/Avatar_Hurdle.prefab",
 			"Assets/Art/Avatar/Trap/Test_Trap/Prefabs/Avater_Test_Trap.prefab",
 			"Assets/Art/Env/TestGround/lowpoly_ground Variant.prefab",
-			"Assets/Art/Avatar/Item/Prefabs/Avater_Test_Item.prefab",
 			"Assets/Dev/Prefabs/ConfigAsset/EntityAttributeConfigAsset.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/EntityPhysicsConfig.asset",
+			"Assets/Dev/Prefabs/ConfigAsset/ItemConfig 1.asset",
+			"Assets/Dev/Prefabs/ConfigAsset/ItemConfig.asset",
+			"Assets/Dev/Prefabs/ConfigAsset/testtesttrap.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_Hurdle.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_Test.asset",
 			"Assets/Dev/Prefabs/SystemAssets/InputSystem/InputAction.inputactions",
-
 		}
 ;	}
 }

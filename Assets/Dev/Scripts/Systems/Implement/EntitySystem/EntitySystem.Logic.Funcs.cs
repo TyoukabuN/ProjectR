@@ -60,5 +60,33 @@ namespace PJR
             id2LogicEntity[context.LogicEntityID] = logicEntity;
             return logicEntity;
         }
+        /// <summary>
+        /// 由Host创建
+        /// </summary>
+        /// <param name="host"></param>
+        public static LogicEntity CreateItemEntity(ItemConfigHost host)
+        {
+            if (!Valid())
+                return null;
+            var guid = GetGUID();
+            EntityContext context = new EntityContext();
+            context.entityType = EntityDefine.LogicEntityType.Item;
+            context.LogicEntityID = guid;
+            context.originPosition = host.transform.position;
+            context.originRotation = host.transform.eulerAngles;
+            context.originScale = host.transform.lossyScale;
+            context.avatarAssetNames = new AvatarAssetNames()
+            {
+                modelName = host.AssetName,
+            };
+            //
+            ItemEntity logicEntity = new ItemEntity();
+            logicEntity.entityContext = context;
+            //logicEntity.configAsset = host.configAsset;
+            logicEntity.OnCreate(context);
+
+            id2LogicEntity[context.LogicEntityID] = logicEntity;
+            return logicEntity;
+        }
     }
 }

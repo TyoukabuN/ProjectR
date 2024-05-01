@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface ITrap
 {
-    void OnStart();
+    virtual void OnStart() { }
     virtual void OnDestory() { }
 }

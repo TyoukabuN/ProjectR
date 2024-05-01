@@ -27,6 +27,7 @@ namespace PJR
         //Roots
         public Transform SceneTrapRoot = null;
 
+        public Transform SceneItemRoot = null;
 
         public override void Init()
         {

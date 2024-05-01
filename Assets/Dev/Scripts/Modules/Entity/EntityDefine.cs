@@ -12,6 +12,7 @@ namespace PJR
             Empty = 0,
             Player = 1,
             Trap = 2,
+            Item = 3,
         }
         /// <summary>
         /// 物理实体下的模型节点
@@ -22,6 +23,11 @@ namespace PJR
         /// 场景根节点下的陷阱节点
         /// </summary>
         public static string SCENE_ROOT_NAME_TRAP = "Traps";
+
+        /// <summary>
+        /// 场景根节点下的道具节点
+        /// </summary>
+        public static string SCENE_ROOT_NAME_ITEM = "Items";
 
         //KD stand for key define
         public static readonly string KD_DASH_TRIGGER = "DashTrigger";

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace PJR
@@ -27,6 +29,28 @@ namespace PJR
                     method.damp);
                 controller.easeType = method.easing;
             }
+            if (evt.trapMethod.ActionType == TActionType.SpeedUp)
+            {
+                var method = evt.trapMethod as TrapMethod_SpeedUp;
+                if (method == null)
+                    return;
+                //不知哪改移速
+            }
+            #region 反射例
+            var interfaceType = typeof(ITrapEvent);
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var types = assembly.GetTypes()
+                .Where(t => interfaceType.IsAssignableFrom(t) && t.IsClass)
+                .ToList();
+
+            var instances = types.Select(t => (ITrapEvent)Activator.CreateInstance(t)).ToList();
+
+            foreach (var instance in instances)
+            {
+                instance.Recive(targetEntity);
+            }
+            #endregion
         }
     }
 }

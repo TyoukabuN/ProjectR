@@ -59,6 +59,5 @@ namespace PJR
                 context.motor.ForceUnground();
             context.currentVelocity += extraVec3;
         }
-
     }
 }

@@ -9,7 +9,7 @@ using static Cinemachine.CinemachineTrackedDolly;
 [AddComponentMenu("")] // Hide in menu
 [ExecuteAlways]
 [SaveDuringPlay]
-public class ConemachineDollyDirectionBaseCameraOffset : CinemachineExtension
+public class CinemachineDollyDirectionBaseCameraOffset : CinemachineExtension
 {
     public Vector3 FollowTargetPosition
     {

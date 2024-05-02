@@ -29,6 +29,7 @@ namespace PJR
                 LogSystem.LogError("PlayerEntity.OnCreate 加载 EntityPhysicsConfig 失败");
 
             //
+            physEntity.gameObject.tag = EntityDefine.EntityTag.Player;
             physEntity.CreateAvatar(this);
             physEntity.logicEntity = this;
             physEntity.onAvatarLoadDone += OnAvatarLoadDone;

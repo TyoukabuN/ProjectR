@@ -36,6 +36,7 @@ namespace PJR.ScriptStates.Player
     {
         public override void Update(EntityContext stateContext)
         {
+            entity.entityContext.RevertJumpCount();
             entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Idle);
         }
         public override bool CanChange(int from)

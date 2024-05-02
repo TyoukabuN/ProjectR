@@ -28,7 +28,6 @@ namespace PJR
                 EntitySystem.CreatePlayer(entityContext);
             }
             //Trap
-            SceneTrapRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_TRAP);
             if (SceneTrapRoot != null)
             { 
                 var trapHosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
@@ -43,7 +42,6 @@ namespace PJR
                 }
             }
             //Item
-            SceneItemRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_ITEM);
             if (SceneItemRoot != null)
             {
                 var itemHosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();

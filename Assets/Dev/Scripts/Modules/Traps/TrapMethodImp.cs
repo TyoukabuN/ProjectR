@@ -58,7 +58,7 @@ namespace PJR
     }
 
     /// <summary>
-    /// 障碍（栏杆）
+    /// 加速
     /// </summary>
     public class TrapMethod_SpeedUp : TrapMethod
     {

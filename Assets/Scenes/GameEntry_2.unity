@@ -232,6 +232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &120662074
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,6 +457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &251278067
 GameObject:
   m_ObjectHideFlags: 0
@@ -565,6 +567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &284541236
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,6 +614,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &323404570
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,6 +661,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &368917789
 GameObject:
   m_ObjectHideFlags: 0
@@ -856,6 +861,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &427949325
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,7 +984,7 @@ GameObject:
   m_Component:
   - component: {fileID: 431309382}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Hurdle_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1099,6 +1105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!4 &665802286
 Transform:
   m_ObjectHideFlags: 0
@@ -1160,6 +1167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &731588021
 GameObject:
   m_ObjectHideFlags: 0
@@ -1263,6 +1271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &860117548
 GameObject:
   m_ObjectHideFlags: 0
@@ -1309,6 +1318,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &882717651
 GameObject:
   m_ObjectHideFlags: 0
@@ -1391,6 +1401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &986811369
 GameObject:
   m_ObjectHideFlags: 0
@@ -1441,6 +1452,16 @@ MonoBehaviour:
   Damp: -1
   easing: 15
   gobjTest: {fileID: 0}
+  testClass:
+    rid: 7174546527647170560
+  references:
+    version: 2
+    RefIds:
+    - rid: 7174546527647170560
+      type: {class: TestClass, ns: , asm: Assembly-CSharp}
+      data:
+        components:
+        - {fileID: 0}
 --- !u!1 &1009035155
 GameObject:
   m_ObjectHideFlags: 0
@@ -1694,6 +1715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &1215038225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1740,6 +1762,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &1239982686
 GameObject:
   m_ObjectHideFlags: 0
@@ -1897,6 +1920,8 @@ Transform:
   - {fileID: 431309382}
   - {fileID: 1867468085}
   - {fileID: 2033975237}
+  - {fileID: 1964864920}
+  - {fileID: 1362622691}
   m_Father: {fileID: 1660479149}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1946,6 +1971,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
+--- !u!1 &1362622690
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1362622691}
+  - component: {fileID: 1362622692}
+  m_Layer: 0
+  m_Name: SpeedUpLine_2
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1362622691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362622690}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: -1.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1339195834}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1362622692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362622690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AssetName: Avater_Test_Trap.prefab
+  configAsset: {fileID: 11400000, guid: 2f4e00f041c10974db97b0eaf669825d, type: 2}
+  isManual: 0
 --- !u!1001 &1377589967
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2166,6 +2239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &1583747912
 GameObject:
   m_ObjectHideFlags: 0
@@ -2243,6 +2317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &1660479148
 GameObject:
   m_ObjectHideFlags: 0
@@ -2341,6 +2416,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &1715189248
 GameObject:
   m_ObjectHideFlags: 0
@@ -2387,6 +2463,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &1798140863
 GameObject:
   m_ObjectHideFlags: 0
@@ -2433,6 +2510,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &1798302191
 GameObject:
   m_ObjectHideFlags: 0
@@ -2617,7 +2695,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867468085}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: Hurdle_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2645,6 +2723,53 @@ Transform:
   m_Father: {fileID: 1339195834}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1964864919
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1964864920}
+  - component: {fileID: 1964864921}
+  m_Layer: 0
+  m_Name: SpeedUpLine
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1964864920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964864919}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.2, y: 5.6948013, z: 35.97}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1339195834}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1964864921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1964864919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AssetName: Avatar_Hurdle.prefab
+  configAsset: {fileID: 11400000, guid: f82d1e9d05c86994ca0f5952510f032c, type: 2}
+  isManual: 0
 --- !u!1 &1995451280
 GameObject:
   m_ObjectHideFlags: 0
@@ -2722,6 +2847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0
 --- !u!1 &2018003237
 GameObject:
   m_ObjectHideFlags: 0
@@ -2794,7 +2920,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2033975237}
   m_Layer: 0
-  m_Name: GameObject (2)
+  m_Name: Hurdle_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2868,3 +2994,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetName: Avatar_Hurdle.prefab
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
+  isManual: 0

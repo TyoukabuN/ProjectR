@@ -60,6 +60,7 @@ namespace PJR
     /// <summary>
     /// 加速
     /// </summary>
+    [InlineProperty]
     public class TrapMethod_SpeedUp : TrapMethod
     {
         public override TActionType ActionType => TActionType.SpeedUp;
@@ -69,7 +70,6 @@ namespace PJR
         [LabelText("速度")] public Vector3 speed = new Vector3(0,0,2f);
         [LabelText("持续时间")] public float duration = 3f;
         [LabelText("衰减系数")][PropertyTooltip(ExtraVelocity.tooltip)] public float damp = -1f;
-        [InlineButton("ShowEasingHelpUrl", "曲线示例")]
         [LabelText("衰减曲线")] public Easing.Ease easing = Easing.Ease.Linear;
         [LabelText("强制移动阻断输入")] public bool blockInput = false;
 
@@ -87,6 +87,7 @@ namespace PJR
                 duration,
                 damp);
             controller.easeType = easing;
+
 
             #region 反射例
             var interfaceType = typeof(ITrapEvent);
@@ -125,6 +126,7 @@ namespace PJR
     /// <summary>
     /// 滚石触发
     /// </summary>
+    [Serializable]
     public class TrapMethod_RollingStoneTrigger : TrapMethod
     {
         public override TActionType ActionType => TActionType.Stumble;
@@ -135,7 +137,6 @@ namespace PJR
         public string group = "1";
         //哎没办法储存
         //[LabelText("控制的陷阱hostGameObject")]
-        //[SerializeField]
         //public List<GameObject> components = new List<GameObject>();
         public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
         {

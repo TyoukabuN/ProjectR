@@ -11,6 +11,8 @@ namespace PJR
         [Tooltip("< 0 即不限次数")]
         public int CanTriggerTimes = -1;
 
+        [LabelText("是否运动")]
+        public bool isPhysics = false;
         [ShowInInspector]
         [LabelText("实体周期事件列表")]
         public List<EntityPhaseEvent> entityPhaseEvents = new List<EntityPhaseEvent>();

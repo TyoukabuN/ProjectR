@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using System.Reflection;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace PJR
 {
@@ -102,6 +103,49 @@ namespace PJR
                 instance.Recive(targetEntity);
             }
             #endregion
+        }
+    }
+    /// <summary>
+    /// 滚石
+    /// </summary>
+    public class TrapMethod_RollingStone : TrapMethod
+    {
+        public override TActionType ActionType => TActionType.Stumble;
+        public override bool HasDirection => false;
+        public override Vector3 Direction => Vector3.one;
+        //需要物理效果
+        public bool isPhysics = true;
+        public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
+        {
+            //trapEntity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Action_1);
+            trapEntity.physEntity.avatar.transform.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+            targetEntity.EnterState((int)EPlayerState.Stumble);
+        }
+    }
+    /// <summary>
+    /// 滚石触发
+    /// </summary>
+    public class TrapMethod_RollingStoneTrigger : TrapMethod
+    {
+        public override TActionType ActionType => TActionType.Stumble;
+        public override bool HasDirection => false;
+        public override Vector3 Direction => Vector3.one;
+        
+        public List<GameObject> components = new List<GameObject>();
+        public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
+        {
+            if (trapEntity is TrapEntity)
+            {
+                if (components.Count >0)
+                {
+                    for (int i = 0; i < components.Count; i++)
+                    {
+                        TrapConfigHost tc = components[i].gameObject.TryGetComponent<TrapConfigHost>();
+                        EntitySystem.CreateTrapEntity(tc);
+                    }
+                }
+            }
+            //TrapManualPool.instance.EntitiesGroup[group];
         }
     }
 }

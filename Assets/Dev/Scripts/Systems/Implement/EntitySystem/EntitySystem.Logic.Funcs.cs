@@ -55,8 +55,13 @@ namespace PJR
             TrapEntity logicEntity = new TrapEntity();
             logicEntity.entityContext = context;
             logicEntity.configAsset = host.configAsset;
+            logicEntity.configHost = host;
             logicEntity.OnCreate(context);
-
+            if (host.configAsset.isPhysics)
+            {
+                Rigidbody rb = logicEntity.gameObject.AddComponent<Rigidbody>();
+            }
+            
             id2LogicEntity[context.LogicEntityID] = logicEntity;
             return logicEntity;
         }

@@ -10,7 +10,7 @@ namespace PJR
     public class TrapEntity : LogicEntity
     {
         public TrapConfigAsset configAsset;
-
+        public TrapConfigHost configHost;
         public override void OnCreate(EntityContext context)
         {
             var physEntity = EntitySystem.CreatePhysEntity();

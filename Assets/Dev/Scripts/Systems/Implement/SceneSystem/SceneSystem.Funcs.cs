@@ -34,17 +34,24 @@ namespace PJR
             {
                 if (host.configAsset == null)
                     continue;
-                EntitySystem.CreateTrapEntity(host);
+                if (!host.isManual)
+                {
+                    EntitySystem.CreateTrapEntity(host);
+                }
             }
             //Item
             SceneItemRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_ITEM);
-            var itemHosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
-            foreach (var host in itemHosts)
+            if (SceneItemRoot)
             {
-                //if (host.configAsset == null)
-                //    continue;
-                EntitySystem.CreateItemEntity(host);
+                var itemHosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
+                foreach (var host in itemHosts)
+                {
+                    //if (host.configAsset == null)
+                    //    continue;
+                    EntitySystem.CreateItemEntity(host);
+                }
             }
+            
         }
     }
 }

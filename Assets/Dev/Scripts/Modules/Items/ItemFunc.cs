@@ -32,7 +32,7 @@ namespace PJR
         }
         private static void CountDownToDo(ItemEntity itemEntity)
         {
-            itemEntity.config.CanRegenerateTimes--;
+            itemEntity.itembase.CanRegenerateTimes--;
             itemEntity.physEntity.avatar.SetActive(false);
             itemEntity.itembase.StartCoroutine(itemEntity.itembase.CountDown(() => { itemEntity.physEntity.avatar.SetActive(true); }));
         }

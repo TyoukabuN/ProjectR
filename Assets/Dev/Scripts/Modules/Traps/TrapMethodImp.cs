@@ -130,21 +130,33 @@ namespace PJR
         public override TActionType ActionType => TActionType.Stumble;
         public override bool HasDirection => false;
         public override Vector3 Direction => Vector3.one;
-        [LabelText("控制的陷阱hostGameObject")]
+        [LabelText("对应场景ManualGroup的第几组")]
         [SerializeField]
-        public List<GameObject> components = new List<GameObject>();
+        public string group = "1";
+        //哎没办法储存
+        //[LabelText("控制的陷阱hostGameObject")]
+        //[SerializeField]
+        //public List<GameObject> components = new List<GameObject>();
         public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
         {
             if (trapEntity is TrapEntity)
             {
-                if (components.Count >0)
+                Transform mTrans = SceneSystem.instance.SceneTrapRoot.Find("ManualGroup");
+                if (mTrans == null){return;}
+                Transform mNodeTrans = mTrans.Find(group);
+                if (mNodeTrans != null)
                 {
-                    for (int i = 0; i < components.Count; i++)
+                    TrapConfigHost[] tcf = mNodeTrans.GetComponentsInChildren<TrapConfigHost>();
+                    if (tcf!=null)
                     {
-                        TrapConfigHost tc = components[i].gameObject.TryGetComponent<TrapConfigHost>();
-                        EntitySystem.CreateTrapEntity(tc);
+                        for (int i = 0; i < tcf.Length; i++)
+                        {
+                            EntitySystem.CreateTrapEntity(tcf[i]);
+                        }
                     }
+                        
                 }
+               
             }
             //TrapManualPool.instance.EntitiesGroup[group];
         }

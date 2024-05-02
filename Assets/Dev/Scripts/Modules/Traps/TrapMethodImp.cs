@@ -130,6 +130,7 @@ namespace PJR
         public override TActionType ActionType => TActionType.Stumble;
         public override bool HasDirection => false;
         public override Vector3 Direction => Vector3.one;
+        [LabelText("控制的陷阱hostGameObject")]
         [SerializeField]
         public List<GameObject> components = new List<GameObject>();
         public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)

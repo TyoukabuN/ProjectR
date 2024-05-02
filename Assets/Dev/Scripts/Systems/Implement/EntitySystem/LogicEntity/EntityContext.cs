@@ -26,6 +26,7 @@ namespace PJR
         public Vector3 originRotation = Vector3.zero;
         public Vector3 originScale = Vector3.one;
 
+
         public int jumpCount = 0;
         public void AddJumpCount()
         {
@@ -35,6 +36,11 @@ namespace PJR
         {
             jumpCount = 0;
         }
+
+        private int triggeredCount = 0;
+        public int TriggeredCount => triggeredCount;
+        public void AddTriggeredCount() {  triggeredCount++; }
+        public void RevertTriggeredCount() {  triggeredCount = 0; }
     }
 
     /// <summary>

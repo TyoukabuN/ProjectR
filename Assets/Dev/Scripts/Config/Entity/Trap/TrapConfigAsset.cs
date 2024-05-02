@@ -67,6 +67,10 @@ namespace PJR
         /// <param name="targetEntity">触发陷阱的目标</param>
         private void ExecuteActionEvents(List<TActionEvent> events, LogicEntity trapEntity, LogicEntity targetEntity)
         {
+            if (CanTriggerTimes >= 0 && trapEntity.entityContext.TriggeredCount >= CanTriggerTimes)
+                return;
+            trapEntity.entityContext.AddTriggeredCount();
+
             for (int i = 0; i < events.Count; i++)
             {
                 var evt = events[i];

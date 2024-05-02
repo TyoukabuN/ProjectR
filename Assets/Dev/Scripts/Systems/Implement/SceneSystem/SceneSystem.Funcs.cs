@@ -29,19 +29,22 @@ namespace PJR
             }
             //Trap
             SceneTrapRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_TRAP);
-            var trapHosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
-            foreach (var host in trapHosts)
-            {
-                if (host.configAsset == null)
-                    continue;
-                if (!host.isManual)
+            if (SceneTrapRoot != null)
+            { 
+                var trapHosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
+                foreach (var host in trapHosts)
                 {
-                    EntitySystem.CreateTrapEntity(host);
+                    if (host.configAsset == null)
+                        continue;
+                    if (!host.isManual)
+                    {
+                        EntitySystem.CreateTrapEntity(host);
+                    }
                 }
             }
             //Item
             SceneItemRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_ITEM);
-            if (SceneItemRoot)
+            if (SceneItemRoot != null)
             {
                 var itemHosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
                 foreach (var host in itemHosts)
@@ -51,7 +54,6 @@ namespace PJR
                     EntitySystem.CreateItemEntity(host);
                 }
             }
-            
         }
     }
 }

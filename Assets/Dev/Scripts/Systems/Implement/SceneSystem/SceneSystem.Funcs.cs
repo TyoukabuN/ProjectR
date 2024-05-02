@@ -29,21 +29,27 @@ namespace PJR
             }
             //Trap
             SceneTrapRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_TRAP);
-            var trapHosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
-            foreach (var host in trapHosts)
-            {
-                if (host.configAsset == null)
-                    continue;
-                EntitySystem.CreateTrapEntity(host);
+            if (SceneTrapRoot != null)
+            { 
+                var trapHosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
+                foreach (var host in trapHosts)
+                {
+                    if (host.configAsset == null)
+                        continue;
+                    EntitySystem.CreateTrapEntity(host);
+                }
             }
             //Item
             SceneItemRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_ITEM);
-            var itemHosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
-            foreach (var host in itemHosts)
+            if (SceneItemRoot != null)
             {
-                //if (host.configAsset == null)
-                //    continue;
-                EntitySystem.CreateItemEntity(host);
+                var itemHosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
+                foreach (var host in itemHosts)
+                {
+                    //if (host.configAsset == null)
+                    //    continue;
+                    EntitySystem.CreateItemEntity(host);
+                }
             }
         }
     }

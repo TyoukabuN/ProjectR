@@ -145,6 +145,10 @@ namespace PJR
         }
 
 
+        /// <summary>
+        /// 通用旋转
+        /// </summary>
+        /// <param name="context"></param>
         public static void CommonRotation(KCContext context)
         {
             var currentRotation = context.currentRotation;

@@ -1452,16 +1452,6 @@ MonoBehaviour:
   Damp: -1
   easing: 15
   gobjTest: {fileID: 0}
-  testClass:
-    rid: 7174546527647170560
-  references:
-    version: 2
-    RefIds:
-    - rid: 7174546527647170560
-      type: {class: TestClass, ns: , asm: Assembly-CSharp}
-      data:
-        components:
-        - {fileID: 0}
 --- !u!1 &1009035155
 GameObject:
   m_ObjectHideFlags: 0
@@ -2767,8 +2757,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
-  configAsset: {fileID: 11400000, guid: f82d1e9d05c86994ca0f5952510f032c, type: 2}
+  AssetName: Avater_Test_Trap.prefab
+  configAsset: {fileID: 11400000, guid: 2f4e00f041c10974db97b0eaf669825d, type: 2}
   isManual: 0
 --- !u!1 &1995451280
 GameObject:

@@ -53,7 +53,7 @@ namespace PJR
 
             //状态的速度控制
             scriptStateMachine.CurrentState?.OnUpdateVelocity(context);
-            ////额外速度控制
+            //额外速度控制
             this.UpdateExtraVelocity(context.deltaTime,out var extraVec3);
             if (extraVec3.y > 0)
                 context.motor.ForceUnground();

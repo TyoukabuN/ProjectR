@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bbc38ef980d9054a86534dd120d4e65, type: 3}
   m_Name: TrapConfig_SpeedUp
   m_EditorClassIdentifier: 
-  CanTriggerTimes: 1
+  CanTriggerTimes: -1
+  isPhysics: 0
   entityPhaseEvents:
   - entityPhase: 3
     events:
@@ -24,7 +25,7 @@ MonoBehaviour:
     - rid: 6500748813090160644
       type: {class: TrapMethod_SpeedUp, ns: PJR, asm: Assembly-CSharp}
       data:
-        speed: 2
+        speed: {x: 0, y: 0, z: 2}
         duration: 3
         damp: -1
         easing: 1

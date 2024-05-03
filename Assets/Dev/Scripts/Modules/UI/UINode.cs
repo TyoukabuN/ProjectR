@@ -4,15 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Reflection;
-using UnityEditor;
-using System.IO;
 
 namespace PJR
 {
     public class UINode : MonoBehaviour
     {
         public UILayer layer;
+        [LabelText("panel名字")]
+        [Tooltip("必须唯一")]
         public string UIName = "";
         public string prefab;
         [ReadOnly]

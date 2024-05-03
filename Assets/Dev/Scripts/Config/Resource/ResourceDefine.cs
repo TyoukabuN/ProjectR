@@ -72,6 +72,11 @@ namespace PJR
                             if (node!=null)
                             {
                                 UIAsset ua = new UIAsset(node.UIName,node.prefab);
+                                if (ud.assets.ContainsKey(node.UIName))
+                                {
+                                    Debug.LogError($"存在相同的key:{node.UIName},{ud.assets[node.UIName].prefab}与{node.prefab}");
+                                    return;
+                                }
                                 ud.assets[node.UIName] = ua;
                             }
                         }

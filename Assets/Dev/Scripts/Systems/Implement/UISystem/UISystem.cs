@@ -1,6 +1,8 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,12 +20,18 @@ namespace PJR
         public GameObject UIRoot;
         //key : GameObjectInstanceID
         public Dictionary<UILayer, Dictionary<int, UINode>> nodeDict = new Dictionary<UILayer, Dictionary<int, UINode>>();
+        //根节点字典
         public Dictionary<UILayer, Transform> rootDict = new Dictionary<UILayer,Transform>();
+        //按名字储存的实例
+        public Dictionary<string,GameObject> nameObjListDict = new Dictionary<string,GameObject>();
         public Transform CanvasRoot;
 
         public GameObject EventSystemObj;
+
+        public UIAssetDict UIAssetdict;
         public override void Init()
         {
+            UIAssetdict = UIAssetDataFunc.GetBindUIAssetDict();
             UIRoot = this.gameObject;
             Type[] types = {typeof(RectTransform), typeof(Canvas), typeof(GraphicRaycaster), typeof(CanvasScaler) };
             GameObject canvasObj = new GameObject("Canvas", types);
@@ -35,7 +43,7 @@ namespace PJR
             GenObject(UILayer.Game, "GameUIRoot");
             GenObject(UILayer.Top, "TopUIRoot");
             CreateEventSystem();
-            Test();
+            TestEntrance();
             LogSystem.Log("========UI准备完成");
         }
         private void CreateEventSystem()
@@ -47,9 +55,9 @@ namespace PJR
                 obj.transform.SetParent(UIRoot.transform);
             }
         }
-        public void Test()
+        public void TestEntrance()
         {
-            LoadUI("UI_Test_Panel.prefab");
+            OpenPanel("mainUI");
         }
         private void GenObject(UILayer uilayer,string name)
         {
@@ -68,13 +76,13 @@ namespace PJR
             
             for (int i = 0; i < arr.Length; i++)
             {
-                if (node.layer != (UILayer)arr.GetValue(i))
+                if (node.layer == (UILayer)arr.GetValue(i))
                 {
-                    rootDict[node.layer].gameObject.SetActive(false);
+                    rootDict[node.layer].gameObject.SetActive(true);
                 }
                 else
                 {
-                    rootDict[node.layer].gameObject.SetActive(true);
+                    rootDict[(UILayer)arr.GetValue(i)].gameObject.SetActive(false);
                 }
             }
             node.gameObject.SetActive(true);
@@ -93,6 +101,7 @@ namespace PJR
                 node.OnClose();
                 node.OnDestory();
                 nodeDict[node.layer].Remove(node.instanID);
+                nameObjListDict.Remove(node.UIName);
                 Destroy(node.gameObject);
             }
             else
@@ -103,19 +112,27 @@ namespace PJR
         }
         public void OpenPanel(string name,object obj =null)
         {
-            if (true)
+            if (UIAssetdict.assets.ContainsKey(name))
             {
-                if(ResourceSystem.TryGetAsset(name, out ResourceLoader asset))
+                if (!nameObjListDict.ContainsKey(name))
                 {
+                    LoadUI(UIAssetdict.assets[name].prefab,true);
                 }
-                
+                else
+                {
+                    ShowNormal(nameObjListDict[name].GetComponent<UINode>());
+                }
+            }
+            else
+            {
+                LogSystem.LogError($"不存在名称{name}的UIPanel");
             }
         }
-        public void LoadUI(string path)
+        private void LoadUI(string path,bool isDoneShow = false)
         {
-            StartCoroutine(LoadAsset(path));
+            StartCoroutine(LoadAsset(path, isDoneShow));
         }
-        IEnumerator LoadAsset(string name)
+        IEnumerator LoadAsset(string name, bool isDoneShow)
         {
             if (!string.IsNullOrEmpty(name))
             {
@@ -126,10 +143,10 @@ namespace PJR
                     yield return null;
                 }
                 yield return loader;
-                OnLoadDone(loader);
+                OnLoadDone(loader, isDoneShow);
             }
         }
-        public void OnLoadDone(ResourceLoader loader)
+        public void OnLoadDone(ResourceLoader loader,bool isDoneShow)
         {
             var asset = loader.GetRawAsset<GameObject>();
             if (asset == null)
@@ -147,7 +164,15 @@ namespace PJR
             UINode uinode = ui.TryGetComponent<UINode>();
             if (uinode!=null)
             {
+                nameObjListDict[uinode.UIName] = ui;
+                //重设rect
                 ui.transform.SetParent(rootDict[uinode.layer]);
+                RectTransform rect = ui.TryGetComponent<RectTransform>();
+                rect.position = Vector3.zero;
+                rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
+                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Screen.width);
+                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Screen.height);
+
                 uinode.OnInit();
                 if (nodeDict.ContainsKey(uinode.layer))
                 {
@@ -158,7 +183,23 @@ namespace PJR
                     nodeDict[uinode.layer] = new Dictionary<int, UINode>();
                     nodeDict[uinode.layer][uinode.instanID] = uinode;
                 }
+                if (isDoneShow)
+                {
+                    ShowNormal(nameObjListDict[uinode.UIName].GetComponent<UINode>());
+                }
             }
+        }
+    }
+    public static class UIAssetDataFunc
+    {
+        public static UIAssetDict GetBindUIAssetDict()
+        {
+            string writePath = Application.dataPath + "/Dev/Scripts/Modules/UI/UIBindJs.json";
+            if (File.Exists(writePath))
+            {
+                return JsonConvert.DeserializeObject<UIAssetDict>(File.ReadAllText(writePath));
+            }
+            return null;
         }
     }
 }

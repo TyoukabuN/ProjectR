@@ -15,6 +15,7 @@ namespace PJR
         public UILayer layer;
         public string UIName = "";
         public string prefab;
+        [ReadOnly]
         public int instanID;
         public object data;
         private void Start()

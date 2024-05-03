@@ -37,7 +37,7 @@ namespace PJR
             }
             builder.Gen();
         }
-        [MenuItem("PJR/资源/查找uiprefab")]
+        [MenuItem("PJR/资源/写入UI绑定预制体")]
         public static void FindScript()
         {
             List<string> prefabs_names = new List<string>();
@@ -72,12 +72,24 @@ namespace PJR
                             if (node!=null)
                             {
                                 UIAsset ua = new UIAsset(node.UIName,node.prefab);
-                                ud.assets[node.name] = ua;
+                                ud.assets[node.UIName] = ua;
                             }
                         }
                     }
                 }
-                string jsStr = JsonUtility.ToJson(ud);
+                string jsStr = Newtonsoft.Json.JsonConvert.SerializeObject(ud);
+                string writePath = Application.dataPath + "/Dev/Scripts/Modules/UI/UIBindJs.json";
+                //string writePath = Application.dataPath + "/UIBindJs.json";
+                //if (!File.Exists(writePath))
+                //{
+                //    File.Create(writePath);
+                //}
+                Debug.Log(writePath);
+                if (Directory.Exists(Application.dataPath + "/Dev/Scripts/Modules/UI"))
+                {
+                    Debug.Log("存在路径");
+                    File.WriteAllText(writePath, jsStr);
+                }
                 Debug.Log(jsStr);
             }
         }

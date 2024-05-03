@@ -11,7 +11,10 @@ namespace PJR
         public override void OnStart()
         {
             base.OnStart();
-            startBtn.onClick.AddListener(() => { Debug.Log("-----点击了"); });
+            startBtn.onClick.AddListener(() => { 
+                Debug.Log("-----点击了");
+                UISystem.instance.OpenPanel("NorUI");
+            });
         }
     }
 }

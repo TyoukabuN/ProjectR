@@ -37,7 +37,7 @@ public class GameEntry : MonoBehaviour
     {
         InputSystem.instance.Init();
         SceneSystem.instance.Init();
-
+        UISystem.instance.Init();
         OnInitGame();
     }
 

@@ -1,7 +1,10 @@
 #if UNITY_EDITOR
 using Sirenix.Utilities;
+using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEditor.Build.Pipeline.Interfaces;
+using UnityEngine;
 #endif
 
 namespace PJR
@@ -33,6 +36,50 @@ namespace PJR
                 }
             }
             builder.Gen();
+        }
+        [MenuItem("PJR/资源/查找uiprefab")]
+        public static void FindScript()
+        {
+            List<string> prefabs_names = new List<string>();
+            string fullPath = "Assets/Art/UI/Prefabs";
+            if (Directory.Exists(fullPath))
+            {
+                UIAssetDict ud = new UIAssetDict();
+                DirectoryInfo direction = new DirectoryInfo(fullPath);
+                FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (files[i].Name.EndsWith(".prefab"))
+                    {
+                        string ab_name = "Assets/Art/UI/";
+                        if (files[i].Directory.Name != "Assets/Art/UI/")
+                        {
+                            ab_name += files[i].Directory.Name + "/";
+                        }
+                        prefabs_names.Add(ab_name + files[i].Name);
+                    }
+                }
+                for (int i = 0; i < prefabs_names.Count; i++)
+                {
+                    GameObject go = AssetDatabase.LoadAssetAtPath(prefabs_names[i], typeof(System.Object)) as GameObject;
+                    if (go != null)
+                    {
+                        if (go.transform.TryGetComponent<UINode>() != null)
+                        {
+                            UINode node = go.transform.TryGetComponent<UINode>();
+                            
+                            Debug.Log("<color=darkblue>Find it: " + go.name + "/" + go.transform.name + "</color>");
+                            if (node!=null)
+                            {
+                                UIAsset ua = new UIAsset(node.UIName,node.prefab);
+                                ud.assets[node.name] = ua;
+                            }
+                        }
+                    }
+                }
+                string jsStr = JsonUtility.ToJson(ud);
+                Debug.Log(jsStr);
+            }
         }
     }
 }

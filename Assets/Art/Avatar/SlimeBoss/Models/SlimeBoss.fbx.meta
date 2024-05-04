@@ -1,0 +1,199 @@
+fileFormatVersion: 2
+guid: a3a838359515f0444a1155da46db6f4b
+ModelImporter:
+  serializedVersion: 21300
+  internalIDToNameTable:
+  - first:
+      74: -5056416556718051709
+    second: Slime_Skill_1
+  - first:
+      74: 2399619406651257610
+    second: Slime_Invincible_Start
+  - first:
+      74: 8643587432620015978
+    second: Slime_Stumble
+  - first:
+      74: -2377392306745622251
+    second: Slime_Idle
+  - first:
+      74: 3874030684340722229
+    second: Slime_Roll_Reverse_Loop
+  - first:
+      74: -7069299854308790912
+    second: Slime_Roll_Loop
+  - first:
+      74: 5329971354472814065
+    second: Slime_Attack
+  - first:
+      74: -5062681494027739412
+    second: Slime_Jump_Fall_Start
+  - first:
+      74: 1885440794893118122
+    second: Slime_Run
+  - first:
+      74: 5356576884460427086
+    second: Slime_Walk
+  - first:
+      74: 4439990238516344516
+    second: Slime_Jump_Air_Start
+  - first:
+      74: 8348478993270984950
+    second: Slime_Jump_Fall_Loop
+  - first:
+      74: -7884399200285943017
+    second: Slime_Jump_Start
+  - first:
+      74: -812884240163029500
+    second: Slime_Jump
+  - first:
+      74: 6245005418181441866
+    second: Slime_Jump_Land
+  - first:
+      74: -115019648915456014
+    second: SlimeBoss__Skill_1
+  - first:
+      74: -380371513213051298
+    second: SlimeBoss_Skill_1
+  - first:
+      74: 3133156100268378195
+    second: SlimeBoss_Invincible_Start
+  - first:
+      74: -8979376268280847064
+    second: SlimeBoss_Stumble
+  - first:
+      74: 8187483297722159134
+    second: SlimeBoss_Idle
+  - first:
+      74: 3444113078977991662
+    second: SlimeBoss_Roll_Reverse_Loop
+  - first:
+      74: -6601324171105839268
+    second: SlimeBoss_Roll_Loop
+  - first:
+      74: -4982636451787622764
+    second: SlimeBoss_Attack
+  - first:
+      74: 3405827027317474757
+    second: SlimeBoss_Jump_Fall_Start
+  - first:
+      74: 5739492578565111290
+    second: SlimeBoss_Run
+  - first:
+      74: -4337218053268152112
+    second: SlimeBoss_Walk
+  - first:
+      74: -6739364472615364097
+    second: SlimeBoss_Jump_Air_Start
+  - first:
+      74: 4977439213907068206
+    second: SlimeBoss_Jump_Fall_Loop
+  - first:
+      74: -5197922511524932414
+    second: SlimeBoss_Jump_Start
+  - first:
+      74: -8288141479485090233
+    second: SlimeBoss_Jump
+  - first:
+      74: -2878214403994093663
+    second: SlimeBoss_Jump_Land
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: Root/Bone
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

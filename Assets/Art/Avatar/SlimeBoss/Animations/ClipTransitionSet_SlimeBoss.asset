@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fc12927ec7b04c4aa1311bfb9addb25, type: 3}
+  m_Name: ClipTransitionSet_SlimeBoss
+  m_EditorClassIdentifier: 
+  clips:
+  - Key: Skill_1
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 312f64795c6dcf845aed021f19c93347, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Attack
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 8ce48ca730c927148a9ef3af32296877, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Idle
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 8bb972fd84ca74f4c95a0909adf5d1fb, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Invincible_Start
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 53cf3dc448ac2214e809a72d53e0e79f, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: a84e3f232b7c0a04facd9bbd88fbe174, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump_Air_Start
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: b6b04e3d393c3e84a9375be19bce4ee1, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump_Fall_Loop
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 84b7484fb4703e441aeb48aff2596804, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump_Fall_Start
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 9acf3c6359f68114993eb074c748dccc, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump_Land
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 407fb88d762f3ff45b97476f11ac35f2, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Jump_Start
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 5cd5eeaeb92fa7f46bc9b67cc9f8eb88, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Roll_Loop
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 638d9fe310f32bf4980d32b41e339d5a, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Roll_Reverse_Loop
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 259c83823c129cd4bb1c03cd0ea8b93a, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Run
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 33d1fae0eb271964b9222593980956e4, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Stumble
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 14c775540e065a945b033e1ccbab46a9, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Walk
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 380a451824eecc34581916da739d1593, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN

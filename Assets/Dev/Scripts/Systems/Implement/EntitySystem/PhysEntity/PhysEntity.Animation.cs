@@ -190,8 +190,6 @@ namespace PJR
             if (TryGetClip(clipName, out ClipTransition clip))
             {
                 var state = layer.Play(clip);
-                if(clip.IsLooping)
-                    state.NormalizedEndTime = 1f;
                 int recordId = RecordState(lastState, state);
                 state.Events.Clear();
                 state.Events.OnEnd = () => { Animancer_OnStateEnd(recordId); callback?.Invoke(); };

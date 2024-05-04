@@ -8,6 +8,8 @@ namespace PJR
     public class MainUIPanel :UINode
     {
         public Button startBtn;
+        public Button optionBtn;
+        public Button exitBtn;
         public override void OnStart()
         {
             base.OnStart();

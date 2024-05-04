@@ -29,14 +29,24 @@ namespace PJR
 
         public GameObject EventSystemObj;
 
+        public Camera UICamera;
         public UIAssetDict UIAssetdict;
         public override void Init()
         {
             UIAssetdict = UIAssetDataFunc.GetBindUIAssetDict();
+            CreateRoot();
+            CreateEventSystem();
+            CreateUICamera();
+            TestEntrance();
+            LogSystem.Log("========UIRoot准备完成");
+        }
+        private void CreateRoot()
+        {
             UIRoot = this.gameObject;
-            Type[] types = {typeof(RectTransform), typeof(Canvas), typeof(GraphicRaycaster), typeof(CanvasScaler) };
+            Type[] types = { typeof(RectTransform), typeof(Canvas), typeof(GraphicRaycaster), typeof(CanvasScaler) };
             GameObject canvasObj = new GameObject("Canvas", types);
-            canvasObj.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+            canvasObj.layer = 5;
+            canvasObj.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
             canvasObj.transform.SetParent(UIRoot.transform);
             CanvasRoot = canvasObj.transform;
             CanvasRoot.position = Vector3.zero;
@@ -44,9 +54,6 @@ namespace PJR
             GenObject(UILayer.Game, "GameUIRoot");
             GenObject(UILayer.Top, "TopUIRoot");
             GenObject(UILayer.MessageTop, "MessageTopUIRoot");
-            CreateEventSystem();
-            TestEntrance();
-            LogSystem.Log("========UIRoot准备完成");
         }
         private void CreateEventSystem()
         {
@@ -57,13 +64,31 @@ namespace PJR
                 obj.transform.SetParent(UIRoot.transform);
             }
         }
+        private void CreateUICamera()
+        {
+            if (UICamera == null)
+            {
+                GameObject obj = new GameObject("UICamera", typeof(Camera));
+                UICamera = obj.GetComponent<Camera>();
+                if (CanvasRoot != null)
+                {
+                    CanvasRoot.GetComponent<Canvas>().worldCamera = UICamera;
+                }
+                UICamera.clearFlags = CameraClearFlags.Depth;
+                UICamera.cullingMask = 1<<5;
+                UICamera.orthographic = true;
+                UICamera.orthographicSize = 100;
+                UICamera.transform.SetParent(UIRoot.transform);
+            }
+        }
         public void TestEntrance()
         {
-            OpenPanel("mainUI");
+            OpenPanel("MainPanel");
         }
         private void GenObject(UILayer uilayer,string name)
         {
             GameObject obj = new GameObject(name,typeof(RectTransform));
+            obj.layer = 5;
             RectTransform rect = obj.GetComponent<RectTransform>();
             rect.position = Vector3.zero;
             rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
@@ -177,6 +202,7 @@ namespace PJR
                 ui.transform.SetParent(rootDict[uinode.layer]);
                 RectTransform rect = ui.TryGetComponent<RectTransform>();
                 rect.position = Vector3.zero;
+                rect.localScale = Vector3.one;
                 rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
                 rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Screen.width);
                 rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Screen.height);

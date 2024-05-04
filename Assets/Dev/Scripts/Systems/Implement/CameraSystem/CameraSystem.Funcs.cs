@@ -59,6 +59,9 @@ namespace PJR
                     inst.mainVCamera.AddExtension(ext);
                 }
             }
+            //----ui相机会在游戏启动一瞬间消失了
+            UISystem.instance.UICamera.gameObject.SetActive(false);
+            UISystem.instance.UICamera.gameObject.SetActive(true);
         }
 
         public static Transform CameraRoot

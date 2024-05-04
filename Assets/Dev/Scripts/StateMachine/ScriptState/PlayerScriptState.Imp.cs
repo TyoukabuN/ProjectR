@@ -47,7 +47,7 @@ namespace PJR.ScriptStates.Player
         {
             base.OnUpdateVelocity(context);
 
-            PlayerControlFunc.GroundedMove(context);
+            PlayerKCCFunc.GroundedMove(context);
         }
     }
 
@@ -81,7 +81,7 @@ namespace PJR.ScriptStates.Player
         {
             base.OnUpdateVelocity(context);
 
-            PlayerControlFunc.GroundedMove(context);
+            PlayerKCCFunc.GroundedMove(context);
         }
         public override bool CanChange(int from)
         {
@@ -126,7 +126,7 @@ namespace PJR.ScriptStates.Player
         {
             base.OnUpdateVelocity(context);
 
-            PlayerControlFunc.GroundedMove(context);
+            PlayerKCCFunc.GroundedMove(context);
         }
     }
 
@@ -167,10 +167,10 @@ namespace PJR.ScriptStates.Player
             { 
                 requireJump = !requireJump;
                 entity.entityContext.AddJumpCount();
-                PlayerControlFunc.EnterToAir(context);
+                PlayerKCCFunc.EnterToAir(context);
                 phase = Phase.End;
             }else
-                PlayerControlFunc.OnAir(context);
+                PlayerKCCFunc.OnAir(context);
         }
         public override void Update(EntityContext entityContext)
         {
@@ -199,7 +199,7 @@ namespace PJR.ScriptStates.Player
         {
             base.OnUpdateVelocity(context);
 
-            PlayerControlFunc.OnAir(context);
+            PlayerKCCFunc.OnAir(context);
         }
     }
 
@@ -228,7 +228,7 @@ namespace PJR.ScriptStates.Player
         public override void OnUpdateVelocity(KCContext context)
         {
             base.OnUpdateVelocity(context);
-            PlayerControlFunc.GroundedMove(context);
+            PlayerKCCFunc.GroundedMove(context);
         }
     }
 
@@ -245,7 +245,7 @@ namespace PJR.ScriptStates.Player
         }
         public override void OnUpdateVelocity(KCContext context)
         {
-            PlayerControlFunc.InHurt(context);
+            PlayerKCCFunc.InHurt(context);
         }
         public override void OnUpdateRotation(KCContext context)
         {

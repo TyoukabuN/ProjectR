@@ -9,12 +9,12 @@ namespace PJR
     /// <summary>
     /// 玩家控制方法
     /// </summary>
-    public static class PlayerControlFunc
+    public static class PlayerKCCFunc
     {
 
         public static bool GetSpeedUpVelMagnitude(KCContext ctx,float defalutValue,out float value,out float orientationSharpness)
         {
-            if (ctx.logicEntity.TryGetExtraValue<TrapMethod_SpeedUp>(EntityDefine.ExtraValueKey.Dash, null, out var valueRef))
+            if (ctx.logicEntity.TryGetExtraValue<SpeedModifyParam>(EntityDefine.ExtraValueKey.Dash, null, out var valueRef))
             {
                 value = valueRef.speed;
                 orientationSharpness = valueRef.orientationSharpness;

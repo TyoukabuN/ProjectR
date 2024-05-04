@@ -9,20 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bbc38ef980d9054a86534dd120d4e65, type: 3}
-  m_Name: TrapConfig_RollingStone
+  m_Script: {fileID: 11500000, guid: 1aa1fd0667bc3ef4489ea87e5f912e52, type: 3}
+  m_Name: ItemConfig_Star
   m_EditorClassIdentifier: 
   entityPhaseEvents:
   - entityPhase: 3
     events:
     - actionApproach:
-        rid: 7174546564607901708
-  CanTriggerTimes: -1
-  isPhysics: 1
+        rid: 7174546564607901698
+  CanRegenerateTimes: 0
+  interval: 3
   references:
     version: 2
     RefIds:
-    - rid: 7174546564607901708
-      type: {class: TrapMethod_RollingStone, ns: PJR, asm: Assembly-CSharp}
+    - rid: 7174546564607901698
+      type: {class: ItemMethod_Star, ns: PJR, asm: Assembly-CSharp}
       data:
-        isPhysics: 1
+        speed: 10
+        duration: 3
+        orientationSharpness: 5

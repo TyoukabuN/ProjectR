@@ -13,6 +13,8 @@ namespace PJR
 {
     public partial class PlayerEntity : LogicEntity
     {
+        public override string entityName => "PlayerEntity";
+
         public EntityPhysicsConfigAsset PhysicsConfig => physicsConfig;
         public override void OnCreate(EntityContext context)
         { 

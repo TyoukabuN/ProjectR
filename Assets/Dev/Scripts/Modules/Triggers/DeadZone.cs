@@ -25,7 +25,8 @@ namespace PJR
                 return;
             if (!SceneSystem.instance.GetClosestResetPoint(entity.transform.position, out var closestPoint))
                 return;
-            entity.logicEntity.RemoveExtendValue(EntityDefine.ExtraValueKey.Dash);
+            if (!entity.logicEntity.ContainsExtraValue(EntityDefine.ExtraValueKey.Invincible))
+                entity.logicEntity.RemoveExtendValue(EntityDefine.ExtraValueKey.Dash);
             entity.SetPosition(closestPoint);
         }
         protected virtual void OnTriggerStay(Collider other)

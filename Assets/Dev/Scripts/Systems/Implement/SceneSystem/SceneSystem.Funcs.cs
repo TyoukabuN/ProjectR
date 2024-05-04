@@ -47,8 +47,8 @@ namespace PJR
                 var itemHosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
                 foreach (var host in itemHosts)
                 {
-                    //if (host.configAsset == null)
-                    //    continue;
+                    if (host.configAsset == null)
+                        continue;
                     EntitySystem.CreateItemEntity(host);
                 }
             }

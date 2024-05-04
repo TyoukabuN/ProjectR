@@ -12,11 +12,11 @@ namespace PJR
     {
         [ShowInInspector]
         [DisableIf("@true")]
-        public abstract TActionType ActionType { get; }
+        public abstract EActionType ActionType { get; }
 
         public abstract bool HasDirection { get; }
         public abstract Vector3 Direction { get; }
 
-        public abstract void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity);
+        public abstract void ExecuteActionEvent(EActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity);
     }
 }

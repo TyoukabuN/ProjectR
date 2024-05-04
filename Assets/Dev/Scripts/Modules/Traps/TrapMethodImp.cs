@@ -12,9 +12,9 @@ namespace PJR
     /// <summary>
     /// 施力陷阱
     /// </summary>
-    public class TrapMethod_AddForce : ActionApproach
+    public class TrapMethod_AddForce : TrapApproach
     {
-        public override TActionType ActionType => TActionType.AddForce;
+        public override EActionType ActionType => EActionType.AddForce;
         public override bool HasDirection => true;
         public override Vector3 Direction => force;
 
@@ -23,13 +23,13 @@ namespace PJR
         [LabelText("衰减系数")][PropertyTooltip(ExtraVelocity.tooltip)] public float damp = -1f;
         [LabelText("衰减曲线")] public Easing.Ease easing = Easing.Ease.Linear;
 
-        public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
+        public override void ExecuteActionEvent(EActionEvent evt, LogicEntity entity, LogicEntity targetEntity)
         {
-            if (evt.trapMethod.ActionType != ActionType)
+            if (evt.actionApproach.ActionType != ActionType)
                 return;
             
-            Vector3 dir = trapEntity.transform.position - targetEntity.transform.position;
-            dir = Vector3.ProjectOnPlane(dir, trapEntity.transform.up);
+            Vector3 dir = entity.transform.position - targetEntity.transform.position;
+            dir = Vector3.ProjectOnPlane(dir, entity.transform.up);
             dir.Normalize();
             Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
 
@@ -45,17 +45,31 @@ namespace PJR
     /// <summary>
     /// 障碍（栏杆）
     /// </summary>
-    public class TrapMethod_Stumble : ActionApproach
+    public class TrapMethod_Stumble : TrapApproach
     {
-        public override TActionType ActionType => TActionType.Stumble;
+        public override EActionType ActionType => EActionType.Stumble;
         public override bool HasDirection => false;
         public override Vector3 Direction => Vector3.one;
 
-        public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
+        public override void ExecuteActionEvent(EActionEvent evt, LogicEntity entity, LogicEntity targetEntity)
         {
-            trapEntity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Action_1);
-            targetEntity.EnterState((int)EPlayerState.Stumble);
-            targetEntity.RemoveExtendValue(EntityDefine.ExtraValueKey.Dash);
+            entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Action_1);
+            if (!targetEntity.ContainsExtraValue(EntityDefine.ExtraValueKey.Invincible))
+            { 
+                targetEntity.EnterState((int)EPlayerState.Stumble);
+                targetEntity.RemoveExtendValue(EntityDefine.ExtraValueKey.Dash);
+            }
+        }
+    }
+
+    public class SpeedModifyParam
+    {
+        public float speed = 10f;
+        public float orientationSharpness = 5f;
+        public SpeedModifyParam(float speed,float orientationSharpness) 
+        {
+            this.speed = speed;
+            this.orientationSharpness = orientationSharpness;
         }
     }
 
@@ -63,36 +77,35 @@ namespace PJR
     /// 加速
     /// </summary>
     [InlineProperty]
-    public class TrapMethod_SpeedUp : ActionApproach
+    public class TrapMethod_SpeedUp : TrapApproach
     {
-        public override TActionType ActionType => TActionType.SpeedUp;
+        public override EActionType ActionType => EActionType.SpeedUp;
         public override bool HasDirection => true;
         public override Vector3 Direction => Vector3.one;
 
         [LabelText("速度")] public float speed = 10f;
         [LabelText("持续时间")] public float duration = 3f;
-        [LabelText("转向系数")] public float orientationSharpness = 10f;
+        [LabelText("转向系数")] public float orientationSharpness = 5f;
 
-        public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
+        public override void ExecuteActionEvent(EActionEvent evt, LogicEntity entity, LogicEntity targetEntity)
         {
-            targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.Dash, this, duration);
+            targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.Dash, new SpeedModifyParam(speed, orientationSharpness), duration);
             targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.LastNonZeroInput, targetEntity.physEntity.motor.CharacterForward, duration);
         }
     }
     /// <summary>
     /// 滚石
     /// </summary>
-    public class TrapMethod_RollingStone : ActionApproach
+    public class TrapMethod_RollingStone : TrapApproach
     {
-        public override TActionType ActionType => TActionType.Stumble;
+        public override EActionType ActionType => EActionType.Stumble;
         public override bool HasDirection => false;
         public override Vector3 Direction => Vector3.one;
         //需要物理效果
         public bool isPhysics = true;
-        public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
+        public override void ExecuteActionEvent(EActionEvent evt, LogicEntity entity, LogicEntity targetEntity)
         {
-            //trapEntity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Action_1);
-            trapEntity.physEntity.avatar.transform.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+            entity.physEntity.avatar.transform.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
             targetEntity.EnterState((int)EPlayerState.Stumble);
         }
     }
@@ -100,9 +113,9 @@ namespace PJR
     /// 滚石触发
     /// </summary>
     [Serializable]
-    public class TrapMethod_RollingStoneTrigger : ActionApproach
+    public class TrapMethod_RollingStoneTrigger : TrapApproach
     {
-        public override TActionType ActionType => TActionType.Stumble;
+        public override EActionType ActionType => EActionType.Stumble;
         public override bool HasDirection => false;
         public override Vector3 Direction => Vector3.one;
         [LabelText("对应场景ManualGroup的第几组")]
@@ -111,9 +124,9 @@ namespace PJR
         //哎没办法储存
         //[LabelText("控制的陷阱hostGameObject")]
         //public List<GameObject> components = new List<GameObject>();
-        public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
+        public override void ExecuteActionEvent(EActionEvent evt, LogicEntity entity, LogicEntity targetEntity)
         {
-            if (trapEntity is TrapEntity)
+            if (entity is TrapEntity)
             {
                 Transform mTrans = SceneSystem.instance.SceneTrapRoot.Find("ManualGroup");
                 if (mTrans == null){return;}

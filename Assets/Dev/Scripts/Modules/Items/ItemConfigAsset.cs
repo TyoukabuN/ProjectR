@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using UnityEditor.PackageManager;
 using UnityEditor.UIElements;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -24,9 +26,9 @@ namespace PJR
             CSConfigHelper.CreateScriptableObject<ItemConfigAsset>();
         }
 #endif
-        public void ExecutePhaseEvent(TEntityPhase entityPhase, ItemEntity itemEntity, LogicEntity targetEntity)
+        protected override void ExecuteActionEvents(List<EActionEvent> events, LogicEntity trapEntity, LogicEntity targetEntity)
         {
-            //ItemFunc.ExcuteEntrance(itemEntity.config.itemType, itemEntity, targetEntity);
+            base.ExecuteActionEvents(events, trapEntity, targetEntity);
         }
     }
 }

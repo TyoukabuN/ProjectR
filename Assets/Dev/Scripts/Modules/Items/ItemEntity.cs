@@ -6,8 +6,9 @@ namespace PJR
 {
     public class ItemEntity : LogicEntity
     {
+        public override string entityName => "ItemEntity";
         public ItemConfigAsset config;
-        public ItemBase itembase;
+        public ItemRepopHandler itembase;
         public override void OnCreate(EntityContext context)
         {
             var physEntity = EntitySystem.CreatePhysEntity();
@@ -25,6 +26,12 @@ namespace PJR
             this.transform = physEntity.transform;
 
             physEntity.onTriggerEnter += OnTriggerEnter;
+            physEntity.onTriggerStay += OnTriggerEnter;
+
+            itembase = physEntity.AddComponent<Item_Buff>();
+            itembase.CanRegenerateTimes = config.CanRegenerateTimes;
+            itembase.interval = config.interval;
+            itembase.itemconfig = config;
         }
         public void OnDrawGizmos()
         {
@@ -32,9 +39,8 @@ namespace PJR
         public void OnTriggerEnter(Collider collider)
         {
             var phys = collider.GetComponent<PhysEntity>();
-            if (phys != null && phys.logicEntity != null)
-                config.ExecutePhaseEvent(TEntityPhase.OnTriggerEnter, this, phys.logicEntity);
-
+            if (phys != null && phys.avatar.activeSelf && phys.logicEntity != null)
+                config.TryExecutePhaseEvent(PhyEntityPhase.OnTriggerEnter, this, phys.logicEntity);
         }
         public override void Destroy()
         {

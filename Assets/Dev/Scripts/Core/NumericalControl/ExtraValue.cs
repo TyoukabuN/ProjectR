@@ -152,6 +152,13 @@ namespace PJR
             var repo = target.ExtraValueMap;
             if (repo == null || !repo.TryGetValue(key, out var extraValue))
                 return false;
+            if (extraValue.valueRef == null)
+                return false;
+            if (!(extraValue.valueRef is T))
+            {
+                LogSystem.LogError($"类型对不上 T:{typeof(T)}  valueRef:{extraValue.GetType()}");
+                return false;
+            }
             value = (T)extraValue.valueRef;
             return true;
         }

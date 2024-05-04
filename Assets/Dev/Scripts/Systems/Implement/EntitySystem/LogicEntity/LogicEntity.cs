@@ -7,6 +7,7 @@ namespace PJR
 {
     public abstract class LogicEntity : INumericalControl
     {
+        public virtual string entityName { get;}
         public PhysEntity physEntity;
         public GameObject gameObject;
         public Transform transform;

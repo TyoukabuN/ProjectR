@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bbc38ef980d9054a86534dd120d4e65, type: 3}
   m_Name: TrapConfig_Hurdle
   m_EditorClassIdentifier: 
-  CanTriggerTimes: 1
   entityPhaseEvents:
   - entityPhase: 3
     events:
-    - trapMethod:
-        rid: 7174546505089941505
+    - actionApproach:
+        rid: 7174546564607901704
+  CanTriggerTimes: 1
+  isPhysics: 0
   references:
     version: 2
     RefIds:
-    - rid: 7174546505089941505
+    - rid: 7174546564607901704
       type: {class: TrapMethod_Stumble, ns: PJR, asm: Assembly-CSharp}

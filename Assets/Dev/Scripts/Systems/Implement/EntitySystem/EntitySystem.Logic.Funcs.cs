@@ -89,14 +89,7 @@ namespace PJR
             logicEntity.entityContext = context;
             logicEntity.config = host.configAsset;
             logicEntity.OnCreate(context);
-            //UnityEngine.Object component = host.config.script;
-            //if (host.configAsset.itemType == 0)
-            //{
-            //    logicEntity.itembase = logicEntity.gameObject.AddComponent<Item_Buff>() ;
-            //}
-            logicEntity.itembase.CanRegenerateTimes = host.configAsset.CanRegenerateTimes;
-            logicEntity.itembase.interval = host.configAsset.interval;
-            logicEntity.itembase.itemconfig = host.configAsset;
+
             id2LogicEntity[context.LogicEntityID] = logicEntity;
             return logicEntity;
         }

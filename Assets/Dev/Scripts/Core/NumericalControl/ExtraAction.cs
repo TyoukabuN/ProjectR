@@ -15,7 +15,7 @@ namespace PJR
     {
         public int actionType;
         public IActionControl target;
-        public TActionEvent tActionEvent;
+        public EActionEvent tActionEvent;
         public ExtraAction(int actionType, float duration) : base(duration)
         {
             Init(actionType, duration);
@@ -115,7 +115,7 @@ namespace PJR
             return value;
         }
 
-        public static ExtraAction ExtraActionMapAdd(this IActionControl target, TActionType actionType, float duration)
+        public static ExtraAction ExtraActionMapAdd(this IActionControl target, EActionType actionType, float duration)
         {
             return ExtraActionMapAdd(target, (int)actionType, duration);
         }
@@ -163,7 +163,7 @@ namespace PJR
             if(isComplete)
                 target.OnActionControlRemove(value);
         }
-        public static void ExtraActionMapRemove(this IActionControl target, TActionType actionType, bool isComplete = true)
+        public static void ExtraActionMapRemove(this IActionControl target, EActionType actionType, bool isComplete = true)
         {
             ExtraActionMapRemove(target, (int)actionType, isComplete);
         }
@@ -175,7 +175,7 @@ namespace PJR
             return repo.ContainsKey(key);
         }
 
-        public static ExtraAction GetExtraActionMap(this IActionControl target, TActionType actionType)
+        public static ExtraAction GetExtraActionMap(this IActionControl target, EActionType actionType)
         {
             return GetExtraActionMap(target, (int)actionType);
         }
@@ -188,7 +188,7 @@ namespace PJR
             repo.TryGetValue(key, out taction);
             return taction;
         }
-        public static bool ExtraActionMapExist(this IActionControl target, TActionType actionType)
+        public static bool ExtraActionMapExist(this IActionControl target, EActionType actionType)
         {
             return ExtraActionMapExist(target,(int)actionType);
         }

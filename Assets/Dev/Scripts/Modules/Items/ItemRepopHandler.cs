@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace PJR
 {
-    public class ItemBase :MonoBehaviour
+    public class ItemRepopHandler :MonoBehaviour
     {
         [LabelText("再生次数")]
         [Tooltip("<=0为无限次数，>0对应次数")]

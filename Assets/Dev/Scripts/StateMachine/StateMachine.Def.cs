@@ -34,7 +34,7 @@ namespace PJR.ScriptStates.Player
         {
             var inputAxi = state.inputHandle.ReadValue<Vector2>(RegisterKeys.Move);
             float magnitude = inputAxi.magnitude;
-            if (state.entity.ContainsExtraValue(EntityDefine.ExtraValueKey.Dash))
+            if (state.entity.ContainsExtraValue(EntityDefine.ExtraValueKey.SpeedModify))
                 return !inverse ? true : false;
 
             return !inverse ? inputAxi.magnitude > 0.003f : inputAxi.magnitude <= 0.003f;
@@ -45,7 +45,7 @@ namespace PJR.ScriptStates.Player
         protected Trans_OnRunning() { }
         public override bool Check(EntityScriptState state)
         {
-            if (state.entity.ContainsExtraValue(EntityDefine.ExtraValueKey.Dash))
+            if (state.entity.ContainsExtraValue(EntityDefine.ExtraValueKey.SpeedModify))
                 return !inverse ? true : false;
 
             var inputAxi = state.inputHandle.ReadValue<Vector2>(RegisterKeys.Move);

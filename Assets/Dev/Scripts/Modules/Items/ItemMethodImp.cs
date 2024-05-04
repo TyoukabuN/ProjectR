@@ -22,8 +22,14 @@ namespace PJR
             ExcuteEntrance((ItemEntity)entity, targetEntity);
 
             targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.Invincible, this, duration);
-            targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.Dash, new SpeedModifyParam(speed, orientationSharpness), duration);
-            targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.LastNonZeroInput, targetEntity.physEntity.motor.CharacterForward, duration);
+            targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.SpeedModify, new SpeedModifyParam(0, 0), duration);
+
+            targetEntity.physEntity.Animancer_Play_Shot(EntityAnimationDefine.AnimationName.Invincible_Start, 0, () =>
+            {
+                targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.Invincible, this, duration);
+                targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.SpeedModify, new SpeedModifyParam(speed, orientationSharpness), duration);
+                targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.LastNonZeroInput, targetEntity.physEntity.motor.CharacterForward, duration);
+            });
         }
 
         public void ExcuteEntrance(ItemEntity itemEntity, LogicEntity targetEntity)

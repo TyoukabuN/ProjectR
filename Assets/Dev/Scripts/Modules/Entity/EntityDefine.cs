@@ -36,7 +36,7 @@ namespace PJR
 
         public static class ExtraValueKey
         {
-            public const string Dash = "Dash";
+            public const string SpeedModify = "Dash";
             public const string LastNonZeroInput = "LastNonZeroInput";
             public const string Invincible = "Invincible";
         }

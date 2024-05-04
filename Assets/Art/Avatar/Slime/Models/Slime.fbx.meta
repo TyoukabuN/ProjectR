@@ -42,6 +42,9 @@ ModelImporter:
   - first:
       74: 6245005418181441866
     second: Slime_Jump_Land
+  - first:
+      74: 2399619406651257610
+    second: Slime_Invincible_Start
   externalObjects: {}
   materials:
     materialImportMode: 2

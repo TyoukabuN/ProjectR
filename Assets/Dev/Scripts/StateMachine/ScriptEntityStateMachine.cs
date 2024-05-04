@@ -66,6 +66,7 @@ namespace PJR.ScriptStates
                     continue;
                 if (transitions[i].Check(state))
                 {
+                    //TODO:加个log的开关
                     LogSystem.Log(transitions[i].ToString());
                     toState = transitions[i].toState;
                     if (states[toState] == null)

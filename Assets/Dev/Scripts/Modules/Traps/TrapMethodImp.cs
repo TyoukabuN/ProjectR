@@ -57,7 +57,7 @@ namespace PJR
             if (!targetEntity.ContainsExtraValue(EntityDefine.ExtraValueKey.Invincible))
             { 
                 targetEntity.EnterState((int)EPlayerState.Stumble);
-                targetEntity.RemoveExtendValue(EntityDefine.ExtraValueKey.Dash);
+                targetEntity.RemoveExtendValue(EntityDefine.ExtraValueKey.SpeedModify);
             }
         }
     }
@@ -89,7 +89,7 @@ namespace PJR
 
         public override void ExecuteActionEvent(EActionEvent evt, LogicEntity entity, LogicEntity targetEntity)
         {
-            targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.Dash, new SpeedModifyParam(speed, orientationSharpness), duration);
+            targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.SpeedModify, new SpeedModifyParam(speed, orientationSharpness), duration);
             targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.LastNonZeroInput, targetEntity.physEntity.motor.CharacterForward, duration);
         }
     }

@@ -33,6 +33,16 @@ MonoBehaviour:
       _Clip: {fileID: 7400000, guid: 53c744ed18645354bae14fbaf1cd88b4, type: 2}
       _Speed: 1
       _NormalizedStartTime: NaN
+  - Key: Invincible_Start
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: 5a15837638bfc774a9ad128d8e381089, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
   - Key: Jump
     Value:
       _FadeDuration: 0.25

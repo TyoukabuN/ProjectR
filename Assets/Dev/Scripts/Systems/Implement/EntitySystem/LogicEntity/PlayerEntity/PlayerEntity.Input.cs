@@ -49,7 +49,7 @@ namespace PJR
             if (context.inputAxi.magnitude > 0)
                 this.AddExtraValue(EntityDefine.ExtraValueKey.LastNonZeroInput, context.rawMoveInputVector);
 
-            if(context.inputAxi.magnitude <= 0 && this.ContainsExtraValue(EntityDefine.ExtraValueKey.Dash))
+            if(context.inputAxi.magnitude <= 0 && this.ContainsExtraValue(EntityDefine.ExtraValueKey.SpeedModify))
                 context.rawMoveInputVector = this.GetExtraValue(EntityDefine.ExtraValueKey.LastNonZeroInput, context.rawMoveInputVector);
 
             context.moveInputVector = context.rawMoveInputVector;

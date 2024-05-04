@@ -155,6 +155,7 @@ namespace PJR
         public AnimancerState Animancer_Play(string clipName,int layerIndex)
         {
             if (animancer == null) return null;
+            if (stateShotRecord != null) return null;
             var layer = animancer.Layers[layerIndex];
             if (TryGetClip(clipName, out ClipTransition clip)) { 
                 return layer.Play(clip);
@@ -164,12 +165,75 @@ namespace PJR
         public AnimancerState Animancer_Play(string clipName, float transition = 0.25f, FadeMode mode = default,int layerIndex = 0)
         {
             if (animancer == null) return null;
+            if (stateShotRecord != null) return null;
             var layer = animancer.Layers[layerIndex];
             if (TryGetClip(clipName, out ClipTransition clip))
             {
                 return layer.Play(clip, transition, mode);
             }
             return null;
+        }
+
+        /// <summary>
+        /// 临时播放一次
+        /// </summary>
+        /// <param name="clipName"></param>
+        /// <param name="layerIndex"></param>
+        /// <returns></returns>
+        public AnimancerState Animancer_Play_Shot(string clipName, int layerIndex = 0,Action callback = null)
+        {
+            if (animancer == null) return null;
+            var layer = animancer.Layers[layerIndex];
+
+            var lastState = layer.CurrentState;
+
+            if (TryGetClip(clipName, out ClipTransition clip))
+            {
+                var state = layer.Play(clip);
+                if(clip.IsLooping)
+                    state.NormalizedEndTime = 1f;
+                int recordId = RecordState(lastState, state);
+                state.Events.Clear();
+                state.Events.OnEnd = () => { Animancer_OnStateEnd(recordId); callback?.Invoke(); };
+                return state;
+            }
+            return null;
+        }
+        protected void Animancer_OnStateEnd(int recordId)
+        {
+            RevertState(recordId);
+        }
+
+
+
+        protected class AnimancerStateRecord
+        {
+            static int s_id = 0;
+            public int id { get; protected set; }
+            public AnimancerState state;
+            public AnimancerState reason;
+            public int RecordState(AnimancerState state, AnimancerState reason)
+            {
+                this.state = state;
+                this.reason = reason;
+                id = ++s_id;
+                return id;
+            }
+        }
+
+        protected AnimancerStateRecord stateShotRecord = null;
+
+        protected int RecordState(AnimancerState state, AnimancerState reason)
+        {
+            stateShotRecord = stateShotRecord ?? new AnimancerStateRecord();
+            return stateShotRecord.RecordState(state, reason);
+        }
+        protected void RevertState(int recordId)
+        {
+            if (stateShotRecord == null || stateShotRecord.id != recordId)
+                return;
+            animancer.Layers[stateShotRecord.state.LayerIndex].Play(stateShotRecord.state);
+            stateShotRecord = null;
         }
         #endregion
 

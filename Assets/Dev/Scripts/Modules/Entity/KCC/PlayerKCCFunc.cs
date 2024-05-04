@@ -12,9 +12,9 @@ namespace PJR
     public static class PlayerKCCFunc
     {
 
-        public static bool GetSpeedUpVelMagnitude(KCContext ctx,float defalutValue,out float value,out float orientationSharpness)
+        public static bool GetSpeedModifyVelMagnitude(KCContext ctx,float defalutValue,out float value,out float orientationSharpness)
         {
-            if (ctx.logicEntity.TryGetExtraValue<SpeedModifyParam>(EntityDefine.ExtraValueKey.Dash, null, out var valueRef))
+            if (ctx.logicEntity.TryGetExtraValue<SpeedModifyParam>(EntityDefine.ExtraValueKey.SpeedModify, null, out var valueRef))
             {
                 value = valueRef.speed;
                 orientationSharpness = valueRef.orientationSharpness;
@@ -45,7 +45,7 @@ namespace PJR
             if (ctx.inputHandle.HasAnyFlag(RegisterKeys.Run))
                 targetVelocityMagnitude = ctx.cfg.ACCMaxGroundedMoveSpeed;
 
-            var dashing = GetSpeedUpVelMagnitude(ctx, targetVelocityMagnitude,out targetVelocityMagnitude,out orientationSharpness);
+            var anyModify = GetSpeedModifyVelMagnitude(ctx, targetVelocityMagnitude,out targetVelocityMagnitude,out orientationSharpness);
             //输入方向
             Vector3 inputAxiVec3 = ctx.moveInputVector;
             bool AnyInputAxi = inputAxiVec3.magnitude > 0;
@@ -72,7 +72,7 @@ namespace PJR
                 finalVelocityMagnitude += ctx.deltaTime * ctx.cfg.GroundedMoveACCSpeed;
             }
 
-            if (dashing)
+            if (anyModify)
                 finalVelocityMagnitude = targetVelocityMagnitude;
 
             ctx.currentVelocity = finalDir * finalVelocityMagnitude;
@@ -125,16 +125,17 @@ namespace PJR
             var output = ctx.currentVelocity;
             var cfg = ctx.cfg;
 
+            Vector3 addedVelocity = ctx.moveInputVector * cfg.AirAccelerationSpeed * ctx.deltaTime;
+            float maxAirMoveSpeed = cfg.MaxAirMoveSpeed;
+            bool anyModify = GetSpeedModifyVelMagnitude(ctx, maxAirMoveSpeed, out float velMagnitude, out float orientationSharpness);
+            if (anyModify)
+            {
+                maxAirMoveSpeed = velMagnitude;
+                addedVelocity = ctx.moveInputVector.normalized * velMagnitude;
+            }
+
             if (ctx.moveInputVector.sqrMagnitude > 0f)
             {
-                Vector3 addedVelocity = ctx.moveInputVector * cfg.AirAccelerationSpeed * ctx.deltaTime;
-                float maxAirMoveSpeed = cfg.MaxAirMoveSpeed;
-                if (GetSpeedUpVelMagnitude(ctx, maxAirMoveSpeed, out float velMagnitude,out float orientationSharpness))
-                {
-                    maxAirMoveSpeed = velMagnitude;
-                    addedVelocity = ctx.moveInputVector.normalized * velMagnitude;
-                }
-
                 Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(output, ctx.motor.CharacterUp);
 
                 // Limit air velocity from inputs
@@ -170,6 +171,9 @@ namespace PJR
             output += cfg.Gravity * ctx.deltaTime;
             output *= (1f / (1f + (cfg.SpeedDamping * ctx.deltaTime)));
             ctx.currentVelocity = output;
+
+            if (anyModify && velMagnitude <= 0)
+                ctx.currentVelocity = Vector3.zero;
         }
 
 
@@ -180,7 +184,7 @@ namespace PJR
         public static void CommonRotation(KCContext context)
         {
             var orientationSharpness = context.cfg.OrientationSharpness;
-            var dashing = GetSpeedUpVelMagnitude(context, 0, out var targetVelocityMagnitude, out orientationSharpness);
+            var dashing = GetSpeedModifyVelMagnitude(context, 0, out var targetVelocityMagnitude, out orientationSharpness);
             //输入方向
             var currentRotation = context.currentRotation;
 

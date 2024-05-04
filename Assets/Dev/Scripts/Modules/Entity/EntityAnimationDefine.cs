@@ -26,6 +26,8 @@ namespace PJR
 
             public const string Stumble = "Stumble";
 
+            public const string Invincible_Start = "Invincible_Start";
+
 
             public const string WALK = "Walk";
             public const string WALK_F = "Walk_Front";

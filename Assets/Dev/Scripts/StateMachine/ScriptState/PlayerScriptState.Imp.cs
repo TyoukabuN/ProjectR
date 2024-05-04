@@ -94,7 +94,7 @@ namespace PJR.ScriptStates.Player
         {
             var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move, true);
             var nameSet = EntityAnimationDefine.AnimationName.Dash;
-            var dashing = entity.ContainsExtraValue(EntityDefine.ExtraValueKey.Dash);
+            var dashing = entity.ContainsExtraValue(EntityDefine.ExtraValueKey.SpeedModify);
             if (inputAxi.magnitude > 0 || dashing)
             {
                 //if (Mathf.Abs(inputAxi.x) <= 0.001f)
@@ -175,7 +175,6 @@ namespace PJR.ScriptStates.Player
         public override void Update(EntityContext entityContext)
         {
             base.Update(entityContext);
-            LogSystem.Log(normalizeTime);
         }
     }
     public class JumpFallingState : AnimationState

@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7b6b3fd91bc4e84ab3a0ce3ea31cbd3, type: 3}
   m_Name: EntityPhysicsConfig
   m_EditorClassIdentifier: 
-  MaxGroundedMoveSpeed: 2
+  MaxGroundedMoveSpeed: 4
   GroundedMoveACCSpeed: 20
-  ACCMaxGroundedMoveSpeed: 5
+  ACCMaxGroundedMoveSpeed: 7
   ACCGroundedMoveACCSpeed: 20
-  MaxAirMoveSpeed: 15
+  MaxAirMoveSpeed: 20
   AirAccelerationSpeed: 15
   JumpUpSpeed: 13
   JumpableTime: 2
   Gravity: {x: 0, y: -39, z: 0}
   SpeedDamping: 4
+  SpeedDampingInHurt: 8
   OrientationSharpness: 40

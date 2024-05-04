@@ -27,6 +27,7 @@ namespace PJR
         [LabelText("其他实体施力")] AddForce = 0,
         [LabelText("绊倒")] Stumble = 1,
         [LabelText("实体加速")] SpeedUp = 2,
+        [LabelText("无敌")] Invincible = 3,
         [LabelText("广播游戏事件")] DispatchEvent = 24,
     }
 
@@ -49,11 +50,11 @@ namespace PJR
         [ShowInInspector]
         [SerializeReference]
         [LabelText("实现方法")]
-        public TrapMethod trapMethod;
+        public ActionApproach trapMethod;
     }
 
     [Serializable]
-    public abstract class TrapMethod
+    public abstract class ActionApproach
     {
         [ShowInInspector]
         [DisableIf("@true")]

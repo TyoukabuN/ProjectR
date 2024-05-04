@@ -34,6 +34,13 @@ namespace PJR
             public const string Player = "Player";
         }
 
+        public static class ExtraValueKey
+        {
+            public const string Dash = "Dash";
+            public const string LastNonZeroInput = "LastNonZeroInput";
+            public const string Invincible = "Invincible";
+        }
+
 
         //KD stand for key define
         public static readonly string KD_DASH_TRIGGER = "DashTrigger";

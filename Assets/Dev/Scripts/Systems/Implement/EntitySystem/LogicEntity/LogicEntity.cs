@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using PJR.ScriptStates;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ namespace PJR
         public EntityContext entityContext;
         public ScriptEntityStateMachine<EntityScriptState> scriptStateMachine;
         public EntityPhysicsConfigAsset physicsConfig;
+
+        public Dictionary<string, ExtraValue> ExtraValueMap { get; set; }
 
         public virtual void Init() { }
         public virtual void Update() { }

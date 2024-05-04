@@ -7,12 +7,12 @@ namespace PJR
 {
     public class ItemBase :MonoBehaviour
     {
-        [LabelText("再生次数")]
-        [Tooltip("<=0为无限次数，>0对应次数")]
+        [LabelText("鍐嶇敓娆℃暟")]
+        [Tooltip("<=0涓烘棤闄愭鏁帮紝>0瀵瑰簲娆℃暟")]
         public int CanRegenerateTimes;
-        public ItemConfig itemconfig;
+        public ItemConfigAsset itemconfig;
         public bool isMugen => itemconfig.CanRegenerateTimes < 1;
-        [LabelText("再生间隔")]
+        [LabelText("鍐嶇敓闂撮殧")]
         public float interval;
         protected virtual void GenFunc()
         {

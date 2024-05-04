@@ -180,7 +180,7 @@ namespace PJR
                 {
                     if (!item.Value.IsValid())
                         continue;
-                    item.Value.Update(Time.fixedDeltaTime);
+                    item.Value.Update(deltaTime);
                     extendVelocity += item.Value.velocity;
                 }
             }

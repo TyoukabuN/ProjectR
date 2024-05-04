@@ -94,7 +94,8 @@ namespace PJR.ScriptStates.Player
         {
             var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move, true);
             var nameSet = EntityAnimationDefine.AnimationName.Dash;
-            if (inputAxi.magnitude > 0)
+            var dashing = entity.ContainsExtraValue(EntityDefine.ExtraValueKey.Dash);
+            if (inputAxi.magnitude > 0 || dashing)
             {
                 //if (Mathf.Abs(inputAxi.x) <= 0.001f)
                 //{
@@ -107,7 +108,10 @@ namespace PJR.ScriptStates.Player
                 //    else
                 //        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.BR : nameSet.BL);
                 //}
-                entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.RUN);
+                if (dashing)
+                    entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Roll_Loop);
+                else
+                    entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.RUN);
             }
             else
             {

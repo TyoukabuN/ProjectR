@@ -11,6 +11,21 @@ namespace PJR
     /// </summary>
     public static class PlayerControlFunc
     {
+
+        public static bool GetSpeedUpVelMagnitude(KCContext ctx,float defalutValue,out float value,out float orientationSharpness)
+        {
+            if (ctx.logicEntity.TryGetExtraValue<TrapMethod_SpeedUp>(EntityDefine.ExtraValueKey.Dash, null, out var valueRef))
+            {
+                value = valueRef.speed;
+                orientationSharpness = valueRef.orientationSharpness;
+                return true;
+            }
+            value = defalutValue;
+            orientationSharpness = ctx.cfg.OrientationSharpness;
+            return false;
+
+
+        }
         /// <summary>
         /// 地面上移动
         /// </summary>
@@ -21,12 +36,16 @@ namespace PJR
             //
             //当前速度
             var inputVelocity = ctx.currentVelocity;
+            //转向系数
+            var orientationSharpness = ctx.cfg.OrientationSharpness;
             //当前速度大小
             var currentVelocityMagnitude = ctx.currentVelocity.magnitude;
             //目标速度
             float targetVelocityMagnitude = ctx.cfg.MaxGroundedMoveSpeed;
             if (ctx.inputHandle.HasAnyFlag(RegisterKeys.Run))
                 targetVelocityMagnitude = ctx.cfg.ACCMaxGroundedMoveSpeed;
+
+            var dashing = GetSpeedUpVelMagnitude(ctx, targetVelocityMagnitude,out targetVelocityMagnitude,out orientationSharpness);
             //输入方向
             Vector3 inputAxiVec3 = ctx.moveInputVector;
             bool AnyInputAxi = inputAxiVec3.magnitude > 0;
@@ -37,7 +56,7 @@ namespace PJR
             var currentDir = ctx.motor.GetDirectionTangentToSurface(inputVelocity, effectiveGroundNormal);// * currentVelocityMagnitude;
             Vector3 reorientedInputDir = ctx.motor.GetDirectionTangentToSurface(inputAxiVec3, effectiveGroundNormal);
 
-            Vector3 finalDir = Vector3.Lerp(currentDir, reorientedInputDir, 1f - Mathf.Exp(-ctx.cfg.OrientationSharpness * ctx.deltaTime));
+            Vector3 finalDir = Vector3.Lerp(currentDir, reorientedInputDir, 1f - Mathf.Exp(-orientationSharpness * ctx.deltaTime));
 
 
             ////计算速度大小
@@ -52,6 +71,9 @@ namespace PJR
                 //加速
                 finalVelocityMagnitude += ctx.deltaTime * ctx.cfg.GroundedMoveACCSpeed;
             }
+
+            if (dashing)
+                finalVelocityMagnitude = targetVelocityMagnitude;
 
             ctx.currentVelocity = finalDir * finalVelocityMagnitude;
         }
@@ -106,14 +128,20 @@ namespace PJR
             if (ctx.moveInputVector.sqrMagnitude > 0f)
             {
                 Vector3 addedVelocity = ctx.moveInputVector * cfg.AirAccelerationSpeed * ctx.deltaTime;
+                float maxAirMoveSpeed = cfg.MaxAirMoveSpeed;
+                if (GetSpeedUpVelMagnitude(ctx, maxAirMoveSpeed, out float velMagnitude,out float orientationSharpness))
+                {
+                    maxAirMoveSpeed = velMagnitude;
+                    addedVelocity = ctx.moveInputVector.normalized * velMagnitude;
+                }
 
                 Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(output, ctx.motor.CharacterUp);
 
                 // Limit air velocity from inputs
-                if (currentVelocityOnInputsPlane.magnitude < cfg.MaxAirMoveSpeed)
+                if (currentVelocityOnInputsPlane.magnitude < maxAirMoveSpeed)
                 {
                     // clamp addedVel to make total vel not exceed max vel on inputs plane
-                    Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, cfg.MaxAirMoveSpeed);
+                    Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, maxAirMoveSpeed);
                     addedVelocity = newTotal - currentVelocityOnInputsPlane;
                 }
                 else
@@ -151,19 +179,22 @@ namespace PJR
         /// <param name="context"></param>
         public static void CommonRotation(KCContext context)
         {
+            var orientationSharpness = context.cfg.OrientationSharpness;
+            var dashing = GetSpeedUpVelMagnitude(context, 0, out var targetVelocityMagnitude, out orientationSharpness);
+            //输入方向
             var currentRotation = context.currentRotation;
 
-            if (context.lookInputVector.sqrMagnitude > 0f && context.cfg.OrientationSharpness > 0f)
+            if (context.lookInputVector.sqrMagnitude > 0f && orientationSharpness > 0f)
             {
                 // Smoothly interpolate from current to target look direction
-                Vector3 smoothedLookInputDirection = Vector3.Slerp(context.motor.CharacterForward, context.lookInputVector, 1 - Mathf.Exp(-context.cfg.OrientationSharpness * context.deltaTime)).normalized;
+                Vector3 smoothedLookInputDirection = Vector3.Slerp(context.motor.CharacterForward, context.lookInputVector, 1 - Mathf.Exp(-orientationSharpness * context.deltaTime)).normalized;
 
                 // Set the current rotation (which will be used by the KinematicCharacterMotor)
                 currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, context.motor.CharacterUp);
             }
 
             Vector3 currentUp = (currentRotation * Vector3.up);
-            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up, 1 - Mathf.Exp(-context.cfg.OrientationSharpness * context.deltaTime));
+            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up, 1 - Mathf.Exp(-orientationSharpness * context.deltaTime));
             currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
 
             context.currentRotation = currentRotation;

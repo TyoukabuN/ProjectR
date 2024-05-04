@@ -11,6 +11,8 @@ namespace PJR
         public static class AnimationName
         {
             public const string Idle = "Idle";
+            public const string Roll_Loop = "Roll_Loop";
+            public const string Roll_Reverse_Loop = "Roll_Reverse_Loop";
 
             public const string Jump = "Jump";
             public const string Jump_Air_Start = "Jump_Air_Start";

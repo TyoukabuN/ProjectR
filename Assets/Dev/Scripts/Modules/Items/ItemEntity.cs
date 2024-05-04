@@ -6,7 +6,7 @@ namespace PJR
 {
     public class ItemEntity : LogicEntity
     {
-        public ItemConfig config;
+        public ItemConfigAsset config;
         public ItemBase itembase;
         public override void OnCreate(EntityContext context)
         {

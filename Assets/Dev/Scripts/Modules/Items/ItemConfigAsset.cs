@@ -9,30 +9,24 @@ using Object = UnityEngine.Object;
 
 namespace PJR
 {
-    public class ItemConfig : EntityConfigAsset
+    public class ItemConfigAsset : EntityConfigAsset
     {
-        [LabelText("再生道具次数")]
-        [Tooltip("<=0为无限次数，>0对应次数")]
+        [LabelText("鍐嶇敓閬撳叿娆℃暟")]
+        [Tooltip("<=0涓烘棤闄愭鏁帮紝>0瀵瑰簲娆℃暟")]
         public int CanRegenerateTimes = 0;
-        [LabelText("再生间隔")]
+        [LabelText("鍐嶇敓闂撮殧")]
         public float interval = 3f;
-        [ScriptTypeRestriction(typeof(ItemBase))]
-        public Object script;
-        //数字先代替
-        public int itemType;
-        
+
 #if UNITY_EDITOR
-        [UnityEditor.MenuItem("Assets/PJR/创建配置/道具配置/道具配置")]
+        [UnityEditor.MenuItem("Assets/PJR/鍒涘缓閰嶇疆/閬撳叿閰嶇疆/閬撳叿閰嶇疆")]
         public static void CreateAsset()
         {
-            CSConfigHelper.CreateScriptableObject<ItemConfig>();
+            CSConfigHelper.CreateScriptableObject<ItemConfigAsset>();
         }
 #endif
-        
         public void ExecutePhaseEvent(TEntityPhase entityPhase, ItemEntity itemEntity, LogicEntity targetEntity)
         {
-
-            ItemFunc.ExcuteEntrance(itemEntity.config.itemType, itemEntity, targetEntity);
+            //ItemFunc.ExcuteEntrance(itemEntity.config.itemType, itemEntity, targetEntity);
         }
     }
 }

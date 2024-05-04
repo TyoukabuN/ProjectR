@@ -5,13 +5,14 @@ using UnityEngine;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace PJR
 {
     /// <summary>
     /// 施力陷阱
     /// </summary>
-    public class TrapMethod_AddForce : TrapMethod
+    public class TrapMethod_AddForce : ActionApproach
     {
         public override TActionType ActionType => TActionType.AddForce;
         public override bool HasDirection => true;
@@ -44,7 +45,7 @@ namespace PJR
     /// <summary>
     /// 障碍（栏杆）
     /// </summary>
-    public class TrapMethod_Stumble : TrapMethod
+    public class TrapMethod_Stumble : ActionApproach
     {
         public override TActionType ActionType => TActionType.Stumble;
         public override bool HasDirection => false;
@@ -54,6 +55,7 @@ namespace PJR
         {
             trapEntity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Action_1);
             targetEntity.EnterState((int)EPlayerState.Stumble);
+            targetEntity.RemoveExtendValue(EntityDefine.ExtraValueKey.Dash);
         }
     }
 
@@ -61,7 +63,7 @@ namespace PJR
     /// 加速
     /// </summary>
     [InlineProperty]
-    public class TrapMethod_SpeedUp : TrapMethod
+    public class TrapMethod_SpeedUp : ActionApproach
     {
         public override TActionType ActionType => TActionType.SpeedUp;
         public override bool HasDirection => true;
@@ -69,22 +71,18 @@ namespace PJR
 
         [LabelText("速度")] public float speed = 10f;
         [LabelText("持续时间")] public float duration = 3f;
-        [LabelText("衰减系数")][PropertyTooltip(ExtraVelocity.tooltip)] public float damp = -1f;
-        [LabelText("衰减曲线")] public Easing.Ease easing = Easing.Ease.Linear;
-        [LabelText("强制移动阻断输入")] public bool blockInput = false;
+        [LabelText("转向系数")] public float orientationSharpness = 10f;
 
         public override void ExecuteActionEvent(TActionEvent evt, LogicEntity trapEntity, LogicEntity targetEntity)
         {
-            ExtraValueObject extraValue = new ExtraValueObject(duration);
-            extraValue.valueRef = this;
-
-            targetEntity.AddExtraValue("Dash", extraValue);
+            targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.Dash, this, duration);
+            targetEntity.AddExtraValue(EntityDefine.ExtraValueKey.LastNonZeroInput, targetEntity.physEntity.motor.CharacterForward, duration);
         }
     }
     /// <summary>
     /// 滚石
     /// </summary>
-    public class TrapMethod_RollingStone : TrapMethod
+    public class TrapMethod_RollingStone : ActionApproach
     {
         public override TActionType ActionType => TActionType.Stumble;
         public override bool HasDirection => false;
@@ -102,7 +100,7 @@ namespace PJR
     /// 滚石触发
     /// </summary>
     [Serializable]
-    public class TrapMethod_RollingStoneTrigger : TrapMethod
+    public class TrapMethod_RollingStoneTrigger : ActionApproach
     {
         public override TActionType ActionType => TActionType.Stumble;
         public override bool HasDirection => false;

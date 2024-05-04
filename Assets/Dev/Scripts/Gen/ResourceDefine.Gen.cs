@@ -25,6 +25,7 @@ namespace PJR
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_Hurdle.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_RollingStone.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_RollingStoneTrigger.asset",
+			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_RollingStoneTrigger2.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_SpeedUp.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_Test.asset",
 			"Assets/Dev/Prefabs/SystemAssets/InputSystem/InputAction.inputactions",

@@ -123,16 +123,6 @@ MonoBehaviour:
       _Clip: {fileID: 7400000, guid: 1df0ae9a8867efa4881f514a6161e20d, type: 2}
       _Speed: 1
       _NormalizedStartTime: NaN
-  - Key: Walk
-    Value:
-      _FadeDuration: 0.25
-      _Events:
-        _NormalizedTimes: []
-        _Callbacks: []
-        _Names: []
-      _Clip: {fileID: 7400000, guid: d44ede69af78bd24582c11050fe9417a, type: 2}
-      _Speed: 1
-      _NormalizedStartTime: NaN
   - Key: Stumble
     Value:
       _FadeDuration: 0.25
@@ -141,5 +131,15 @@ MonoBehaviour:
         _Callbacks: []
         _Names: []
       _Clip: {fileID: 7400000, guid: 945523ea8711cac479ff537186c19e67, type: 2}
+      _Speed: 1
+      _NormalizedStartTime: NaN
+  - Key: Walk
+    Value:
+      _FadeDuration: 0.25
+      _Events:
+        _NormalizedTimes: []
+        _Callbacks: []
+        _Names: []
+      _Clip: {fileID: 7400000, guid: d44ede69af78bd24582c11050fe9417a, type: 2}
       _Speed: 1
       _NormalizedStartTime: NaN

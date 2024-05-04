@@ -11,9 +11,10 @@ namespace PJR
 {
     public enum UILayer
     {
-        Main = 0,
-        Game,
-        Top,
+        Main = 0, //全屏界面
+        Game, //游戏中界面
+        Top, //弹窗
+        MessageTop, //最顶级
     }
     public class UISystem : MonoSingletonSystem<UISystem>
     {
@@ -23,7 +24,7 @@ namespace PJR
         //根节点字典
         public Dictionary<UILayer, Transform> rootDict = new Dictionary<UILayer,Transform>();
         //按名字储存的实例
-        public Dictionary<string,GameObject> nameObjListDict = new Dictionary<string,GameObject>();
+        public Dictionary<string,UINode> nameUINodeDict = new Dictionary<string, UINode>();
         public Transform CanvasRoot;
 
         public GameObject EventSystemObj;
@@ -42,9 +43,10 @@ namespace PJR
             GenObject(UILayer.Main, "MainUIRoot");
             GenObject(UILayer.Game, "GameUIRoot");
             GenObject(UILayer.Top, "TopUIRoot");
+            GenObject(UILayer.MessageTop, "MessageTopUIRoot");
             CreateEventSystem();
             TestEntrance();
-            LogSystem.Log("========UI准备完成");
+            LogSystem.Log("========UIRoot准备完成");
         }
         private void CreateEventSystem()
         {
@@ -70,7 +72,7 @@ namespace PJR
             obj.transform.SetParent(CanvasRoot);
             rootDict[uilayer] = obj.transform;
         }
-        public void ShowNormal(UINode node)
+        public void ShowNormal(UINode node,object data = null)
         {
             Array arr = Enum.GetValues(typeof(UILayer));
             
@@ -78,22 +80,28 @@ namespace PJR
             {
                 if (node.layer == (UILayer)arr.GetValue(i))
                 {
-                    rootDict[node.layer].gameObject.SetActive(true);
-                }
-                else
-                {
-                    rootDict[(UILayer)arr.GetValue(i)].gameObject.SetActive(false);
+                    foreach (var item in nodeDict[node.layer])
+                    {
+                        if (item.Value == node)
+                        {
+                            item.Value.gameObject.SetActive(true);
+                            item.Value.gameObject.transform.SetAsLastSibling();
+                        }
+                        else
+                        {
+                            item.Value.gameObject.SetActive(false);
+                        }
+                    }
+                    break;
                 }
             }
-            node.gameObject.SetActive(true);
-            node.transform.SetAsLastSibling();
             node.OnOpen();
+            if (data !=null)
+            {
+                SetData(node.UIName, data);
+            }
         }
-        public void ShowTop(UINode node)
-        {
-            node.gameObject.SetActive(true);
-            node.transform.SetAsLastSibling();
-        }
+        
         public void Close(UINode node,bool isRelease)
         {
             if (isRelease)
@@ -101,7 +109,7 @@ namespace PJR
                 node.OnClose();
                 node.OnDestory();
                 nodeDict[node.layer].Remove(node.instanID);
-                nameObjListDict.Remove(node.UIName);
+                nameUINodeDict.Remove(node.UIName);
                 Destroy(node.gameObject);
             }
             else
@@ -110,29 +118,29 @@ namespace PJR
                 node.gameObject.SetActive(false);
             }
         }
-        public void OpenPanel(string name,object obj =null)
+        public void OpenPanel(string name,object data =null)
         {
             if (UIAssetdict.assets.ContainsKey(name))
             {
-                if (!nameObjListDict.ContainsKey(name))
+                if (!nameUINodeDict.ContainsKey(name))
                 {
-                    LoadUI(UIAssetdict.assets[name].prefab,true);
+                    LoadUI(UIAssetdict.assets[name].prefab,data,true);
                 }
                 else
                 {
-                    ShowNormal(nameObjListDict[name].GetComponent<UINode>());
+                    ShowNormal(nameUINodeDict[name],data);
                 }
             }
             else
             {
-                LogSystem.LogError($"不存在名称{name}的UIPanel");
+                Debug.LogError($"不存在名称{name}的UIPanel");
             }
         }
-        private void LoadUI(string path,bool isDoneShow = false)
+        private void LoadUI(string path,object data,bool isDoneShow = false)
         {
-            StartCoroutine(LoadAsset(path, isDoneShow));
+            StartCoroutine(LoadAsset(path, data,isDoneShow));
         }
-        IEnumerator LoadAsset(string name, bool isDoneShow)
+        IEnumerator LoadAsset(string name, object data, bool isDoneShow)
         {
             if (!string.IsNullOrEmpty(name))
             {
@@ -143,10 +151,10 @@ namespace PJR
                     yield return null;
                 }
                 yield return loader;
-                OnLoadDone(loader, isDoneShow);
+                OnLoadDone(loader,data, isDoneShow);
             }
         }
-        public void OnLoadDone(ResourceLoader loader,bool isDoneShow)
+        public void OnLoadDone(ResourceLoader loader,object data,bool isDoneShow)
         {
             var asset = loader.GetRawAsset<GameObject>();
             if (asset == null)
@@ -164,7 +172,7 @@ namespace PJR
             UINode uinode = ui.TryGetComponent<UINode>();
             if (uinode!=null)
             {
-                nameObjListDict[uinode.UIName] = ui;
+                nameUINodeDict[uinode.UIName] = uinode;
                 //重设rect
                 ui.transform.SetParent(rootDict[uinode.layer]);
                 RectTransform rect = ui.TryGetComponent<RectTransform>();
@@ -174,6 +182,7 @@ namespace PJR
                 rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Screen.height);
 
                 uinode.OnInit();
+                ui.SetActive(false);
                 if (nodeDict.ContainsKey(uinode.layer))
                 {
                     nodeDict[uinode.layer][uinode.instanID] = uinode;
@@ -185,8 +194,31 @@ namespace PJR
                 }
                 if (isDoneShow)
                 {
-                    ShowNormal(nameObjListDict[uinode.UIName].GetComponent<UINode>());
+                    UINode node = nameUINodeDict[uinode.UIName];
+                    node.data = data;
+                    if (node !=null)
+                    {
+                        ShowNormal(node,data);
+                    }
                 }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="recive">接受data的panel名字</param>
+        /// <param name="data"></param>
+        public void SetData(string recive,object data)
+        {
+            if (nameUINodeDict.ContainsKey(recive))
+            {
+                UINode node = nameUINodeDict[recive];
+                node.data= data;
+                node.OnData(data);
+            }
+            else
+            {
+                LogSystem.LogError($"{recive}不存在");
             }
         }
     }

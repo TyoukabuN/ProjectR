@@ -16,6 +16,8 @@ namespace PJR
         public string prefab;
         [ReadOnly]
         public int instanID;
+        [ReadOnly]
+        public UINode parent;
         public object data;
         private void Start()
         {
@@ -28,6 +30,13 @@ namespace PJR
         public virtual void OnStart()
         {
             transform.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        }
+        public virtual void OnData(object data)
+        {
+            if (data is UINode)
+            {
+                parent = (UINode)data;
+            }
         }
         public virtual void OnOpen()
         {
@@ -43,10 +52,13 @@ namespace PJR
         }
         public virtual void Close(bool isRelease = false)
         {
-            OnClose();
             UISystem.instance.Close(this, isRelease);
         }
         
+    }
+    public class UINodeData
+    {
+
     }
     [Serializable]
     public class UIAssetDict

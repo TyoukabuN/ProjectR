@@ -11,7 +11,24 @@ namespace PJR
         public override void OnStart()
         {
             base.OnStart();
-            closeBtn.onClick.AddListener(() => { Close(); });
+            closeBtn.onClick.AddListener(() => { Close(true); });
+        }
+        public override void OnOpen()
+        {
+            Debug.Log("NormalUIPanel´ò¿ªÁË");
+        }
+        public override void OnData(object data)
+        {
+            base.OnData(data);
+            if (data is string)
+            {
+                Debug.Log(data);
+            }
+            if (data is UINodeData)
+            {
+                MainUIData mud = (MainUIData)data;
+                Debug.Log(mud.name);
+            }
         }
     }
 }

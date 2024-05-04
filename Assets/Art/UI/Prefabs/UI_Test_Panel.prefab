@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1279585397661448871}
   - component: {fileID: 1279585397661448870}
   - component: {fileID: 1279585397661448869}
-  - component: {fileID: -2320766501911612322}
   m_Layer: 5
   m_Name: Button (Legacy)
   m_TagString: Untagged
@@ -123,22 +122,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &-2320766501911612322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1279585397661448867}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0b717bf354d8fc49a32a21c90b8f04d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layer: 0
-  UIName: 
-  prefab: 
-  instanID: 0
 --- !u!1 &1279585398229266826
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,6 +176,7 @@ MonoBehaviour:
   UIName: mainUI
   prefab: UI_Test_Panel.prefab
   instanID: 0
+  parent: {fileID: 0}
   startBtn: {fileID: 1279585397661448869}
 --- !u!1 &1279585398448694338
 GameObject:

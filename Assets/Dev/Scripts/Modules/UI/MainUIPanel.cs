@@ -12,10 +12,16 @@ namespace PJR
         {
             base.OnStart();
             startBtn.onClick.AddListener(() => { 
-                Debug.Log("-----µã»÷ÁË");
-                UISystem.instance.OpenPanel("NorUI");
+                MainUIData md = new MainUIData();
+                md.name = "gawgwasgwa";
+                UISystem.instance.OpenPanel("NorUI",md);
+                //UISystem.instance.SetData("NorUI", "123123");
             });
         }
+    }
+    public class MainUIData:UINodeData
+    {
+        public string name;
     }
 }
 

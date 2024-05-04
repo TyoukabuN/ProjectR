@@ -83,6 +83,7 @@ namespace PJR
             {"Assets/Dev/Scripts/Systems/Implement/LogSystem",new GUIContent("日志系统")},
             {"Assets/Dev/Scripts/Systems/Implement/ResourceSystem",new GUIContent("资源系统")},
             {"Assets/Dev/Scripts/Systems/Implement/SceneSystem",new GUIContent("场景系统")},
+            {"Assets/Dev/Scripts/Systems/Implement/UISystem",new GUIContent("UI系统")},
             {"Assets/Dev/Scripts/Utility",new GUIContent("通用工具")},
             {"Assets/Dev/Scripts/Utility/ClassExtension",new GUIContent("扩展类")},
         };

@@ -78,6 +78,8 @@ namespace PJR
                 UICamera.cullingMask = 1<<5;
                 UICamera.orthographic = true;
                 UICamera.orthographicSize = 100;
+                UICamera.nearClipPlane = -1000;
+                UICamera.farClipPlane = 200;
                 UICamera.transform.SetParent(UIRoot.transform);
             }
         }
@@ -85,13 +87,19 @@ namespace PJR
         {
             OpenPanel("MainPanel");
         }
+        Dictionary<UILayer,float> layerFar = new Dictionary<UILayer, float> { 
+            [UILayer.Main] = 0f,
+            [UILayer.Game] = -200f,
+            [UILayer.Top] = -600f,
+            [UILayer.MessageTop] = -900f,
+        };
         private void GenObject(UILayer uilayer,string name)
         {
             GameObject obj = new GameObject(name,typeof(RectTransform));
             obj.layer = 5;
             RectTransform rect = obj.GetComponent<RectTransform>();
-            rect.position = Vector3.zero;
             rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
+            rect.localPosition = new Vector3(0, 0, layerFar[uilayer]);
             rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Screen.width);
             rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Screen.height);
             obj.transform.SetParent(CanvasRoot);

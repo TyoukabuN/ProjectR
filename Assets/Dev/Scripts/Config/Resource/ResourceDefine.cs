@@ -45,20 +45,27 @@ namespace PJR
             if (Directory.Exists(fullPath))
             {
                 UIAssetDict ud = new UIAssetDict();
-                DirectoryInfo direction = new DirectoryInfo(fullPath);
-                FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
-                for (int i = 0; i < files.Length; i++)
+                string filters = " t:ScriptableObject t:Prefab";
+                string[] searchInFolders = new string[]{fullPath,};
+                var guids = AssetDatabase.FindAssets(filters, searchInFolders);
+                guids.ForEach(guid =>
                 {
-                    if (files[i].Name.EndsWith(".prefab"))
-                    {
-                        string ab_name = "Assets/Art/UI/";
-                        if (files[i].Directory.Name != "Assets/Art/UI/")
-                        {
-                            ab_name += files[i].Directory.Name + "/";
-                        }
-                        prefabs_names.Add(ab_name + files[i].Name);
-                    }
-                }
+                    prefabs_names.Add(AssetDatabase.GUIDToAssetPath(guid));
+                });
+                //DirectoryInfo direction = new DirectoryInfo(fullPath);
+                //FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
+                //for (int i = 0; i < files.Length; i++)
+                //{
+                //    if (files[i].Name.EndsWith(".prefab"))
+                //    {
+                //        string ab_name = "Assets/Art/UI/";
+                //        if (files[i].Directory.Name != "Assets/Art/UI/")
+                //        {
+                //            ab_name += files[i].Directory.Name + "/";
+                //        }
+                //        prefabs_names.Add(ab_name + files[i].Name);
+                //    }
+                //}
                 for (int i = 0; i < prefabs_names.Count; i++)
                 {
                     GameObject go = AssetDatabase.LoadAssetAtPath(prefabs_names[i], typeof(System.Object)) as GameObject;

@@ -17,7 +17,10 @@ namespace PJR
                 MainUIData md = new MainUIData();
                 md.name = "gawgwasgwa";
                 UISystem.instance.OpenPanel("NorUI",md);
-                //UISystem.instance.SetData("NorUI", "123123");
+            });
+            optionBtn.onClick.AddListener(() =>
+            {
+                UISystem.instance.OpenPanel("OptionWindowPanel");
             });
         }
     }

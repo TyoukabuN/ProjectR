@@ -16,6 +16,7 @@ namespace PJR
 			"Assets/Art/Avatar/Trap/Test_Trap/Prefabs/Avater_Test_Stone_Trap.prefab",
 			"Assets/Art/Avatar/Trap/Test_Trap/Prefabs/Avater_Test_Trap.prefab",
 			"Assets/Art/Env/TestGround/lowpoly_ground Variant.prefab",
+			"Assets/Art/UI/Prefabs/UI_Main_Panel.prefab",
 			"Assets/Art/UI/Prefabs/UI_nor_Panel.prefab",
 			"Assets/Art/UI/Prefabs/UI_Test_Panel.prefab",
 			"Assets/Dev/Prefabs/ConfigAsset/EntityAttributeConfigAsset.asset",

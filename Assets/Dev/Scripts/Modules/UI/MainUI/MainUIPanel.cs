@@ -15,8 +15,8 @@ namespace PJR
             base.OnStart();
             startBtn.onClick.AddListener(() => { 
                 MainUIData md = new MainUIData();
-                md.name = "gawgwasgwa";
-                UISystem.instance.OpenPanel("NorUI",md);
+                md.message = $"the message from {this.name}";
+                UISystem.instance.OpenPanel("LevelSelectWindow", md);
             });
             optionBtn.onClick.AddListener(() =>
             {
@@ -26,7 +26,8 @@ namespace PJR
     }
     public class MainUIData:UINodeData
     {
-        public string name;
+        public string message;
+        public List<int> levels = new List<int> { 1,2,3,4};
     }
 }
 

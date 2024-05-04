@@ -1,0 +1,9 @@
+diff a/Assets/Dev/Scripts/Modules/Traps/TrapMethodImp.cs b/Assets/Dev/Scripts/Modules/Traps/TrapMethodImp.cs	(rejected hunks)
+@@ -132,6 +132,7 @@
+         public override Vector3 Direction => Vector3.one;
+         [LabelText("对应场景ManualGroup的第几组")]
+         [SerializeField]
++        public string group = "1";
+         //哎没办法储存
+         //[LabelText("控制的陷阱hostGameObject")]
+         //[SerializeField]

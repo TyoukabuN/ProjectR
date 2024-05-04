@@ -27,7 +27,7 @@ namespace PJR
             if (data is UINodeData)
             {
                 MainUIData mud = (MainUIData)data;
-                Debug.Log(mud.name);
+                Debug.Log(mud.message);
             }
         }
     }

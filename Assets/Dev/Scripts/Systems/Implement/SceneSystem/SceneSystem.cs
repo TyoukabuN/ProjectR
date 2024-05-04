@@ -1,7 +1,5 @@
+using JetBrains.Annotations;
 using System.Collections.Generic;
-using System.Security.Policy;
-using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -27,8 +25,12 @@ namespace PJR
         //Roots
         public Transform SceneTrapRoot = null;
         public Transform PlayBornPoint = null;
-
         public Transform SceneItemRoot = null;
+        public Transform SceneResetPointRoot = null;
+        public Transform SceneDeadZoneRoot = null;
+        //
+        public List<Transform> ResetPoints = null;
+
 
         public override void Init()
         {
@@ -71,8 +73,43 @@ namespace PJR
         public void OnEnterScene(GameObject sceneRoot = null)
         {
             sceneRoot = sceneRoot == null ? instance.sceneRoot : sceneRoot;
+            SceneTrapRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_TRAP);
+            SceneItemRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_ITEM);
+            SceneResetPointRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_RESET_POINT);
+            if (SceneResetPointRoot != null)
+            {
+                ResetPoints = new List<Transform>();
+                for (int i = 0; i < SceneResetPointRoot.childCount; i++)
+                { 
+                    var point = SceneResetPointRoot.GetChild(i);
+                    ResetPoints.Add(point);
+                }
+            }
+            SceneDeadZoneRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_DEAdZONE);
 
             GenSceneEntity();
+        }
+
+        public bool GetClosestResetPoint(Vector3 refPoint,out Vector3 closestPoint)
+        {
+            closestPoint = Vector3.zero;
+            if (ResetPoints == null)
+            { 
+                LogSystem.LogError("场景没有设置重置点");
+                return false;
+            }
+            float closestDis = float.MaxValue;
+            for (int i = 0; i < ResetPoints.Count; i++)
+            {
+                var resetPoint = ResetPoints[i].position;
+                float dis = (refPoint - resetPoint).magnitude;
+                if (dis <= closestDis)
+                {
+                    closestPoint = resetPoint;
+                    closestDis = dis;
+                }
+            }
+            return true;
         }
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Sirenix.OdinInspector;
+
 namespace PJR
 {
     public class ItemConfigHost : EntityConfigHost
     {
-        public ItemConfig config;
+        [InlineEditor]
+        public ItemConfigAsset configAsset;
     }
 }
-

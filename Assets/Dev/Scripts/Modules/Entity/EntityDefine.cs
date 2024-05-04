@@ -14,26 +14,33 @@ namespace PJR
             Trap = 2,
             Item = 3,
         }
-        /// <summary>
-        /// 物理实体下的模型节点
-        /// </summary>
-        public static string MODEL_ROOT_NAME = "ModelRoot";
+        public static string MODEL_ROOT_NAME = "ModelRoot";/// 物理实体下的模型节点
 
-        /// <summary>
-        /// 场景根节点下的陷阱节点
-        /// </summary>
-        public static string SCENE_ROOT_NAME_TRAP = "Traps";
-
-        /// <summary>
-        /// 场景根节点下的道具节点
-        /// </summary>
-        public static string SCENE_ROOT_NAME_ITEM = "Items";
+        public static string SCENE_ROOT_NAME_TRAP = "Traps";/// 场景根节点下的陷阱节点
+        public static string SCENE_ROOT_NAME_ITEM = "Items";   /// 场景根节点下的道具节点     
+        public static string SCENE_ROOT_NAME_RESET_POINT = "ResetPoints";/// 重置点s
+        public static string SCENE_ROOT_NAME_DEAdZONE = "DeadZones";/// 场景根节点下的掉落死区节点
 
         public static string ModelNamePrefix = "Avatar";
         public static string AnimationSetPrefix = "ClipTransitionSet";
 
         public static string ModelNameFormat = "Avatar_{0}.prefab";
         public static string AnimationSetFormat = "ClipTransitionSet_{0}.asset";
+
+
+
+        public static class EntityTag
+        {
+            public const string Player = "Player";
+        }
+
+        public static class ExtraValueKey
+        {
+            public const string Dash = "Dash";
+            public const string LastNonZeroInput = "LastNonZeroInput";
+            public const string Invincible = "Invincible";
+        }
+
 
         //KD stand for key define
         public static readonly string KD_DASH_TRIGGER = "DashTrigger";

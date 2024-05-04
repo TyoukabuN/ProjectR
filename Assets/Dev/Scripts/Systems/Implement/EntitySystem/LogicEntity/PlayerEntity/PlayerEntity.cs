@@ -13,6 +13,8 @@ namespace PJR
 {
     public partial class PlayerEntity : LogicEntity
     {
+        public override string entityName => "PlayerEntity";
+
         public EntityPhysicsConfigAsset PhysicsConfig => physicsConfig;
         public override void OnCreate(EntityContext context)
         { 
@@ -29,6 +31,7 @@ namespace PJR
                 LogSystem.LogError("PlayerEntity.OnCreate 加载 EntityPhysicsConfig 失败");
 
             //
+            physEntity.gameObject.tag = EntityDefine.EntityTag.Player;
             physEntity.CreateAvatar(this);
             physEntity.logicEntity = this;
             physEntity.onAvatarLoadDone += OnAvatarLoadDone;

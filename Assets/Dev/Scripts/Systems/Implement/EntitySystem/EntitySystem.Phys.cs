@@ -28,6 +28,7 @@ namespace PJR
             }
         }
         private static Dictionary<int,PhysEntity> id2PhysEntity = new Dictionary<int,PhysEntity>();
+        private static Dictionary<int,PhysEntity> instanceID2PhysEntity = new Dictionary<int,PhysEntity>();
 
 
         public static PhysEntity CreatePhysEntity()
@@ -39,7 +40,9 @@ namespace PJR
             gobj.transform.SetParent(EntityRoot, false);
 
             entity.physEntityId = guid;
+            //
             id2PhysEntity[guid] = entity;
+            instanceID2PhysEntity[gobj.gameObject.GetInstanceID()] = entity;
             return entity;
         }
 
@@ -48,9 +51,18 @@ namespace PJR
             id2PhysEntity.TryGetValue(id, out var entity);
             return entity;
         }
+        public static PhysEntity GetPhysEntityByGobjInstanceId(int instanceId)
+        {
+            instanceID2PhysEntity.TryGetValue(instanceId, out var entity);
+            return entity;
+        }
         public static bool DestroyPhysEntity(int id)
         {
             return DestroyPhysEntity(GetPhysEntity(id));
+        }
+        public static bool DestroyPhysEntityByInstanceId(int instanceId)
+        {
+            return DestroyPhysEntity(GetPhysEntity(instanceId));
         }
         public static bool DestroyPhysEntity(PhysEntity entity)
         {
@@ -58,6 +70,7 @@ namespace PJR
                 return false;
 
             id2PhysEntity.Remove(entity.physEntityId);
+            instanceID2PhysEntity.Remove(entity.gameObject.GetInstanceID());
 
             entity.Destroy();
 

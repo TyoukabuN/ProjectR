@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: TrapConfig_Test
   m_EditorClassIdentifier: 
   CanTriggerTimes: -1
+  isPhysics: 0
   entityPhaseEvents:
   - entityPhase: 3
     events:
     - trapMethod:
-        rid: 7174546505089941504
+        rid: 7174546527647170562
   references:
     version: 2
     RefIds:
-    - rid: 7174546505089941504
-      type: {class: TrapMethod_AddForce, ns: PJR, asm: Assembly-CSharp}
+    - rid: 7174546527647170562
+      type: {class: TrapMethod_RollingStoneTrigger, ns: PJR, asm: Assembly-CSharp}
       data:
-        force: {x: 0, y: 0, z: 0}
-        duration: 0.333
-        damp: -1
-        easing: 1
+        group: 1
+        components:
+        - {fileID: 0}

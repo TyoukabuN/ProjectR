@@ -99,6 +99,8 @@ namespace PJR
             this.logicEntity = logicEntity;
             this._assetNames = logicEntity.entityContext.avatarAssetNames;
 
+            gameObject.name = $"{logicEntity.entityName}_{physEntityId}";
+
             BeginLoadAsset();
         }
 

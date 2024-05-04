@@ -9,6 +9,7 @@ namespace PJR
     public class KCContext 
     {
         //refs
+        public LogicEntity logicEntity = null;
         public PhysEntity physEntity = null;
         public KinematicCharacterMotor motor = null;
         //config

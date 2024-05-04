@@ -44,7 +44,13 @@ namespace PJR
             var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move);
             context.motor ??= this.physEntity.motor;
             context.inputAxi = inputAxi;
-            context.rawMoveInputVector = Vector3.ClampMagnitude(new Vector3(inputAxi.x, 0f, inputAxi.y), 1f);
+            context.rawMoveInputVector = new Vector3(inputAxi.x, 0f, inputAxi.y);
+
+            if (context.inputAxi.magnitude > 0)
+                this.AddExtraValue(EntityDefine.ExtraValueKey.LastNonZeroInput, context.rawMoveInputVector);
+
+            if(context.inputAxi.magnitude <= 0 && this.ContainsExtraValue(EntityDefine.ExtraValueKey.Dash))
+                context.rawMoveInputVector = this.GetExtraValue(EntityDefine.ExtraValueKey.LastNonZeroInput, context.rawMoveInputVector);
 
             context.moveInputVector = context.rawMoveInputVector;
             context.lookInputVector = context.rawMoveInputVector;
@@ -74,6 +80,7 @@ namespace PJR
 
         public void CopyInputKCContent(KCContext context)
         {
+            context.logicEntity = this;
             context.inputAxi = InputKCContent.inputAxi;
             context.rawMoveInputVector = InputKCContent.rawMoveInputVector;
             context.moveInputVector = InputKCContent.moveInputVector;

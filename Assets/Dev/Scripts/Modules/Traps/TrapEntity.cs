@@ -9,6 +9,7 @@ namespace PJR
 {
     public class TrapEntity : LogicEntity
     {
+        public override string entityName => "TrapEntity";
         public TrapConfigAsset configAsset;
         public TrapConfigHost configHost;
         public override void OnCreate(EntityContext context)
@@ -35,7 +36,7 @@ namespace PJR
         {
             var phys = collider.GetComponent<PhysEntity>();
             if (phys != null && phys.logicEntity != null)
-                configAsset.TryExecutePhaseEvent(TEntityPhase.OnTriggerEnter,this, phys.logicEntity);
+                configAsset.TryExecutePhaseEvent(PhyEntityPhase.OnTriggerEnter,this, phys.logicEntity);
         }
 
         public void OnDrawGizmos()

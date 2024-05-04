@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bbc38ef980d9054a86534dd120d4e65, type: 3}
+  m_Name: TrapConfig_RollingStoneTrigger2
+  m_EditorClassIdentifier: 
+  entityPhaseEvents:
+  - entityPhase: 3
+    events:
+    - actionApproach:
+        rid: 7174546564607901706
+  CanTriggerTimes: 1
+  isPhysics: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 7174546564607901706
+      type: {class: TrapMethod_RollingStoneTrigger, ns: PJR, asm: Assembly-CSharp}
+      data:
+        group: 1

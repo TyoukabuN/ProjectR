@@ -21,7 +21,7 @@ namespace PJR.ScriptStates
         public virtual void OnGrounded() { }
         public virtual void OnUpdateVelocity(KCContext context) { }
         public virtual void OnUpdateRotation(KCContext context) {
-            PlayerControlFunc.CommonRotation(context);
+            PlayerKCCFunc.CommonRotation(context);
         }
         #endregion
     }

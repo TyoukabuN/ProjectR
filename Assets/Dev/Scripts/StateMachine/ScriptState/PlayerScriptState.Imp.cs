@@ -36,6 +36,7 @@ namespace PJR.ScriptStates.Player
     {
         public override void Update(EntityContext stateContext)
         {
+            entity.entityContext.RevertJumpCount();
             entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Idle);
         }
         public override bool CanChange(int from)
@@ -46,7 +47,7 @@ namespace PJR.ScriptStates.Player
         {
             base.OnUpdateVelocity(context);
 
-            PlayerControlFunc.GroundedMove(context);
+            PlayerKCCFunc.GroundedMove(context);
         }
     }
 
@@ -80,7 +81,7 @@ namespace PJR.ScriptStates.Player
         {
             base.OnUpdateVelocity(context);
 
-            PlayerControlFunc.GroundedMove(context);
+            PlayerKCCFunc.GroundedMove(context);
         }
         public override bool CanChange(int from)
         {
@@ -93,7 +94,8 @@ namespace PJR.ScriptStates.Player
         {
             var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move, true);
             var nameSet = EntityAnimationDefine.AnimationName.Dash;
-            if (inputAxi.magnitude > 0)
+            var dashing = entity.ContainsExtraValue(EntityDefine.ExtraValueKey.Dash);
+            if (inputAxi.magnitude > 0 || dashing)
             {
                 //if (Mathf.Abs(inputAxi.x) <= 0.001f)
                 //{
@@ -106,7 +108,10 @@ namespace PJR.ScriptStates.Player
                 //    else
                 //        entity.physEntity.Animancer_Play(inputAxi.x > 0 ? nameSet.BR : nameSet.BL);
                 //}
-                entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.RUN);
+                if (dashing)
+                    entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Roll_Loop);
+                else
+                    entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.RUN);
             }
             else
             {
@@ -121,7 +126,7 @@ namespace PJR.ScriptStates.Player
         {
             base.OnUpdateVelocity(context);
 
-            PlayerControlFunc.GroundedMove(context);
+            PlayerKCCFunc.GroundedMove(context);
         }
     }
 
@@ -162,10 +167,10 @@ namespace PJR.ScriptStates.Player
             { 
                 requireJump = !requireJump;
                 entity.entityContext.AddJumpCount();
-                PlayerControlFunc.EnterToAir(context);
+                PlayerKCCFunc.EnterToAir(context);
                 phase = Phase.End;
             }else
-                PlayerControlFunc.OnAir(context);
+                PlayerKCCFunc.OnAir(context);
         }
         public override void Update(EntityContext entityContext)
         {
@@ -194,7 +199,7 @@ namespace PJR.ScriptStates.Player
         {
             base.OnUpdateVelocity(context);
 
-            PlayerControlFunc.OnAir(context);
+            PlayerKCCFunc.OnAir(context);
         }
     }
 
@@ -223,7 +228,7 @@ namespace PJR.ScriptStates.Player
         public override void OnUpdateVelocity(KCContext context)
         {
             base.OnUpdateVelocity(context);
-            PlayerControlFunc.GroundedMove(context);
+            PlayerKCCFunc.GroundedMove(context);
         }
     }
 
@@ -240,7 +245,7 @@ namespace PJR.ScriptStates.Player
         }
         public override void OnUpdateVelocity(KCContext context)
         {
-            PlayerControlFunc.InHurt(context);
+            PlayerKCCFunc.InHurt(context);
         }
         public override void OnUpdateRotation(KCContext context)
         {

@@ -11,7 +11,9 @@ namespace PJR
         public GameObject itemPrefab;
         public Transform Content;
         public object data;
+        [ReadOnly]
         public int instanceID;
+        [ReadOnly]
         public List<UIListItem> uIListItems = new List<UIListItem>();
         public void SetData(object data)
         {

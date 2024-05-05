@@ -56,10 +56,29 @@ namespace PJR
         }
         
     }
+    /// <summary>
+    /// panel数据
+    /// </summary>
     public class UINodeData
     {
 
     }
+    /// <summary>
+    /// 自定义字典数据
+    /// </summary>
+    /// <typeparam name="Value"></typeparam>
+    public class DataDict<Value>
+    {
+        public string key;
+        public Value value;
+        public DataDict(string key, Value v)
+        {
+            this.key = key;
+            this.value = v;
+        }
+
+    }
+
     [Serializable]
     public class UIAssetDict
     {

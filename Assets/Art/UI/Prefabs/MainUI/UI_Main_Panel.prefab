@@ -219,6 +219,7 @@ MonoBehaviour:
   startBtn: {fileID: 7402463753318388850}
   optionBtn: {fileID: 3476389166157380603}
   exitBtn: {fileID: 2230527691699381335}
+  iModel: {fileID: 2967582477008727369}
 --- !u!1 &3033320679026558540
 GameObject:
   m_ObjectHideFlags: 0

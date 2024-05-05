@@ -8,7 +8,7 @@ namespace PJR
     public class UIModel : MonoBehaviour
     {
         public string prefabName;
-        public UnityAction onLoadDone;
+        public UnityAction<GameObject> onLoadDone;
         public Vector3 offset;
         public Vector3 scale;
         public Vector3 rotation;
@@ -53,7 +53,7 @@ namespace PJR
             }
             if (onLoadDone!=null)
             {
-                onLoadDone();
+                onLoadDone(model);
             }
         }
     }

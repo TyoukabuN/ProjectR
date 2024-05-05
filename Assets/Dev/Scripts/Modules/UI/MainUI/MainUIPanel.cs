@@ -10,6 +10,7 @@ namespace PJR
         public Button startBtn;
         public Button optionBtn;
         public Button exitBtn;
+        public UIModel iModel;
         public override void OnStart()
         {
             base.OnStart();
@@ -22,6 +23,10 @@ namespace PJR
             {
                 UISystem.instance.OpenPanel("OptionWindowPanel");
             });
+            iModel.onLoadDone += (model) =>
+              {
+                  Debug.Log($"{model}模型加载成功");
+              };
         }
     }
     public class MainUIData:UINodeData

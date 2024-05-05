@@ -152,7 +152,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &16374065
 GameObject:
@@ -230,9 +230,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &120662074
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,7 +411,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &141850260
 GameObject:
@@ -455,9 +457,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &187618868
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,9 +506,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &251278067
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,9 +586,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &277740520
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,7 +621,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &281405464
 GameObject:
@@ -659,9 +667,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &284541236
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,9 +716,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &323404570
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,9 +765,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &368917789
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,7 +809,7 @@ Transform:
   - {fileID: 1995451281}
   - {fileID: 251278068}
   m_Father: {fileID: 1660479149}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &402614064
 GameObject:
@@ -953,9 +967,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &427949325
 GameObject:
   m_ObjectHideFlags: 0
@@ -1150,9 +1166,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &545076787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1197,9 +1215,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &616653445
 GameObject:
   m_ObjectHideFlags: 0
@@ -1275,9 +1295,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &628958315
 GameObject:
   m_ObjectHideFlags: 0
@@ -1389,9 +1411,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &665802284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1421,9 +1445,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!4 &665802286
 Transform:
   m_ObjectHideFlags: 0
@@ -1483,9 +1509,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
+--- !u!1 &723349536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 723349537}
+  m_Layer: 0
+  m_Name: Triggers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &723349537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723349536}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1767736260}
+  - {fileID: 1066712603}
+  m_Father: {fileID: 1660479149}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &731588021
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,9 +1648,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avater_Test_Trap.prefab
+  assetName:
+    modelName: Avater_Test_Trap.prefab
+    animationClipSet: 
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 2f4e00f041c10974db97b0eaf669825d, type: 2}
-  isManual: 0
 --- !u!1 &807092623
 GameObject:
   m_ObjectHideFlags: 0
@@ -1634,9 +1697,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &860117548
 GameObject:
   m_ObjectHideFlags: 0
@@ -1681,9 +1746,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &882717651
 GameObject:
   m_ObjectHideFlags: 0
@@ -1759,7 +1826,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1fb1b9e349e1f246a18b2e1881fb56e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avater_Test_Item.prefab
+  assetName:
+    modelName: Avater_Test_Item.prefab
+    animationClipSet: 
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 5f86389b6f1d1964cad9687806dc50bb, type: 2}
 --- !u!1 &897685457
 GameObject:
@@ -1805,9 +1875,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &915710545 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fd4e5b37c0dd8a04eb7b8de8656278af, type: 3}
@@ -1857,9 +1929,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &986811369
 GameObject:
   m_ObjectHideFlags: 0
@@ -1972,7 +2046,7 @@ Transform:
   m_Children:
   - {fileID: 1544494349}
   m_Father: {fileID: 1660479149}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1030591878
 GameObject:
@@ -2018,7 +2092,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1fb1b9e349e1f246a18b2e1881fb56e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avater_Test_Item.prefab
+  assetName:
+    modelName: Avater_Test_Item.prefab
+    animationClipSet: 
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 5f86389b6f1d1964cad9687806dc50bb, type: 2}
 --- !u!1 &1041017951
 GameObject:
@@ -2064,9 +2141,195 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
+--- !u!1 &1066712602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1066712603}
+  - component: {fileID: 1066712607}
+  - component: {fileID: 1066712606}
+  - component: {fileID: 1066712605}
+  - component: {fileID: 1066712604}
+  m_Layer: 0
+  m_Name: Tirgger_enterBossZone (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1066712603
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066712602}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 11.96, y: 3.1, z: -0.93}
+  m_LocalScale: {x: 16.720516, y: 7.4608006, z: 4.9976645}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 723349537}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1066712604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066712602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d05b7a9b9a90bd24193564ac9328f5ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CanTriggerTimes: 1
+  triggerCount: 0
+  boxCollider: {fileID: 0}
+  renderer: {fileID: 0}
+  OnTriggerEnterEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115050042}
+        m_TargetAssemblyTypeName: PJR.EntityConfigHost, Assembly-CSharp
+        m_MethodName: GenrateEntity
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTriggerEnterStay:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTriggerEnterExit:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!65 &1066712605
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066712602}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1066712606
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066712602}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1066712607
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066712602}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1115050040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1115050041}
+  - component: {fileID: 1115050042}
+  m_Layer: 0
+  m_Name: Boss
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1115050041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115050040}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 35.7, z: 130.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1685836887}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1115050042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115050040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 513bac90fb721a74991b9db3c7d3c124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assetName:
+    modelName: Avatar_SlimeBoss.prefab
+    animationClipSet: ClipTransitionSet_SlimeBoss.asset
+  LoadOnSceneEnter: 0
+  configAsset: {fileID: 11400000, guid: 8f2cf4327d39ec0409de1c085b8299d2, type: 2}
 --- !u!1 &1137062523
 GameObject:
   m_ObjectHideFlags: 0
@@ -2254,66 +2517,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
---- !u!1001 &1213639979
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 8394430927493365266, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_Name
-      value: Avatar_SlimeBoss
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 40.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 130.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -180
-      objectReference: {fileID: 0}
-    - target: {fileID: 9166182998678906024, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 688f47356248ca845afb9a78bae51fa2, type: 3}
 --- !u!1 &1215038225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2358,9 +2566,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1225413703
 GameObject:
   m_ObjectHideFlags: 0
@@ -2405,9 +2615,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1239982686
 GameObject:
   m_ObjectHideFlags: 0
@@ -2618,9 +2830,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1362622690
 GameObject:
   m_ObjectHideFlags: 0
@@ -2665,9 +2879,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avater_Test_Trap.prefab
+  assetName:
+    modelName: Avater_Test_Trap.prefab
+    animationClipSet: 
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 2f4e00f041c10974db97b0eaf669825d, type: 2}
-  isManual: 0
 --- !u!1001 &1377589967
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2778,7 +2994,7 @@ Transform:
   - {fileID: 1157579525}
   - {fileID: 120662075}
   m_Father: {fileID: 1660479149}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1462846839
 GameObject:
@@ -2922,9 +3138,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1583747912
 GameObject:
   m_ObjectHideFlags: 0
@@ -3002,9 +3220,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1626764013
 GameObject:
   m_ObjectHideFlags: 0
@@ -3049,9 +3269,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1660479148
 GameObject:
   m_ObjectHideFlags: 0
@@ -3086,11 +3308,13 @@ Transform:
   - {fileID: 1239982687}
   - {fileID: 1339195834}
   - {fileID: 1583747913}
+  - {fileID: 1685836887}
   - {fileID: 368917790}
   - {fileID: 1448714278}
   - {fileID: 1023888881}
+  - {fileID: 723349537}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1660479150
 MonoBehaviour:
@@ -3148,9 +3372,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1681583649
 GameObject:
   m_ObjectHideFlags: 0
@@ -3195,9 +3421,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
+--- !u!1 &1685836886
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1685836887}
+  m_Layer: 0
+  m_Name: Enemys
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1685836887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685836886}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1115050041}
+  m_Father: {fileID: 1660479149}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1715189248
 GameObject:
   m_ObjectHideFlags: 0
@@ -3242,9 +3502,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1757237193
 GameObject:
   m_ObjectHideFlags: 0
@@ -3281,6 +3543,141 @@ Transform:
   m_Father: {fileID: 1339195834}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1767736259
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1767736260}
+  - component: {fileID: 1767736264}
+  - component: {fileID: 1767736263}
+  - component: {fileID: 1767736262}
+  - component: {fileID: 1767736261}
+  m_Layer: 0
+  m_Name: Tirgger_enterBossZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1767736260
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767736259}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 14.26, z: 113.83}
+  m_LocalScale: {x: 16.720516, y: 7.4608006, z: 4.9976645}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 723349537}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1767736261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767736259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d05b7a9b9a90bd24193564ac9328f5ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CanTriggerTimes: 1
+  triggerCount: 0
+  boxCollider: {fileID: 0}
+  renderer: {fileID: 0}
+  OnTriggerEnterEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1115050042}
+        m_TargetAssemblyTypeName: PJR.EntityConfigHost, Assembly-CSharp
+        m_MethodName: GenrateEntity
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTriggerEnterStay:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTriggerEnterExit:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!65 &1767736262
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767736259}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1767736263
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767736259}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1767736264
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767736259}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1791155922
 GameObject:
   m_ObjectHideFlags: 0
@@ -3325,9 +3722,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1798140863
 GameObject:
   m_ObjectHideFlags: 0
@@ -3372,9 +3771,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1798302191
 GameObject:
   m_ObjectHideFlags: 0
@@ -3562,9 +3963,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1824306636
 GameObject:
   m_ObjectHideFlags: 0
@@ -3678,9 +4081,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &1964864919
 GameObject:
   m_ObjectHideFlags: 0
@@ -3725,9 +4130,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avater_Test_Trap.prefab
+  assetName:
+    modelName: Avater_Test_Trap.prefab
+    animationClipSet: 
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 2f4e00f041c10974db97b0eaf669825d, type: 2}
-  isManual: 0
 --- !u!1 &1995451280
 GameObject:
   m_ObjectHideFlags: 0
@@ -3803,9 +4210,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &2018003237
 GameObject:
   m_ObjectHideFlags: 0
@@ -3866,7 +4275,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2033975236
 GameObject:
@@ -3950,9 +4359,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0
 --- !u!1 &2120330381
 GameObject:
   m_ObjectHideFlags: 0
@@ -3997,6 +4408,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0935b707b0afd5429297579d4dd0f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetName: Avatar_Hurdle.prefab
+  assetName:
+    modelName: Avatar_Hurdle.prefab
+    animationClipSet: ClipTransitionSet_Hurdle.asset
+  LoadOnSceneEnter: 1
   configAsset: {fileID: 11400000, guid: 70ccc1101fe265b4c8ae3f107af233dd, type: 2}
-  isManual: 0

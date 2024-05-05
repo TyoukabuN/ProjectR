@@ -2,16 +2,11 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using UnityEditor.PackageManager;
-using UnityEditor.UIElements;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace PJR
 {
-    public class ItemConfigAsset : EntityConfigAsset
+    public class ItemConfigAsset : TriggerConfigAsset
     {
         [LabelText("再生道具次数")]
         [Tooltip("<=0为无限次数，>0对应次数")]

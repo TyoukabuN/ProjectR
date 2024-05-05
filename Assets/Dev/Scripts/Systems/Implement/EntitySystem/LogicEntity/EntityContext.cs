@@ -1,3 +1,7 @@
+using Sirenix.OdinInspector;
+using Sirenix.Utilities.Editor;
+using System;
+using UnityEditor;
 using UnityEngine;
 using LogicEntityType = PJR.EntityDefine.LogicEntityType;
 
@@ -46,11 +50,45 @@ namespace PJR
     /// <summary>
     /// 构建Avatar所需的各种资源的assetPath
     /// </summary>
+    [Serializable]
     public class AvatarAssetNames
     {
         public static AvatarAssetNames Empty = new AvatarAssetNames();
         //
+        [LabelText("模型资源名字")]
+        [ValidateInput("IsAssetNameValid_Prefab", "", InfoMessageType.Warning)]
+        [InlineButton("ChooseAsset", SdfIconType.Folder,"")]
         public string modelName = string.Empty;
+        [LabelText("动画集合名字")]
+        [ValidateInput("IsAssetNameValid_Asset", "", InfoMessageType.Warning)]
+        [InlineButton("ChooseAsset", SdfIconType.Folder, "")]
         public string animationClipSet = string.Empty;
+
+#if UNITY_EDITOR
+        public bool IsAssetNameValid_Prefab(string assetName, ref string error) => IsAssetNameValid(assetName, ".prefab", ref error);
+        public bool IsAssetNameValid_Asset(string assetName, ref string error) => IsAssetNameValid(assetName, ".asset", ref error);
+        public bool IsAssetNameValid(string assetName,string ext, ref string error)
+        {
+            error = "资源格式错误";
+            if (string.IsNullOrEmpty(assetName))
+            {
+                error = "资源名字为空";
+                return false;
+            }
+            if (assetName.IndexOf(ext) <= 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void ChooseAsset(string searchFilter)
+        {
+            //UnityEngine.Object @object = null;
+            //EditorGUIUtility.ShowObjectPicker<UnityEngine.Object>(@object, false, searchFilter, 0);
+            //if(@object!= null)
+            Debug.Log("还没有空弄...");
+        }
+#endif
     }
 }

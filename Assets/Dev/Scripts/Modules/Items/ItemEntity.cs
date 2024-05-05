@@ -33,9 +33,6 @@ namespace PJR
             itembase.interval = config.interval;
             itembase.itemconfig = config;
         }
-        public void OnDrawGizmos()
-        {
-        }
         public void OnTriggerEnter(Collider collider)
         {
             var phys = collider.GetComponent<PhysEntity>();

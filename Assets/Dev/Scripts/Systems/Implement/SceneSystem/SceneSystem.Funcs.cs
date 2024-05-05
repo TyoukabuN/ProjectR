@@ -25,27 +25,40 @@ namespace PJR
             {
                 var entityContext = new EntityContext();
                 entityContext.originPosition = PlayBornPoint.transform.position;
+                entityContext.avatarAssetNames = new AvatarAssetNames() {
+                    modelName = "Avatar_Slime.prefab",
+                };
                 EntitySystem.CreatePlayer(entityContext);
+            }
+            //Monster
+            if (SceneEnemyRoot != null)
+            {
+                var hosts = SceneEnemyRoot.GetComponentsInChildren<MonsterConfigHost>();
+                foreach (var host in hosts)
+                {
+                    if (!host.LoadOnSceneEnter)
+                        continue;
+                    EntitySystem.CreateMonster(host);
+                }
             }
             //Trap
             if (SceneTrapRoot != null)
             { 
-                var trapHosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
-                foreach (var host in trapHosts)
+                var hosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
+                foreach (var host in hosts)
                 {
                     if (host.configAsset == null)
                         continue;
-                    if (!host.isManual)
-                    {
-                        EntitySystem.CreateTrapEntity(host);
-                    }
+                    if (!host.LoadOnSceneEnter)
+                        continue;
+                    EntitySystem.CreateTrapEntity(host);
                 }
             }
             //Item
             if (SceneItemRoot != null)
             {
-                var itemHosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
-                foreach (var host in itemHosts)
+                var hosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
+                foreach (var host in hosts)
                 {
                     if (host.configAsset == null)
                         continue;

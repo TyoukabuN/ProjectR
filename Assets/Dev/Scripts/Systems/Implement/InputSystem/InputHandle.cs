@@ -5,6 +5,8 @@ using static UnityEngine.InputSystem.InputAction;
 using PJR.Input;
 using UnityEngine;
 using PJR;
+using Unity.VisualScripting;
+
 namespace PJR
 {
 
@@ -53,7 +55,7 @@ namespace PJR
         {
             return _inputRecord.TryGetValue(inputKey, out var boolValue) && boolValue;
         }
-        public virtual void Init(InputActionMap actionMap)
+        public virtual void OnRegister(InputActionMap actionMap)
         {
             if (actionMap == null)
                 return;
@@ -68,20 +70,25 @@ namespace PJR
                     var inputAction = actionMap.FindAction(inputkey.Value);
                     if (inputAction == null)
                         continue;
-                    inputKey2Action[inputkey.Value.strValue] = inputAction;
-
+                    inputKey2Action[inputkey.Value] = inputAction;
                     //
-                    var callback = new InputActionCallback
-                    {
-                        started     = context => { OnActionStarted(context, inputkey.Value); },
-                        performed   = context => { OnActionPerformed(context, inputkey.Value); },
-                        canceled    = context => { OnActionCanceled(context, inputkey.Value); },
-                    };
+                    //var callback = new InputActionCallback
+                    //{
+                    //    started     = context => { OnActionStarted(context, inputkey.Value); },
+                    //    performed   = context => { OnActionPerformed(context, inputkey.Value); },
+                    //    canceled    = context => { OnActionCanceled(context, inputkey.Value); },
+                    //};
 
-                    callback.Register(inputAction);
-                    inputKey2ActionCallback[inputkey.Value.strValue] = callback;
+                    //callback.Register(inputAction);
+                    //inputKey2ActionCallback[inputkey.Value] = callback;
                 }
             }
+        }
+
+        public virtual void OnUnRegister()
+        {
+            inputKey2Action.Clear();
+            _inputFlag = Flag256.Empty;
         }
 
         public void Destroy()
@@ -150,24 +157,4 @@ namespace PJR
             return value;
         }
     }
-
-    public struct InputActionCallback
-    {
-        public Action<CallbackContext> started;
-        public Action<CallbackContext> performed;
-        public Action<CallbackContext> canceled;
-        public void Register(InputAction action)
-        {
-            action.started += started;
-            action.performed += performed;
-            action.canceled += canceled;
-        }
-        public void UnRegister(InputAction action)
-        {
-            action.started -= started;
-            action.performed -= performed;
-            action.canceled -= canceled;
-        }
-    }
-
 }

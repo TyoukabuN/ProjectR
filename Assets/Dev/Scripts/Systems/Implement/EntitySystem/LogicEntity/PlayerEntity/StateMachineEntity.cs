@@ -11,69 +11,27 @@ using UnityEditor;
 
 namespace PJR
 {
-    public partial class PlayerEntity : StateMachineEntity
+    public partial class StateMachineEntity : LogicEntity
     {
-        public override string entityName => "PlayerEntity";
+        public override string entityName => "StateMachineEntity";
 
-        public override void OnCreate(EntityContext context)
-        { 
-            var physEntity = EntitySystem.CreatePhysEntity();
-
-            context.avatarAssetNames = new AvatarAssetNames()
-            {
-                modelName = "Avatar_Slime.prefab",
-            };
-
-            if (ResourceSystem.TryGetAsset("EntityPhysicsConfig.asset", out var loader))
-                physicsConfig = loader.GetRawAsset<EntityPhysicsConfigAsset>();
-            else
-                LogSystem.LogError("PlayerEntity.OnCreate 加载 EntityPhysicsConfig 失败");
-
-            //
-            physEntity.gameObject.tag = EntityDefine.EntityTag.Player;
-            physEntity.CreateAvatar(this);
-            physEntity.logicEntity = this;
-            physEntity.onAvatarLoadDone += OnAvatarLoadDone;
-            physEntity.onDrawGizmos += OnDrawGizmos;
-            //
-            this.physEntity = physEntity;
-            this.gameObject = physEntity.gameObject;
-            this.transform = physEntity.transform;
-
-#if UNITY_EDITOR
-            GUIHelper.PingObject(physEntity);
-#endif
-        }
-        protected override void OnAvatarLoadDone(PhysEntity physEntity)
-        {
-            if (physEntity != this.physEntity)
-                return;
-
-            CameraSystem.CreatePlayerCamera(this);
-
-            Init_Input();
-            Init_State();
-        }
+        public EntityPhysicsConfigAsset PhysicsConfig => physicsConfig;
 
         public override void Update()
         {
             base.Update();
              
-            Update_Input();
             Update_State();
         }
         public override void LateUpdate()
         {
             base.LateUpdate();
-
-            LateUpdate_Input();
         }
 
         public override void Destroy()
         {
             base.Destroy();
 
-            Destroy_Input();
             Destroy_State();
 
             EntitySystem.DestroyPhysEntity(physEntity);

@@ -13,9 +13,11 @@ namespace PJR
             Player = 1,
             Trap = 2,
             Item = 3,
+            Enemy = 4,
         }
         public static string MODEL_ROOT_NAME = "ModelRoot";/// 物理实体下的模型节点
 
+        public static string SCENE_ROOT_NAME_ENEMY = "Enemys";/// 场景根节点下的敌人节点
         public static string SCENE_ROOT_NAME_TRAP = "Traps";/// 场景根节点下的陷阱节点
         public static string SCENE_ROOT_NAME_ITEM = "Items";   /// 场景根节点下的道具节点     
         public static string SCENE_ROOT_NAME_RESET_POINT = "ResetPoints";/// 重置点s

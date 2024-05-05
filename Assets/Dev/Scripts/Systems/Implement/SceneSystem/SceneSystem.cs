@@ -25,6 +25,7 @@ namespace PJR
         //Roots
         public Transform SceneTrapRoot = null;
         public Transform PlayBornPoint = null;
+        public Transform SceneEnemyRoot = null;
         public Transform SceneItemRoot = null;
         public Transform SceneResetPointRoot = null;
         public Transform SceneDeadZoneRoot = null;
@@ -73,6 +74,7 @@ namespace PJR
         public void OnEnterScene(GameObject sceneRoot = null)
         {
             sceneRoot = sceneRoot == null ? instance.sceneRoot : sceneRoot;
+            SceneEnemyRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_ENEMY);
             SceneTrapRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_TRAP);
             SceneItemRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_ITEM);
             SceneResetPointRoot = sceneRoot.transform.Find(EntityDefine.SCENE_ROOT_NAME_RESET_POINT);

@@ -3,26 +3,12 @@ using UnityEngine;
 
 namespace PJR
 {
-    public partial class PlayerEntity : LogicEntity
+    public partial class PlayerEntity
     {
-        public enum OrientationMethod
+        protected override void Init_Input()
         {
-            TowardsCamera,
-            TowardsMovement,
-        }
-
-        public OrientationMethod orientationMethod = OrientationMethod.TowardsMovement;
-
-
-        public KCContext _inputKCContent = null;
-        public KCContext InputKCContent { 
-            get {
-                return _inputKCContent ??= new KCContext();
-            }
-        }
-        protected void Init_Input()
-        {
-            inputHandle = InputSystem.GetInputHandle<PlayerInputHandle>();
+            inputHandle = new PlayerInputHandle();
+            InputSystem.RegisterHandle(inputHandle);
             if (inputHandle == null)
             { 
                 LogSystem.LogError("[PlayerEntity.Init_Input]找不到对应的InputAssetMap");
@@ -30,12 +16,8 @@ namespace PJR
             }
             Update_InputKCContent();
         }
-        protected void Destroy_Input()
-        { 
-            inputHandle.Destroy();
-        }
 
-        protected void Update_InputKCContent()
+        protected override void Update_InputKCContent()
         {
             if (inputHandle == null)
                 return;
@@ -76,28 +58,6 @@ namespace PJR
 
             context.direction = context.moveInputVector;
             context.inputHandle = inputHandle;
-        }
-
-        public void CopyInputKCContent(KCContext context)
-        {
-            context.logicEntity = this;
-            context.inputAxi = InputKCContent.inputAxi;
-            context.rawMoveInputVector = InputKCContent.rawMoveInputVector;
-            context.moveInputVector = InputKCContent.moveInputVector;
-            context.lookInputVector = InputKCContent.lookInputVector;
-            context.direction = InputKCContent.direction;
-            context.inputHandle = InputKCContent.inputHandle;
-        }
-
-        protected void Update_Input()
-        {
-            inputHandle?.OnUpdate();
-
-            Update_InputKCContent();
-        }
-        protected void LateUpdate_Input()
-        {
-            inputHandle?.OnLateUpdate();
         }
     }
 }

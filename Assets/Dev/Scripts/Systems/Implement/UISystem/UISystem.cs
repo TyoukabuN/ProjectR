@@ -11,19 +11,21 @@ namespace PJR
 {
     public enum UILayer
     {
-        Main = 0, //È«ÆÁ½çÃæ
-        Game, //ÓÎÏ·ÖĞ½çÃæ
-        Top, //µ¯´°
-        MessageTop, //×î¶¥¼¶
+        Main = 0, //å…¨å±ç•Œé¢
+        Game, //æ¸¸æˆä¸­ç•Œé¢
+        Top, //å¼¹çª—
+        MessageTop, //æœ€é¡¶çº§
     }
     public class UISystem : MonoSingletonSystem<UISystem>
     {
+        public override Vector3 Position => new Vector3(5000, 5000, 5000);
+
         public GameObject UIRoot;
         //key : GameObjectInstanceID
         public Dictionary<UILayer, Dictionary<int, UINode>> nodeDict = new Dictionary<UILayer, Dictionary<int, UINode>>();
-        //¸ù½Úµã×Öµä
+        //æ ¹èŠ‚ç‚¹å­—å…¸
         public Dictionary<UILayer, Transform> rootDict = new Dictionary<UILayer,Transform>();
-        //°´Ãû×Ö´¢´æµÄÊµÀı
+        //æŒ‰åå­—å‚¨å­˜çš„å®ä¾‹
         public Dictionary<string,UINode> nameUINodeDict = new Dictionary<string, UINode>();
         public Transform CanvasRoot;
 
@@ -38,7 +40,7 @@ namespace PJR
             CreateEventSystem();
             CreateUICamera();
             TestEntrance();
-            LogSystem.Log("========UIRoot×¼±¸Íê³É");
+            LogSystem.Log("========UIRootå‡†å¤‡å®Œæˆ");
         }
         private void CreateRoot()
         {
@@ -80,7 +82,8 @@ namespace PJR
                 UICamera.orthographicSize = 100;
                 UICamera.nearClipPlane = -1000;
                 UICamera.farClipPlane = 200;
-                UICamera.transform.SetParent(UIRoot.transform);
+                UICamera.transform.SetParent(UIRoot.transform,false);
+                UICamera.transform.localScale = Vector3.one;
             }
         }
         public void TestEntrance()
@@ -166,7 +169,7 @@ namespace PJR
             }
             else
             {
-                Debug.LogError($"²»´æÔÚÃû³Æ{name}µÄUIPanel");
+                Debug.LogError($"ä¸å­˜åœ¨åç§°{name}çš„UIPanel");
             }
         }
         private void LoadUI(string path,object data,bool isDoneShow = false)
@@ -206,10 +209,10 @@ namespace PJR
             if (uinode!=null)
             {
                 nameUINodeDict[uinode.UIName] = uinode;
-                //ÖØÉèrect
+                //é‡è®¾rect
                 ui.transform.SetParent(rootDict[uinode.layer]);
                 RectTransform rect = ui.TryGetComponent<RectTransform>();
-                rect.position = Vector3.zero;
+                rect.localPosition = Vector3.zero;
                 rect.localScale = Vector3.one;
                 rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
                 rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Screen.width);
@@ -240,7 +243,7 @@ namespace PJR
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="recive">½ÓÊÜdataµÄpanelÃû×Ö</param>
+        /// <param name="recive">æ¥å—dataçš„panelåå­—</param>
         /// <param name="data"></param>
         public void SetData(string recive,object data)
         {
@@ -252,7 +255,7 @@ namespace PJR
             }
             else
             {
-                LogSystem.LogError($"{recive}²»´æÔÚ");
+                LogSystem.LogError($"{recive}ä¸å­˜åœ¨");
             }
         }
     }

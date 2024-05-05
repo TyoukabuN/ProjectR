@@ -3,23 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityConfigHost : MonoBehaviour
+namespace PJR
 {
-    [LabelText("资源名字")]
-    [ValidateInput("IsAssetNameValid","",InfoMessageType.Warning)]
-    public string AssetName;
-    public bool IsAssetNameValid(string assetName,ref string error)
+    public abstract class EntityConfigHost : MonoBehaviour
     {
-        error = "资源格式错误";
-        if (string.IsNullOrEmpty(assetName))
+        public abstract EntityConfigAsset EntiyConfigAsset { get; }
+
+        public AvatarAssetNames assetName = new AvatarAssetNames();
+
+        public bool LoadOnSceneEnter = true;
+
+        protected virtual void Awake()
         {
-            error = "资源名字为空";
-            return false;
+            if (EntiyConfigAsset != null)
+            {
+                EntiyConfigAsset.host = this;
+            }
         }
-        if (assetName.IndexOf(".prefab") <= 0)
+
+        public virtual void GenrateEntity()
         {
-            return false;
+            if (EntiyConfigAsset == null)
+            {
+                LogSystem.LogError("[EntityConfigHost.GenrateEntity] EntiyConfigAsset == null");
+                return;
+            }
+            EntiyConfigAsset.GenrateEntity();
         }
-        return true;
     }
 }

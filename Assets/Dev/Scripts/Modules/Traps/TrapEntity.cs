@@ -39,7 +39,7 @@ namespace PJR
                 configAsset.TryExecutePhaseEvent(PhyEntityPhase.OnTriggerEnter,this, phys.logicEntity);
         }
 
-        public void OnDrawGizmos()
+        public override void OnDrawGizmos()
         {
             if (physEntity.boxCollider)
             {

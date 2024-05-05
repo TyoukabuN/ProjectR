@@ -7,9 +7,9 @@ namespace PJR
     {
         public override KeyCategory keyCategory => KeyCategory.PlayerInput;
         public override string inputActionMapName => "Player";
-        public override void Init(InputActionMap actionMap)
+        public override void OnRegister(InputActionMap actionMap)
         {
-            base.Init(actionMap);
+            base.OnRegister(actionMap);
         }
         public override void OnUpdate()
         {

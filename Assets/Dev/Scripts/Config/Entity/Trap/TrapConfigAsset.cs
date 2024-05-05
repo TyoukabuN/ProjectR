@@ -5,14 +5,11 @@ using UnityEngine;
 
 namespace PJR
 {
-    public class TrapConfigAsset : EntityConfigAsset
+    public class TrapConfigAsset : TriggerConfigAsset
     {
         [LabelText("可触发次数")]
         [Tooltip("< 0 即不限次数")]
         public int CanTriggerTimes = -1;
-
-        [LabelText("是否运动")]
-        public bool isPhysics = false;
 
 #if UNITY_EDITOR
         [UnityEditor.MenuItem("Assets/PJR/创建配置/机关陷阱/机关陷阱配置")]

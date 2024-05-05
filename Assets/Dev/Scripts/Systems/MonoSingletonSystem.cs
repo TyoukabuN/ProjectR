@@ -7,6 +7,10 @@ namespace PJR
 {
     public abstract class MonoSingletonSystem<T> : MonoSingleton<T> where T : MonoSingleton
     {
+        /// <summary>
+        /// 实例位置偏移
+        /// </summary>
+        public virtual Vector3 Position { get; } = Vector3.zero;
         public override string Name { 
             get { return typeof(T).Name; }
         }
@@ -16,6 +20,8 @@ namespace PJR
         public override void OnInstantiated()
         {
             base.OnInstantiated();
+
+            gameObject.transform.position = Position;
 
             SystemHandler.instance.RegisterSystem(_instance);
 

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using PJR.Input;
 using Sirenix.OdinInspector;
+using static UnityEngine.InputSystem.InputAction;
+using System;
 
 namespace PJR
 {
@@ -65,30 +67,74 @@ namespace PJR
             }
         }
 
-        public static InputHandle GetInputHandle<T>() where T : InputHandle,new()
+        [NonSerialized]
+        protected InputHandle currentHandle = null;
+
+        public static void RegisterHandle(InputHandle handle)
         {
-            if (instance.inputActionAsset == null)
-                return null;
-            var handle = new T();
+            if (handle == null || handle == instance.currentHandle)
+                return;
+            if (instance.currentHandle != null)
+                instance.currentHandle.OnUnRegister();
+            instance.currentHandle = handle;
+
             var actionMap = instance.inputActionAsset.FindActionMap(handle.inputActionMapName);
             if (actionMap == null)
+                return;
+
+            handle.OnRegister(actionMap);
+
+            foreach (var action in actionMap.actions)
             {
-                handle = null;
-                return null;
-            }
-            handle.Init(actionMap);
-
-            foreach ( var action in handle.InputKey2Action) {
-                if (action.Value == null || instance.actions.Contains(action.Value))
+                if (action == null || instance.actions.Contains(action))
                     continue;
-                instance.actions.Add(action.Value);
+                instance.actions.Add(action);
+                action.started += instance.OnActionStarted;
+                action.performed += instance.OnActionPerformed;
+                action.canceled += instance.OnActionCanceled;
             }
-
-            return handle;
         }
+        public void OnActionStarted(CallbackContext context)
+        {
+            //if (currentHandle != null)
+            //    if(InputKey.Cache.TryGetKey(context.action.name, out var inputKeys))
+            //        currentHandle.OnActionStarted(context, inputKeys);
+        }
+        public void OnActionPerformed(CallbackContext context)
+        {
+            if (currentHandle != null)
+                if (InputKey.Cache.TryGetKey(context.action.name, out var inputKeys))
+                    currentHandle.OnActionPerformed(context, inputKeys);
+        }
+        public void OnActionCanceled(CallbackContext context)
+        {
+            if (currentHandle != null)
+                if (InputKey.Cache.TryGetKey(context.action.name, out var inputKeys))
+                    currentHandle.OnActionPerformed(context, inputKeys);
+        }
+
+
         public override void OnUpdate()
         {
             base.OnUpdate();
+        }
+    }
+    public struct InputActionCallback
+    {
+        public Action<CallbackContext> started;
+        public Action<CallbackContext> performed;
+        public Action<CallbackContext> canceled;
+        public void Register(InputAction action)
+        {
+            action.started += started;
+            action.performed += performed;
+            action.canceled += canceled;
+        }
+        public void UnRegister(InputAction action)
+        {
+            action.started -= started;
+            action.performed -= performed;
+            action.canceled -= canceled;
         }
     }
 }

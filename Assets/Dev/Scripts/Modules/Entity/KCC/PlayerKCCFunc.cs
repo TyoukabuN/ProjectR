@@ -23,9 +23,17 @@ namespace PJR
             value = defalutValue;
             orientationSharpness = ctx.cfg.OrientationSharpness;
             return false;
-
-
         }
+
+        public static void CommonMove(KCContext ctx)
+        {
+            if (ctx.motor.GroundingStatus.IsStableOnGround)
+                GroundedMove(ctx);
+            else
+                OnAir(ctx);
+                    
+        }
+
         /// <summary>
         /// 地面上移动
         /// </summary>
@@ -42,7 +50,7 @@ namespace PJR
             var currentVelocityMagnitude = ctx.currentVelocity.magnitude;
             //目标速度
             float targetVelocityMagnitude = ctx.cfg.MaxGroundedMoveSpeed;
-            if (ctx.inputHandle.HasAnyFlag(RegisterKeys.Run))
+            if (ctx.inputHandle != null && ctx.inputHandle.HasAnyFlag(RegisterKeys.Run))
                 targetVelocityMagnitude = ctx.cfg.ACCMaxGroundedMoveSpeed;
 
             var anyModify = GetSpeedModifyVelMagnitude(ctx, targetVelocityMagnitude,out targetVelocityMagnitude,out orientationSharpness);

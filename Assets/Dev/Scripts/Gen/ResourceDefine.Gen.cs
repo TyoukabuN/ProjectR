@@ -30,6 +30,7 @@ namespace PJR
 			"Assets/Dev/Prefabs/ConfigAsset/EntityAttributeConfigAsset.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/EntityPhysicsConfig.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/ItemConfig_Star.asset",
+			"Assets/Dev/Prefabs/ConfigAsset/MonsterConfig_SlimeBoss.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_Hurdle.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_RollingStone.asset",
 			"Assets/Dev/Prefabs/ConfigAsset/TrapConfig_RollingStoneTrigger.asset",

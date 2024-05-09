@@ -6,27 +6,42 @@ using UnityEngine;
 
 public class GameEntry : MonoBehaviour
 {
-    void Start()
+    void Awake()
     {
-        ResourceSystem.instance.Init();
-        StartCoroutine(PreloadGameResource());
+        StartCoroutine(InitAll());
     }
-    IEnumerator PreloadGameResource()
-    {
-        for (int i = 0; i < ResourceDefine.Assets.Length; i++)
-        { 
-            string assetFullName = ResourceDefine.Assets[i];
-            yield return ResourceSystem.LoadAsset<UnityEngine.Object>(assetFullName);
-        }
-        OnPreloadDone();
 
+    IEnumerator InitAll()
+    { 
+        yield return InitSystems();
+        yield return InitConfig();
+
+        OnAfterInitAll();
         yield return null;
     }
-    void OnPreloadDone()
+
+    IEnumerator InitSystems()
+    {
+        //for (int i = 0; i < ResourceDefine.Assets.Length; i++)
+        //{ 
+        //    string assetFullName = ResourceDefine.Assets[i];
+        //    yield return ResourceSystem.LoadAsset<UnityEngine.Object>(assetFullName);
+        //}
+        yield return ResourceSystem.instance.Initialize();
+        yield return InputSystem.instance.Initialize();
+        yield return SceneSystem.instance.Initialize();
+        yield return UISystem.instance.Initialize();
+    }
+    IEnumerator InitConfig()
+    {
+        yield return ResourceSystem.LoadAsset<EntityPhysicsConfigAsset>("EntityPhysicsConfig.asset");
+    }
+    void OnAfterInitAll()
     {
         try
         {
             InitGame();
+            OnAfterInitGame();
         }
         catch (System.Exception e)
         {
@@ -35,13 +50,10 @@ public class GameEntry : MonoBehaviour
     }
     void InitGame()
     {
-        InputSystem.instance.Init();
-        SceneSystem.instance.Init();
-        UISystem.instance.Init();
-        OnInitGame();
+
     }
 
-    void OnInitGame()
+    void OnAfterInitGame()
     {
         if (SceneSystem.CheckReadyInValidGameScene()) { 
             SceneSystem.instance.OnEnterScene();

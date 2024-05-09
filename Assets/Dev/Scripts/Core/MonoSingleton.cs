@@ -38,7 +38,7 @@ namespace PJR
         /// invoked before awake
         /// </summary>
         public virtual void OnInstantiated() { }
-        public virtual void Init() { }
+        public virtual IEnumerator Initialize() { yield return null; }
         public virtual void Clear() { }
 
         public virtual void OnUpdate() { }

@@ -58,7 +58,15 @@ namespace PJR
         [MenuItem("Debug/Launch包模式 #%F5", false, priority = 101)]
         public static void LanuchInABMode()
         {
-            EditorUtility.DisplayDialog("Tips", "还没有", "ok");
+            if (Application.isPlaying)
+            {
+                EditorApplication.isPlaying = false;
+                return;
+            }
+            EditorApplication.isPlaying = true;
+            EditorPrefs.SetBool(PJR_DebugMenuKey_Launch, true);
+            EditorPrefs.SetBool(PJR_DebugMenuKey_LaunchInAssetBundleMode, true);
+            RegisterEvent();
         }
 
         static void DontDestroyOnLoad(Object obj) => GameObject.DontDestroyOnLoad(obj);

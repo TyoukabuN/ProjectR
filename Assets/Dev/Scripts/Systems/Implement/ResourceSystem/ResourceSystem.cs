@@ -1,11 +1,14 @@
-using PJR;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
 using System.Linq;
-using Unity.VisualScripting;
+using YooAsset;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace PJR
 {
@@ -14,6 +17,24 @@ namespace PJR
         public static Dictionary<string,ResourceLoader> assetFullName2Loader = new Dictionary<string, ResourceLoader> ();
 
         public static Dictionary<string,ResourceLoader> assetame2Loader = new Dictionary<string, ResourceLoader> ();
+
+        private ResourcePackage _package;
+        public ResourcePackage Package { get { return _package; } }
+
+        public override IEnumerator Initialize()
+        {
+            if(!YooAssets.Initialized)
+                YooAssets.Initialize();
+            if (_package == null)
+            { 
+                _package = YooAssets.CreatePackage("pkgs");
+                YooAssets.SetDefaultPackage(_package);
+            }
+
+            var initParameters = new OfflinePlayModeParameters();
+            yield return _package.InitializeAsync(initParameters);
+        }
+
         public static ResourceLoader LoadAsset<T>(string assetFullName) where T : UnityEngine.Object 
         {
             if(string.IsNullOrEmpty(assetFullName))
@@ -27,14 +48,24 @@ namespace PJR
 
             string assetName = Path.GetFileName(assetFullName);
 #if UNITY_EDITOR
+
+
             if (!assetame2Loader.TryGetValue(assetFullName, out var loader))
             {
                 assetFullName2Loader.TryGetValue(assetFullName, out loader);
             }
 
             if (loader == null)
-            { 
-                loader = new EditorResourceLoader(assetFullName, assetType);
+            {
+                if (EditorPrefs.GetBool(DebugMenu.PJR_DebugMenuKey_LaunchInAssetBundleMode))
+                {
+                    
+                    loader = new YooAssetHandleWrapper(assetFullName, assetType);
+                }
+                else
+                { 
+                    loader = new EditorResourceLoader(assetFullName, assetType);
+                }
                 assetFullName2Loader[assetFullName] = loader;
                 assetame2Loader[assetName] = loader; 
             }

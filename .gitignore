@@ -77,3 +77,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 Assets/Samples/
 Bundles/
+Assets/StreamingAssets/

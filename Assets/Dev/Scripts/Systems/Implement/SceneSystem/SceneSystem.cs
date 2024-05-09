@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -33,11 +34,12 @@ namespace PJR
         public List<Transform> ResetPoints = null;
 
 
-        public override void Init()
+        public override IEnumerator Initialize()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
+            yield return null;
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using PJR.Input;
 using Sirenix.OdinInspector;
 using static UnityEngine.InputSystem.InputAction;
 using System;
+using System.Collections;
 
 namespace PJR
 {
@@ -32,9 +33,8 @@ namespace PJR
         [ShowInInspector]
         private List<InputAction> actions;
 
-        public override void Init()
+        public override IEnumerator Initialize()
         {
-            base.Init();
             actions = new List<InputAction>();
             //
             RegisterKeys.Init();
@@ -43,8 +43,12 @@ namespace PJR
             if (inputActionAsset == null)
             { 
                 var loader = ResourceSystem.LoadAsset(assetPath, typeof(InputActionAsset));
-                loader.OnDone = OnLoadAssetDone;
+                yield return loader;
+                if (!string.IsNullOrEmpty(loader.error))
+                    yield return null;
+                OnLoadAssetDone(loader);
             }
+            yield return null;
         }
         void OnLoadAssetDone(ResourceLoader loader)
         {

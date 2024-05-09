@@ -31,10 +31,10 @@ namespace PJR
         /// <summary>
         /// 初始化系统,在<see cref="GameEntry.InitGame"/>调用
         /// </summary>
-        public override void Init()
+        public override IEnumerator Initialize()
         {
-            base.Init();
             LogSystem.Log($"[System][Init]{typeof(T).Name}");
+            yield return null;
         }
     }
 }

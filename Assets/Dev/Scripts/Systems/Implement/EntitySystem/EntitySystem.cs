@@ -7,11 +7,6 @@ namespace PJR
 {
     public partial class EntitySystem : MonoSingletonSystem<EntitySystem>
     {
-        public override void Init()
-        {
-
-        }
-
         public static bool Valid()
         {
             if (!Application.isPlaying)

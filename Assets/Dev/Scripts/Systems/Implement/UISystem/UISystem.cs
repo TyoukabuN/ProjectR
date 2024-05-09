@@ -33,7 +33,7 @@ namespace PJR
 
         public Camera UICamera;
         public UIAssetDict UIAssetdict;
-        public override void Init()
+        public override IEnumerator Initialize()
         {
             UIAssetdict = UIAssetDataFunc.GetBindUIAssetDict();
             CreateRoot();
@@ -41,6 +41,8 @@ namespace PJR
             CreateUICamera();
             TestEntrance();
             LogSystem.Log("========UIRoot准备完成");
+
+            yield return null;
         }
         private void CreateRoot()
         {

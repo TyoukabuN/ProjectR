@@ -33,12 +33,12 @@ namespace PJR
             assetName = Path.GetFileName(assetFullName);
         }
 
-        public Object GetRawAsset()
+        public virtual Object GetRawAsset()
         {
-            //TODO:¼Ó¸öÊµÀý»¯£¬¼ÓÒýÓÃ¼ÆÊý
+            //TODO:åŠ ä¸ªå®žä¾‹åŒ–ï¼ŒåŠ å¼•ç”¨è®¡æ•°
             return asset;
         }
-        public T GetRawAsset<T>()
+        public virtual T GetRawAsset<T>() where T:UnityEngine.Object
         {
             return (T)asset;
         }

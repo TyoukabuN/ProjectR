@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root Version="v2.0.0">
+  <Common ShowPackageView="False" ShowEditorAlias="True" UniqueBundleName="False" />
+  <Package PackageName="art" PackageDesc="" AutoAddressable="False" LocationToLower="False" IncludeAssetGUID="False" IgnoreDefaultType="True">
+    <Group GroupActiveRule="EnableGroup" GroupName="avatar" GroupDesc="模型" AssetTags="">
+      <Collector CollectPath="Assets/Art/Avatar" CollectGUID="eb6f4acc880b0c34bbbcd93daf101d5b" CollectType="MainAssetCollector" AddressRule="AddressByFileName" PackRule="PackShaderVariants" FilterRule="CollectShaderVariants" UserData="" AssetTags="" />
+    </Group>
+    <Group GroupActiveRule="EnableGroup" GroupName="env" GroupDesc="场景" AssetTags="" />
+    <Group GroupActiveRule="EnableGroup" GroupName="ui" GroupDesc="ui资源" AssetTags="" />
+  </Package>
+</root>

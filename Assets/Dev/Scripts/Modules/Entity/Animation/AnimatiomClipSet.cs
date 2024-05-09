@@ -1,10 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.Serialization;
 using Sirenix.OdinInspector;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace PJR
 {
@@ -22,11 +22,13 @@ namespace PJR
             public static KeyValuePair<TKey, TValue> Create(TKey key, TValue value)=> new KeyValuePair<TKey, TValue> { Key = key, Value = value };
         }
 
+#if UNITY_EDITOR
         [Button("Save")]
         void Save()
         {
             EditorUtility.SetDirty(this);
             AssetDatabase.SaveAssets();
         }
+#endif
     }
 }

@@ -1,8 +1,5 @@
 using PJR.Input;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.AddressableAssets.Build.BuildPipelineTasks.GenerateLocationListsTask;
 
 namespace PJR
 {

@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System;
+﻿using System;
 using UnityEngine;
-using UnityEditor;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 
 namespace PJR
 {

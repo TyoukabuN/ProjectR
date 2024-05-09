@@ -3,9 +3,7 @@ using Sirenix.Utilities;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
-using UnityEditor.Build.Pipeline.Interfaces;
 using UnityEngine;
-#endif
 
 namespace PJR
 {
@@ -107,3 +105,4 @@ namespace PJR
         }
     }
 }
+#endif

@@ -1,8 +1,8 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class Shooter : MonoBehaviour
 {
@@ -16,8 +16,10 @@ public class Shooter : MonoBehaviour
     [Button("Shoot")]
     public void Shoot()
     {
+#if UNITY_EDITOR
         if (!EditorApplication.isPlaying)
             return;
+#endif
         Vector3 random = Random.onUnitSphere;
         var genSpot = random * radius + target.transform.position;
         var dir = -random;

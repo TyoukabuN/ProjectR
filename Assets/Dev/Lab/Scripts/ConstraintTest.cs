@@ -1,10 +1,7 @@
-using JetBrains.Annotations;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+#endif
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -24,6 +21,7 @@ public class ConstraintTest : MonoBehaviour
     public Avatar avatar = null;
     public Animator animator = null;
 
+#if UNITY_EDITOR
     public HumanTemplate humanTemplate = null;
 
     [Button("AttachedTest")]
@@ -80,6 +78,7 @@ public class ConstraintTest : MonoBehaviour
             }
         }
     }
+#endif
 
     private void Update()
     {

@@ -1,11 +1,8 @@
-using Animancer.Examples.StateMachines;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class PosMatchTest : MonoBehaviour
 {
@@ -17,6 +14,7 @@ public class PosMatchTest : MonoBehaviour
     private Transform _weapon;
     private Transform _handle;
 
+#if UNITY_EDITOR
     [Button("Test3_SetParent(hand, true) [LocalSpace]")]
     public void Test3()
     {
@@ -205,6 +203,7 @@ public class PosMatchTest : MonoBehaviour
         _weapon.rotation = hand.rotation * rotInv_handle * _weapon.rotation;
         _weapon.position += hand.position - _handle.position;
     }
+#endif
 }
 
 public static class PosMatchTestHelper

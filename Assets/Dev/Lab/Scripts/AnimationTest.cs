@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using PJR;
 using Sirenix.OdinInspector;
 using System.Collections;
@@ -85,5 +86,4 @@ public class AnimationTest : MonoBehaviour
         }
     }
 }
-
-
+#endif

@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-using static PJR.FieldSystem;
 
 namespace PJR
 {
@@ -95,6 +92,7 @@ namespace PJR
             return 1;//Constant
         }
 
+#if UNITY_EDITOR
         /// <summary>
         /// 轮询函数 
         /// </summary>
@@ -156,5 +154,7 @@ namespace PJR
             ////sphere线框
             //Drawing.Draw.gameAndEditor.WireSphere(transform.position, _radius);
         }
+#endif
     }
+
 }

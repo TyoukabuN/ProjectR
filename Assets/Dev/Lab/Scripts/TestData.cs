@@ -1,9 +1,9 @@
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class TestData : ScriptableObject
 {
@@ -13,6 +13,8 @@ public class TestData : ScriptableObject
     //)]
     [ListDrawerSettings]
     public List<TestDataItem> items = new List<TestDataItem>();
+
+#if UNITY_EDITOR
 
     [OnInspectorGUI]
     [PropertyOrder(-1)]
@@ -69,4 +71,6 @@ public class TestData : ScriptableObject
         AssetDatabase.SaveAssets();
         AnimationFlagConfig.OnAssetDirty();
     }
+#endif
+
 }

@@ -1,11 +1,6 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using PJR;
-using static UnityEditor.Progress;
-using UnityEditor;
-using JetBrains.Annotations;
 
 public class Test : MonoBehaviour
 {

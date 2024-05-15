@@ -2292,7 +2292,8 @@ public class AssetAnalysisTool : AssetAnalysisBase
                     string fileName = Path.GetFileName(assetPath);
                     EditorGUILayout.BeginHorizontal();
                     {
-                        EditorGUILayout.LabelField(fileName);
+                        var _name = $"[{fileName}]".PadRight(32);
+                        EditorGUILayout.LabelField($"{_name} {assetPath}");
                         if (i == activeMainSelected)
                         {
                             GUI.color = Color.yellow;

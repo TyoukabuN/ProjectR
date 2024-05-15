@@ -19,6 +19,8 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: GameEntry_2
+    path: Assets/Scenes/GameEntry_2.unity
   - name: BuildScene_LaunchScreen
     path: Assets/__LS/Resources/DevScene/BuildScene_LaunchScreen.unity
   - name: TestScene_DemoP5_JW

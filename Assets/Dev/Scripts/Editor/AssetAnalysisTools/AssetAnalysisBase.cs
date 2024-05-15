@@ -589,6 +589,11 @@ public class AssetAnalysisBase : EditorWindow
             this.m_AdditionRecordKey = additionKey;
             Update();
         }
+        
+        public T ToEnum<T>() where T : System.Enum
+        {
+            return (T)(object)value;
+        }
         public override void Save()
         {
             SetInt(RecordKey, m_value);

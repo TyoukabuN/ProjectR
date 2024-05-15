@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 185f6993d5150494d98da50e26cb1c25, type: 3}
+  m_Name: AssetBundleCollectorSetting
+  m_EditorClassIdentifier: 
+  ShowPackageView: 1
+  ShowEditorAlias: 1
+  UniqueBundleName: 0
+  Packages:
+  - PackageName: Art
+    PackageDesc: "\u7F8E\u672F\u8D44\u6E90"
+    EnableAddressable: 1
+    LocationToLower: 0
+    IncludeAssetGUID: 0
+    IgnoreDefaultType: 1
+    AutoCollectShaders: 1
+    IgnoreNonRefAsset: 1
+    Groups:
+    - GroupName: Characters
+      GroupDesc: "\u89D2\u8272"
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/__LS/Art/Characters/Beast
+        CollectorGUID: 02195d212cbd2ba46984a9a964ae86a1
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Characters/Boss
+        CollectorGUID: 4946855894342c146bd496c003fa5fab
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Characters/Ecology
+        CollectorGUID: 915a5ee55d0071e43b731c08cf9b4672
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Characters/Eye
+        CollectorGUID: a203ef6c553081e47b6a03edf5cb80b9
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackCollector
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Characters/Humanoid
+        CollectorGUID: 844e13f37a9675c41856d2e262b03acc
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Characters/Monster
+        CollectorGUID: b1271457aa75c3a49a13ec8f981cdad3
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Characters/Player
+        CollectorGUID: 796eb091790f98f4eb7e33cf61238499
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileNameWithExt
+        PackRuleName: PackCollector
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Characters/PlayerM
+        CollectorGUID: 97d5f520c6d6cb04e8c5fec17e272095
+        CollectorType: 1
+        AddressRuleName: AddressByFolderAndFileNameWithExt
+        PackRuleName: PackCollector
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Characters/Special
+        CollectorGUID: e1db510b0d202df419e5f47c182b0c6e
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: Environment
+      GroupDesc: "\u73AF\u5883"
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/__LS/Art/Environment/Boat
+        CollectorGUID: cc137ba73912cff44b6d59a28503ecdb
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Environment/Build
+        CollectorGUID: cd4e22a7aec575344ae615008122a922
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/__LS/Art/Environment/Camp
+        CollectorGUID: 819efa870770681459baa997f7616556
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: CustomPackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 

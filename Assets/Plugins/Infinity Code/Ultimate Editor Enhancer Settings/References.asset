@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ea5fabd361f4d0f81a66ff0fcdd77dd, type: 3}
+  m_Name: References
+  m_EditorClassIdentifier: 
+  _bookmarks: []
+  _emptyInspectorItems: []
+  _favoriteWindows: []
+  _headerRules: []
+  _quickAccessItems: []
+  _projectFolderIcons: []
+  _sceneHistory:
+  - name: BuildScene_LaunchScreen
+    path: Assets/__LS/Resources/DevScene/BuildScene_LaunchScreen.unity
+  - name: TestScene_DemoP5_JW
+    path: Assets/__LS_Test/Test_JW/TestScene_DemoP5_JW.unity
+  - name: AnimationTest
+    path: Assets/__LS_Test/Test_JW/AnimationTest.unity
+  - name: BuildScene_SplashScreen
+    path: Assets/__LS/Resources/DevScene/BuildScene_SplashScreen.unity
+  - name: CreateIconScene
+    path: Assets/__LS_Test/Test_CPX/CreateIconScene.unity
+  - name: TestScene_AI_HB
+    path: Assets/__LS_Test/Test_HB/TestFlowScript/TestScene_AI_HB.unity
+  - name: BitwiseTest
+    path: Assets/__LS_Test/Test_JW/BitwiseTest.unity
+  - name: MagicaCloth_CloakTest
+    path: Assets/__LS_Test/Test_JW/MagicaCloth_CloakTest.unity
+  - name: UnityChanKAGURA_HDRP
+    path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/HDRP/UnityChanKAGURA_HDRP.unity
+  - name: UnityChanKAGURA_CoreRP
+    path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/CoreRP/UnityChanKAGURA_CoreRP.unity
+  - name: Wind_CoreRP
+    path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/CoreRP/Wind_CoreRP.unity
+  - name: UnityChanKAGURA_URP
+    path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/URP/UnityChanKAGURA_URP.unity
+  - name: RuntimeDressUp_URP
+    path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/URP/RuntimeDressUp_URP.unity
+  - name: DynamicBone
+    path: Assets/__LS_Test/Test_JW/DynamicBone.unity
+  - name: TestScene_DemoP5_JB_
+    path: Assets/__LS_Test/Test_JB/TestScene_DemoP5_JB_.unity
+  - name: TestScene_DemoP8
+    path: Assets/__LS_Test/Scenes/Demo/TestScene_DemoP8.unity
+  - name: TTool_TestScene
+    path: Assets/Plugins/TTools/Scenes/TTool_TestScene.unity
+  - name: CharacterCustomizationScene
+    path: Assets/__LS_Test/Test_CPX/CharacterCustomizationScene.unity
+  _notes: []

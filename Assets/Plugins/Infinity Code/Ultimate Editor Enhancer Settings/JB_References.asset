@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ea5fabd361f4d0f81a66ff0fcdd77dd, type: 3}
+  m_Name: JB_References
+  m_EditorClassIdentifier: 
+  UserLabel: 
+  _bookmarks:
+  - title: Item
+    type: UnityEditor.DefaultAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: 5917b0600f769c04094f591a3ea6df08, type: 3}
+  - title: Environment
+    type: UnityEditor.DefaultAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: 2655d5b248930224c8b50f309c7e41a3, type: 3}
+  - title: TempArtResources
+    type: UnityEditor.DefaultAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: 297b2b3b6bcce414e929ecdbdd3c6f36, type: 3}
+  - title: AxeMotions
+    type: UnityEditor.DefaultAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: 34de0ffc3668c6640950fe0fc8c6a534, type: 3}
+  - title: 2Hand-Axe
+    type: UnityEditor.DefaultAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: 606a9fdac5dbe5c45b9e14dd582b0ae1, type: 3}
+  - title: GamePrefab
+    type: UnityEditor.DefaultAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: 57511d931566bfb4083bca0dee1cff07, type: 3}
+  - title: TestScene_DemoP4_JB
+    type: UnityEditor.SceneAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: 0422d6b9a7c2bc443bcbb17b6baa4658, type: 3}
+  - title: Suit01
+    type: UnityEditor.DefaultAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: c0930ee5a2482b9469a84daf5994e9f9, type: 3}
+  - title: Test_JB
+    type: UnityEditor.DefaultAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: 82c0a3eb59f56074fb5788b0dc553ca7, type: 3}
+  - title: PlayerEquipabilityConfig
+    type: LS.Game.SSEquipmentAgentSetting, LS, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 11400000, guid: ffe0fe118c6790a4dad62949ccbb26c1, type: 2}
+  - title: TestScene_BUILD_Jb
+    type: UnityEditor.SceneAsset, UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    target: {fileID: 102900000, guid: fee9abb8e475dc943ad340b19dd04912, type: 3}
+  _favoriteWindows: []
+  _quickAccessItems: []
+  _sceneHistory:
+  - name: TestScene_DemoP5_JB
+    path: Assets/__LS_Test/Test_JB/TestScene_DemoP5_JB.unity
+  - name: TestScene_DemoP5_Lean_JB
+    path: Assets/__LS_Test/Test_JB/TestScene_DemoP5_Lean_JB.unity
+  - name: TestScene_DemoP5
+    path: Assets/__LS_Test/Scenes/Demo/TestScene_DemoP5.unity
+  - name: TestScene_DemoP6
+    path: Assets/__LS_Test/Scenes/Demo/TestScene_DemoP6.unity
+  - name: TestScene_BUILD_Jb
+    path: Assets/__LS_Test/Test_JB/TestScene_BUILD_Jb.unity
+  - name: TestScene_Opt_JB
+    path: Assets/__LS_Test/Test_JB/TestScene_Opt_JB.unity
+  - name: TestScene_DemoP4_JB
+    path: Assets/__LS_Test/Test_JB/TestScene_DemoP4_JB.unity
+  - name: TestScene_Simple
+    path: Assets/__LS_Test/Test_JB/TestScene_Simple.unity
+  - name: _MP3BaseScene_Pretty_TestEquip
+    path: Assets/__LS_Test/Test_JB/_MP3BaseScene_Pretty_TestEquip.unity

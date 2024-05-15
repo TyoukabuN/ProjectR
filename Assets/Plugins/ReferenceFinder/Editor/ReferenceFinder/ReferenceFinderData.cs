@@ -241,6 +241,12 @@ public class ReferenceFinderData
         }
     }
 
+    //获取引用信息
+    public bool GetAssetState(string guid, out AssetDescription ad)
+    {
+        return assetDict.TryGetValue(guid, out ad);
+    }
+
     //根据引用信息状态获取状态描述
     public static string GetInfoByState(AssetState state)
     {

@@ -1,0 +1,23 @@
+{
+    "name": "UltimateEditorEnhancer-Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:77dc307bd06543d98907dd0b3b4f773e",
+        "GUID:6410ed5824df2184fba9d1a92ce18468",
+        "GUID:546a0530eab2505478af29bc04b9f202",
+        "GUID:ba93befc7f5199f4abd20c2ed36ef687",
+        "GUID:ae2a0c3d649c75b4980aeff4ee104b75",
+        "GUID:32d977fd988bb1e48a9d2965b5fbb3f9"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185f6993d5150494d98da50e26cb1c25, type: 3}
   m_Name: AssetBundleCollectorSetting
   m_EditorClassIdentifier: 
-  ShowPackageView: 0
+  ShowPackageView: 1
   ShowEditorAlias: 1
   UniqueBundleName: 0
   Packages:
   - PackageName: art
     PackageDesc: 
-    EnableAddressable: 0
+    EnableAddressable: 1
     LocationToLower: 0
     IncludeAssetGUID: 0
     IgnoreDefaultType: 1
@@ -32,7 +32,7 @@ MonoBehaviour:
       - CollectPath: Assets/Art/Avatar
         CollectorGUID: eb6f4acc880b0c34bbbcd93daf101d5b
         CollectorType: 0
-        AddressRuleName: AddressByFileName
+        AddressRuleName: AddressByGroupAndFileNameWithExt
         PackRuleName: PackTopDirectory
         FilterRuleName: CollectAll
         AssetTags: 

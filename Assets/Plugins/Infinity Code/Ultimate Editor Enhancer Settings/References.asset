@@ -19,6 +19,8 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: ABTest
+    path: Assets/Dev/Lab/Scenes/ABTest.unity
   - name: GameEntry_2
     path: Assets/Scenes/GameEntry_2.unity
   - name: BuildScene_LaunchScreen
@@ -55,6 +57,4 @@ MonoBehaviour:
     path: Assets/__LS_Test/Scenes/Demo/TestScene_DemoP8.unity
   - name: TTool_TestScene
     path: Assets/Plugins/TTools/Scenes/TTool_TestScene.unity
-  - name: CharacterCustomizationScene
-    path: Assets/__LS_Test/Test_CPX/CharacterCustomizationScene.unity
   _notes: []

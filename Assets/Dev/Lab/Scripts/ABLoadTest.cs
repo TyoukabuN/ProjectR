@@ -4,6 +4,12 @@ using UnityEngine;
 using YooAsset;
 using Sirenix.OdinInspector;
 using System.Xml.Schema;
+using System.IO;
+using UnityEngine.Networking;
+using Newtonsoft.Json;
+
+
+
 
 
 #if UNITY_EDITOR
@@ -40,6 +46,35 @@ public class ABLoadTest : MonoBehaviour
         var assetHandle = YooAssets.LoadAssetAsync<GameObject>(assetName);
         assetHandle.Completed -= OnComplete;
         assetHandle.Completed += OnComplete;
+    }
+
+
+    [Button("LoadAssetSetting")]
+    public void LoadAssetSetting()
+    {
+        StartCoroutine(ILoadAssetSetting());
+    }
+    public IEnumerator ILoadAssetSetting()
+    {
+        string url = $"file:///{Application.streamingAssetsPath}/AssetSetting.json";
+        var require = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET);
+        DownloadHandlerBuffer handler = new DownloadHandlerBuffer();
+        require.downloadHandler = handler;
+        yield return require.SendWebRequest();
+
+        if (require.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError(require.error);
+            yield return null;
+        }
+        Debug.Log(require.downloadHandler.text);
+        AssetSetting inst = JsonConvert.DeserializeObject<AssetSetting>(require.downloadHandler.text);
+        //AssetSetting inst = JsonUtility.FromJson<AssetSetting>(require.downloadHandler.text);//这个方法不可以
+        if (inst != null)
+        {
+            Debug.Log(inst.RemoteUrls[0]);
+            Debug.Log(inst.AssetSettingsData);
+        }
     }
 
     public void OnComplete(AssetHandle assetHandle)

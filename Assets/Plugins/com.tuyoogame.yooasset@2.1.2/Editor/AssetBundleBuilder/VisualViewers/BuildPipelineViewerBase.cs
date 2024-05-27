@@ -7,7 +7,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using System.Drawing.Text;
 
 namespace YooAsset.Editor
 {
@@ -28,7 +27,6 @@ namespace YooAsset.Editor
         private EnumField _outputNameStyleField;
         private EnumField _copyBuildinFileOptionField;
         private TextField _copyBuildinFileTagsField;
-        private TextField _copyBuildiToField;
 
         public BuildPipelineViewerBase(string packageName, EBuildPipeline buildPipeline, BuildTarget buildTarget, VisualElement parent)
         {
@@ -54,16 +52,12 @@ namespace YooAsset.Editor
             string defaultOutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
             _buildOutputField = Root.Q<TextField>("BuildOutput");
             _buildOutputField.SetValueWithoutNotify(defaultOutputRoot);
-            //_buildOutputField.SetEnabled(false);
+            _buildOutputField.SetEnabled(false);
 
             // 构建版本
             _buildVersionField = Root.Q<TextField>("BuildVersion");
             _buildVersionField.style.width = StyleWidth;
             _buildVersionField.SetValueWithoutNotify(GetDefaultPackageVersion());
-
-            // 使用日期作为版本
-            var refreshVersionButton = Root.Q<Button>("RefreshVersion");
-            refreshVersionButton.clicked += RefreshVersionButton_clicked;
 
             // 构建模式
             {
@@ -154,15 +148,6 @@ namespace YooAsset.Editor
                 AssetBundleBuilderSetting.SetPackageBuildinFileCopyParams(PackageName, BuildPipeline, _copyBuildinFileTagsField.value);
             });
 
-            // 额外的文件复制路径
-            var copyBuildToPaths = AssetBundleBuilderSetting.GetPackageCopyBuildToPaths(PackageName, BuildPipeline);
-            _copyBuildiToField = Root.Q<TextField>("CopyBuildTo");
-            _copyBuildiToField.SetValueWithoutNotify(copyBuildToPaths);
-            _copyBuildiToField.RegisterValueChangedCallback(evt =>
-            {
-                AssetBundleBuilderSetting.SetPackageCopyBuildToPaths(PackageName, BuildPipeline, _copyBuildiToField.value);
-            });
-
             // 构建按钮
             var buildButton = Root.Q<Button>("Build");
             buildButton.clicked += BuildButton_clicked;
@@ -172,11 +157,6 @@ namespace YooAsset.Editor
             var buildinFileCopyOption = AssetBundleBuilderSetting.GetPackageBuildinFileCopyOption(PackageName, BuildPipeline);
             bool tagsFiledVisible = buildinFileCopyOption == EBuildinFileCopyOption.ClearAndCopyByTags || buildinFileCopyOption == EBuildinFileCopyOption.OnlyCopyByTags;
             _copyBuildinFileTagsField.visible = tagsFiledVisible;
-        }
-
-        private void RefreshVersionButton_clicked()
-        {
-            _buildVersionField.SetValueWithoutNotify(GetDefaultPackageVersion());
         }
         private void BuildButton_clicked()
         {

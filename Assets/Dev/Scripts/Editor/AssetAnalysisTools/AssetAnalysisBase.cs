@@ -368,9 +368,6 @@ public class AssetAnalysisBase : EditorWindow
             dirtyCacheList = new Dictionary<XStreamingEditorCache, System.Diagnostics.Stopwatch>();
         }
 
-        public virtual void DrawDefaultGUI(GUIContent label) { }
-        public virtual void DrawDefaultGUI(string label){ DrawDefaultGUI(new GUIContent(label)); }
-
         public static Dictionary<string, XStreamingEditorCache> cacheBook = new Dictionary<string, XStreamingEditorCache>();
         public static List<XStreamingEditorCache> cacheQueue = new List<XStreamingEditorCache>();
         public static XStreamingEditorCache currentEditorCache
@@ -592,6 +589,7 @@ public class AssetAnalysisBase : EditorWindow
             this.m_AdditionRecordKey = additionKey;
             Update();
         }
+        
         public T ToEnum<T>() where T : System.Enum
         {
             return (T)(object)value;
@@ -686,10 +684,6 @@ public class AssetAnalysisBase : EditorWindow
             this.m_AdditionRecordKey = additionKey;
             Update();
         }
-        public override void DrawDefaultGUI(GUIContent label)
-        {
-            value = EditorGUILayout.Toggle(label, value);
-        }
         public override void Save()
         {
             SetBool(RecordKey, m_value);
@@ -733,10 +727,6 @@ public class AssetAnalysisBase : EditorWindow
             m_RecordKey = recordKey;
             m_AdditionRecordKey = additionKey;
             Update();
-        }
-        public override void DrawDefaultGUI(GUIContent label)
-        {
-            value = EditorGUILayout.TextField(label, value);
         }
         public override void Save()
         {

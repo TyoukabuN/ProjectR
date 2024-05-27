@@ -2,9 +2,6 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using YooAsset;
-#if UNITY_EDITOR
-using YooAsset.Editor;
-#endif
 
 /// <summary>
 /// 资源文件查询服务类
@@ -34,7 +31,7 @@ public sealed class StreamingAssetsHelper
         {
             if (GameQueryServices.CompareFileCRC)
             {
-                string crc32 = EditorTools.GetFileCRC32(filePath);
+                string crc32 = HashUtility.FileCRC32(filePath);
                 return crc32 == fileCRC;
             }
             else
@@ -149,7 +146,7 @@ internal class PreprocessBuild : UnityEditor.Build.IPreprocessBuildWithReport
 
             BuildinFileManifest.Element element = new BuildinFileManifest.Element();
             element.PackageName = fileInfo.Directory.Name;
-            element.FileCRC32 = EditorTools.GetFileCRC32(fileInfo.FullName);
+            element.FileCRC32 = HashUtility.FileCRC32(fileInfo.FullName);
             element.FileName = fileInfo.Name;
             manifest.BuildinFiles.Add(element);
         }

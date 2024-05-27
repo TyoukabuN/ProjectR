@@ -26,7 +26,6 @@ namespace YooAsset.Editor
             var fileNameStyle = AssetBundleBuilderSetting.GetPackageFileNameStyle(PackageName, BuildPipeline);
             var buildinFileCopyOption = AssetBundleBuilderSetting.GetPackageBuildinFileCopyOption(PackageName, BuildPipeline);
             var buildinFileCopyParams = AssetBundleBuilderSetting.GetPackageBuildinFileCopyParams(PackageName, BuildPipeline);
-            var copyBuildToPaths = AssetBundleBuilderSetting.GetPackageCopyBuildToPaths(PackageName, BuildPipeline);
             var compressOption = AssetBundleBuilderSetting.GetPackageCompressOption(PackageName, BuildPipeline);
 
             ScriptableBuildParameters buildParameters = new ScriptableBuildParameters();
@@ -42,7 +41,6 @@ namespace YooAsset.Editor
             buildParameters.FileNameStyle = fileNameStyle;
             buildParameters.BuildinFileCopyOption = buildinFileCopyOption;
             buildParameters.BuildinFileCopyParams = buildinFileCopyParams;
-            buildParameters.CopyBuildToPaths = copyBuildToPaths;
             buildParameters.EncryptionServices = CreateEncryptionInstance();
             buildParameters.CompressOption = compressOption;
 

@@ -14,7 +14,7 @@ using Unity.EditorCoroutines.Editor;
 using UnityEngine.SceneManagement;
 //
 
-public partial class AssetAnalysisTool : AssetAnalysisBase
+public class AssetAnalysisTool : AssetAnalysisBase
 {
     [MenuItem(@"Tools/Asset分析工具")]
     static void Open()
@@ -28,7 +28,8 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
         Selection.selectionChanged -= this.Repaint;
         Selection.selectionChanged += this.Repaint;
 
-        AssetRenameTool_OnRegisterEvent();
+        Selection.selectionChanged -= this.AssetRenameTool_OnSelectionChange;
+        Selection.selectionChanged += this.AssetRenameTool_OnSelectionChange;
 
         EditorSceneManager.sceneOpened -= OnSceneOpened;
         EditorSceneManager.sceneOpened += OnSceneOpened;
@@ -93,6 +94,8 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
     public static AnimBoolHandle animBool_resource_sameassetname;
     public static AnimBoolHandle animBool_resource_sameassetname_except_paths;
     public static AnimBoolHandle animBool_resource_sameassetname_filter;
+    //
+    public static AnimBoolHandle animBool_resource_rename;
     //
     public static AnimBoolHandle animBool_resource_empty_ref_report;
     public static AnimBoolHandle animBool_resource_mess_ref_report;
@@ -206,8 +209,9 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
         animBool_resource_sameassetname_except_paths.valueChanged.AddListener(Repaint);
         animBool_resource_sameassetname_filter = new AnimBoolHandle(this.GetType().Name + "animBool_resource_sameassetname_filter", false);
         animBool_resource_sameassetname_filter.valueChanged.AddListener(Repaint);
-        AssetRenameTool_OnEnable();
-        //
+        animBool_resource_rename = new AnimBoolHandle(this.GetType().Name + "animBool_resource_rename", false);
+        animBool_resource_rename.valueChanged.AddListener(Repaint);
+
         animBool_LookingForTheSame_except_paths = new AnimBoolHandle(this.GetType().Name + "animBool_LookingForTheSame_except_paths", false);
         animBool_LookingForTheSame_except_paths.valueChanged.AddListener(Repaint);
         animBool_LookingForTheSame_filter = new AnimBoolHandle(this.GetType().Name + "animBool_LookingForTheSame_filter", false);
@@ -413,11 +417,6 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
             }
             initializedData = true;
         }
-    }
-    static ReferenceFinderData GetRefFinderData()
-    {
-        InitReferenceDataIfNeeded();
-        return data;
     }
 
     /// <summary>
@@ -2205,8 +2204,336 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                 sw.Stop();
                 Debug.Log("[开始结束]耗时 " + sw.ElapsedMilliseconds * 0.001f);
             }
+
+
         }
         EditorGUILayout.EndFadeGroup();
+    }
+
+
+    public enum ERenameType
+    {
+        FineAndReplace = 0,
+        SetName = 1,
+        StripCharacters = 2,
+        ChangeCase = 3,
+    }
+    public enum ERenameTypeCN
+    {
+        查找和替换 = 0,
+        设置名字 = 1,
+        字符剥离 = 2,
+        改变大小写 = 3,
+    }
+    public enum ESetNameMethod
+    { 
+        New = 0,
+        Prefix = 1,
+        Suffix = 2,
+    }
+    public enum ESetNameMethodCN
+    {
+        新命名 = 0,
+        设置前缀 = 1,
+        设置后缀 = 2,
+    }
+
+    public static IntHandle RenameType;
+    public static IntHandle RenameMethodType;
+    public static StringHandle RenameName;
+
+    public static List<string> _selectedGUIDs = new List<string>();
+    public static int activeMainSelected = -1;
+
+    public static AssetRenameOperationGroup renameOperationGroup;
+    /// <summary>
+    /// 资源重命名工具
+    /// </summary>
+    public void AssetRenameTool()
+    {
+        if (RenameType == null) RenameType = new IntHandle("AssetRenameTool_RenameType",(int)ERenameType.SetName);
+        if (RenameMethodType == null) RenameMethodType = new IntHandle("AssetRenameTool_RenameMethodType", (int)ESetNameMethod.New);
+        if (RenameName == null) RenameName = new StringHandle("AssetRenameTool_RenameName", string.Empty);
+        //
+        animBool_resource_rename.target = Foldout(animBool_resource_rename.target, "资源重命名工具");
+        if (EditorGUILayout.BeginFadeGroup(animBool_resource_rename.faded))
+        {
+            RenameType.value = (int)Enum.ToObject(typeof(ERenameType), EditorGUILayout.EnumPopup("Type", (ERenameTypeCN)RenameType.value));
+
+            if (((ERenameType)RenameType.value) == ERenameType.SetName)
+            {
+                AssetRenameTool_SetName();
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("这个类型还没有弄", MessageType.Warning);
+            }
+        }
+        EditorGUILayout.EndFadeGroup();
+    }
+
+
+    /// <summary>
+    /// Type=设置名字
+    /// </summary>
+    public void AssetRenameTool_SetName()
+    {
+        RenameMethodType.value = (int)Enum.ToObject(typeof(ESetNameMethod), EditorGUILayout.EnumPopup("Method", (ESetNameMethodCN)RenameMethodType.value));
+        RenameName.value = EditorGUILayout.TextField("Name", RenameName.value);
+        if (_selectedGUIDs != null)
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            {
+                for (int i = 0; i < _selectedGUIDs.Count; i++)
+                {
+                    string assetPath = AssetDatabase.GUIDToAssetPath(_selectedGUIDs[i]);
+                    if (string.IsNullOrEmpty(assetPath))
+                        continue;
+                    string fileName = Path.GetFileName(assetPath);
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        var _name = $"[{fileName}]".PadRight(32);
+                        EditorGUILayout.LabelField($"{_name} {assetPath}");
+                        if (i == activeMainSelected)
+                        {
+                            GUI.color = Color.yellow;
+                            EditorGUILayout.LabelField("MainAsset", GUILayout.Width(60f));
+                            GUI.color = Color.white;
+                        }
+                        else if (GUILayout.Button("As Main", GUILayout.Width(60f)))
+                        {
+                            activeMainSelected = i;
+                        }
+
+                        EditorGUILayout.EndHorizontal();
+                    }
+                }
+                EditorGUILayout.EndVertical();
+            }
+        }
+        if (GUILayout.Button("OK"))
+        {
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                if (RenameMethodType.ToEnum<ESetNameMethod>() == ESetNameMethod.New)
+                    AssetRenameTool_RenameAsset_Method_New();
+                else if (RenameMethodType.ToEnum<ESetNameMethod>() == ESetNameMethod.Prefix)
+                    AssetRenameTool_RenameAsset_Method_Prefix();
+            }
+            catch (Exception e)
+            { 
+                Debug.LogError(e.ToString());
+            }
+            AssetDatabase.StopAssetEditing();
+        }
+        if (renameOperationGroup != null && GUILayout.Button("撤销"))
+        {
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                renameOperationGroup.Undo();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+            }
+            renameOperationGroup = null;
+            AssetDatabase.StopAssetEditing();
+
+        }
+    }
+
+    /// <summary>
+    /// 新命名的ok按钮
+    /// </summary>
+    public void AssetRenameTool_RenameAsset_Method_New()
+    {
+        renameOperationGroup = new AssetRenameOperationGroup();
+
+        if (_selectedGUIDs == null || _selectedGUIDs.Count <= 0)
+            return;
+        if (string.IsNullOrEmpty(RenameName.value))
+            return;
+        if (activeMainSelected < 0)
+            return;
+        int count = 0;
+        for (int i = 0; i < _selectedGUIDs.Count; i++)
+        {
+            string guid = _selectedGUIDs[i];
+            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            var ext = Path.GetExtension(assetPath);
+            if (i == activeMainSelected)
+            {
+                renameOperationGroup.AddRenameOp(guid, $"{RenameName.value}{ext}");
+            }
+            else
+            {
+                renameOperationGroup.AddRenameOp(guid, $"{RenameName.value}_{++count}{ext}");
+            }
+        }
+        renameOperationGroup.Perform();
+    }
+
+    /// <summary>
+    /// 前缀的ok按钮
+    /// </summary>
+    public void AssetRenameTool_RenameAsset_Method_Prefix()
+    {
+        renameOperationGroup = new AssetRenameOperationGroup();
+
+        if (_selectedGUIDs == null || _selectedGUIDs.Count <= 0)
+            return;
+        if (string.IsNullOrEmpty(RenameName.value))
+            return;
+        for (int i = 0; i < _selectedGUIDs.Count; i++)
+        {
+            string guid = _selectedGUIDs[i];
+            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            var ext = Path.GetExtension(assetPath);
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(assetPath);
+            renameOperationGroup.AddRenameOp(guid, $"{RenameName.value}{fileNameWithoutExtension}{ext}");
+        }
+        renameOperationGroup.Perform();
+    }
+
+    /// <summary>
+    /// 重命名操作
+    /// </summary>
+    public class AssetRenameOperationGroup
+    {
+        //后面可能会改成记录多个Group
+        public static int s_guid = -1;
+
+        private int _guid = -1;
+        private List<AssetRenameOperation> _operations;
+        public int guid => s_guid;
+        public List<AssetRenameOperation> Operations => _operations;
+
+        public AssetRenameOperationGroup()
+        {
+            _guid = ++s_guid;
+            _operations = new List<AssetRenameOperation>();
+        }
+        public void AddRenameOp(string guid, string newAssetName)
+        {
+            var op = new AssetRenameOperation(guid, newAssetName);
+            _operations.Add(op);
+        }
+        public void Perform()
+        {
+            for (int i = 0; i < _operations.Count; i++)
+            { 
+                var op = _operations[i];
+                op.Perform();
+            }
+        }
+        public void Undo()
+        {
+            for (int i = 0; i < _operations.Count; i++)
+            {
+                var op = _operations[i];
+                op.Undo();
+            }
+        }
+        public class AssetRenameOperation
+        {
+            public string guid = string.Empty;
+            public string newAssetName = string.Empty;
+            //
+            public string preAssetPath = string.Empty;
+            public string preAssetName = string.Empty;
+            //
+            private bool _isValid = false;
+            public bool IsValid => _isValid;
+
+            private bool _isPerformed = false;
+            public bool IsPerformed => _isPerformed;
+            //
+            public string CurrentAssetPath
+            {
+                get { return AssetDatabase.GUIDToAssetPath(guid); }
+            }
+            public AssetRenameOperation(string guid, string newAssetName)
+            {
+                Init(guid, newAssetName);
+            }
+            private void Init(string guid, string newAssetName)
+            {
+                this.guid = guid;
+                this.newAssetName = newAssetName;
+                //
+                _isValid = false;
+                if (string.IsNullOrEmpty(guid))
+                    return;
+                if (string.IsNullOrEmpty(newAssetName))
+                    return;
+                if (string.IsNullOrEmpty(CurrentAssetPath))
+                    return;
+                //
+                preAssetPath = CurrentAssetPath;
+                if (string.IsNullOrEmpty(preAssetPath))
+                    return;
+                _isPerformed = false;
+                _isValid = true;
+                preAssetName = Path.GetFileName(preAssetPath);
+            }
+            public void Perform()
+            {
+                if (!_isValid)
+                    return;
+                _isPerformed = true;
+                AssetDatabase.RenameAsset(preAssetPath, newAssetName);
+            }
+            public void Undo()
+            {
+                if (!_isValid)
+                    return;
+                if (!_isPerformed)
+                    return;
+                AssetDatabase.RenameAsset(CurrentAssetPath, preAssetName);
+            }
+        }
+    }
+
+
+    //private MethodInfo RegisterAssetsMoveUndo = null;
+    public void AssetRenameTool_RecordUndo(ref List<string> assetGUIDs, string recordName = "AssetRenameTool_RecordUndo")
+    {
+        //unity好像没有这个功能
+        //if (RegisterAssetsMoveUndo == null)
+        //    RegisterAssetsMoveUndo = typeof(Undo).GetMethod("RegisterAssetsMoveUndo", BindingFlags.NonPublic | BindingFlags.Static);
+        //if (RegisterAssetsMoveUndo == null)
+        //    return;
+        if (assetGUIDs == null || assetGUIDs.Count <= 0)
+            return;
+
+        var assets = new List<UnityEngine.Object>();
+        var assetPaths = new List<string>();
+
+        for (int i = 0; i < assetGUIDs.Count; i++)
+        {
+            string assetPath = AssetDatabase.GUIDToAssetPath(assetGUIDs[i]);
+            var asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
+            if(asset == null)
+                continue;
+            assets.Add(asset);
+            assetPaths.Add(assetPath);
+        }
+        //RegisterAssetsMoveUndo.Invoke(null, new object[] { assetPaths.ToArray() });
+    }
+    public void AssetRenameTool_OnSelectionChange()
+    {
+        activeMainSelected = 0;
+        _selectedGUIDs = _selectedGUIDs ?? new List<string>();
+        _selectedGUIDs.Clear();
+        foreach (var guids in Selection.assetGUIDs)
+        { 
+            string assetPath = AssetDatabase.GUIDToAssetPath(guids);
+            if (string.IsNullOrEmpty(assetPath))
+                continue;
+            _selectedGUIDs.Add(guids);
+        }
     }
 
     /// <summary>

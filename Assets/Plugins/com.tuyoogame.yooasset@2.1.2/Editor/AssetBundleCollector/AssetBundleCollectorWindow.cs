@@ -24,7 +24,6 @@ namespace YooAsset.Editor
         private List<RuleDisplayName> _addressRuleList;
         private List<RuleDisplayName> _packRuleList;
         private List<RuleDisplayName> _filterRuleList;
-        private List<RuleDisplayName> _ignoreRuleList;
 
         private VisualElement _helpBoxContainer;
 
@@ -78,7 +77,6 @@ namespace YooAsset.Editor
                 _addressRuleList = AssetBundleCollectorSettingData.GetAddressRuleNames();
                 _packRuleList = AssetBundleCollectorSettingData.GetPackRuleNames();
                 _filterRuleList = AssetBundleCollectorSettingData.GetFilterRuleNames();
-                _ignoreRuleList = AssetBundleCollectorSettingData.GetIgnoreRuleNames();
 
                 VisualElement root = this.rootVisualElement;
 
@@ -153,6 +151,17 @@ namespace YooAsset.Editor
                         RefreshWindow();
                     }
                 });
+                _ignoreDefaultTypeToogle = root.Q<Toggle>("IgnoreDefaultType");
+                _ignoreDefaultTypeToogle.RegisterValueChangedCallback(evt =>
+                {
+                    var selectPackage = _packageListView.selectedItem as AssetBundleCollectorPackage;
+                    if (selectPackage != null)
+                    {
+                        selectPackage.IgnoreDefaultType = evt.newValue;
+                        AssetBundleCollectorSettingData.ModifyPackage(selectPackage);
+                        RefreshWindow();
+                    }
+                });
                 _autoCollectShadersToogle = root.Q<Toggle>("AutoCollectShaders");
                 _autoCollectShadersToogle.RegisterValueChangedCallback(evt =>
                 {
@@ -164,6 +173,8 @@ namespace YooAsset.Editor
                         RefreshWindow();
                     }
                 });
+                _ignoreNonRefAssetToogle = root.Q<Toggle>("IgnoreNonRefAsset");
+                _ignoreNonRefAssetToogle.RegisterValueChangedCallback(evt =>
                 {
                     _ignoreRulePopupField = new PopupField<RuleDisplayName>(_ignoreRuleList, 0);
                     _ignoreRulePopupField.label = "File Ignore Rule";
@@ -173,6 +184,8 @@ namespace YooAsset.Editor
                     _ignoreRulePopupField.formatListItemCallback = FormatListItemCallback;
                     _ignoreRulePopupField.formatSelectedValueCallback = FormatSelectedValueCallback;
                     _ignoreRulePopupField.RegisterValueChangedCallback(evt => 
+                    var selectPackage = _packageListView.selectedItem as AssetBundleCollectorPackage;
+                    if (selectPackage != null)
                     {
                         var selectPackage = _packageListView.selectedItem as AssetBundleCollectorPackage;
                         if(selectPackage != null)
@@ -183,6 +196,11 @@ namespace YooAsset.Editor
                     });
                     _setting2Container.Add(_ignoreRulePopupField);
                 }
+                        selectPackage.IgnoreNonRefAsset = evt.newValue;
+                        AssetBundleCollectorSettingData.ModifyPackage(selectPackage);
+                        RefreshWindow();
+                    }
+                });
 
                 // 配置修复按钮
                 var fixBtn = root.Q<Button>("FixButton");
@@ -403,7 +421,7 @@ namespace YooAsset.Editor
         }
         private void ExportBtn_clicked()
         {
-            string resultPath = EditorTools.OpenFolderPanel("Export XML", "Assets/");
+            string resultPath = EditorTools.OpenFolderPanel("Export XML", "Assets/Scripts/Editor/AssetBundleBuild");
             if (resultPath != null)
             {
                 AssetBundleCollectorConfig.ExportXmlConfig($"{resultPath}/{nameof(AssetBundleCollectorConfig)}.xml");
@@ -412,6 +430,7 @@ namespace YooAsset.Editor
         private void ImportBtn_clicked()
         {
             string resultPath = EditorTools.OpenFilePath("Import XML", "Assets/", "xml");
+            string resultPath = EditorTools.OpenFilePath("Import XML", "Assets/Scripts/Editor/AssetBundleBuild", "xml");
             if (resultPath != null)
             {
                 AssetBundleCollectorConfig.ImportXmlConfig(resultPath);
@@ -487,6 +506,8 @@ namespace YooAsset.Editor
                 _includeAssetGUIDToogle.SetValueWithoutNotify(selectPackage.IncludeAssetGUID);
                 _autoCollectShadersToogle.SetValueWithoutNotify(selectPackage.AutoCollectShaders);
                 _ignoreRulePopupField.SetValueWithoutNotify(GetIgnoreRuleIndex(selectPackage.IgnoreRuleName));
+                _ignoreDefaultTypeToogle.SetValueWithoutNotify(selectPackage.IgnoreDefaultType);
+                _ignoreNonRefAssetToogle.SetValueWithoutNotify(selectPackage.IgnoreNonRefAsset);
             }
             else
             {
@@ -981,6 +1002,7 @@ namespace YooAsset.Editor
             if (collector.IsValid() == false)
             {
                 collector.CheckConfigError();
+                Debug.LogWarning($"The collector is invalid : {collector.CollectPath} in group : {group.GroupName}");
                 return;
             }
 
@@ -996,9 +1018,12 @@ namespace YooAsset.Editor
                         _enableAddressableToogle.value,
                         _locationToLowerToogle.value,
                         _includeAssetGUIDToogle.value,
+                        _ignoreDefaultTypeToogle.value,
                         _autoCollectShadersToogle.value,
                         _uniqueBundleNameToogle.value,
                         ignoreRule);
+                        _ignoreNonRefAssetToogle.value,
+                        _uniqueBundleNameToogle.value);
                     collector.CheckConfigError();
                     collectAssetInfos = collector.GetAllCollectAssets(command, group);
                 }

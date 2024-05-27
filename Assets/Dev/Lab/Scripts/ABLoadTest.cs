@@ -68,12 +68,11 @@ public class ABLoadTest : MonoBehaviour
             yield return null;
         }
         Debug.Log(require.downloadHandler.text);
-        AssetSetting inst = JsonConvert.DeserializeObject<AssetSetting>(require.downloadHandler.text);
-        //AssetSetting inst = JsonUtility.FromJson<AssetSetting>(require.downloadHandler.text);//这个方法不可以
+        //AssetSetting inst = JsonConvert.DeserializeObject<AssetSetting>(require.downloadHandler.text);
+        AssetSetting inst = JsonUtility.FromJson<AssetSetting>(require.downloadHandler.text);//这个方法不可以
         if (inst != null)
         {
             Debug.Log(inst.RemoteUrls[0]);
-            Debug.Log(inst.AssetSettingsData);
         }
     }
 

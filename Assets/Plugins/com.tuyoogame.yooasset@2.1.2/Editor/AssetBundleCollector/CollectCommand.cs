@@ -14,6 +14,11 @@ namespace YooAsset.Editor
         public string PackageName { private set; get; }
 
         /// <summary>
+        /// 忽略Unity引擎无法识别的文件
+        /// </summary>
+        public bool IgnoreDefaultType { private set; get; }
+
+        /// <summary>
         /// 启用可寻址资源定位
         /// </summary>
         public bool EnableAddressable { private set; get; }
@@ -34,6 +39,11 @@ namespace YooAsset.Editor
         public bool AutoCollectShaders { private set; get; }
 
         /// <summary>
+        /// 自动收集所有着色器
+        /// </summary>
+        public bool IgnoreNonRefAsset { private set; get; }
+
+        /// <summary>
         /// 资源包名唯一化
         /// </summary>
         public bool UniqueBundleName { private set; get; }
@@ -52,13 +62,16 @@ namespace YooAsset.Editor
         public CollectCommand(EBuildMode buildMode, string packageName,
             bool enableAddressable, bool locationToLower, bool includeAssetGUID, 
             bool autoCollectShaders, bool uniqueBundleName, IIgnoreRule ignoreRule)
+        public CollectCommand(EBuildMode buildMode, string packageName, bool enableAddressable, bool locationToLower, bool includeAssetGUID, bool ignoreDefaultType, bool autoCollectShaders, bool ignoreNonRefAsset ,bool uniqueBundleName)
         {
             BuildMode = buildMode;
             PackageName = packageName;
             EnableAddressable = enableAddressable;
             LocationToLower = locationToLower;
             IncludeAssetGUID = includeAssetGUID;
+            IgnoreDefaultType = ignoreDefaultType;
             AutoCollectShaders = autoCollectShaders;
+            IgnoreNonRefAsset = ignoreNonRefAsset;
             UniqueBundleName = uniqueBundleName;
             IgnoreRule = ignoreRule;
 

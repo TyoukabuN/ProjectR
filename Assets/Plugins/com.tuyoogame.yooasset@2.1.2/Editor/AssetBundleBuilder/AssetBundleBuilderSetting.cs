@@ -89,5 +89,17 @@ namespace YooAsset.Editor
             string key = $"{Application.productName}_{packageName}_{buildPipeline}_EncyptionClassName";
             EditorPrefs.SetString(key, encyptionClassName);
         }
+
+        // CopyBuildTo
+        public static string GetPackageCopyBuildToPaths(string packageName, EBuildPipeline buildPipeline)
+        {
+            string key = $"{Application.productName}_{packageName}_{buildPipeline}_CopyBuildTo";
+            return EditorPrefs.GetString(key, string.Empty);
+        }
+        public static void SetPackageCopyBuildToPaths(string packageName, EBuildPipeline buildPipeline, string buildinFileCopyParams)
+        {
+            string key = $"{Application.productName}_{packageName}_{buildPipeline}_CopyBuildTo";
+            EditorPrefs.SetString(key, buildinFileCopyParams);
+        }
     }
 }

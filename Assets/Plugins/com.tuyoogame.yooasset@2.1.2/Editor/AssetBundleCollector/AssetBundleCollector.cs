@@ -166,7 +166,7 @@ namespace YooAsset.Editor
             foreach (string assetPath in findAssets)
             {
                 var assetInfo = new AssetInfo(assetPath);
-                if (command.IgnoreRule.IsIgnore(assetInfo) == false && IsCollectAsset(group, assetInfo))
+                if (IsValidateAsset(command, assetInfo) && IsCollectAsset(group, assetInfo))
                 {
                     if (result.ContainsKey(assetPath) == false)
                     {
@@ -179,7 +179,7 @@ namespace YooAsset.Editor
                     }
                 }
             }
-
+            
             // 检测可寻址地址是否重复
             if (command.EnableAddressable)
             {
@@ -228,6 +228,65 @@ namespace YooAsset.Editor
             return collectAssetInfo;
         }
 
+        //reference finder 相关
+        private static ReferenceFinderData referenceFinderData = new ReferenceFinderData();
+        private static bool initializedData = false;
+        static ReferenceFinderData InitReferenceDataIfNeeded()
+        {
+            referenceFinderData = referenceFinderData ?? new ReferenceFinderData();
+            if (!initializedData)
+            {
+                if (!referenceFinderData.ReadFromCache())
+                {
+                    referenceFinderData.CollectDependenciesInfo();
+                }
+                initializedData = true;
+            }
+            return referenceFinderData;
+        }
+
+        private bool IsValidateAsset(CollectCommand command, AssetInfo assetInfo)
+        {
+            if (assetInfo.AssetPath.StartsWith("Assets/") == false && assetInfo.AssetPath.StartsWith("Packages/") == false)
+            {
+                UnityEngine.Debug.LogError($"Invalid asset path : {assetInfo.AssetPath}");
+                return false;
+            }
+
+            // 忽略文件夹
+            if (AssetDatabase.IsValidFolder(assetInfo.AssetPath))
+                return false;
+
+            // 忽略编辑器下的类型资源
+            if (assetInfo.AssetType == typeof(LightingDataAsset))
+                return false;
+
+            // 忽略Unity引擎无法识别的文件
+            if (command.IgnoreDefaultType)
+            {
+                if (assetInfo.AssetType == typeof(UnityEditor.DefaultAsset))
+                {
+                    UnityEngine.Debug.LogWarning($"Cannot pack default asset : {assetInfo.AssetPath}");
+                    return false;
+                }
+            }
+
+            //忽略没有被引用到的资源啊
+            if (command.IgnoreNonRefAsset)
+            {
+                var data = InitReferenceDataIfNeeded();
+                if (data.GetAssetState(assetInfo.AssetGUID, out var ab) && ab.references.Count <= 0)
+                    return false;
+            }
+
+            if (DefaultFilterRule.IsIgnoreFile(assetInfo.FileExtension))
+                return false;
+
+            if (DefaultFilterRule.IsIgnoreFolder(assetInfo.AssetPath))
+                return false;
+
+            return true;
+        }
         private bool IsCollectAsset(AssetBundleCollectorGroup group, AssetInfo assetInfo)
         {
             // 根据规则设置过滤资源文件
@@ -281,7 +340,7 @@ namespace YooAsset.Editor
                     continue;
 
                 AssetInfo assetInfo = new AssetInfo(assetPath);
-                if (command.IgnoreRule.IsIgnore(assetInfo) == false)
+                if (IsValidateAsset(command, assetInfo))
                     result.Add(assetInfo);
             }
             return result;

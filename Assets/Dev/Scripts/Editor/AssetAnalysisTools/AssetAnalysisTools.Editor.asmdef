@@ -2,8 +2,8 @@
     "name": "AssetAnalysisTools.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:f5bbc0c0dd939be4ba31a954a06c0722",
-        "GUID:478a2357cc57436488a56e564b08d223"
+        "GUID:478a2357cc57436488a56e564b08d223",
+        "GUID:32d977fd988bb1e48a9d2965b5fbb3f9"
     ],
     "includePlatforms": [
         "Editor"

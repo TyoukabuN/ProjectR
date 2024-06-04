@@ -27,7 +27,6 @@ public abstract class ConfigAsset<IdType,ItemType> : ConfigAsset
     {
         EditorUtility.SetDirty(this);
         AssetDatabase.SaveAssets();
-        AnimationFlagConfig.OnAssetDirty();
     }
     public virtual void OnBeginListElementGUI(int index) { }
     public virtual void OnEndListElementGUI(int index) { }

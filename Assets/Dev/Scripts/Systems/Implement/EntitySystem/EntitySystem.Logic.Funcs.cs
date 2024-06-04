@@ -34,7 +34,7 @@ namespace PJR
         }
 
         /// <summary>
-        /// 创建Player实体
+        /// 由Host创建怪物实体
         /// </summary>
         /// <param name="assetFullName"></param>
         /// <returns></returns>
@@ -61,7 +61,7 @@ namespace PJR
         }
 
         /// <summary>
-        /// 由Host创建
+        /// 由Host创建陷阱实体
         /// </summary>
         /// <param name="host"></param>
         public static LogicEntity CreateTrapEntity(TrapConfigHost host)
@@ -91,7 +91,7 @@ namespace PJR
             return logicEntity;
         }
         /// <summary>
-        /// 由Host创建
+        /// 创建物品实体
         /// </summary>
         /// <param name="host"></param>
         public static LogicEntity CreateItemEntity(ItemConfigHost host)

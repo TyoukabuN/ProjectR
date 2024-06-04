@@ -2,8 +2,8 @@ namespace PJR
 {
 	public class EntityAttributeConfig
 	{
-		public FloatConstConfig  asset;
-		
+		public FloatConstConfig asset;
+
 		/// <summary>
 		/// 硬直时间
 		/// <summary>
@@ -34,8 +34,8 @@ namespace PJR
 		public float PlayerAtkInterval => GetValue(6);
 		float GetValue(int index)
 		{
-			if(asset == null || asset.items == null || asset.items.Count <= index)
-				 return 0f;
+			if (asset == null || asset.items == null || asset.items.Count <= index)
+				return 0f;
 			return asset.items[index].value;
 		}
 	}

@@ -22,11 +22,11 @@ public class GameEntry : MonoBehaviour
 
     IEnumerator InitSystems()
     {
-        //for (int i = 0; i < ResourceDefine.Assets.Length; i++)
-        //{ 
-        //    string assetFullName = ResourceDefine.Assets[i];
-        //    yield return ResourceSystem.LoadAsset<UnityEngine.Object>(assetFullName);
-        //}
+        for (int i = 0; i < ResourceDefine.Assets.Length; i++)
+        {
+            string assetFullName = ResourceDefine.Assets[i];
+            yield return ResourceSystem.LoadAsset<UnityEngine.Object>(assetFullName);
+        }
         yield return ResourceSystem.instance.Initialize();
         yield return InputSystem.instance.Initialize();
         yield return SceneSystem.instance.Initialize();

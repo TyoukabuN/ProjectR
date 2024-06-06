@@ -16,8 +16,8 @@ namespace PJR
         {
             if (isDone)
                 return;
-
-            asset = AssetDatabase.LoadAssetAtPath(assetFullName, assetType);
+            string assetPath = ResourceSystem.EditorAssetMgr.ConvertLocationToAssetPath(assetFullName);
+            asset = AssetDatabase.LoadAssetAtPath(assetPath, assetType);
             if (asset == null)
             {
                 error = $"[EditorResourceLoader] Find not asset \"{assetName}\": \n [type]: {assetType.FullName} \n [fullName]:{assetFullName} ";

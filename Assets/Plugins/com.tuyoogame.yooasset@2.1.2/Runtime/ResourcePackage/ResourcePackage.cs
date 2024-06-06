@@ -19,6 +19,9 @@ namespace YooAsset
         private DownloadManager _downloadMgr;
         private ResourceManager _resourceMgr;
         private ResourceLoader _resourceLoader;
+#if UNITY_EDITOR
+        private EditorAssetManager _editorAssetMgr;
+#endif
         private IBundleQuery _bundleQuery;
         private IPlayMode _playModeImpl;
 
@@ -89,7 +92,14 @@ namespace YooAsset
                     _cacheMgr.ClearAll();
                     _cacheMgr = null;
                 }
-
+#if UNITY_EDITOR
+                _editorAssetMgr = null;
+                if (_editorAssetMgr != null)
+                {
+                    _editorAssetMgr.ClearAll();
+                    _editorAssetMgr = null;
+                }
+#endif
                 // 最后清理该包裹的异步任务
                 // 注意：对于有线程操作的异步任务，需要保证线程安全释放。
                 OperationSystem.ClearPackageOperation(PackageName);
@@ -137,7 +147,10 @@ namespace YooAsset
             assist.Persistent = _persistentMgr;
             assist.Download = _downloadMgr;
             assist.Loader = _resourceLoader;
-
+#if UNITY_EDITOR
+            //Editor下所有Asset的Cache
+            _editorAssetMgr = new EditorAssetManager(PackageName);
+#endif
             // 创建资源管理器
             InitializationOperation initializeOperation;
             _resourceMgr = new ResourceManager(PackageName);
@@ -1161,11 +1174,29 @@ namespace YooAsset
 
         private AssetInfo ConvertLocationToAssetInfo(string location, System.Type assetType)
         {
-            return _playModeImpl.ActiveManifest.ConvertLocationToAssetInfo(location, assetType);
+            AssetInfo info = _playModeImpl.ActiveManifest.ConvertLocationToAssetInfo(location, assetType);
+#if UNITY_EDITOR
+            if (info.IsInvalid && _playMode == EPlayMode.EditorSimulateMode)
+            {
+                info = _editorAssetMgr.ConvertLocationToAssetInfo(location, assetType);
+                if (!info.IsInvalid)
+                    YooLogger.Warning($"Asset: {info.Address} 没有在manifest里,但你runtime尝试加载它,请及时将他加进build collector收集 {info.AssetPath}");
+            }
+#endif
+            return info;
         }
         private AssetInfo ConvertAssetGUIDToAssetInfo(string assetGUID, System.Type assetType)
         {
-            return _playModeImpl.ActiveManifest.ConvertAssetGUIDToAssetInfo(assetGUID, assetType);
+            AssetInfo info = _playModeImpl.ActiveManifest.ConvertAssetGUIDToAssetInfo(assetGUID, assetType);
+#if UNITY_EDITOR
+            if (info.IsInvalid && _playMode == EPlayMode.EditorSimulateMode)
+            {
+                info = _editorAssetMgr.ConvertAssetGUIDToAssetInfo(assetGUID, assetType);
+                if (!info.IsInvalid)
+                    YooLogger.Warning($"Asset: {info.Address} 没有在manifest里,但你runtime尝试加载它,请及时将他加进build collector收集 {info.AssetPath}");
+            }
+#endif
+            return info;
         }
         #endregion
 

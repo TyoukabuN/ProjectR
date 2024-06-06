@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+#pragma warning disable 67
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

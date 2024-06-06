@@ -9,7 +9,7 @@ namespace PJR
     public class DeadZone : MonoBehaviour
     {
         public BoxCollider boxCollider;
-        public Renderer renderer;
+        public new Renderer renderer;
         private void Awake()
         {
             boxCollider = GetComponent<BoxCollider>();

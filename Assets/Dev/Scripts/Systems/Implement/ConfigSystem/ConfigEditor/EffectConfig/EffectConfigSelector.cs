@@ -38,8 +38,8 @@ public class EffectConfigSelector : OdinMenuEditorWindow
         ClearCallBacks();
     }
 
-    private static string Select_Tips = "选择特效配置";
-    protected override void OnGUI()
+    //private static string Select_Tips = "选择特效配置";
+    protected override void OnImGUI()
     {
         this.MenuWidth = position.width;
 

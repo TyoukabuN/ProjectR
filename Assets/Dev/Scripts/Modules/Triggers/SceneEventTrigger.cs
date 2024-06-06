@@ -24,7 +24,7 @@ namespace PJR
         [HideInInspector]
         public BoxCollider boxCollider;
         [HideInInspector]
-        public Renderer renderer;
+        public new Renderer renderer;
 
         public UnityEvent OnTriggerEnterEvent = new UnityEvent();
         public UnityEvent OnTriggerEnterStay = new UnityEvent();

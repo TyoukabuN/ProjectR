@@ -13,6 +13,14 @@ namespace PJR
         public const string PJR_DebugMenuKey_Launch = "PJR_DebugMenuKey_Launch";
         public const string PJR_DebugMenuKey_LaunchInAssetBundleMode = "PJR_DebugMenuKey_LaunchInAssetBundleMode";
 
+        public static bool InABMode
+        {
+            get
+            {
+                return EditorPrefs.GetBool(PJR_DebugMenuKey_LaunchInAssetBundleMode);
+            }
+        }
+
         [InitializeOnLoadMethod]
         static void RegisterEvent()
         {

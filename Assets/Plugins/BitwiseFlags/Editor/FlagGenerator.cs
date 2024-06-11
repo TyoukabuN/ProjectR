@@ -192,14 +192,12 @@ public class FlagGenerator : EditorWindow
                 Debug.LogWarning($"路径无效： {fileRoot}");
             }
 
-            bool justCreateRoot = false;
             if (!AssetDatabase.IsValidFolder(fileRoot))
             {
                 string direction = Path.GetDirectoryName(fileRoot);
                 if (AssetDatabase.IsValidFolder(direction))
                 {
                     AssetDatabase.CreateFolder(direction, GenerateFolderName);
-                    justCreateRoot = true;
                     goto FolderValid;
                 }
 

@@ -7,6 +7,8 @@ using System.Xml.Schema;
 using System.IO;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
+using PJR;
+
 
 
 
@@ -46,6 +48,33 @@ public class ABLoadTest : MonoBehaviour
         var assetHandle = YooAssets.LoadAssetAsync<GameObject>(assetName);
         assetHandle.Completed -= OnComplete;
         assetHandle.Completed += OnComplete;
+    }
+
+    [Button()]
+    public void RegisterEvent()
+    {
+        //if (!CMDUtility.IsBatchMode)
+        //{ 
+        Application.logMessageReceived -= LogCallback;
+        Application.logMessageReceived += LogCallback;
+        //}
+    }
+
+    private void LogCallback(string condition, string stackTrace, LogType type)
+    {
+        if (type == LogType.Log)
+            LogSystem.Log(stackTrace);
+        else if (type == LogType.Warning)
+            LogSystem.LogWarning(stackTrace);
+        else
+            LogSystem.LogError(stackTrace);
+    }
+
+    [Button()]
+    public void Debug1()
+    {
+        Debug.Log("123");
+        Debug.LogError("123");
     }
 
     public void OnComplete(AssetHandle assetHandle)

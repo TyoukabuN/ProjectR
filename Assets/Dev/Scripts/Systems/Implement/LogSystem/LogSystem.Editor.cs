@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Diagnostics;
+using System;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,6 +11,39 @@ namespace PJR
 {
     public partial class LogSystem : StaticSystem
     {
+#if UNITY_EDITOR
+        [InitializeOnLoadMethod]
+#endif
+        static void RegisterEvent()
+        {
+            SetDefaultLogFile();
+            if (CMDUtility.IsBatchMode)
+            {
+                SetDefaultLogFile(NAME_cmdLogFile);
+                Log("///////////////////////////////////////////////////");
+                Log("////////////////////[BatchMode]////////////////////");
+                Log("///////////////////////////////////////////////////");
+                Application.logMessageReceived -= OnLogMessageReceived;
+                Application.logMessageReceived += OnLogMessageReceived;
+            }
+        }
+
+        /// <summary>
+        /// Unityçš„Debugå›žè°ƒ
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="stackTrace"></param>
+        /// <param name="type"></param>
+        static void OnLogMessageReceived(string condition, string stackTrace, LogType type)
+        { 
+            if(type == LogType.Log)
+                Log($"{condition}\n{stackTrace}", false);
+            else if(type == LogType.Warning)
+                LogWarning($"{condition}\n{stackTrace}", false);
+            else
+                LogError($"{condition}\n{stackTrace}", false);
+        }
+
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
         static void RegisterEditorEvent()
@@ -32,12 +67,12 @@ namespace PJR
             }
         }
 
-        [MenuItem("Debug/´ò¿ªLogSystemÈÕÖ¾",priority = 200)]
+        [MenuItem("Debug/æ‰“å¼€LogSystemæ—¥å¿—",priority = 200)]
         public static void OpenLogFile()
         {
             Process.Start(GetLogFileOutputPath());
         }
-        [MenuItem("Debug/´ò¿ªLogSystemÈÕÖ¾ÎÄ¼þ¼Ð", priority = 201)]
+        [MenuItem("Debug/æ‰“å¼€LogSystemæ—¥å¿—æ–‡ä»¶å¤¹", priority = 201)]
         public static void OpenLogFileLocation()
         {
             Process.Start(Application.persistentDataPath);

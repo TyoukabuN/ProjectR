@@ -16,13 +16,13 @@ MonoBehaviour:
   ShowEditorAlias: 1
   UniqueBundleName: 0
   Packages:
-  - PackageName: art
+  - PackageName: Default
     PackageDesc: 
     EnableAddressable: 1
     LocationToLower: 0
     IncludeAssetGUID: 0
-    IgnoreDefaultType: 1
     AutoCollectShaders: 1
+    IgnoreRuleName: NormalIgnoreRule
     Groups:
     - GroupName: avatar
       GroupDesc: "\u6A21\u578B"

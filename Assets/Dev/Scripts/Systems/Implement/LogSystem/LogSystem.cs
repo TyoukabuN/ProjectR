@@ -31,9 +31,9 @@ namespace PJR
         public static void LogWarning(object content,bool orginalLog = true) => LogWarning(content.ToString(), orginalLog);
         public static void LogError(object content, bool orginalLog = true) => LogError(content.ToString(), orginalLog);
 
-        public static void Log(string content, bool orginalLog = true) => Debug.Log(LogWithTag(content, TAG_COMMON_LOG, null));
-        public static void LogWarning(string content, bool orginalLog = true) => Debug.LogWarning(LogWithTag(content, TAG_WARNING_LOG, null));
-        public static void LogError(string content, bool orginalLog = true) => Debug.LogError(LogWithTag(content, TAG_ERROR_LOG, null));
+        public static void Log(string content, bool orginalLog = true) => Debug.Log(LogWithTag(content, TAG_COMMON_LOG));
+        public static void LogWarning(string content, bool orginalLog = true) => Debug.LogWarning(LogWithTag(content, TAG_WARNING_LOG));
+        public static void LogError(string content, bool orginalLog = true) => Debug.LogError(LogWithTag(content, TAG_ERROR_LOG));
 
         public static void Log(string tag, string content, bool orginalLog = true) { if (orginalLog) Debug.Log(LogWithTag(content, TAG_COMMON_LOG, tag)); else LogWithTag(content, TAG_COMMON_LOG, tag); }
         public static void LogWarning(string tag, string content, bool orginalLog = true) { if (orginalLog) Debug.LogWarning(LogWithTag(content, TAG_WARNING_LOG, tag)); else LogWithTag(content, TAG_WARNING_LOG, tag); }

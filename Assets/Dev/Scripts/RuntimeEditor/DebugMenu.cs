@@ -1,10 +1,9 @@
 #if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEditor.Build.Player;
+using System.IO;
 
 namespace PJR
 {
@@ -121,6 +120,30 @@ namespace PJR
             var tips = new GameObject("[带Test开头的Gobj不会被 <Shift + F5> etc 删掉]");
             DontDestroyOnLoad(tips);
             tips.transform.SetAsFirstSibling();
+        }
+
+        private const string TempDir = "Temp/PlayerScriptCompilationTests";
+
+        [MenuItem("Debug/当前平台代码编译测试 &F5", false, priority = 200)]
+        public static void PlayerScriptCompileTest()
+        {
+            var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+            var settings = new ScriptCompilationSettings
+            {
+                group = BuildPipeline.GetBuildTargetGroup(buildTarget),
+                target = buildTarget,
+                options = ScriptCompilationOptions.None
+            };
+
+            string output = Path.Combine(TempDir, buildTarget.ToString());
+            if(!Directory.Exists(output))
+                Directory.CreateDirectory(output);
+
+            EditorUtility.DisplayProgressBar("Compiling Player Scripts", "Build Target: " + settings.target + " (" + settings.group + ")", 0.1f);
+
+            PlayerBuildInterface.CompilePlayerScripts(settings, output);
+
+            EditorUtility.ClearProgressBar();
         }
     }
 }

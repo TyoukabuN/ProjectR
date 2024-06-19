@@ -67,12 +67,12 @@ namespace PJR
             }
         }
 
-        [MenuItem("Debug/打开LogSystem日志",priority = 200)]
+        [MenuItem("Debug/打开LogSystem日志",priority = 300)]
         public static void OpenLogFile()
         {
             Process.Start(GetLogFileOutputPath());
         }
-        [MenuItem("Debug/打开LogSystem日志文件夹", priority = 201)]
+        [MenuItem("Debug/打开LogSystem日志文件夹", priority = 301)]
         public static void OpenLogFileLocation()
         {
             Process.Start(Application.persistentDataPath);

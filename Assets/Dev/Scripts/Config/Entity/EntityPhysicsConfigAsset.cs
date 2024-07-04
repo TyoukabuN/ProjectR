@@ -2,10 +2,10 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PJR;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using PJR.Editor;
 #endif
 
 namespace PJR

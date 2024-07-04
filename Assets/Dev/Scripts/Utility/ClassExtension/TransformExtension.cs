@@ -1,9 +1,4 @@
-using Animancer.Examples.StateMachines;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.XR;
 
 public static class TransformExtension
 {

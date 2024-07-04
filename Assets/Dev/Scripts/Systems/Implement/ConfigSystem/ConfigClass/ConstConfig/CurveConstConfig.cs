@@ -16,7 +16,7 @@ namespace PJR
         [MenuItem("Assets/PJR/创建配置/曲线常数配置")]
         public static void CreateConstConfigAsset()
         {
-            CSConfigHelper.CreateListConfigAsset<CurveConstConfig, ConstConfigItem<AnimationCurve>>();
+            PJR.Editor.CSConfigHelper.CreateListConfigAsset<CurveConstConfig, ConstConfigItem<AnimationCurve>>();
         }
 #endif
     }

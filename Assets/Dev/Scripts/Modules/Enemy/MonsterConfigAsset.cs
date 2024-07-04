@@ -15,7 +15,7 @@ namespace PJR
         [UnityEditor.MenuItem("Assets/PJR/创建配置/实体配置/实体配置")]
         public static void CreateAsset()
         {
-            CSConfigHelper.CreateScriptableObject<MonsterConfigAsset>();
+            PJR.Editor.CSConfigHelper.CreateScriptableObject<MonsterConfigAsset>();
         }
 #endif
     }

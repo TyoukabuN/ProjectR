@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using YooAsset;
 using System.Diagnostics;
-using Debug = UnityEngine.Debug;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -105,7 +103,7 @@ namespace PJR
                 else
 #endif
                 { 
-                    LogSystem.LogError($"find not ResourceDescription in {filePath}");
+                    Debug.LogError($"find not ResourceDescription in {filePath}");
                     return false;
                 }
             }
@@ -119,7 +117,7 @@ namespace PJR
                     }
                     catch (Exception e)
                     {
-                        LogSystem.LogError(e);
+                        Debug.LogError(e);
                         return false;
                     }
                 }
@@ -132,7 +130,7 @@ namespace PJR
         /// <returns></returns>
         private IEnumerator InitializePackage()
         {
-            LogSystem.Log($"[AssetSystem.InitializePackage] 初始化资源包");
+            Debug.Log($"[AssetSystem.InitializePackage] 初始化资源包");
 
             YooAssets.Destroy();
             YooAssets.Initialize();
@@ -146,7 +144,7 @@ namespace PJR
                 ResourcePackage package = YooAssets.TryGetPackage(packageName);
                 if (package != null)
                 {
-                    LogSystem.LogError($"已存在 {packageName}");
+                    Debug.LogError($"已存在 {packageName}");
                     yield return null;
                 }
 
@@ -194,12 +192,12 @@ namespace PJR
 
                 if (initOperation.Status != EOperationStatus.Succeed)
                 {
-                    LogSystem.LogError($"[AssetSystem.InitializePackage] 资源包初始化失败：{packageName}");
+                    Debug.LogError($"[AssetSystem.InitializePackage] 资源包初始化失败：{packageName}");
                     yield break;
                 }
 
                 Watch.Stop();
-                LogSystem.Log($"[AssetSystem.InitializePackage] 资源包初始化成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
+                Debug.Log($"[AssetSystem.InitializePackage] 资源包初始化成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
             }
         }
 
@@ -221,7 +219,7 @@ namespace PJR
             if (!IsRequireUpdate)
                 yield return null;
 
-            LogSystem.Log($"[AssetSystem.UpdatePackage] 更新Package [{packageName}]");
+            Debug.Log($"[AssetSystem.UpdatePackage] 更新Package [{packageName}]");
 
             var package = YooAssets.GetPackage(packageName);
             var updatePackageVersionOperation = package.UpdatePackageVersionAsync(appendTimeTicks, timeout);
@@ -229,11 +227,11 @@ namespace PJR
 
             if (updatePackageVersionOperation.Status != EOperationStatus.Succeed)
             {
-                LogSystem.LogError($"[AssetSystem.UpdatePackage] 更新版本号失败：{packageName}");
+                Debug.LogError($"[AssetSystem.UpdatePackage] 更新版本号失败：{packageName}");
                 yield return null;
             }
             //
-            LogSystem.Log($"[AssetSystem.UpdatePackage] 更新版本号成功：{packageName}");
+            Debug.Log($"[AssetSystem.UpdatePackage] 更新版本号成功：{packageName}");
             var packageVersion = updatePackageVersionOperation.PackageVersion;
             var savePackageVersion = true;
             var updatePackageManifestOperation = package.UpdatePackageManifestAsync(packageVersion, savePackageVersion, timeout);
@@ -241,12 +239,12 @@ namespace PJR
 
             if (updatePackageManifestOperation.Status != EOperationStatus.Succeed)
             {
-                LogSystem.LogError($"[AssetSystem.UpdatePackage] 更新资源清单失败：{packageName}");
+                Debug.LogError($"[AssetSystem.UpdatePackage] 更新资源清单失败：{packageName}");
                 yield return null;
             }
 
             Watch.Stop();
-            LogSystem.Log($"[AssetSystem.UpdatePackage] 更新资源清单成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
+            Debug.Log($"[AssetSystem.UpdatePackage] 更新资源清单成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
         }
 
 
@@ -336,7 +334,7 @@ namespace PJR
                             }
                             catch (Exception e)
                             {
-                                LogSystem.LogError($"[{nameof(ResourceSystem.ClearDones)}] {e.ToString()}");
+                                Debug.LogError($"[{nameof(ResourceSystem.ClearDones)}] {e.ToString()}");
                             }
                             loader.OnDone = null;
                         };

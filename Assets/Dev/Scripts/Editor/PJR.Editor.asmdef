@@ -1,0 +1,26 @@
+{
+    "name": "PJR.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4d1926c9df5b052469a1c63448b7609a",
+        "GUID:2ecf6041f1cb4e479a7303248208fa08",
+        "GUID:f5bbc0c0dd939be4ba31a954a06c0722",
+        "GUID:64e2451789ce69c419ae39ad085de427",
+        "GUID:af4a3ceb227b8f94cb8375f40e156398",
+        "GUID:f38b31ab0ef52d844968bf62e88c5291",
+        "GUID:ca28727feda69ef4191e2a1ec5a9063d",
+        "GUID:e4c868b73e8e098449984d853aa9de4a",
+        "GUID:e34a5702dd353724aa315fb8011f08c3"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

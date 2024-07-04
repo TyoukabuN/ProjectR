@@ -15,7 +15,7 @@ namespace PJR
         [UnityEditor.MenuItem("Assets/PJR/创建配置/机关陷阱/机关陷阱配置")]
         public static void CreateAsset()
         {
-            CSConfigHelper.CreateScriptableObject<TrapConfigAsset>();
+            PJR.Editor.CSConfigHelper.CreateScriptableObject<TrapConfigAsset>();
         }
 #endif
         /// <summary>

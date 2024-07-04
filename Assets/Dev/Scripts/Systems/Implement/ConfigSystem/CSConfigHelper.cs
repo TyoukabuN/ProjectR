@@ -1,12 +1,11 @@
 #if UNITY_EDITOR
-
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace PJR
+namespace PJR.Editor
 {
     public static class CSConfigHelper
     {

@@ -3,14 +3,8 @@ using UnityEngine;
 using YooAsset;
 using Sirenix.OdinInspector;
 using PJR;
-using JetBrains.Annotations;
 using System.Collections.Generic;
 using System;
-using static AssetAnalysisBase;
-
-
-
-
 
 #if UNITY_EDITOR
 using UnityEditor;

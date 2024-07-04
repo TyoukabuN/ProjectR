@@ -2,7 +2,7 @@ using System;
 using YooAsset.Editor;
 using System.IO;
 
-namespace LS.LSEditor
+namespace PJR
 {
     [DisplayName("资源包名: 收集器下次级文件夹路径")]
     public class PackSecondaryDirectory : IPackRule

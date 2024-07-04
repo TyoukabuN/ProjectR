@@ -16,7 +16,7 @@ namespace PJR
         [MenuItem("Assets/PJR/创建配置/混合常数配置")]
         public static void CreateConstConfigAsset()
         {
-            CSConfigHelper.CreateTableListConfigAsset<MixConstConfig, MixConstConfigItem>();
+            PJR.Editor.CSConfigHelper.CreateTableListConfigAsset<MixConstConfig, MixConstConfigItem>();
         }
 #endif
     }

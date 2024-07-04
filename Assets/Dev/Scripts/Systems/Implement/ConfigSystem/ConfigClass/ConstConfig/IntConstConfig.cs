@@ -16,7 +16,7 @@ namespace PJR
         [MenuItem("Assets/PJR/创建配置/Int常数配置")]
         public static void CreateConstConfigAsset()
         {
-            CSConfigHelper.CreateListConfigAsset<IntConstConfig, IntConstConfigItem>();
+            PJR.Editor.CSConfigHelper.CreateListConfigAsset<IntConstConfig, IntConstConfigItem>();
         }
 #endif
     }

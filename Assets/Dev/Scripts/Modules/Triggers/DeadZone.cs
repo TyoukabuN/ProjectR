@@ -45,7 +45,7 @@ namespace PJR
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(DeadZone))]
-    public class DeadZoneEditor : Editor
+    public class DeadZoneEditor : UnityEditor.Editor
     {
         private BoxCollider boxCollider;
         public void OnSceneGUI()

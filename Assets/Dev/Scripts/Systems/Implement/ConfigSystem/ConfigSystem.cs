@@ -7,7 +7,7 @@ using System.IO;
 using UnityEditor;
 using PJR;
 
-namespace LS.Game
+namespace PJR
 {
     public class ConfigSystem : MonoSingletonSystem<ResourceSystem>
     {

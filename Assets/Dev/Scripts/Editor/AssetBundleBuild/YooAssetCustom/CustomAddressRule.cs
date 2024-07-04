@@ -1,10 +1,8 @@
 #if UNITY_EDITOR
-
 using System.IO;
-using UnityEngine;
 using YooAsset.Editor;
 
-namespace LS.LSEditor
+namespace PJR.Editor
 {
     [DisplayName("定位地址: 文件名.后缀")]
     public class AddressByFileNameWithExt : IAddressRule
@@ -36,5 +34,4 @@ namespace LS.LSEditor
         }
     }
 }
-
 #endif

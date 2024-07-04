@@ -18,7 +18,7 @@ namespace PJR
         [UnityEditor.MenuItem("Assets/PJR/创建配置/道具配置/道具配置")]
         public static void CreateAsset()
         {
-            CSConfigHelper.CreateScriptableObject<ItemConfigAsset>();
+            PJR.Editor.CSConfigHelper.CreateScriptableObject<ItemConfigAsset>();
         }
 #endif
         protected override void ExecuteActionEvents(List<EActionEvent> events, LogicEntity trapEntity, LogicEntity targetEntity)

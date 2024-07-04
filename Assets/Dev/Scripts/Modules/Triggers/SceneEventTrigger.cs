@@ -124,7 +124,7 @@ namespace PJR
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(SceneEventTrigger))]
-    public class SceneEventTriggerEditor : Editor
+    public class SceneEventTriggerEditor : UnityEditor.Editor
     {
         private BoxCollider boxCollider;
         public void OnSceneGUI()

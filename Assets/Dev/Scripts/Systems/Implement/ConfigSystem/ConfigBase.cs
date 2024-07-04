@@ -1,4 +1,4 @@
-namespace LS.Game
+namespace PJR
 {
     public abstract class ConfigBase
     {

@@ -3,6 +3,14 @@ using UnityEngine;
 using YooAsset;
 using Sirenix.OdinInspector;
 using PJR;
+using JetBrains.Annotations;
+using System.Collections.Generic;
+using System;
+using static AssetAnalysisBase;
+
+
+
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -15,6 +23,28 @@ public class ABLoadTest : MonoBehaviour
     public ResourcePackage package = null;
 
     public GameObject gobj = null;
+
+    [Button()]
+    public void Gen()
+    { 
+        var gobj = new GameObject();
+        var inst = gobj.AddComponent<MonoInst>();
+        gobjs.Add(gobj);
+        inst.Handle(this.gameObject);
+    }
+
+    private List<GameObject> gobjs = new List<GameObject>();
+    [Button()]
+    public void DestroyAllGened()
+    {
+        foreach (var gobj in gobjs)
+        { 
+            GameObject.DestroyImmediate(gobj);
+        }
+        gobjs.Clear();
+        //Resources.UnloadUnusedAssets();
+        GC.Collect();
+    }
 
     [Button("Destroy")]
     public void Destroy()

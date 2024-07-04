@@ -55,7 +55,7 @@ namespace PJR
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(e.ToString());
+                    LogSystem.LogError(e.ToString());
                 }
             }
             if (target == null)

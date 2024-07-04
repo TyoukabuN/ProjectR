@@ -67,7 +67,7 @@ namespace PJR
             }
             catch (Exception e)
             {
-                Debug.LogError(e.ToString());
+                LogSystem.LogError(e.ToString());
             }
         }
 
@@ -82,7 +82,7 @@ namespace PJR
             }
             catch (Exception e)
             {
-                Debug.LogError(e.ToString());
+                LogSystem.LogError(e.ToString());
             }
         }
         public virtual void OnComplete()
@@ -96,7 +96,7 @@ namespace PJR
             }
             catch (Exception e)
             {
-                Debug.LogError(e.ToString());
+                LogSystem.LogError(e.ToString());
             }
         }
     }

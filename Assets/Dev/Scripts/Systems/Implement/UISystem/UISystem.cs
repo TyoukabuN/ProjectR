@@ -171,7 +171,7 @@ namespace PJR
             }
             else
             {
-                Debug.LogError($"不存在名称{name}的UIPanel");
+                LogSystem.LogError($"不存在名称{name}的UIPanel");
             }
         }
         private void LoadUI(string path,object data,bool isDoneShow = false)

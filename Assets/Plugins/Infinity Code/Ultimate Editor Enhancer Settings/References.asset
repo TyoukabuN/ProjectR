@@ -19,14 +19,16 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: ABTest
+    path: Assets/Dev/Lab/Scenes/ABTest.unity
+  - name: Beizer
+    path: Assets/Dev/Lab/Scenes/Beizer.unity
+  - name: Empty
+    path: Assets/Scenes/Empty.unity
   - name: GameEntry_2
     path: Assets/Scenes/GameEntry_2.unity
   - name: GameEntry
     path: Assets/Scenes/GameEntry.unity
-  - name: Empty
-    path: Assets/Scenes/Empty.unity
-  - name: ABTest
-    path: Assets/Dev/Lab/Scenes/ABTest.unity
   - name: BuildScene_LaunchScreen
     path: Assets/__LS/Resources/DevScene/BuildScene_LaunchScreen.unity
   - name: TestScene_DemoP5_JW
@@ -55,6 +57,4 @@ MonoBehaviour:
     path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/URP/RuntimeDressUp_URP.unity
   - name: DynamicBone
     path: Assets/__LS_Test/Test_JW/DynamicBone.unity
-  - name: TestScene_DemoP5_JB_
-    path: Assets/__LS_Test/Test_JB/TestScene_DemoP5_JB_.unity
   _notes: []

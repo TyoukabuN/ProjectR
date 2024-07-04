@@ -47,13 +47,13 @@ namespace PJR
                         {
                             UINode node = go.transform.TryGetComponent<UINode>();
                             
-                            Debug.Log("<color=darkblue>Find it: " + go.name + "/" + go.transform.name + "</color>");
+                            LogSystem.Log("<color=darkblue>Find it: " + go.name + "/" + go.transform.name + "</color>");
                             if (node!=null)
                             {
                                 UIAsset ua = new UIAsset(node.UIName,node.prefab);
                                 if (ud.assets.ContainsKey(node.UIName))
                                 {
-                                    Debug.LogError($"存在相同的key:{node.UIName},{ud.assets[node.UIName].prefab}与{node.prefab}");
+                                    LogSystem.LogError($"存在相同的key:{node.UIName},{ud.assets[node.UIName].prefab}与{node.prefab}");
                                     return;
                                 }
                                 ud.assets[node.UIName] = ua;
@@ -61,20 +61,20 @@ namespace PJR
                         }
                     }
                 }
-                string jsStr = Newtonsoft.Json.JsonConvert.SerializeObject(ud);
+                string jsStr = Newtonsoft.Json.JsonConvert.SerializeObject(ud, Newtonsoft.Json.Formatting.Indented);
                 string writePath = Application.dataPath + "/Dev/Scripts/Modules/UI/UIBindJs.json";
                 //string writePath = Application.dataPath + "/UIBindJs.json";
                 //if (!File.Exists(writePath))
                 //{
                 //    File.Create(writePath);
                 //}
-                Debug.Log(writePath);
+                LogSystem.Log(writePath);
                 if (Directory.Exists(Application.dataPath + "/Dev/Scripts/Modules/UI"))
                 {
-                    Debug.Log("存在路径");
+                    LogSystem.Log("存在路径");
                     File.WriteAllText(writePath, jsStr);
                 }
-                Debug.Log(jsStr);
+                LogSystem.Log(jsStr);
             }
         }
     }

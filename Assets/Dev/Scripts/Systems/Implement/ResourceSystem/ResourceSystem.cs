@@ -21,9 +21,6 @@ namespace PJR
         private ResourcePackage _package;
         public ResourcePackage Package { get { return _package; } }
 
-#if UNITY_EDITOR
-        private static EditorAssetManager _editorAssetMgr;
-#endif
         private static ResourceDescription _resDesc = null;
         //
         public static ResourceDescription ResDesc => _resDesc;
@@ -56,17 +53,7 @@ namespace PJR
                 return Application.isPlaying && res;
             }
         }
-#if UNITY_EDITOR
-        public static EditorAssetManager EditorAssetMgr
-        {
-            get
-            {
-                if (_editorAssetMgr == null)
-                    _editorAssetMgr = new EditorAssetManager();
-                return _editorAssetMgr;
-            }
-        }
-#endif
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -326,17 +313,17 @@ namespace PJR
                 {
                     if (assetFullName2Loader.TryGetValue(assetFullName, out var loader))
                     {
-                        if (loader.OnDone != null)
+                        if (loader.Completed != null)
                         {
                             try { 
-                                loader.OnDone.Invoke(loader);
-                                loader.OnDone = null;
+                                loader.Completed.Invoke(loader);
+                                loader.Completed = null;
                             }
                             catch (Exception e)
                             {
                                 Debug.LogError($"[{nameof(ResourceSystem.ClearDones)}] {e.ToString()}");
                             }
-                            loader.OnDone = null;
+                            loader.Completed = null;
                         };
 
                         assetFullName2Loader.Remove(assetFullName);

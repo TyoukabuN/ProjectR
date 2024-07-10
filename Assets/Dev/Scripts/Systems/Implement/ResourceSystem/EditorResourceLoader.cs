@@ -6,32 +6,35 @@ using UnityEditor;
 #if UNITY_EDITOR
 namespace PJR
 {
-    public class EditorResourceLoader : ResourceLoader
+    public partial class ResourceSystem
     {
-        public EditorResourceLoader(string assetFullName, Type assetType) : base(assetFullName, assetType)
+        public class EditorResourceLoader : ResourceLoader
         {
-            isEditor = true;
-        }
-        public override void Update()
-        {
-            if (isDone)
-                return;
-            string assetPath = ResourceSystem.EditorAssetMgr.ConvertLocationToAssetPath(assetFullName);
-            asset = AssetDatabase.LoadAssetAtPath(assetPath, assetType);
-            if (asset == null)
+            public EditorResourceLoader(string assetFullName, Type assetType) : base(assetFullName, assetType)
             {
-                error = $"[EditorResourceLoader] Find not asset \"{assetName}\": \n [type]: {assetType.FullName} \n [fullName]:{assetFullName} ";
-                LogSystem.LogError(error);
+                IsEditor = true;
             }
-            phase = Phase.Done;
+            public override void Update()
+            {
+                if (isDone)
+                    return;
+                string assetPath = ResourceSystem.EditorAssetMgr.ConvertLocationToAssetPath(AssetFullName);
+                AssetObject = AssetDatabase.LoadAssetAtPath(assetPath, AssetType);
+                if (AssetObject == null)
+                {
+                    error = $"[EditorResourceLoader] Find not asset \"{AssetName}\": \n [type]: {AssetType.FullName} \n [fullName]:{AssetFullName} ";
+                    LogSystem.LogError(error);
+                }
+                State = LoaderState.Done;
+            }
         }
-    }
 
-    public class EditorResourceLoader<T> : ResourceLoader where T : System.Type
-    {
-        public EditorResourceLoader(T assetType,string assetFullName) : base(assetFullName, assetType)
+        public class EditorResourceLoader<T> : ResourceLoader where T : System.Type
         {
-            isEditor = true;
+            public EditorResourceLoader(T assetType, string assetFullName) : base(assetFullName, assetType)
+            {
+                IsEditor = true;
+            }
         }
     }
 }

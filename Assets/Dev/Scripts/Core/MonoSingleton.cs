@@ -26,6 +26,12 @@ namespace PJR
             }
         }
 
+        /// <summary>
+        /// 系统的初始化操作都可以放这里
+        /// 这里是提供异步等待操作
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerator Initialize() { yield break; }
     }
 
     public abstract class MonoSingleton : MonoBehaviour
@@ -35,7 +41,7 @@ namespace PJR
         /// invoked before awake
         /// </summary>
         public virtual void OnInstantiated() { }
-        public virtual IEnumerator Initialize() { yield return null; }
+        public abstract IEnumerator Initialize();
         public virtual void Clear() { }
 
         public virtual void OnUpdate() { }

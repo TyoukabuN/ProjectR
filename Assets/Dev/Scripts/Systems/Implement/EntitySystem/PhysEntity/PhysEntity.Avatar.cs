@@ -1,9 +1,8 @@
-﻿using Animancer;
-using JetBrains.Annotations;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using UnityEngine;
+using static PJR.ResourceSystem;
 
 namespace PJR
 {

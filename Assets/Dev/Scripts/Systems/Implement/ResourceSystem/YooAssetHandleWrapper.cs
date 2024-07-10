@@ -3,49 +3,63 @@ using UnityEditor;
 using UnityEngine;
 using YooAsset;
 using System.IO;
+using System.Collections.Generic;
 
 namespace PJR
 {
-    public class YooAssetHandleWrapper : ResourceLoader
+    public partial class ResourceSystem
     {
-        public AssetHandle assetHandle = null;
-        public YooAssetHandleWrapper(string assetFullName, Type assetType) : base(assetFullName, assetType)
+        public class YooAssetHandleWrapper : ResourceLoader
         {
-            assetHandle = ResourceSystem.inst.Package.LoadAssetSync(Path.GetFileNameWithoutExtension(assetFullName), assetType);
-        }
-        public override void Update()
-        {
-            if (isDone)
-                return;
+            private AssetHandle assetHandle = null;
 
-            if (!assetHandle.IsValid || !string.IsNullOrEmpty(assetHandle.LastError))
+            private List<AssetHandle> assetHandles = new List<AssetHandle>();
+            public YooAssetHandleWrapper(string assetFullName, Type assetType) : base(assetFullName, assetType)
             {
-                error = $"[EditorResourceLoader] Find not asset \"{assetName}\": \n" +
-                    $" [type]: {assetType.FullName} \n" +
-                    $" [fullName]:{assetFullName}  \n" +
-                    $" [error]:{assetHandle.LastError}";
-                LogSystem.LogError(error);
-                phase = Phase.Done;
-                return;
+                assetHandle = ResourceSystem.inst.Package.LoadAssetAsync(Path.GetFileName(assetFullName), assetType);
+            }
+            public override void Update()
+            {
+                if (isDone)
+                    return;
+
+                if (!assetHandle.IsValid || !string.IsNullOrEmpty(assetHandle.LastError))
+                {
+                    error = $"[EditorResourceLoader] Find not asset \"{AssetName}\": \n" +
+                        $" [type]: {AssetType.FullName} \n" +
+                        $" [fullName]:{AssetFullName}  \n" +
+                        $" [error]:{assetHandle.LastError}";
+                    LogSystem.LogError(error);
+                    State = LoaderState.Error;
+                    return;
+                }
+
+                if (assetHandle.IsDone)
+                    State = LoaderState.Done;
             }
 
-            if (assetHandle.IsDone)
-                phase = Phase.Done;
-        }
+            public override object GetRawAsset()
+            {
+                return assetHandle.AssetObject;
+            }
+            public override T GetRawAsset<T>()
+            {
+                return assetHandle.AssetObject as T;
+            }
 
-        public override object GetRawAsset()
-        {
-            return assetHandle.AssetObject;
+            public override void Release()
+            {
+                base.Release();
+                if (assetHandle == null)
+                    return;
+                assetHandle.Release();
+            }
         }
-        public override T GetRawAsset<T>()
+        public class YooAssetHandleWrapper<T> : ResourceLoader where T : System.Type
         {
-            return assetHandle.AssetObject as T;
-        }
-    }
-    public class YooAssetHandleWrapper<T> : ResourceLoader where T : System.Type
-    {
-        public YooAssetHandleWrapper(T assetType, string assetFullName) : base(assetFullName, assetType)
-        {
+            public YooAssetHandleWrapper(T assetType, string assetFullName) : base(assetFullName, assetType)
+            {
+            }
         }
     }
 }

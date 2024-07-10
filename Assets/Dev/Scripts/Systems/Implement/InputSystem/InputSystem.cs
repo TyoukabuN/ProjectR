@@ -7,6 +7,7 @@ using Sirenix.OdinInspector;
 using static UnityEngine.InputSystem.InputAction;
 using System;
 using System.Collections;
+using static PJR.ResourceSystem;
 
 namespace PJR
 {

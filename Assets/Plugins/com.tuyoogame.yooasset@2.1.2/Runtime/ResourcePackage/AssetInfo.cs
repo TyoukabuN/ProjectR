@@ -77,6 +77,32 @@ namespace YooAsset
             }
         }
 
+        /// <summary>
+        /// 资源GUID
+        /// </summary>
+        public string AssetGUID
+        {
+            get
+            {
+                if (_packageAsset == null)
+                    return string.Empty;
+                return _packageAsset.AssetGUID;
+            }
+        }
+
+        /// <summary>
+        /// 资源包Id
+        /// </summary>
+        public int BundleID
+        {
+            get
+            {
+                if (_packageAsset == null)
+                    return -1;
+                return _packageAsset.BundleID;
+            }
+        }
+
 
         private AssetInfo()
         {

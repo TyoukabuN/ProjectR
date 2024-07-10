@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public static class TransformExtension
@@ -24,5 +26,22 @@ public static class TransformExtension
             if (!string.IsNullOrEmpty(path)) path = $"{path}/{transform.name}";
         }
         return path;
+    }
+    public static List<Transform> GetChilds(this Transform transform, int depth = 1)
+    {
+        List<Transform> childList = new List<Transform>();
+        GetChilds_Recursion(transform, depth, childList);
+        return childList;
+    }
+    private static void GetChilds_Recursion(Transform transform, int depth, List<Transform> list)
+    {
+        if (depth <= 0)
+            return;
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            list.Add(transform.GetChild(i));
+            GetChilds_Recursion(transform.GetChild(i), depth - 1, list);
+        }
     }
 }

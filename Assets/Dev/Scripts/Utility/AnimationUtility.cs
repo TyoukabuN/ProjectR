@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PJR
 {
-    public static class AnimationUtil
+    public static class AnimationUtility
     {
         private static Dictionary<AnimationClip, TransformCurveHandle> clip2transCurveHandle = new Dictionary<AnimationClip, TransformCurveHandle>();
 
@@ -46,7 +46,7 @@ namespace PJR
             {
                 if (animationClip == null || string.IsNullOrEmpty(path))
                     return;
-                var editorCurveBindings = AnimationUtility.GetCurveBindings(animationClip);
+                var editorCurveBindings = UnityEditor.AnimationUtility.GetCurveBindings(animationClip);
                 foreach (var curveBinding in editorCurveBindings)
                 {
                     if (curveBinding.type != typeof(Transform))
@@ -54,7 +54,7 @@ namespace PJR
                     if (curveBinding.path != path)
                         continue;
 
-                    var curve = AnimationUtility.GetEditorCurve(animationClip, curveBinding);
+                    var curve = UnityEditor.AnimationUtility.GetEditorCurve(animationClip, curveBinding);
 
                     if (curveBinding.propertyName == "m_LocalPosition.x") localPositionX = curve;
                     if (curveBinding.propertyName == "m_LocalPosition.y") localPositionY = curve;
@@ -76,7 +76,7 @@ namespace PJR
                 if (target == null) return;
 
                 if (transRecord == null)
-                    transRecord = TransformUtil.RecordTransformValue(target);
+                    transRecord = TransformUtility.RecordTransformValue(target);
 
                 Vector3 localPosition = transRecord.localPosition;
                 Quaternion localRotation = transRecord.localRotation;

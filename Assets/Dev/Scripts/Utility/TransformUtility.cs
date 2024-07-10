@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PJR
 {
-    public static class TransformUtil
+    public static class TransformUtility
     {
         public static TransformValueRecord RecordTransformValue(Transform transform)
         {

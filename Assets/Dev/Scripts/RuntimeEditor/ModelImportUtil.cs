@@ -131,7 +131,7 @@ public static class ModelImportUtil
         if (File.Exists(exportPath))
         {
             var actions = new List<System.Action>();
-            var bindings = AnimationUtility.GetCurveBindings(newAnim);
+            var bindings = UnityEditor.AnimationUtility.GetCurveBindings(newAnim);
             AnimationClip existingAnim = (AnimationClip)AssetDatabase.LoadAssetAtPath(
                     exportPath, typeof(AnimationClip));
 
@@ -139,8 +139,8 @@ public static class ModelImportUtil
 
             foreach (var binding in bindings)
             {
-                var curve = AnimationUtility.GetEditorCurve(newAnim, binding);
-                AnimationUtility.SetEditorCurve(existingAnim, binding, curve);
+                var curve = UnityEditor.AnimationUtility.GetEditorCurve(newAnim, binding);
+                UnityEditor.AnimationUtility.SetEditorCurve(existingAnim, binding, curve);
             }
 
             AssetDatabase.SaveAssets();

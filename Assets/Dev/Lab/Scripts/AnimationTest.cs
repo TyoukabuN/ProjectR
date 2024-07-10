@@ -38,7 +38,7 @@ public class AnimationTest : MonoBehaviour
         Vector3 localScale = Vector3.zero;
         if (animationClip != null)
         {
-            if (AnimationUtil.TryGetTranssformCurveHandle(animationClip, "root", out var handle))
+            if (PJR.AnimationUtility.TryGetTranssformCurveHandle(animationClip, "root", out var handle))
             {
                 handle.Evaluate(target, animationTime);
             }

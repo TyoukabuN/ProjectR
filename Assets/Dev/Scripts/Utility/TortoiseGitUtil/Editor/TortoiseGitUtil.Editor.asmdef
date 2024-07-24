@@ -1,0 +1,19 @@
+{
+    "name": "TortoiseGitUtil.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2ecf6041f1cb4e479a7303248208fa08",
+        "GUID:64e2451789ce69c419ae39ad085de427"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

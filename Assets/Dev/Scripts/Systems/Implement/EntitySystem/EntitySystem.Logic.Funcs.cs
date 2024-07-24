@@ -27,7 +27,7 @@ namespace PJR
             logicEntity.entityContext = context;
             logicEntity.OnCreate(context);
 
-            id2LogicEntity[context.LogicEntityID] = logicEntity;
+            AddLogicEntity(logicEntity);
 
             inst.localPlayer = logicEntity;
             return logicEntity;
@@ -56,7 +56,7 @@ namespace PJR
             logicEntity.configAsset = host.configAsset;
             logicEntity.OnCreate(context);
 
-            id2LogicEntity[context.LogicEntityID] = logicEntity;
+            AddLogicEntity(logicEntity);
             return logicEntity;
         }
 
@@ -87,7 +87,7 @@ namespace PJR
                 Rigidbody rb = logicEntity.gameObject.AddComponent<Rigidbody>();
             }
             
-            id2LogicEntity[context.LogicEntityID] = logicEntity;
+            AddLogicEntity(logicEntity);
             return logicEntity;
         }
         /// <summary>
@@ -112,7 +112,7 @@ namespace PJR
             logicEntity.config = host.configAsset;
             logicEntity.OnCreate(context);
 
-            id2LogicEntity[context.LogicEntityID] = logicEntity;
+            AddLogicEntity(logicEntity);
             return logicEntity;
         }
     }

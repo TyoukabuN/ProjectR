@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Animancer.Editor.SerializableEventSequenceDrawer;
 
 namespace PJR
 {
@@ -39,6 +40,30 @@ namespace PJR
             logicEntity.Destroy();
             id2LogicEntity.Remove(logicEntity.entityContext.LogicEntityID);
             return true;
+        }
+
+        static bool IsLogicEntityValid(LogicEntity logicEntity)
+        {
+            if (logicEntity == null)
+                return false;
+            if (logicEntity.entityContext == null || logicEntity.entityContext.LogicEntityID < 0)
+                return false;
+            return true;
+        }
+        public static bool AddLogicEntity(int logicEntityID, LogicEntity logicEntity, bool CheckValid = true)
+        {
+            if(CheckValid && !IsLogicEntityValid(logicEntity))
+                return false;
+            if (id2LogicEntity.ContainsKey(logicEntityID))
+                return false;
+            id2LogicEntity[logicEntityID] = logicEntity;
+            return true;
+        }
+        public static bool AddLogicEntity(LogicEntity logicEntity)
+        {
+            if (!IsLogicEntityValid(logicEntity))
+                return false;
+            return AddLogicEntity(logicEntity.entityContext.LogicEntityID, logicEntity, false);
         }
 
         protected static int GetGUID()

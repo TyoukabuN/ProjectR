@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using LogicEntityType = PJR.EntityDefine.LogicEntityType;
 
 namespace PJR
@@ -18,6 +19,13 @@ namespace PJR
         public string LogicEntityIDStr { get => logicEntityIDStr; set => logicEntityIDStr = value; }
 
         private string logicEntityIDStr = string.Empty;
+
+        public int EmployerLogicEntityID
+        { 
+            get { return employerLogicEntityID; }
+            set { employerLogicEntityID = value; }
+        }
+        protected int employerLogicEntityID;
 
         public LogicEntityType entityType = LogicEntityType.Empty;
 

@@ -12,19 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bbc38ef980d9054a86534dd120d4e65, type: 3}
   m_Name: TrapConfig_Test
   m_EditorClassIdentifier: 
-  CanTriggerTimes: -1
   isPhysics: 0
   entityPhaseEvents:
   - entityPhase: 3
     events:
-    - trapMethod:
-        rid: 7174546527647170562
+    - actionApproach:
+        rid: 6003597666405056514
+  CanTriggerTimes: -1
   references:
     version: 2
     RefIds:
-    - rid: 7174546527647170562
-      type: {class: TrapMethod_RollingStoneTrigger, ns: PJR, asm: Assembly-CSharp}
+    - rid: 6003597666405056514
+      type: {class: TrapMethod_RollingStoneTrigger, ns: PJR, asm: PJR}
       data:
         group: 1
-        components:
-        - {fileID: 0}

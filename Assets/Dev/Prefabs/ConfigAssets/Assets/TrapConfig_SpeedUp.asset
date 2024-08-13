@@ -23,7 +23,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 7174546564607901702
-      type: {class: TrapMethod_SpeedUp, ns: PJR, asm: Assembly-CSharp}
+      type: {class: TrapMethod_SpeedUp, ns: PJR, asm: PJR}
       data:
         speed: 10
         duration: 3

@@ -23,4 +23,4 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 7174546564607901704
-      type: {class: TrapMethod_Stumble, ns: PJR, asm: Assembly-CSharp}
+      type: {class: TrapMethod_Stumble, ns: PJR, asm: PJR}

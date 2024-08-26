@@ -66,8 +66,8 @@ namespace PJR
                 //https://kybernetik.com.au/animancer/docs/examples/integration/animation-rigging/#ik-targets
                 if (rigBuilder != null)
                 {
-                    animancer.InitializePlayable(rigBuilder.graph);
-                    animancer.Playable.KeepChildrenConnected = keepChildrenConnected;
+                    //animancer.InitializePlayable(rigBuilder.graph);
+                    //animancer.Playable.KeepChildrenConnected = keepChildrenConnected;
                     animancer.Layers[0].ApplyAnimatorIK = true;
 
                     foreach (var layer in rigBuilder.layers)
@@ -85,8 +85,8 @@ namespace PJR
                     }
                 }
 
-                if (_animanerUpdateAproach == AnimanerUpdateAproach.Manually)
-                    animancer.Playable.PauseGraph();
+                //if (_animanerUpdateAproach == AnimanerUpdateAproach.Manually)
+                //    animancer.Playable.PauseGraph();
 
                 Setup_AvatarMask();
 
@@ -115,7 +115,7 @@ namespace PJR
             { 
                 for (int layerIndex = 0; layerIndex < avatarMasks.Count; layerIndex++)
                 {
-                    animancer.Layers[layerIndex].SetMask(avatarMasks[layerIndex]);
+                    //animancer.Layers[layerIndex].SetMask(avatarMasks[layerIndex]);
                 }
             }
         }
@@ -191,8 +191,9 @@ namespace PJR
             {
                 var state = layer.Play(clip);
                 int recordId = RecordState(lastState, state);
-                state.Events.Clear();
-                state.Events.OnEnd = () => { Animancer_OnStateEnd(recordId); callback?.Invoke(); };
+                if(state.Events(this, out var events))
+                events.Clear();
+                events.OnEnd = () => { Animancer_OnStateEnd(recordId); callback?.Invoke(); };
                 return state;
             }
             return null;

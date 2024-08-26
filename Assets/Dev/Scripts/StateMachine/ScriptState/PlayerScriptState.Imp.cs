@@ -149,8 +149,8 @@ namespace PJR.ScriptStates.Player
         }
         public override void OnChange(int from)
         {
-            if (animancerState != null)
-                animancerState.Events.OnEnd = null;
+            if (animancerState.Events(this,out var events))
+                events.OnEnd = null;
         }
         public override bool CanChange(int from)
         {

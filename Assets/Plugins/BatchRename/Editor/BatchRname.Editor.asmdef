@@ -1,0 +1,19 @@
+{
+    "name": "BatchRname.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6410ed5824df2184fba9d1a92ce18468",
+        "GUID:546a0530eab2505478af29bc04b9f202"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

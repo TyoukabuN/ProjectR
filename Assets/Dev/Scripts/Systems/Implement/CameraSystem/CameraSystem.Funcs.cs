@@ -8,11 +8,13 @@ namespace PJR
 { 
     public partial class CameraSystem : MonoSingletonSystem<CameraSystem>
     {
+        public static Camera MainCamera => instance?.mainCamera;
+
         public GameObject cameraRoot;
         public Camera mainCamera;
         public CinemachineBrain cinemachineBrain;
-
         public CinemachineVirtualCamera mainVCamera;
+
         public static void CreatePlayerCamera(PlayerEntity playerEntity)
         {
             if (inst.mainCamera != null)
@@ -59,9 +61,9 @@ namespace PJR
                     inst.mainVCamera.AddExtension(ext);
                 }
             }
-            //----uiÏà»ú»áÔÚÓÎÏ·Æô¶¯Ò»Ë²¼äÏûÊ§ÁË
-            UISystem.instance.UICamera.gameObject.SetActive(false);
-            UISystem.instance.UICamera.gameObject.SetActive(true);
+            //----uiç›¸æœºä¼šåœ¨æ¸¸æˆå¯åŠ¨ä¸€ç¬é—´æ¶ˆå¤±äº†
+            UISystem.instance?.UICamera?.gameObject.SetActive(false);
+            UISystem.instance?.UICamera?.gameObject.SetActive(true);
         }
 
         public static Transform CameraRoot

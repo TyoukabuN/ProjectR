@@ -36,9 +36,9 @@ namespace PJR
 
             context.moveInputVector = context.rawMoveInputVector;
             context.lookInputVector = context.rawMoveInputVector;
-            if (CameraSystem.inst.mainCamera)
+            if (CameraSystem.MainCamera)
             {
-                Quaternion CameraRotation = CameraSystem.inst.mainCamera.transform.rotation;
+                Quaternion CameraRotation = CameraSystem.MainCamera.transform.rotation;
                 Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(CameraRotation * Vector3.forward, context.motor.CharacterUp).normalized;
                 if (cameraPlanarDirection.sqrMagnitude == 0f)
                 {

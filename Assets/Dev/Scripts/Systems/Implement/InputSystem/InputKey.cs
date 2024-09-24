@@ -15,12 +15,20 @@ namespace PJR.Input
         public int intValue = -1;
         public int category = -1;
         //
+        public static FlagManager256 _inputFlagManager = null;
+        public static FlagManager256 InputFlagManager {
+            get {
+                if (_inputFlagManager == null)
+                    _inputFlagManager = new FlagManager256();
+                return _inputFlagManager;
+            }
+        }
         public Flag256 flag;
         private InputKey(int category, string strValue)
         {
             this.category = category;
             this.strValue = strValue;
-            flag = FlagDefine.InputFlag.StringToFlag(strValue);
+            flag = InputFlagManager.StringToFlag(strValue);
 
             Cache.CacheWrap(this);
         }
@@ -32,7 +40,7 @@ namespace PJR.Input
             this.type = type;
             this.strValue = strValue;
 
-            flag = FlagDefine.InputFlag.StringToFlag(strValue);
+            flag = InputFlagManager.StringToFlag(strValue);
             Cache.CacheWrap(this);
         }
         /// <summary>

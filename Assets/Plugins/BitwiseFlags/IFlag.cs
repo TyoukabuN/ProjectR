@@ -1,3 +1,5 @@
+// using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 public abstract class IFlag<FlagType> where FlagType : struct
 {
 	public static IFlag<FlagType> Empty { get; }
@@ -16,7 +18,6 @@ public abstract class IFlag<FlagType> where FlagType : struct
 	public static IFlag<FlagType> operator ~(IFlag<FlagType> f1) { return Empty; }
 	public static bool operator ==(IFlag<FlagType> f1, IFlag<FlagType> f2) { return false; }
 	public static bool operator !=(IFlag<FlagType> f1, IFlag<FlagType> f2) { return false; }
-
 	public static implicit operator bool(IFlag<FlagType> f) { return false; }
 	public abstract string ToString();
 }

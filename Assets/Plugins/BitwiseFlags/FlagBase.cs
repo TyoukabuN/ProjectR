@@ -106,7 +106,7 @@ public abstract class FlagBase<FlagType> where FlagType : IBitwiseFlag<FlagType>
     #endregion
 }
 
-public interface IBitwiseFlag<FlagType> : IBitwiseFlag
+public interface IBitwiseFlag<FlagType>
 {
     public FlagType GetEmpty();
     public bool HasAny(FlagType f);
@@ -118,7 +118,39 @@ public interface IBitwiseFlag<FlagType> : IBitwiseFlag
     public bool Equals(FlagType f2);
     public bool IsEmpty();
 }
+public class ProfileScope : System.IDisposable
+{
+    public string name = String.Empty;
+    private DateTime beginStamp;
 
-public interface IBitwiseFlag
-{ 
+    private ProfileScope()
+    {
+        beginStamp = System.DateTime.Now;
+    }
+    public ProfileScope(string name) : this()
+    {
+        this.name = name;
+        UnityEngine.Profiling.Profiler.BeginSample(name);
+    }
+
+    public void Dispose()
+    {
+        UnityEngine.Profiling.Profiler.EndSample();
+    }
+}
+
+public class MemoryCostScope : IDisposable
+{
+    public string name = String.Empty;
+    public long beginStamp;
+    public MemoryCostScope(string name)
+    {
+        this.name = name;
+        beginStamp = GC.GetTotalMemory(true);
+    }
+    public void Dispose()
+    {
+        long res = (GC.GetTotalMemory(false) - beginStamp) / 1000;
+        Debug.Log($"[Cost][{name}] : [{res}] kb");
+    }
 }

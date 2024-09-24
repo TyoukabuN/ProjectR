@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-public struct Flag256
+public struct Flag256 : IBitwiseFlag<Flag256>
 {
 	public static readonly Flag256 Empty =
 		new(){
@@ -39,7 +39,7 @@ public struct Flag256
 		return (this & f) == f;
 	}
 	
-	private bool HasFlag(int pos, uint value)
+	public bool HasFlag(int pos, uint value)
 	{
 		if (pos == 0) return (Value0 & value) != 0;
 		if (pos == 1) return (Value1 & value) != 0;
@@ -52,7 +52,7 @@ public struct Flag256
 		return false;
 	}
 	
-	private uint GetFlag(int pos)
+	public uint GetFlag(int pos)
 	{
 		if (pos == 0) return Value0;
 		if (pos == 1) return Value1;
@@ -65,7 +65,7 @@ public struct Flag256
 		return 0;
 	}
 	
-	private void SetFlag(int pos, uint value)
+	public void SetFlag(int pos, uint value)
 	{
 		if (pos == 0) Value0 = value;
 		if (pos == 1) Value1 = value;
@@ -77,7 +77,7 @@ public struct Flag256
 		if (pos == 7) Value7 = value;
 	}
 	
-	private void FlagOr(int pos, uint value)
+	public void FlagOr(int pos, uint value)
 	{
 		if (pos == 0) Value0 |= value;
 		if (pos == 1) Value1 |= value;
@@ -89,7 +89,7 @@ public struct Flag256
 		if (pos == 7) Value7 |= value;
 	}
 	
-	private void FlagAnd(int pos, uint value)
+	public void FlagAnd(int pos, uint value)
 	{
 		if (pos == 0) Value0 &= value;
 		if (pos == 1) Value1 &= value;
@@ -101,7 +101,7 @@ public struct Flag256
 		if (pos == 7) Value7 &= value;
 	}
 	
-	private void FlagComplement(int pos)
+	public void FlagComplement(int pos)
 	{
 		if (pos == 0) Value0 = ~Value0;
 		if (pos == 1) Value1 = ~Value1;
@@ -113,7 +113,7 @@ public struct Flag256
 		if (pos == 7) Value7 = ~Value7;
 	}
 	
-	private void FlagOrExclusive(int pos, uint value)
+	public void FlagOrExclusive(int pos, uint value)
 	{
 		if (pos == 0) Value0 = Value0 ^ value;
 		if (pos == 1) Value1 = Value1 ^ value;
@@ -257,15 +257,15 @@ public struct Flag256
 	
 	public static bool operator != (Flag256 f1, Flag256 f2)
 	{
-		if (f1.Value0 == f2.Value0) return false;
-		if (f1.Value1 == f2.Value1) return false;
-		if (f1.Value2 == f2.Value2) return false;
-		if (f1.Value3 == f2.Value3) return false;
-		if (f1.Value4 == f2.Value4) return false;
-		if (f1.Value5 == f2.Value5) return false;
-		if (f1.Value6 == f2.Value6) return false;
-		if (f1.Value7 == f2.Value7) return false;
-		return true;
+		if (f1.Value0 != f2.Value0) return true;
+		if (f1.Value1 != f2.Value1) return true;
+		if (f1.Value2 != f2.Value2) return true;
+		if (f1.Value3 != f2.Value3) return true;
+		if (f1.Value4 != f2.Value4) return true;
+		if (f1.Value5 != f2.Value5) return true;
+		if (f1.Value6 != f2.Value6) return true;
+		if (f1.Value7 != f2.Value7) return true;
+		return false;
 	}
 	
 	public static implicit operator bool(Flag256 f)

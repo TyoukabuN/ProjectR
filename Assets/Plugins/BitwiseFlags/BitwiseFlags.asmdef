@@ -2,7 +2,6 @@
     "name": "BitwiseFlags",
     "rootNamespace": "",
     "references": [
-        "GUID:546a0530eab2505478af29bc04b9f202"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -10,7 +9,8 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

@@ -2,6 +2,8 @@ using System.Collections;
 using System.IO;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PJR
 {
@@ -25,9 +27,11 @@ namespace PJR
                 LoadindAsset,
                 Error,
                 Done,
+                Released,
             }
             public LoaderState State { get; protected set; } = LoaderState.None;
             public bool isDone => State == LoaderState.Done;
+            public bool isReleased => State == LoaderState.Released;
 
             public ResourceLoader(string assetFullName, Type assetType)
             {
@@ -45,6 +49,36 @@ namespace PJR
             public virtual T GetRawAsset<T>() where T : UnityEngine.Object
             {
                 return (T)AssetObject;
+            }
+
+            public List<UnityEngine.Object> _instantiates = new List<UnityEngine.Object>(12);
+            public virtual T GetInstantiate<T>() where T : UnityEngine.Object
+            {
+                var inst = Instantiate<T>(GetRawAsset<T>());
+                if (inst == null)
+                    return null;
+                _instantiates.Add(inst);
+                return inst;
+            }
+
+            public virtual void ClearNullInstantiate()
+            {
+                if (_instantiates == null || _instantiates.Count <= 0)
+                    return;
+                for (int i = 0; i < _instantiates.Count; i++)
+                {
+                    if (_instantiates[i] == null)
+                    { 
+                        _instantiates.RemoveAt(i--);
+                        continue;
+                    }
+                }
+            }
+            public virtual bool Releasable()
+            {
+                if (_instantiates.Count > 0)
+                    return false;
+                return true;
             }
         }
 

@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace YooAsset
 {
-    internal class OperationSystem
+    public class OperationSystem
     {
         private static readonly List<AsyncOperationBase> _operations = new List<AsyncOperationBase>(1000);
         private static readonly List<AsyncOperationBase> _newList = new List<AsyncOperationBase>(1000);
@@ -41,7 +41,7 @@ namespace YooAsset
         /// <summary>
         /// 更新异步操作系统
         /// </summary>
-        public static void Update()
+        public static void Update(bool manually = false)
         {
             _frameTime = _watch.ElapsedMilliseconds;
 
@@ -69,7 +69,7 @@ namespace YooAsset
             // 更新进行中的异步操作
             for (int i = 0; i < _operations.Count; i++)
             {
-                if (IsBusy)
+                if (IsBusy && !manually)
                     break;
 
                 var operation = _operations[i];

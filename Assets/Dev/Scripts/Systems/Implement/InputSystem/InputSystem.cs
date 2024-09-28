@@ -119,9 +119,8 @@ namespace PJR
         }
 
 
-        public override void OnUpdate()
+        public override void OnUpdate(float f)
         {
-            base.OnUpdate();
         }
     }
     public struct InputActionCallback

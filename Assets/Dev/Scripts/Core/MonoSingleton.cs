@@ -7,8 +7,6 @@ namespace PJR
     {
         protected static T _instance = null;
         public static T inst => instance;
-        public static T current => instance;
-        public static T cur => instance;
 
         public static T instance
         {
@@ -16,10 +14,15 @@ namespace PJR
             {
                 if (_instance == null)
                 {
-                    var gobj = new GameObject(typeof(T).Name);
-                    DontDestroyOnLoad(gobj);
-                    _instance = gobj.AddComponent<T>();
-                    gobj.name = $"[{_instance.Name}]";
+                    _instance = GameObject.FindObjectOfType<T>();
+                    if (_instance == null)
+                    { 
+                        var gobj = new GameObject(typeof(T).Name);
+                        if (Application.isPlaying)
+                            DontDestroyOnLoad(gobj);
+                        _instance = gobj.AddComponent<T>();
+                        gobj.name = $"[{_instance.Name}]";
+                    }
                     _instance.OnInstantiated();
                 }
                 return _instance;
@@ -32,6 +35,7 @@ namespace PJR
         /// </summary>
         /// <returns></returns>
         public override IEnumerator Initialize() { yield break; }
+
     }
 
     public abstract class MonoSingleton : MonoBehaviour
@@ -44,7 +48,7 @@ namespace PJR
         public abstract IEnumerator Initialize();
         public virtual void Clear() { }
 
-        public virtual void OnUpdate() { }
+        public virtual void OnUpdate(float deltaTime) { }
         //unity messages
         public virtual void LateUpdate() { }
         public virtual void OnDisable() { }

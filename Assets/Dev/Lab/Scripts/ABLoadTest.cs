@@ -57,11 +57,10 @@ public class ABLoadTest : MonoBehaviour
     [Button("LoadAsset")]
     public void LoadAsset()
     {
-        if (package == null)
-            return;
-        var assetHandle = YooAssets.LoadAssetAsync<GameObject>(assetName);
-        assetHandle.Completed -= OnComplete;
-        assetHandle.Completed += OnComplete;
+        var loader = ResourceSystem.LoadAsset<GameObject>(assetName, (loader) =>
+        {
+            loader.GetInstantiate<GameObject>();
+        });
     }
 
     [Button()]

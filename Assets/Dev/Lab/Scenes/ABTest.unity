@@ -601,12 +601,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1879298708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78ebd82418493984194ee4e955323a38, type: 3}
+  m_Script: {fileID: 11500000, guid: 905c8a8b78028624ca4a4695e050637c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1352915079}
-  maxAbsInclineAngle: 30
-  inclinePerFrame: 0.15
-  average: 2
-  testVec4: {x: -6.3, y: -0.26, z: 0, w: 0}
-  playing: 0
+  resUrl: https://192.168.10.50/ls/StandaloneWindows64/Art
+  assetName: Avatar_SlimeBoss.prefab
+  gobj: {fileID: 0}

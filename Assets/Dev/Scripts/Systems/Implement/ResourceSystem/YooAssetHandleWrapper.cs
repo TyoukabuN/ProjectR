@@ -1,9 +1,9 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 using YooAsset;
 using System.IO;
 using System.Collections.Generic;
+using Object = UnityEngine.Object;
 
 namespace PJR
 {
@@ -16,7 +16,7 @@ namespace PJR
             private List<AssetHandle> assetHandles = new List<AssetHandle>();
             public YooAssetHandleWrapper(string assetFullName, Type assetType) : base(assetFullName, assetType)
             {
-                assetHandle = ResourceSystem.inst.Package.LoadAssetAsync(Path.GetFileName(assetFullName), assetType);
+                assetHandle = ResourceSystem.instance.Package.LoadAssetAsync(Path.GetFileName(assetFullName), assetType);
             }
             public override void Update()
             {
@@ -38,7 +38,7 @@ namespace PJR
                     State = LoaderState.Done;
             }
 
-            public override object GetRawAsset()
+            public override Object GetRawAsset()
             {
                 return assetHandle.AssetObject;
             }
@@ -49,10 +49,10 @@ namespace PJR
 
             public override void Release()
             {
-                base.Release();
                 if (assetHandle == null)
                     return;
                 assetHandle.Release();
+                State = LoaderState.Released;
             }
         }
         public class YooAssetHandleWrapper<T> : ResourceLoader where T : System.Type

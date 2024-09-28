@@ -17,10 +17,8 @@ namespace PJR
             return true;
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float f)
         {
-            base.OnUpdate();
-
             foreach (var pair in id2LogicEntity) 
             {
                 var entity = pair.Value;

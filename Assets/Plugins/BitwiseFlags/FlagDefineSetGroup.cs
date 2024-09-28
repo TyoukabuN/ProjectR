@@ -11,7 +11,7 @@ public class FlagDefineSetGroup : SerializedScriptableObject, IFlagDefine
     public int id = -1;
     public string nameStr = null;
 
-    [ListDrawerSettings( Expanded = true )]
+    [ListDrawerSettings( DefaultExpandedState = true )]
     public List<FlagDefineSet> FlagDefineSets;
 
     #region IFlagDefine

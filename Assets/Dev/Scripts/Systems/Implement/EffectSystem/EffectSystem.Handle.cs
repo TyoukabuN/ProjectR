@@ -214,17 +214,10 @@ namespace PJR
                     if (config != value)
                     { 
                         config = value;
-                        SetDirty();
                         effectID = config.ID;
                         effectName = config.AssetName;
                     }
                 }
-            }
-
-            private bool dirty = false;
-            public void SetDirty()
-            { 
-                dirty = true;
             }
 
             /// <summary>

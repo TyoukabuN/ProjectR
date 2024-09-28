@@ -549,6 +549,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                     }
                     catch (Exception e)
                     {
+                        Debug.LogException(e);
                     }
                 }
                 EditorGUILayout.EndHorizontal();
@@ -558,7 +559,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
     }
 
 
-    public static ObjectHandleList ObjectHandleList;
+    public static ObjectHandleList objectHandleList;
     public static StringHandleList pathExceptList;
     public static List<string> ResoureceMemeryCSV_Exts;
     public static List<string> assetPaths;
@@ -567,10 +568,10 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
     /// </summary>
     public void DrawExportResoureceMemeryCSVReport()
     {
-        if (ObjectHandleList == null)
+        if (objectHandleList == null)
         {
-            ObjectHandleList = new ObjectHandleList("[检查特定预置体]", this.GetType().Name + "MemeryCSVObjectHandleList");
-            ObjectHandleList.Init();
+            objectHandleList = new ObjectHandleList("[检查特定预置体]", this.GetType().Name + "MemeryCSVObjectHandleList");
+            objectHandleList.Init();
         }
         if (pathExceptList == null)
         {
@@ -587,7 +588,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                 animBool_resource_memery_report_specific_prefab.target = Foldout(animBool_resource_memery_report_specific_prefab.target, "设置指定预制");
                 if (EditorGUILayout.BeginFadeGroup(animBool_resource_memery_report_specific_prefab.faded))
                 {
-                    ObjectHandleList.OnGUI();
+                    objectHandleList.OnGUI();
                 }
                 EditorGUILayout.EndFadeGroup();
                 //过滤路径
@@ -647,7 +648,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                     assetPaths = new List<string>();
                     Path2Depends = new Dictionary<string, List<string>>();
 
-                    if (ObjectHandleList.Enabled.value || ObjectHandleList.Infos.Any(info => info.Enabled.value))
+                    if (objectHandleList.Enabled.value || objectHandleList.Infos.Any(info => info.Enabled.value))
                     {
                         ResoureceMemeryCSV_Exts = new List<string>();
                         foreach (var searchType in SearchTypes_MemeryReport)
@@ -664,9 +665,9 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                         List<string> assetPaths2 = new List<string>();
                         List<string> csvPaths = new List<string>();
 
-                        for (int i = 0; i < ObjectHandleList.Infos.Count; i++)
+                        for (int i = 0; i < objectHandleList.Infos.Count; i++)
                         {
-                            var objectHandle = ObjectHandleList.Infos[i];
+                            var objectHandle = objectHandleList.Infos[i];
                             if (objectHandle == null || !objectHandle.Enabled.value || string.IsNullOrEmpty(objectHandle.assetPath))
                                 continue;
                             var depends = AssetDatabase.GetDependencies(objectHandle.assetPath);
@@ -700,6 +701,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                             }
                             catch (Exception e)
                             {
+                                Debug.LogException(e);
                             }
                             assetPaths.Clear();
                         }
@@ -761,6 +763,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                         }
                         catch (Exception e)
                         {
+                            Debug.LogException(e);
                         }
                     }
                 }
@@ -781,9 +784,9 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
         CSVReport.Init(path_ResourceMemeryReportOutput.value, "prfabInfo");
         CSVReport.csvStr = @"预制名字,DrawCall,面数,顶点数,图片数,网格数,总内存(MB)";
 
-        for (int i = 0; i < ObjectHandleList.Infos.Count; i++)
+        for (int i = 0; i < objectHandleList.Infos.Count; i++)
         {
-            var objectHandle = ObjectHandleList.Infos[i];
+            var objectHandle = objectHandleList.Infos[i];
             if (objectHandle == null || !objectHandle.Enabled.value || string.IsNullOrEmpty(objectHandle.assetPath))
                 continue;
 
@@ -928,6 +931,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                     }
                     catch (Exception e)
                     {
+                        Debug.LogException(e);
                     }
                 }
                 EditorGUILayout.EndHorizontal();
@@ -988,6 +992,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                     }
                     catch (Exception e)
                     {
+                        Debug.LogException(e);
                     }
                 }
                 EditorGUILayout.EndHorizontal();
@@ -1348,33 +1353,33 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                     }
                     Debug.Log(string.Format("Path:{0}  总内存:{1}MB", path, sizeKB / 1048f));
 
-                    //if (type == TYPE_TEXTURE)
-                    //{
-                    //    memery = float.Parse(GetStorageMemorySizeLong.Invoke(null, new object[] { obj }).ToString()) / 1024f;
-                    //    Debug.Log(string.Format("Path:{0}  内存:{1}", AssetDatabase.GetAssetPath(obj), memery));
-                    //}
-                    //else if (type == TYPE_MODEL)
-                    //{
-                    //    //var model = AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Object)) as UnityEngine.Object;
-                    //    var assets = AssetDatabase.LoadAllAssetsAtPath(path);
-                    //    List<Mesh> meshFilterList = new List<Mesh>();
-                    //    foreach (var asset in assets)
-                    //    {
-                    //        if (asset is Mesh)
-                    //        {
-                    //            var mesh = asset as Mesh;
-                    //            if (!mesh || meshFilterList.Contains(mesh))
-                    //                continue;
-                    //            float temp = Profiler.GetRuntimeMemorySizeLong(asset) / 1024f / 1024f;
-                    //            meshFilterList.Add(mesh);
-                    //            SubMeshCount++;
-                    //            Debug.Log(string.Format("Path:{0}  内存:{1}  子网格索引:{2}", path + "/" + mesh.name, temp, SubMeshCount));
-                    //            memery += temp;
-                    //        }
-                    //    }
-                    //}
-                    //Debug.Log(string.Format("Path:{0}  总内存:{1}", path, memery));
-                    //Debug.Log("--------------------------------------------");
+                    if (type == TYPE_TEXTURE)
+                    {
+                        memery = float.Parse(GetStorageMemorySizeLong.Invoke(null, new object[] { obj }).ToString()) / 1024f;
+                        Debug.Log(string.Format("Path:{0}  内存:{1}", AssetDatabase.GetAssetPath(obj), memery));
+                    }
+                    else if (type == TYPE_MODEL)
+                    {
+                        //var model = AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Object)) as UnityEngine.Object;
+                        var assets = AssetDatabase.LoadAllAssetsAtPath(path);
+                        List<Mesh> meshFilterList = new List<Mesh>();
+                        foreach (var asset in assets)
+                        {
+                            if (asset is Mesh)
+                            {
+                                var mesh = asset as Mesh;
+                                if (!mesh || meshFilterList.Contains(mesh))
+                                    continue;
+                                float temp = Profiler.GetRuntimeMemorySizeLong(asset) / 1024f / 1024f;
+                                meshFilterList.Add(mesh);
+                                SubMeshCount++;
+                                Debug.Log(string.Format("Path:{0}  内存:{1}  子网格索引:{2}", path + "/" + mesh.name, temp, SubMeshCount));
+                                memery += temp;
+                            }
+                        }
+                    }
+                    Debug.Log(string.Format("Path:{0}  总内存:{1}", path, memery));
+                    Debug.Log("--------------------------------------------");
                 }
             }
         }
@@ -2208,43 +2213,6 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
         }
         EditorGUILayout.EndFadeGroup();
     }
-
-    /// <summary>
-    /// 有对应layer的GameObject?
-    /// </summary>
-    /// <param name="trans"></param>
-    /// <param name="layer"></param>
-    /// <returns></returns>
-    private bool AnyGameObjectInLayout(Transform trans, int layer)
-    {
-        for (int i = 0; i < trans.childCount; i++)
-        {
-            var child = trans.GetChild(i);
-            if (AnyGameObjectInLayout(child, layer))
-                return true;
-        }
-        if (trans.gameObject.layer == layer)
-            return true;
-
-        return false;
-    }
-    /// <summary>
-    /// 获取对应layer的GameObject:List
-    /// </summary>
-    /// <param name="trans"></param>
-    /// <param name="layer"></param>
-    /// <param name="gobjs"></param>
-    private void GetGameObjectInLayout(Transform trans, int layer, List<GameObject> gobjs)
-    {
-        for (int i = 0; i < trans.childCount; i++)
-        {
-            var child = trans.GetChild(i);
-            GetGameObjectInLayout(child, layer, gobjs);
-        }
-        if (trans.gameObject.layer == layer)
-            gobjs.Add(trans.gameObject);
-    }
-
 
     public static StringHandle partialPath_SameAssetNameReport;
     public static StringHandle path_SameAssetNameReportOutput;

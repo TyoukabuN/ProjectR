@@ -73,6 +73,11 @@ namespace YooAsset.Editor
         public string BuildinFileCopyParams;
 
         /// <summary>
+        /// 复制构建到指定路径
+        /// </summary>
+        public string CopyBuildToPaths;
+
+        /// <summary>
         /// 资源包加密服务类
         /// </summary>
         public IEncryptionServices EncryptionServices;

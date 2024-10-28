@@ -25,7 +25,7 @@ public class GameEntry : MonoBehaviour
         yield return ResourceSystem.instance.Initialize();
         yield return InputSystem.instance.Initialize();
         yield return SceneSystem.instance.Initialize();
-        yield return UISystem.instance.Initialize();
+        //yield return UISystem.instance.Initialize();
     }
     IEnumerator InitConfig()
     {

@@ -22,7 +22,7 @@ namespace PJR
         private List<UnityAction<Scene, Scene>> _onActiveSceneChangedCallbacks = new List<UnityAction<Scene, Scene>>();
 
         public GameObject sceneRoot = null;
-        public EnvSetting envSetting = null;
+        public SceneEnvironmentSetting envSetting = null;
         //Roots
         public Transform SceneTrapRoot = null;
         public Transform PlayBornPoint = null;
@@ -56,7 +56,7 @@ namespace PJR
                 if (gobj.tag == "SceneRoot")
                 {
                     instance.sceneRoot = gobj;
-                    instance.envSetting = gobj.GetComponent<EnvSetting>();
+                    instance.envSetting = gobj.GetComponent<SceneEnvironmentSetting>();
                     break;
                 }
             }

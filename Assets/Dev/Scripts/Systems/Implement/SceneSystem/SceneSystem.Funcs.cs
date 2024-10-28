@@ -14,6 +14,7 @@ namespace PJR
             if (sceneRoot == null)
                 return;
 
+
             //Player
             if (EntitySystem.LocalPlayer == null)
             {
@@ -25,40 +26,43 @@ namespace PJR
                 EntitySystem.CreatePlayer(entityContext);
             }
             //Monster
-            if (SceneEnemyRoot != null)
-            {
-                var hosts = SceneEnemyRoot.GetComponentsInChildren<MonsterConfigHost>();
-                foreach (var host in hosts)
+            if (envSetting?.GenSceneMonster ?? false)
+                if (SceneEnemyRoot != null)
                 {
-                    if (!host.LoadOnSceneEnter)
-                        continue;
-                    EntitySystem.CreateMonster(host);
+                    var hosts = SceneEnemyRoot.GetComponentsInChildren<MonsterConfigHost>();
+                    foreach (var host in hosts)
+                    {
+                        if (!host.LoadOnSceneEnter)
+                            continue;
+                        EntitySystem.CreateMonster(host);
+                    }
                 }
-            }
             //Trap
-            if (SceneTrapRoot != null)
-            { 
-                var hosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
-                foreach (var host in hosts)
+            if (envSetting?.GenSceneTrap ?? false)
+                if (SceneTrapRoot != null)
                 {
-                    if (host.configAsset == null)
-                        continue;
-                    if (!host.LoadOnSceneEnter)
-                        continue;
-                    EntitySystem.CreateTrapEntity(host);
+                    var hosts = SceneTrapRoot.GetComponentsInChildren<TrapConfigHost>();
+                    foreach (var host in hosts)
+                    {
+                        if (host.configAsset == null)
+                            continue;
+                        if (!host.LoadOnSceneEnter)
+                            continue;
+                        EntitySystem.CreateTrapEntity(host);
+                    }
                 }
-            }
             //Item
-            if (SceneItemRoot != null)
-            {
-                var hosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
-                foreach (var host in hosts)
+            if (envSetting?.GenSceneItem ?? false)
+                if (SceneItemRoot != null)
                 {
-                    if (host.configAsset == null)
-                        continue;
-                    EntitySystem.CreateItemEntity(host);
+                    var hosts = SceneItemRoot.GetComponentsInChildren<ItemConfigHost>();
+                    foreach (var host in hosts)
+                    {
+                        if (host.configAsset == null)
+                            continue;
+                        EntitySystem.CreateItemEntity(host);
+                    }
                 }
-            }
         }
     }
 }

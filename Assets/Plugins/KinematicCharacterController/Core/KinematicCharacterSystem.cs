@@ -8,7 +8,7 @@ namespace KinematicCharacterController
     /// <summary>
     /// The system that manages the simulation of KinematicCharacterMotor and PhysicsMover
     /// </summary>
-    [DefaultExecutionOrder(-100)]
+    //[DefaultExecutionOrder(-100)]
     public class KinematicCharacterSystem : MonoBehaviour
     {
         private static KinematicCharacterSystem _instance;
@@ -31,8 +31,8 @@ namespace KinematicCharacterController
                 GameObject systemGameObject = new GameObject("KinematicCharacterSystem");
                 _instance = systemGameObject.AddComponent<KinematicCharacterSystem>();
 
-                systemGameObject.hideFlags = HideFlags.NotEditable;
-                _instance.hideFlags = HideFlags.NotEditable;
+                //systemGameObject.hideFlags = HideFlags.NotEditable;
+                //_instance.hideFlags = HideFlags.NotEditable;
 
                 Settings = ScriptableObject.CreateInstance<KCCSettings>();
 

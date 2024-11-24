@@ -80,6 +80,11 @@ namespace PJR
                     return false;
                 return true;
             }
+
+            public override void Release()
+            {
+                this.State = LoaderState.Released;
+            }
         }
 
         public abstract class AsyncLoader : IEnumerator

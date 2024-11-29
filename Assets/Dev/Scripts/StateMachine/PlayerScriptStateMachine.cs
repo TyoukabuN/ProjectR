@@ -133,7 +133,7 @@ namespace PJR.ScriptStates.Player
             currentEState = ePlayerState;
             EPlayerState estate = (EPlayerState)currentEState;
             //TODO:加个log的开关
-            LogSystem.Log(estate.ToString());
+            //LogSystem.Log(estate.ToString());
             states[(int)currentEState].OnEnter(ownEntity);
             return true;
         }

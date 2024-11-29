@@ -9,8 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1731d4ba5bd7e248925222438441941, type: 3}
-  m_Name: MonsterConfig_SlimeBoss
+  m_Script: {fileID: 11500000, guid: a2447f09917548147a63c2e82ba523e5, type: 3}
+  m_Name: AssetAnalysisSetting
   m_EditorClassIdentifier: 
-  isPhysics: 1
-  Hp: 10
+  referedCountCheckPath:
+  - Assets/__LS/Art
+  showAssetRefCount: 0
+  showIsReferedByOutside: 0
+  rootForOutsideReferedCheck: 

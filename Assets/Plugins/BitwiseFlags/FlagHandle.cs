@@ -373,12 +373,20 @@ public class FlagHandle512
         else
             return $"[{FlagID}][找不到id对应配置]";
     }
+    private void Editor_ResetCacheField()
+    {
+        flagIDStr = string.Empty;
+        flag = Flag512.Empty;
+        _initialized = false;
+    }
     private void Editor_SelectConfig()
     {
         FlagRuntimeEditorUtil.Editor_ShowFlagGenericMenu(flagDefine =>
         {
             flagId = flagDefine.ID;
             this.flagDefine = flagDefine;
+            flagMenuName = FlagRuntimeEditorUtil.Editor_GetMenuName(flagId);
+            Editor_ResetCacheField();
         }, -1);
     }
     private void Editor_SelectFilteredConfig(bool categoryOnly = false, params int[] categorys)

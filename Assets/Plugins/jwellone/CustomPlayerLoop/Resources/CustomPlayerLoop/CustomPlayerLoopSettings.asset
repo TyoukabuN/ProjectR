@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data:
   - parameter:
-      _enabled: 0
+      _enabled: 1
       _assemblyQualifiedName: UnityEngine.PlayerLoop.Initialization, UnityEngine.CoreModule,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     subSystemParameters:
@@ -37,7 +37,7 @@ MonoBehaviour:
       _assemblyQualifiedName: UnityEngine.PlayerLoop.Initialization+XREarlyUpdate,
         UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - parameter:
-      _enabled: 0
+      _enabled: 1
       _assemblyQualifiedName: UnityEngine.PlayerLoop.EarlyUpdate, UnityEngine.CoreModule,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     subSystemParameters:
@@ -132,7 +132,7 @@ MonoBehaviour:
       _assemblyQualifiedName: UnityEngine.PlayerLoop.EarlyUpdate+PerformanceAnalyticsUpdate,
         UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - parameter:
-      _enabled: 0
+      _enabled: 1
       _assemblyQualifiedName: UnityEngine.PlayerLoop.FixedUpdate, UnityEngine.CoreModule,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     subSystemParameters:
@@ -176,7 +176,7 @@ MonoBehaviour:
       _assemblyQualifiedName: UnityEngine.PlayerLoop.FixedUpdate+ScriptRunDelayedFixedFrameRate,
         UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - parameter:
-      _enabled: 0
+      _enabled: 1
       _assemblyQualifiedName: UnityEngine.PlayerLoop.PreUpdate, UnityEngine.CoreModule,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     subSystemParameters:

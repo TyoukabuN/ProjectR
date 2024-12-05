@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PJR
 {
-    public partial class LogSystem : StaticSystem
+    public partial class LogSystem
     {
         public static string PATH_logFile = Application.persistentDataPath;
 
@@ -21,23 +21,27 @@ namespace PJR
         public const string TAG_WARNING_LOG = "Warning";
         public const string TAG_ERROR_LOG = "Error";
         public const string TAG_CRASH_LOG = "Crash";
+        public const string TAG_ASSERT_LOG = "Assert";
+        public const string TAG_EXCEPTION_LOG = "Exception";
 
         public static string STR_BLANK = " ";
 
         static StringBuilder s_sb;
         static StringBuilder sb => s_sb ??= new StringBuilder();
 
-        public static void Log(object content, bool orginalLog = true) => Log(content.ToString(), orginalLog);
-        public static void LogWarning(object content,bool orginalLog = true) => LogWarning(content.ToString(), orginalLog);
-        public static void LogError(object content, bool orginalLog = true) => LogError(content.ToString(), orginalLog);
+        public static void Log(object content, bool invokeUnityLog = false) => Log(content.ToString(), invokeUnityLog);
+        public static void LogWarning(object content, bool invokeUnityLog = false) => LogWarning(content.ToString(), invokeUnityLog);
+        public static void LogError(object content, bool invokeUnityLog = false) => LogError(content.ToString(), invokeUnityLog);
 
-        public static void Log(string content, bool orginalLog = true) => Debug.Log(LogWithTag(content, TAG_COMMON_LOG));
-        public static void LogWarning(string content, bool orginalLog = true) => Debug.LogWarning(LogWithTag(content, TAG_WARNING_LOG));
-        public static void LogError(string content, bool orginalLog = true) => Debug.LogError(LogWithTag(content, TAG_ERROR_LOG));
+        public static void Log(string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.Log(LogWithTag(content, TAG_COMMON_LOG)); else LogWithTag(content, TAG_COMMON_LOG); }
+        public static void LogWarning(string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.Log(LogWithTag(content, TAG_WARNING_LOG)); else LogWithTag(content, TAG_WARNING_LOG); }
+        public static void LogError(string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.Log(LogWithTag(content, TAG_ERROR_LOG)); else LogWithTag(content, TAG_ERROR_LOG); }
 
-        public static void Log(string tag, string content, bool orginalLog = true) { if (orginalLog) Debug.Log(LogWithTag(content, TAG_COMMON_LOG, tag)); else LogWithTag(content, TAG_COMMON_LOG, tag); }
-        public static void LogWarning(string tag, string content, bool orginalLog = true) { if (orginalLog) Debug.LogWarning(LogWithTag(content, TAG_WARNING_LOG, tag)); else LogWithTag(content, TAG_WARNING_LOG, tag); }
-        public static void LogError(string tag, string content, bool orginalLog = true) { if (orginalLog) Debug.LogError(LogWithTag(content, TAG_ERROR_LOG, tag)); else LogWithTag(content, TAG_ERROR_LOG, tag); }
+        public static void Log(string tag, string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.Log(LogWithTag(content, TAG_COMMON_LOG, tag)); else LogWithTag(content, TAG_COMMON_LOG, tag); }
+        public static void LogWarning(string tag, string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.LogWarning(LogWithTag(content, TAG_WARNING_LOG, tag)); else LogWithTag(content, TAG_WARNING_LOG, tag); }
+        public static void LogError(string tag, string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.LogError(LogWithTag(content, TAG_ERROR_LOG, tag)); else LogWithTag(content, TAG_ERROR_LOG, tag); }
+
+
 
         public static string LogWithTag(string content, params string[] tag)
         {
@@ -55,6 +59,7 @@ namespace PJR
 
             return EndEdit();
         }
+
         static void BeginEdit()
         {
             sb.Clear();

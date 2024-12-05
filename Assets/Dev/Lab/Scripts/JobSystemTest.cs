@@ -78,6 +78,12 @@ public class JobSystemTest : MonoBehaviour
             Clear();
     }
 
+    [Button]
+    public void Debug1()
+    {
+        Debug.LogError("123");
+    }
+
     public class PrimitiveWrap
     {
         public int index;
@@ -101,7 +107,7 @@ public class JobSystemTest : MonoBehaviour
         //    };
         //}
 
-        public void CreateJob()
+        public JobHandle CreateJob()
         {
             if(!result.IsCreated)
                 result = new NativeArray<float3>(1, Allocator.TempJob);
@@ -112,8 +118,9 @@ public class JobSystemTest : MonoBehaviour
                 time = Time.time,
                 result = result,
             };
+            return jobHandle;
         }
-        public void CreateJob(NativeArray<float3> _result)
+        public JobHandle CreateJob(NativeArray<float3> _result)
         {
             result = _result;
             job = new MovementJob()
@@ -123,10 +130,12 @@ public class JobSystemTest : MonoBehaviour
                 time = Time.time,
                 result = _result,
             };
+            return jobHandle;
         }
-        public void ScheduleJob()
+        public void ScheduleJob() => ScheduleJob(jobHandle);
+        public void ScheduleJob(JobHandle dependency)
         {
-            jobHandle = job.Schedule(jobHandle);
+            jobHandle = job.Schedule(dependency);
         }
         public void JobCompleteAndApplyResult()
         {
@@ -194,11 +203,12 @@ public class JobSystemTest : MonoBehaviour
         //    if(!result.IsCreated)
         //        result = new NativeParallelHashMap<int, float3>(PrimitiveMatrixSize.x * PrimitiveMatrixSize.y, Allocator.Persistent);
         //}
+        JobHandle lastJobHandle;
         foreach (var wrap in primitiveMap.Values)
         {
             if (createAndSchedule)
             {
-                wrap.CreateJob();
+                lastJobHandle = wrap.CreateJob();
                 wrap.ScheduleJob();
             }
             if (completeAndApply)

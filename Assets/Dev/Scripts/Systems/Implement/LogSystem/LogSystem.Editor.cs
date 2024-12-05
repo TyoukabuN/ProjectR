@@ -11,9 +11,10 @@ namespace PJR
 {
     public partial class LogSystem : StaticSystem
     {
-#if UNITY_EDITOR
-        [InitializeOnLoadMethod]
-#endif
+        static LogSystem()
+        {
+            RegisterEvent();
+        }
         static void RegisterEvent()
         {
             SetDefaultLogFile();
@@ -23,25 +24,32 @@ namespace PJR
                 Log("///////////////////////////////////////////////////");
                 Log("////////////////////[BatchMode]////////////////////");
                 Log("///////////////////////////////////////////////////");
-                Application.logMessageReceived -= OnLogMessageReceived;
-                Application.logMessageReceived += OnLogMessageReceived;
             }
+            Application.logMessageReceived -= OnLogMessageReceived2;
+            Application.logMessageReceived += OnLogMessageReceived2;
         }
-
-        /// <summary>
-        /// Unity的Debug回调
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <param name="stackTrace"></param>
-        /// <param name="type"></param>
-        static void OnLogMessageReceived(string condition, string stackTrace, LogType type)
-        { 
-            if(type == LogType.Log)
-                Log($"{condition}\n{stackTrace}", false);
-            else if(type == LogType.Warning)
-                LogWarning($"{condition}\n{stackTrace}", false);
-            else
-                LogError($"{condition}\n{stackTrace}", false);
+         
+        static void OnLogMessageReceived2(string condition, string stackTrace, LogType type)
+        {
+            LogWithTag(stackTrace, LogType2Tag(type));
+        }
+        static string LogType2Tag(LogType logType)
+        {
+            switch (logType)
+            {
+                case LogType.Error:
+                    return TAG_ERROR_LOG;
+                case LogType.Assert:
+                    return TAG_ASSERT_LOG;
+                case LogType.Warning:
+                    return TAG_WARNING_LOG;
+                case LogType.Log:
+                    return TAG_COMMON_LOG;
+                case LogType.Exception:
+                    return TAG_EXCEPTION_LOG;
+                default:
+                    return TAG_COMMON_LOG;
+            }
         }
 
 #if UNITY_EDITOR

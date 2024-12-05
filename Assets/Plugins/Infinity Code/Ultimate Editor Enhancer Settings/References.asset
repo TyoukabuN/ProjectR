@@ -19,8 +19,14 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: JobSystemTest
+    path: Assets/Dev/Lab/Scenes/JobSystemTest.unity
+  - name: CharacterPlayground
+    path: Assets/Plugins/KinematicCharacterController/Examples/Scenes/CharacterPlayground.unity
   - name: GameEntry_KccTest
     path: Assets/Scenes/GameEntry_KccTest.unity
+  - name: PlayerLoopTest
+    path: Assets/Dev/Lab/Scenes/PlayerLoopTest.unity
   - name: GameEntry_2
     path: Assets/Scenes/GameEntry_2.unity
   - name: GameEntry
@@ -51,10 +57,4 @@ MonoBehaviour:
     path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/HDRP/UnityChanKAGURA_HDRP.unity
   - name: UnityChanKAGURA_CoreRP
     path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/CoreRP/UnityChanKAGURA_CoreRP.unity
-  - name: Wind_CoreRP
-    path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/CoreRP/Wind_CoreRP.unity
-  - name: UnityChanKAGURA_URP
-    path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/URP/UnityChanKAGURA_URP.unity
-  - name: RuntimeDressUp_URP
-    path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/URP/RuntimeDressUp_URP.unity
   _notes: []

@@ -80,12 +80,14 @@ public class Test : MonoBehaviour
         if (true)
         {
             Vector3 obstructionLeftAlongGround = Vector3.Cross(GroundNormal, obstructionNormal).normalized;
+            Debug.Log(obstructionLeftAlongGround);
             obstructionNormal = Vector3.Cross(obstructionLeftAlongGround, _characterUp).normalized;
         }
 
         // Catch cases where cross product between parallel normals returned 0
         if (obstructionNormal.sqrMagnitude == 0f)
         {
+            Debug.Log("obstructionNormal.sqrMagnitude == 0f");
             obstructionNormal = hitNormal;
         }
 

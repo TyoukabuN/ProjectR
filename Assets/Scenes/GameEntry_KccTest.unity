@@ -1406,7 +1406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4670b620ea0163742a767f3534295c95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GenSceneMonster: 1
+  GenSceneMonster: 0
   GenSceneTrap: 0
   GenSceneItem: 0
 --- !u!1 &1685836886
@@ -1520,8 +1520,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Vec1: {x: 1, y: 0, z: 0}
   Vec2: {x: 0, y: 1, z: 0}
-  HitNormal: {x: -1, y: 0, z: 0}
-  GroundNormal: {x: 0.707, y: 0.707, z: 0}
+  HitNormal: {x: 0.707, y: 0, z: -0.707}
+  GroundNormal: {x: 0, y: 1, z: 0}
   _characterUp: {x: 0, y: 1, z: 0}
 --- !u!4 &1812420425
 Transform:

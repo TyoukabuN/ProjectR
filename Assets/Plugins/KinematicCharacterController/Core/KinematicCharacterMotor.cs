@@ -827,6 +827,9 @@ namespace KinematicCharacterController
             if (_solveMovementCollisions)
             {
                 #region Resolve initial overlaps
+                //这是第一次Resolve overlaps
+                //是为了在解决初始状态下的跟其他collider的overlaps
+                //也就是解决mover经过SetPositionAndRotation后与Moter发生Overlaps
                 Vector3 resolutionDirection = _cachedWorldUp;
                 float resolutionDistance = 0f;
                 int iterationsMade = 0;
@@ -1070,6 +1073,9 @@ namespace KinematicCharacterController
                 if (InteractiveRigidbodyHandling)
                 {
                     #region Resolve overlaps that could've been caused by rotation or physics movers simulation pushing the character
+                    //这是第二次Resolve overlaps
+                    //主要是为了在解决mover的SetPositionAndRotation之后导致与Moter发生的Overlaps,
+                    //或者是其他Collider的Overlaps
                     Vector3 resolutionDirection = _cachedWorldUp;
                     float resolutionDistance = 0f;
                     int iterationsMade = 0;

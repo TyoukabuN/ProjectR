@@ -2,9 +2,6 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor.Drawers;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -20,7 +17,11 @@ public class JobSystemTest : MonoBehaviour
 {
     [LabelText("使用Job计算")]
     public bool UsingJobs = false;
-    [LabelText("分阶段执行Job")]
+    [LabelText("使用ParallelJob"), ShowIf("@UsingJobs")]
+    public bool UsingParallelJob = false;
+    [ShowIf("@UsingParallelJob")]
+    public int InnerloopBatchCount = 1;
+    [LabelText("分阶段执行Job"), ShowIf("@UsingJobs")]
     public bool SplitJobWorkingPeriod = true;
 
     [LabelText("Primitive用材质")]
@@ -29,16 +30,35 @@ public class JobSystemTest : MonoBehaviour
     [LabelText("Primitive方阵大小")]
     public Vector2Int PrimitiveMatrixSize = new Vector2Int(16,16);
 
+    public int PrimitiveCount => PrimitiveMatrixSize.x * PrimitiveMatrixSize.y;
+
+
+    private void Awake()
+    {
+#if UNITY_EDITOR
+        EditorApplication.playModeStateChanged += state =>
+        {
+            if (state == PlayModeStateChange.ExitingPlayMode)
+            {
+                if (primitiveOriginalPositions.IsCreated) primitiveOriginalPositions.Dispose();
+            }
+        };
+#endif
+    }
+
     private void Update()
     {
-        if (primitiveMap != null && primitiveMap.Values.Count > 0)
+        if (!objectCreateDone)
+            return;
+
+        if (primitiveMap != null && primitiveMap.Length > 0)
         {
             if (UsingJobs) 
             { 
                 JobOperate(true, !SplitJobWorkingPeriod);
             }
             else {
-                foreach (var wrap in primitiveMap.Values)
+                foreach (var wrap in primitiveMap)
                 {
                     var pos = wrap.originPosition;
                     pos.y += math.sin(math.sqrt(math.dot(pos.xz, pos.xz)) + Time.time);
@@ -51,7 +71,7 @@ public class JobSystemTest : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (primitiveMap != null && primitiveMap.Values.Count > 0)
+        if (primitiveMap != null && primitiveMap.Length > 0)
         {
             if (UsingJobs)
             { 
@@ -93,20 +113,7 @@ public class JobSystemTest : MonoBehaviour
         public MovementJob job;
         public JobHandle jobHandle;
         private NativeArray<float3> result;
-        //private NativeParallelHashMap<int, float3> parallelResult;
-
-        //public void CreateJob(NativeParallelHashMap<int, float3> _result)
-        //{
-        //    parallelResult = _result;
-        //    job = new MovementJob()
-        //    {
-        //        index = index,
-        //        pos = originPosition,
-        //        time = Time.time,
-        //        result = parallelResult,
-        //    };
-        //}
-
+       
         public JobHandle CreateJob()
         {
             if(!result.IsCreated)
@@ -120,7 +127,7 @@ public class JobSystemTest : MonoBehaviour
             };
             return jobHandle;
         }
-        public JobHandle CreateJob(NativeArray<float3> _result)
+        public JobHandle CreateParallelJob(NativeArray<float3> _result)
         {
             result = _result;
             job = new MovementJob()
@@ -140,9 +147,13 @@ public class JobSystemTest : MonoBehaviour
         public void JobCompleteAndApplyResult()
         {
             jobHandle.Complete();
-            //gameObject.transform.position = parallelResult[index];
             gameObject.transform.position = result[0];
-            //result.Dispose();
+            //gameObject.transform.position = result[0];
+            if(result.IsCreated) result.Dispose();
+        }
+        public void ApplyParallelResult(NativeArray<float3> parallelResult)
+        {
+            gameObject.transform.position = parallelResult[index];
         }
         public void Dispose()
         { 
@@ -153,25 +164,36 @@ public class JobSystemTest : MonoBehaviour
         }
     }
 
-    private Dictionary<int, PrimitiveWrap> primitiveMap;
+    private PrimitiveWrap[] primitiveMap;
+    private NativeArray<float3> primitiveOriginalPositions;
 
     public void Clear()
     {
-        if (primitiveMap == null)
-            return;
-        foreach (var pair in primitiveMap)
-        {
-            pair.Value.Dispose();
+        if (primitiveMap != null)
+        { 
+            for (int i = 0; i < primitiveMap.Length; i++)
+            {
+                if (primitiveMap[i] == null)
+                    continue;
+                primitiveMap[i].Dispose();
+            }
+            primitiveMap?.Free();
+            primitiveMap = null;
         }
-        primitiveMap.Clear();
+
+        if(primitiveOriginalPositions.IsCreated) primitiveOriginalPositions.Dispose();
     }
+
+    [NonSerialized]
+    private bool objectCreateDone = false;
     public void CreateObjects()
     {
-        primitiveMap ??= new Dictionary<int, PrimitiveWrap>();
-
         Clear();
 
+        primitiveMap = ArrayPool<PrimitiveWrap>.New(PrimitiveCount);
+
         int index = 0;
+        primitiveOriginalPositions = new NativeArray<float3>(PrimitiveCount, Allocator.Persistent);
 
         for (int x = 0; x < PrimitiveMatrixSize.x; x++)
         {
@@ -186,34 +208,68 @@ public class JobSystemTest : MonoBehaviour
                     gameObject = gobj,
                     originPosition = new Vector3(x, 0, z),
                 };
-                primitiveMap.Add(wrap.index, wrap);
+                primitiveMap[wrap.index] = wrap;
+
+                primitiveOriginalPositions[wrap.index] = wrap.originPosition;
 
                 gobj.transform.position = wrap.originPosition;
             }
         }
+
+        objectCreateDone = true;
     }
 
 
-    private NativeParallelHashMap<int,float3> result;
+    private NativeArray<float3> parallelResult;
     public void JobOperate() => JobOperate(true, true);
+
+    public JobHandle parallelJobHandle;
     public void JobOperate(bool createAndSchedule = true, bool completeAndApply = true)
     {
-        //if (completeAndApply)
-        //{
-        //    if(!result.IsCreated)
-        //        result = new NativeParallelHashMap<int, float3>(PrimitiveMatrixSize.x * PrimitiveMatrixSize.y, Allocator.Persistent);
-        //}
-        JobHandle lastJobHandle;
-        foreach (var wrap in primitiveMap.Values)
+        if (UsingParallelJob)
         {
+            if (!primitiveOriginalPositions.IsCreated)
+                return;
             if (createAndSchedule)
             {
-                lastJobHandle = wrap.CreateJob();
-                wrap.ScheduleJob();
+                if (parallelResult.IsCreated)
+                    parallelResult.Dispose();
+                parallelResult = new NativeArray<float3>(PrimitiveCount, Allocator.TempJob);
+
+                var job = new PMovementJob();
+                job.originalPositions = primitiveOriginalPositions;
+                job.time = Time.time;
+                job.result = parallelResult;
+
+                parallelJobHandle = job.Schedule(PrimitiveCount, InnerloopBatchCount);
             }
+
             if (completeAndApply)
-            { 
-                wrap.JobCompleteAndApplyResult();
+            {
+                parallelJobHandle.Complete();
+
+                for (int i = 0; i < primitiveMap.Length; i++)
+                {
+                    primitiveMap[i].ApplyParallelResult(parallelResult);
+                }
+
+                if (parallelResult.IsCreated)
+                    parallelResult.Dispose();
+            }
+        }
+        else
+        {
+            foreach (var wrap in primitiveMap)
+            {
+                if (createAndSchedule)
+                {
+                    wrap.CreateJob();
+                    wrap.ScheduleJob();
+                }
+                if (completeAndApply)
+                {
+                    wrap.JobCompleteAndApplyResult();
+                }
             }
         }
     }
@@ -232,6 +288,21 @@ public class JobSystemTest : MonoBehaviour
             pos.y += math.sin(math.sqrt(math.dot(pos.xz, pos.xz)) + time);
             result[0] = pos;
             //result[index] = pos;
+        }
+    }
+
+    [BurstCompile]
+    public struct PMovementJob : IJobParallelFor
+    {
+        public NativeArray<float3> originalPositions;
+        public float time;
+
+        public NativeArray<float3> result;
+        public void Execute(int index)
+        {
+            var pos = originalPositions[index];
+            pos.y += math.sin(math.sqrt(math.dot(pos.xz, pos.xz)) + time);
+            result[index] = pos;
         }
     }
 }

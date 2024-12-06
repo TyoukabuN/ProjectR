@@ -262,9 +262,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UsingJobs: 1
+  UsingParallelJob: 1
+  InnerloopBatchCount: 1
   SplitJobWorkingPeriod: 0
   PrimitiveMaterial: {fileID: 2100000, guid: f7f7cc9fce1b6b2479cd35b289aa744a, type: 2}
-  PrimitiveMatrixSize: {x: 64, y: 64}
+  PrimitiveMatrixSize: {x: 64, y: 128}
 --- !u!1 &2124265041
 GameObject:
   m_ObjectHideFlags: 0

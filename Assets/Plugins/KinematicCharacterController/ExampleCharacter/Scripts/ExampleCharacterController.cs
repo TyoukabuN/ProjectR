@@ -326,10 +326,6 @@ namespace KinematicCharacterController.Examples
                                     {
                                         addedVelocity = Vector3.ProjectOnPlane(addedVelocity, currentVelocityOnInputsPlane.normalized);
                                     }
-                                    else
-                                    {
-                                        Debug.Log(321);
-                                    }
                                 }
 
                                 // Prevent air-climbing sloped walls

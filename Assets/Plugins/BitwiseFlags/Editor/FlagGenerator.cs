@@ -192,14 +192,12 @@ public class FlagGenerator : EditorWindow
                 Debug.LogWarning($"路径无效： {fileRoot}");
             }
 
-            bool justCreateRoot = false;
             if (!AssetDatabase.IsValidFolder(fileRoot))
             {
                 string direction = Path.GetDirectoryName(fileRoot);
                 if (AssetDatabase.IsValidFolder(direction))
                 {
                     AssetDatabase.CreateFolder(direction, GenerateFolderName);
-                    justCreateRoot = true;
                     goto FolderValid;
                 }
 
@@ -234,6 +232,7 @@ public class FlagGenerator : EditorWindow
                 filePath = filePath,
             };
 
+            AppendLine("#pragma warning disable CS0660, CS0661");
             AppendLine("using System;");
             AppendLine("using System.Text;");
             AppendLine($"public struct {h.className} : IBitwiseFlag<{h.className}>");
@@ -245,6 +244,7 @@ public class FlagGenerator : EditorWindow
                 Append_Functions();
             }
             AppendLine("}");
+            AppendLine("#pragma warning restore CS0660, CS0661");
 
             File.WriteAllText(filePath, h.sb.ToString());
 

@@ -1,4 +1,4 @@
-// using Microsoft.CodeAnalysis.CSharp.Syntax;
+#pragma warning disable CS0660,CS0661
 
 public abstract class IFlag<FlagType> where FlagType : struct
 {
@@ -19,5 +19,6 @@ public abstract class IFlag<FlagType> where FlagType : struct
 	public static bool operator ==(IFlag<FlagType> f1, IFlag<FlagType> f2) { return false; }
 	public static bool operator !=(IFlag<FlagType> f1, IFlag<FlagType> f2) { return false; }
 	public static implicit operator bool(IFlag<FlagType> f) { return false; }
-	public abstract string ToString();
+	public override string ToString() => string.Empty;
 }
+#pragma warning restore CS0660, CS0661

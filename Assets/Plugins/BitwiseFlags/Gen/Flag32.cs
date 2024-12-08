@@ -1,3 +1,4 @@
+#pragma warning disable CS0660,CS0661
 using System;
 using System.Text;
 public struct Flag32
@@ -146,5 +147,5 @@ public struct Flag32
 	{
 		return this == Empty;
 	}
-	
 }
+#pragma warning restore CS0660,CS0661

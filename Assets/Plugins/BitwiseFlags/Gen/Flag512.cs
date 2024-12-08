@@ -1,3 +1,4 @@
+#pragma warning disable CS0660,CS0661
 using System;
 using System.Text;
 public struct Flag512 : IBitwiseFlag<Flag512>
@@ -476,5 +477,5 @@ public struct Flag512 : IBitwiseFlag<Flag512>
 	{
 		return this == Empty;
 	}
-	
 }
+#pragma warning restore CS0660, CS0661

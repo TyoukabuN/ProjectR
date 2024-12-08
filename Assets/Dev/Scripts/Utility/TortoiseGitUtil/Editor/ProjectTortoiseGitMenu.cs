@@ -13,7 +13,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ProjectTools
         }
 
         private static Texture2D _tortoiseGitThumb;
-        private static string _tortoiseGitThumbPath = "Assets/Dev/Scripts/Utility/TortoiseGitUtil/Resources/Icons/TortoiseGitThumb.png";
+        private static string _tortoiseGitThumbPath = "Assets/Dev/Scripts/Utility/TortoiseGitUtility/Resources/Icons/TortoiseGitThumb.png";
         public static Texture2D TortoiseGitThumb
         {
             get
@@ -48,11 +48,11 @@ namespace InfinityCode.UltimateEditorEnhancer.ProjectTools
 
                     string itemFullPath = PJR.PathUtility.GetFullPath(item.path);
 
-                    menu.Add("Log", () => TortoiseGitUtil.SVNLog(itemFullPath));
-                    menu.Add("Commit", () => TortoiseGitUtil.SVNCommit(itemFullPath));
-                    menu.Add("Revert", () => TortoiseGitUtil.SVNRevert(itemFullPath));
-                    menu.Add("Pull", () => TortoiseGitUtil.SVNPull(itemFullPath));
-                    menu.Add("Push", () => TortoiseGitUtil.SVNPush(itemFullPath));
+                    menu.Add("Log", () => TortoiseGitUtility.SVNLog(itemFullPath));
+                    menu.Add("Commit", () => TortoiseGitUtility.SVNCommit(itemFullPath));
+                    menu.Add("Revert", () => TortoiseGitUtility.SVNRevert(itemFullPath));
+                    menu.Add("Pull", () => TortoiseGitUtility.SVNPull(itemFullPath));
+                    menu.Add("Push", () => TortoiseGitUtility.SVNPush(itemFullPath));
                     menu.Add("需要安装TortoiseGit", () => { });
 
                     menu.Show();

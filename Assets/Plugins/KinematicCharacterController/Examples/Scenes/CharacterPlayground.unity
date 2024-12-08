@@ -22036,7 +22036,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &1078244172
 Canvas:
   m_ObjectHideFlags: 0
@@ -43760,3 +43760,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   solveMovementCollisions: 0
+  HasPlanarConstraint: 0

@@ -1,5 +1,5 @@
 {
-    "name": "TortoiseGitUtil.Editor",
+    "name": "TortoiseGitUtility.Editor",
     "rootNamespace": "",
     "references": [
         "GUID:2ecf6041f1cb4e479a7303248208fa08",

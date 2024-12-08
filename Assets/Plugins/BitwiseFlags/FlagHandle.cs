@@ -1,3 +1,4 @@
+#pragma warning disable CS0660,CS0661
 using Sirenix.OdinInspector;
 using System;
 using UnityEditor;
@@ -416,3 +417,4 @@ public class FlagHandle512
 #endif
 }
 
+#pragma warning restore CS0660, CS0661

@@ -24,6 +24,9 @@ public class JobSystemTest : MonoBehaviour
     [LabelText("分阶段执行Job"), ShowIf("@UsingJobs")]
     public bool SplitJobWorkingPeriod = true;
 
+
+    [LabelText("Primitive类型")]
+    public PrimitiveType PrimitiveType;
     [LabelText("Primitive用材质")]
     public Material PrimitiveMaterial;
 
@@ -199,7 +202,7 @@ public class JobSystemTest : MonoBehaviour
         {
             for (int z = 0; z < PrimitiveMatrixSize.y; z++)
             { 
-                var gobj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                var gobj = GameObject.CreatePrimitive(PrimitiveType);
                 if(PrimitiveMaterial != null)
                     gobj.GetComponent<MeshRenderer>().material = PrimitiveMaterial;
 
@@ -213,6 +216,7 @@ public class JobSystemTest : MonoBehaviour
                 primitiveOriginalPositions[wrap.index] = wrap.originPosition;
 
                 gobj.transform.position = wrap.originPosition;
+                gobj.hideFlags = HideFlags.HideInHierarchy;
             }
         }
 

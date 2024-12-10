@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
+using PJR.Core.Pooling;
 
 namespace PJR.ScriptStates
 {
-    public interface IPoolItem
-    {
-        public void OnGet();
-        public void OnRelease();
-    }
     public abstract class ScriptTransition : IPoolItem
     {
         public int toState = -1;

@@ -30,5 +30,11 @@ namespace PJR
             animancer = false,
             collider = false,
         };
+        public static PhysEntityComponentRequire NonKCCOnly => new PhysEntityComponentRequire
+        {
+            kinematicCharacterMotor = false,
+            animancer = true,
+            collider = true,
+        };
     }
 }

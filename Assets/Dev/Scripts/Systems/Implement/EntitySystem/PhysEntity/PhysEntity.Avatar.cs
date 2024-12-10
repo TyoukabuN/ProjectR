@@ -87,21 +87,32 @@ namespace PJR
 
             BeginLoadAsset();
         }
+
         /// <summary>
         /// 根据avatar所需的assetNames加载/创建avatar
         /// </summary>
         /// <param name="assetNames"></param>
-        public void CreateAvatar(LogicEntity logicEntity)
+        public void CreateAvatar(LogicEntity logicEntity, PhysEntityComponentRequire physRequire, Action<PhysEntity> onAvatarLoadDone, Action onDrawGizmos)
         {
             if (logicEntity == null)
                 return;
             this.logicEntity = logicEntity;
             this._assetNames = logicEntity.entityContext.avatarAssetNames;
 
+            this.physRequire = physRequire;
+            if(onAvatarLoadDone != null) this.onAvatarLoadDone += onAvatarLoadDone;
+            if(onDrawGizmos != null) this.onDrawGizmos += onDrawGizmos;
+
             gameObject.name = $"{logicEntity.entityName}_{physEntityId}";
 
             BeginLoadAsset();
         }
+        public void CreateAvatar(LogicEntity logicEntity, Action<PhysEntity> onAvatarLoadDone, Action onDrawGizmos) => CreateAvatar(logicEntity, PhysEntityComponentRequire.Default, onAvatarLoadDone, onDrawGizmos);
+        public void CreateAvatar(LogicEntity logicEntity, PhysEntityComponentRequire physRequire, Action onDrawGizmos) => CreateAvatar(logicEntity, physRequire, null, onDrawGizmos);
+        public void CreateAvatar(LogicEntity logicEntity, PhysEntityComponentRequire physRequire, Action<PhysEntity> onAvatarLoadDone) => CreateAvatar(logicEntity, physRequire, onAvatarLoadDone, null);
+        public void CreateAvatar(LogicEntity logicEntity, PhysEntityComponentRequire physRequire) => CreateAvatar(logicEntity, physRequire, null, null);
+        public void CreateAvatar(LogicEntity logicEntity) => CreateAvatar(logicEntity, PhysEntityComponentRequire.Default, null, null);
+
 
         public void SetTransformByEntityContext(EntityContext context)
         {

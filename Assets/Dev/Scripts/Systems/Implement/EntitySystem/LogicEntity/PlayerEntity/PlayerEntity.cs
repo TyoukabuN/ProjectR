@@ -15,9 +15,14 @@ namespace PJR
     {
         public override string entityName => "PlayerEntity";
 
-        public override void OnCreate(EntityContext context)
+        public override bool OnCreate(EntityContext context)
         { 
             var physEntity = EntitySystem.CreatePhysEntity();
+            if (physEntity == null)
+            {
+                LogSystem.LogError("Failure to create a PhysEntity", true);
+                return false;
+            }
 
             context.avatarAssetNames = new AvatarAssetNames()
             {
@@ -31,18 +36,15 @@ namespace PJR
 
             //
             physEntity.gameObject.tag = EntityDefine.EntityTag.Player;
-            physEntity.CreateAvatar(this);
-            physEntity.logicEntity = this;
-            physEntity.onAvatarLoadDone += OnAvatarLoadDone;
-            physEntity.onDrawGizmos += OnDrawGizmos;
+            physEntity.CreateAvatar(this, PhysEntityComponentRequire.All, OnAvatarLoadDone, OnDrawGizmos);
             //
             this.physEntity = physEntity;
-            this.gameObject = physEntity.gameObject;
-            this.transform = physEntity.transform;
 
 #if UNITY_EDITOR
             GUIHelper.PingObject(physEntity);
 #endif
+
+            return true;
         }
         protected override void OnAvatarLoadDone(PhysEntity physEntity)
         {

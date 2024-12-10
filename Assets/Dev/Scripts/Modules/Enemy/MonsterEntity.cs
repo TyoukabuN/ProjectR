@@ -26,7 +26,7 @@ public partial class MonsterEntity : StateMachineEntity
         }
         Update_InputKCContent();
     }
-    public override void OnCreate(EntityContext context)
+    public override bool OnCreate(EntityContext context)
     {
         if (ResourceSystem.TryGetAsset("EntityPhysicsConfig.asset", out var loader))
             physicsConfig = loader.GetRawAsset<EntityPhysicsConfigAsset>();
@@ -34,7 +34,7 @@ public partial class MonsterEntity : StateMachineEntity
             LogSystem.LogError("PlayerEntity.OnCreate 加载 EntityPhysicsConfig 失败");
 
         physRequire = PhysEntityComponentRequire.All;
-        base.OnCreate(context);
+        return base.OnCreate(context);
     }
     protected override void OnAvatarLoadDone(PhysEntity physEntity)
     {

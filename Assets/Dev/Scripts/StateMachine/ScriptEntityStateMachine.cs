@@ -71,6 +71,7 @@ namespace PJR.ScriptStates
                     toState = transitions[i].toState;
                     if (states[toState] == null)
                         continue;
+                    //return CheckTransition(toState, out toState);
                     return true;
                 }
             }

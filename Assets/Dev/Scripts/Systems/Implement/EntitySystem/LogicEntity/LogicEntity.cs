@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using PJR.ScriptStates;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace PJR
@@ -10,8 +9,9 @@ namespace PJR
     {
         public virtual string entityName { get;}
         public PhysEntity physEntity;
-        public GameObject gameObject;
-        public Transform transform;
+        public GameObject gameObject => physEntity?.gameObject;
+        public Transform transform => physEntity?.transform;
+
         public InputHandle inputHandle;
         public EntityContext entityContext;
         public ScriptEntityStateMachine<EntityScriptState> scriptStateMachine;
@@ -19,23 +19,20 @@ namespace PJR
         public PhysEntityComponentRequire physRequire = PhysEntityComponentRequire.Default;
         public Dictionary<string, ExtraValue> ExtraValueMap { get; set; }
 
+        public List<LogicUnit> LogicComponents;
         public virtual void Init() { }
         public virtual void Update() { }
         public virtual void LateUpdate() { }
         public virtual void Destroy() { }
-        public virtual void OnCreate(EntityContext context) {
-            var physEntity = EntitySystem.CreatePhysEntity();
-            //
-            physEntity.CreateAvatar(this);
-            physEntity.logicEntity = this;
-            physEntity.physRequire = physRequire;
-            physEntity.onAvatarLoadDone += OnAvatarLoadDone;
-            physEntity.onDrawGizmos += OnDrawGizmos;
-
-            //
-            this.physEntity = physEntity;
-            this.gameObject = physEntity.gameObject;
-            this.transform = physEntity.transform;
+        public virtual bool OnCreate(EntityContext context) {
+            physEntity = EntitySystem.CreatePhysEntity();
+            if (physEntity == null)
+            {
+                LogSystem.LogError("Failure to create a PhysEntity", true);
+                return false;
+            }    
+            physEntity.CreateAvatar(this, physRequire, OnAvatarLoadDone, OnDrawGizmos);
+            return true;
         }
         protected virtual void OnAvatarLoadDone(PhysEntity physEntity) { }
 

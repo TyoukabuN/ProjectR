@@ -9,22 +9,16 @@ namespace PJR
         public override string entityName => "ItemEntity";
         public ItemConfigAsset config;
         public ItemRepopHandler itembase;
-        public override void OnCreate(EntityContext context)
+        public override bool OnCreate(EntityContext context)
         {
-            var physEntity = EntitySystem.CreatePhysEntity();
-            var physRequire = PhysEntityComponentRequire.Default;
-            physRequire.kinematicCharacterMotor = false;
-
-            physEntity.CreateAvatar(this);
-            physEntity.logicEntity = this;
-            physEntity.physRequire = physRequire;
-            physEntity.onDrawGizmos += OnDrawGizmos;
-
+            physEntity = EntitySystem.CreatePhysEntity();
+            if (physEntity == null)
+            {
+                LogSystem.LogError("Failure to create a PhysEntity", true);
+                return false;
+            }
+            physEntity.CreateAvatar(this, PhysEntityComponentRequire.NonKCCOnly, OnDrawGizmos);
             //
-            this.physEntity = physEntity;
-            this.gameObject = physEntity.gameObject;
-            this.transform = physEntity.transform;
-
             physEntity.onTriggerEnter += OnTriggerEnter;
             physEntity.onTriggerStay += OnTriggerEnter;
 
@@ -32,6 +26,7 @@ namespace PJR
             itembase.CanRegenerateTimes = config.CanRegenerateTimes;
             itembase.interval = config.interval;
             itembase.itemconfig = config;
+            return true;
         }
         public void OnTriggerEnter(Collider collider)
         {

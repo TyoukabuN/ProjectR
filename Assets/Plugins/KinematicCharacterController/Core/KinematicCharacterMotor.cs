@@ -1627,6 +1627,8 @@ namespace KinematicCharacterController
             {
                 Vector3 obstructionLeftAlongGround = Vector3.Cross(GroundingStatus.GroundNormal, obstructionNormal).normalized;
                 obstructionNormal = Vector3.Cross(obstructionLeftAlongGround, _characterUp).normalized;
+
+                Debug.Log($"{obstructionNormal}  {Vector3.ProjectOnPlane(hitNormal, _characterUp)}");
             }
 
             // Catch cases where cross product between parallel normals returned 0

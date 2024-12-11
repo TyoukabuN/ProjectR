@@ -1,4 +1,5 @@
-using PJR.Input;
+using PJR.Systems.Input;
+using PJR.Systems;
 using UnityEngine;
 
 namespace PJR
@@ -7,14 +8,7 @@ namespace PJR
     {
         protected override void Init_Input()
         {
-            inputHandle = new PlayerInputHandle();
-            InputSystem.RegisterHandle(inputHandle);
-            if (inputHandle == null)
-            { 
-                LogSystem.LogError("[PlayerEntity.Init_Input]找不到对应的InputAssetMap");
-                return;
-            }
-            Update_InputKCContent();
+
         }
 
         protected override void Update_InputKCContent()
@@ -23,6 +17,9 @@ namespace PJR
                 return;
 
             var context = InputKCContent;
+            if (context == null)
+                return;
+
             var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move);
             context.motor ??= this.physEntity.motor;
             context.inputAxi = inputAxi;
@@ -49,9 +46,9 @@ namespace PJR
 
                 context.moveInputVector = cameraPlanarRotation * context.rawMoveInputVector;
 
-                if(orientationMethod == OrientationMethod.TowardsCamera)
+                if(OrientationMethod == OrientationMethod.TowardsCamera)
                     context.lookInputVector = cameraPlanarDirection;
-                else if(orientationMethod == OrientationMethod.TowardsMovement)
+                else if(OrientationMethod == OrientationMethod.TowardsMovement)
                     context.lookInputVector = context.moveInputVector.normalized;
 
             }

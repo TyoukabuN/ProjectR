@@ -2,10 +2,8 @@ using PJR.ScriptStates.Player;
 using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
-using System.Reflection;
 using System.Linq;
-using System.Collections.Generic;
-using static UnityEngine.EventSystems.EventTrigger;
+using PJR.Systems;
 
 namespace PJR
 {

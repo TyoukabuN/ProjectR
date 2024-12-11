@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class EffectSystem : MonoSingletonSystem<ResourceSystem>
     {

@@ -1,4 +1,4 @@
-using PJR.Input;
+using PJR.Systems.Input;
 using PJR.ScriptStates.Player;
 using System.Collections.Generic;
 using UnityEditor;

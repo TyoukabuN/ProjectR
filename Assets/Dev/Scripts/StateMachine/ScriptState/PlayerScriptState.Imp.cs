@@ -1,6 +1,6 @@
 using Animancer;
 using UnityEngine;
-using PJR.Input;
+using PJR.Systems.Input;
 using Sirenix.OdinInspector;
 
 namespace PJR.ScriptStates.Player

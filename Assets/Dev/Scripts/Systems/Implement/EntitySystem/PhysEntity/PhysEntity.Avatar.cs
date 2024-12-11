@@ -2,7 +2,8 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using static PJR.ResourceSystem;
+using static PJR.Systems.ResourceSystem;
+using PJR.Systems;
 
 namespace PJR
 {

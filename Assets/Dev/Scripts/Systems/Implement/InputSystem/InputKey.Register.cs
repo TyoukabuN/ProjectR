@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace PJR.Input
+namespace PJR.Systems.Input
 {
     public enum KeyCategory
     {
@@ -15,7 +15,7 @@ namespace PJR.Input
         public static InputKey Run = InputKey.Register(KeyCategory.PlayerInput, "Run");
         public static InputKey Jump = InputKey.Register(KeyCategory.PlayerInput, "Jump");
         /// <summary>
-        /// 单纯是为了初始化static field
+        /// 鍗曠函鏄负浜嗗垵濮嬪寲static field
         /// </summary>
         public static void Init() { }
     }

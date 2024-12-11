@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class EntitySystem : MonoSingletonSystem<EntitySystem>
     {

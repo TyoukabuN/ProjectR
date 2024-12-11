@@ -11,7 +11,7 @@ using Cysharp.Threading.Tasks;
 using UnityEditor;
 #endif
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class ResourceSystem : MonoSingletonSystem<ResourceSystem>
     {

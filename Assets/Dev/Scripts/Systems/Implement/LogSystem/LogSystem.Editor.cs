@@ -7,7 +7,7 @@ using System;
 using UnityEditor;
 #endif
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class LogSystem : StaticSystem
     {

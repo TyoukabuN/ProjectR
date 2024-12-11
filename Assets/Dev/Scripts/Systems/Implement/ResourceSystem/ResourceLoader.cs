@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class ResourceSystem
     {

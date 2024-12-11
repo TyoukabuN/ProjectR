@@ -1,5 +1,5 @@
 using UnityEngine;
-using PJR.Input;
+using PJR.Systems.Input;
 using PJR.ScriptStates.Player;
 using System.Runtime.InteropServices.ComTypes;
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-namespace PJR
+namespace PJR.Systems
 {
     public class ForceField : FieldObject
     {

@@ -4,7 +4,7 @@ using UnityEditor;
 #endif
 
 #if UNITY_EDITOR
-namespace PJR
+namespace PJR.Systems
 {
     public partial class ResourceSystem
     {

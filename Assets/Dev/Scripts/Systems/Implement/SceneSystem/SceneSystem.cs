@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class SceneSystem : MonoSingletonSystem<SceneSystem>
     {

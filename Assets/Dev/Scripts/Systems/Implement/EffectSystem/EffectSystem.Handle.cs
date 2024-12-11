@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static PJR.ResourceSystem;
+using static PJR.Systems.ResourceSystem;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class EffectSystem
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class SceneSystem : MonoSingletonSystem<SceneSystem>
     {

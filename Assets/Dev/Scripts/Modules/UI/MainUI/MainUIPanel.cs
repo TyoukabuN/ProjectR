@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using PJR.Systems;
 
 namespace PJR
 {
@@ -25,7 +26,7 @@ namespace PJR
             });
             iModel.onLoadDone += (model) =>
               {
-                  Debug.Log($"{model}模型加载成功");
+                  Debug.Log($"{model}妯″瀷鍔犺浇鎴愬姛");
               };
         }
     }

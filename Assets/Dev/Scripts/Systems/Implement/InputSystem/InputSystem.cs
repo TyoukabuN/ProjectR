@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using PJR.Input;
+using PJR.Systems.Input;
 using Sirenix.OdinInspector;
 using static UnityEngine.InputSystem.InputAction;
 using System;
 using System.Collections;
-using static PJR.ResourceSystem;
+using static PJR.Systems.ResourceSystem;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class InputSystem : MonoSingletonSystem<InputSystem>
     {

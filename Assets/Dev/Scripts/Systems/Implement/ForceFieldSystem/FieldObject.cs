@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
 using System;
-using static PJR.FieldSystem;
+using static PJR.Systems.FieldSystem;
 
-namespace PJR
+namespace PJR.Systems
 {
     public abstract class FieldObject : MonoBehaviour, IDisposable
     {

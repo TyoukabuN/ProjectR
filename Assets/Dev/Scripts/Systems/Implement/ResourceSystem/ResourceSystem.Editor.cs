@@ -7,7 +7,7 @@ using YooAsset;
 using System;
 using Object = UnityEngine.Object;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class ResourceSystem
     {

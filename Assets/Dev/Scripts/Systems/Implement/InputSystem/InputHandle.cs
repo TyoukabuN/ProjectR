@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
-using PJR.Input;
+using PJR.Systems.Input;
 using UnityEngine;
-using PJR;
-using Unity.VisualScripting;
 
-namespace PJR
+namespace PJR.Systems
 {
-
     public abstract class InputHandle
     {
         public abstract KeyCategory keyCategory { get; }

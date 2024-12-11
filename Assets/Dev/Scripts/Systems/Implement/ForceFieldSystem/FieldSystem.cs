@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using System;
 using PJR;
 
-namespace PJR
+namespace PJR.Systems
 {
 
     public partial class FieldSystem : MonoSingletonSystem<FieldSystem>

@@ -2,8 +2,8 @@ using UnityEngine;
 using System.IO;
 using Sirenix.OdinInspector;
 using System;
-using YooAsset;
-using static PJR.ResourceSystem;
+using static PJR.Systems.ResourceSystem;
+using PJR.Systems;
 
 #if UNITY_EDITOR
 using UnityEditor;

@@ -1,15 +1,10 @@
-using YooAsset;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using System.IO;
-using UnityEditor;
-using PJR;
 
-namespace PJR
+namespace PJR.Systems
 {
-    public class ConfigSystem : MonoSingletonSystem<ResourceSystem>
+    public class ConfigSystem : MonoSingletonSystem<ConfigSystem>
     {
         protected static bool _initialized = false;
 

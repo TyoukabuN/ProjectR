@@ -6,9 +6,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static PJR.ResourceSystem;
+using static PJR.Systems.ResourceSystem;
 
-namespace PJR
+namespace PJR.Systems
 {
     public enum UILayer
     {

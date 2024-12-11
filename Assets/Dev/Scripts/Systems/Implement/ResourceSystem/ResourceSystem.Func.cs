@@ -6,7 +6,7 @@ using System.IO;
 using System;
 using YooAsset;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class ResourceSystem
     {

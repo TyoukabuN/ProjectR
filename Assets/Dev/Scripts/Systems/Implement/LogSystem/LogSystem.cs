@@ -3,7 +3,7 @@ using UnityEngine;
 using System.IO;
 using System.Text;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class LogSystem
     {

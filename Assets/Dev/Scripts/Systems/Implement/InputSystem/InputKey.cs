@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PJR.Input
+namespace PJR.Systems.Input
 {
     [Serializable]
     public partial class InputKey

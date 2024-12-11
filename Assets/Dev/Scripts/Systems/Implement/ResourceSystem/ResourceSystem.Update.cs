@@ -9,7 +9,7 @@ using System.Linq;
 using NPOI.SS.Formula.Functions;
 using System.Runtime.Serialization;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class ResourceSystem
     {

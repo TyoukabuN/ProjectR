@@ -1,7 +1,7 @@
 using UnityEngine.InputSystem;
-using PJR.Input;
+using PJR.Systems.Input;
 
-namespace PJR
+namespace PJR.Systems
 {
     public class PlayerInputHandle : InputHandle
     {

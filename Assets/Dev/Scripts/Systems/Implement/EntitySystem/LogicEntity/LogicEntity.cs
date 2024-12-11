@@ -1,11 +1,13 @@
-using System;
 using System.Collections.Generic;
 using PJR.ScriptStates;
+using PJR.LogicUnits;
+using PJR.Systems;
 using UnityEngine;
+using System.Linq;
 
 namespace PJR
 {
-    public abstract class LogicEntity : INumericalControl
+    public abstract partial class LogicEntity : INumericalControl
     {
         public virtual string entityName { get;}
         public PhysEntity physEntity;
@@ -19,7 +21,6 @@ namespace PJR
         public PhysEntityComponentRequire physRequire = PhysEntityComponentRequire.Default;
         public Dictionary<string, ExtraValue> ExtraValueMap { get; set; }
 
-        public List<LogicUnit> LogicComponents;
         public virtual void Init() { }
         public virtual void Update() { }
         public virtual void LateUpdate() { }
@@ -35,7 +36,6 @@ namespace PJR
             return true;
         }
         protected virtual void OnAvatarLoadDone(PhysEntity physEntity) { }
-
         public virtual void EnterState(int state) { }
         public virtual void OnDrawGizmos() { }
     }

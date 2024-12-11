@@ -1,21 +1,19 @@
-using PJR.Input;
+using PJR.Systems.Input;
 using UnityEngine;
 
 namespace PJR
 {
+    public enum OrientationMethod
+    {
+        TowardsCamera,
+        TowardsMovement,
+    }
     public partial class StateMachineEntity : LogicEntity
     {
-        public enum OrientationMethod
-        {
-            TowardsCamera,
-            TowardsMovement,
-        }
-
-        public OrientationMethod orientationMethod = OrientationMethod.TowardsMovement;
-
+        public override OrientationMethod OrientationMethod => OrientationMethod.TowardsMovement;
 
         public KCContext _inputKCContent = null;
-        public KCContext InputKCContent { 
+        public override KCContext InputKCContent { 
             get {
                 return _inputKCContent ??= new KCContext();
             }

@@ -1,12 +1,12 @@
 using UnityEngine;
 using System;
 using Sirenix.OdinInspector;
-using static PJR.ResourceSystem;
+using static PJR.Systems.ResourceSystem;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-namespace PJR
+namespace PJR.Systems
 {
     [HelpURL("https://docs.qq.com/doc/DY3BsdUlVSGpLUk5W")]
     [ExecuteInEditMode]

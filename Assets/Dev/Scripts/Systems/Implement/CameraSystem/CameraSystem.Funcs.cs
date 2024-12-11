@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace PJR
+namespace PJR.Systems
 { 
     public partial class CameraSystem : MonoSingletonSystem<CameraSystem>
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using PJR.Input;
+using PJR.Systems.Input;
 using System;
 
 namespace PJR.ScriptStates.Player

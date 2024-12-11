@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace PJR
+namespace PJR.Systems
 {
     public abstract class MonoSingletonSystem<T> : MonoSingleton<T> where T : MonoSingleton
     {

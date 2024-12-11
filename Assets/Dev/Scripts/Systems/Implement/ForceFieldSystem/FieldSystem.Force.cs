@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using static PJR.ForceField;
+using static PJR.Systems.ForceField;
 using Sirenix.OdinInspector;
 using PJR;
 
-namespace PJR
+namespace PJR.Systems
 {
     public partial class FieldSystem : MonoSingletonSystem<FieldSystem>
     {

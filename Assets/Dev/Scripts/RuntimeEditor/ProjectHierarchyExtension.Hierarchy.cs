@@ -39,7 +39,7 @@ namespace PJR
         [MenuItem("GameObject/PJR/Copy Path", false)]
         public static void CopyPath()
         {
-            var path = TransformExtension.CopyPath(Selection.activeGameObject?.transform);
+            var path = TransformExtension.CopyHierarchyPath(Selection.activeGameObject?.transform);
             Debug.Log(path);
             var textEditor = new TextEditor();
             textEditor.text = path;

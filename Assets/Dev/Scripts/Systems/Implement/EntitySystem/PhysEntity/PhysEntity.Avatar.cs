@@ -219,6 +219,7 @@ namespace PJR
         protected void InitAvatar(GameObject avatar)
         {
             avatar.transform.SetParent(ModelRoot, false);
+            avatar.transform.ResetValue();
 
             SetTransformByEntityContext(logicEntity.entityContext);
 

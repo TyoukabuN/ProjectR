@@ -1,6 +1,4 @@
 using PJR.ScriptStates.Player;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using PJR.Systems;
@@ -27,7 +25,7 @@ namespace PJR
 
             context.avatarAssetNames = new AvatarAssetNames()
             {
-                modelName = "Avatar_Slime.prefab",
+                modelName = "Avater_KCCTester.prefab",
             };
 
             if (ResourceSystem.TryGetAsset("EntityPhysicsConfig.asset", out var loader))
@@ -37,7 +35,7 @@ namespace PJR
 
             //
             physEntity.gameObject.tag = EntityDefine.EntityTag.Player;
-            physEntity.CreateAvatar(this, PhysEntityComponentRequire.All, OnAvatarLoadDone, OnDrawGizmos);
+            physEntity.CreateAvatar(this, PhysEntityComponentRequire.NonAnimancerOnly, OnAvatarLoadDone, OnDrawGizmos);
             //
             this.physEntity = physEntity;
 

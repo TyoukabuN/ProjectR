@@ -10,8 +10,12 @@ namespace PJR.LogicUnits
     public class EntityInputLogicUnit : EntityLogicUnit
     {
         public InputHandle inputHandle;
+
+        private LogicEntity dependant;
+        public override LogicEntity Dependant => dependant;
         public override void OnInit(LogicEntity dependency)
         {
+            this.dependant = dependency;
             inputHandle = new PlayerInputHandle();
             InputSystem.RegisterHandle(inputHandle);
             if (inputHandle == null)
@@ -27,7 +31,7 @@ namespace PJR.LogicUnits
             if (inputHandle == null)
                 return;
 
-            var context = LogicEntity.InputKCContent;
+            var context = Dependant.InputKCContent;
             if (context == null)
                 return;
 

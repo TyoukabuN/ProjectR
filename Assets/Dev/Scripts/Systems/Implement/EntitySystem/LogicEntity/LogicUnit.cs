@@ -65,18 +65,18 @@ namespace PJR.LogicUnits
 
     }
 
-    public abstract partial class LogicUnit<ILogicUnitDependantType> : LogicUnit where ILogicUnitDependantType : ILogicUnitDependant<T>
+    public abstract partial class LogicUnit<ILogicUnitDependantType, ILogicUnitType> : LogicUnit where ILogicUnitDependantType : ILogicUnitDependant<ILogicUnitType>  where ILogicUnitType : ILogicUnit
     {
-        public abstract ILogicUnitDependant<LogicUnit<ILogicUnitDependantType>> Dependant { get; }
+        public abstract ILogicUnitDependantType Dependant { get; }
         public abstract void OnInit(ILogicUnitDependantType dependency);
 
         public override void RemoveSelf()
         {
-            Dependant.RemoveLoginUnit(this);
+            Dependant.RemoveLoginUnit<ILogicUnitType>(this);
         }
     }
 
-    public abstract class EntityLogicUnit : LogicUnit<ILogicUnitDependant<EntityLogicUnit>>
+    public abstract class EntityLogicUnit : LogicUnit<LogicEntity, EntityLogicUnit>
     {
 
     }

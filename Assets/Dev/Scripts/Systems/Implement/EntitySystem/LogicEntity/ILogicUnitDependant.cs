@@ -75,10 +75,12 @@ namespace PJR.LogicUnits
         }
         public void RemoveLoginUnit<T>() where T : ILogicUnitType
         {
-            if (!TryGetLogicUnit<T>(out var unit))
+            if (!FindUnitByType<T>(out var unit))
+            {
+                Debug.LogError($"Found not LogicUnit {nameof(T)}");
                 return;
-            unit.OnDestroy();
-            units.Remove(unit);
+            }
+            RemoveLoginUnit(unit);
         }
         public void RemoveLoginUnit<T>(T unit) where T : ILogicUnitType
         {

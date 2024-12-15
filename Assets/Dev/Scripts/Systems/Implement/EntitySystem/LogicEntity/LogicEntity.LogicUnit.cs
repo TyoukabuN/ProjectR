@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace PJR
 {
-    public abstract partial class LogicEntity : ILogicUnitDependant<EntityLogicUnit>
+    public abstract partial class LogicEntity : LogicUnitDependant<EntityLogicUnit>
     {
      
     }

@@ -787,7 +787,7 @@ namespace KinematicCharacterController
             _rigidbodiesPushedThisMove.Clear();
 
             // Before update
-            CharacterController.BeforeCharacterUpdate(deltaTime);
+            CharacterController?.BeforeCharacterUpdate(deltaTime);
 
             _transientPosition = _transform.position;
             TransientRotation = _transform.rotation;
@@ -936,7 +936,7 @@ namespace KinematicCharacterController
 
             if (_solveGrounding)
             {
-                CharacterController.PostGroundingUpdate(deltaTime);
+                CharacterController?.PostGroundingUpdate(deltaTime);
             }
 
             if (InteractiveRigidbodyHandling)
@@ -1033,7 +1033,7 @@ namespace KinematicCharacterController
         public void UpdatePhase2(float deltaTime)
         {
             // Handle rotation
-            CharacterController.UpdateRotation(ref _transientRotation, deltaTime);
+            CharacterController?.UpdateRotation(ref _transientRotation, deltaTime);
             TransientRotation = _transientRotation;
 
             // Handle move rotation
@@ -1159,9 +1159,9 @@ namespace KinematicCharacterController
             }
 
             // Handle velocity
-            CharacterController.UpdateVelocity(ref BaseVelocity, deltaTime);
+            CharacterController?.UpdateVelocity(ref BaseVelocity, deltaTime);
 
-            //this.CharacterController.UpdateVelocity(ref BaseVelocity, deltaTime);
+            //this.CharacterController?.UpdateVelocity(ref BaseVelocity, deltaTime);
             if (BaseVelocity.magnitude < MinVelocityMagnitude)
             {
                 BaseVelocity = Vector3.zero;
@@ -1200,11 +1200,11 @@ namespace KinematicCharacterController
                 int nbOverlaps = CharacterCollisionsOverlap(_transientPosition, _transientRotation, _internalProbedColliders, CollisionOffset * 2f);
                 for (int i = 0; i < nbOverlaps; i++)
                 {
-                    CharacterController.OnDiscreteCollisionDetected(_internalProbedColliders[i]);
+                    CharacterController?.OnDiscreteCollisionDetected(_internalProbedColliders[i]);
                 }
             }
 
-            CharacterController.AfterCharacterUpdate(deltaTime);
+            CharacterController?.AfterCharacterUpdate(deltaTime);
         }
 
         /// <summary>
@@ -1315,7 +1315,7 @@ namespace KinematicCharacterController
                             probingPosition = groundSweepPosition + (groundSweepDirection * (groundSweepHit.distance - CollisionOffset));
                         }
 
-                        CharacterController.OnGroundHit(groundSweepHit.collider, groundSweepHit.normal, groundSweepHit.point, ref groundHitStabilityReport);
+                        CharacterController?.OnGroundHit(groundSweepHit.collider, groundSweepHit.normal, groundSweepHit.point, ref groundHitStabilityReport);
                         groundSweepingIsOver = true;
                     }
                     else
@@ -1551,7 +1551,7 @@ namespace KinematicCharacterController
                         Vector3 obstructionNormal = GetObstructionNormal(closestSweepHitNormal, moveHitStabilityReport.IsStable);
 
                         // Movement hit callback
-                        CharacterController.OnMovementHit(closestSweepHitCollider, closestSweepHitNormal, closestSweepHitPoint, ref moveHitStabilityReport);
+                        CharacterController?.OnMovementHit(closestSweepHitCollider, closestSweepHitNormal, closestSweepHitPoint, ref moveHitStabilityReport);
 
                         // Handle remembering rigidbody hits
                         if (InteractiveRigidbodyHandling && closestSweepHitCollider.attachedRigidbody)
@@ -2014,7 +2014,7 @@ namespace KinematicCharacterController
             }
 
             // Custom checks
-            bool colliderValid = CharacterController.IsColliderValidForCollisions(coll);
+            bool colliderValid = CharacterController?.IsColliderValidForCollisions(coll) ?? true;
             if (!colliderValid)
             {
                 return false;
@@ -2115,7 +2115,7 @@ namespace KinematicCharacterController
                 }
             }
 
-            CharacterController.ProcessHitStabilityReport(hitCollider, hitNormal, hitPoint, atCharacterPosition, atCharacterRotation, ref stabilityReport);
+            CharacterController?.ProcessHitStabilityReport(hitCollider, hitNormal, hitPoint, atCharacterPosition, atCharacterRotation, ref stabilityReport);
         }
 
         private void DetectSteps(Vector3 characterPosition, Quaternion characterRotation, Vector3 hitPoint, Vector3 innerHitDirection, ref HitStabilityReport stabilityReport)

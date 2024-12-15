@@ -8,8 +8,9 @@ using static PJR.StateMachineEntity;
 namespace PJR
 {
     public abstract partial class LogicEntity
-    { 
-        public virtual KCContext InputKCContent { get => null; }
+    {
+        protected KCContext inputKCContent;
+        public virtual KCContext InputKCContent => inputKCContent ??= new KCContext();
         public virtual OrientationMethod OrientationMethod { get => OrientationMethod.TowardsCamera; }
     }
 }

@@ -11,27 +11,28 @@ namespace PJR.LogicUnits
     {
         public InputHandle inputHandle;
 
-        private LogicEntity dependant;
-        public override LogicEntity Dependant => dependant;
-        public override void OnInit(LogicEntity dependency)
+        public override bool OnInit(System.Object dependency)
         {
-            this.dependant = dependency;
+            if (!base.OnInit(dependency))
+                return false;
             inputHandle = new PlayerInputHandle();
             InputSystem.RegisterHandle(inputHandle);
             if (inputHandle == null)
             {
                 LogSystem.LogError("[PlayerEntity.Init_Input]找不到对应的InputAssetMap");
-                return;
+                return false;
             }
-            OnUpdate();
+            OnUpdate(Time.deltaTime);
+            logicEntity.inputHandle = inputHandle;
+            return true;
         }
 
-        public override void OnUpdate()
+        public override void OnUpdate(float deltaTime)
         {
             if (inputHandle == null)
                 return;
 
-            var context = Dependant.InputKCContent;
+            var context = LogicEntity?.InputKCContent;
             if (context == null)
                 return;
 

@@ -9,7 +9,7 @@ namespace PJR
     {
         public EntityInputLogicUnit inputLogicUnit;
         public EntityInputLogicUnit InputLogicUnit => inputLogicUnit;
-        protected override void Init_Input()
+        protected virtual void Init_Input()
         {
             inputLogicUnit = AddLogicUnit<EntityInputLogicUnit>();
         }

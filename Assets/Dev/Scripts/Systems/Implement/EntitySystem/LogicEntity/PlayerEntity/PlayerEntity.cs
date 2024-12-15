@@ -10,7 +10,7 @@ using Sirenix.Utilities.Editor;
 
 namespace PJR
 {
-    public partial class PlayerEntity : StateMachineEntity
+    public partial class PlayerEntity : LogicEntity
     {
         public override string entityName => "PlayerEntity";
 
@@ -59,23 +59,25 @@ namespace PJR
         public override void Update()
         {
             base.Update();
-             
-            Update_Input();
+
+            LogicUnits_OnUpdate(Time.deltaTime);
+            //Update_Input();
             Update_State();
         }
         public override void LateUpdate()
         {
             base.LateUpdate();
 
-            LateUpdate_Input();
+            LogicUnits_OnLatedUpdate();
         }
 
         public override void Destroy()
         {
             base.Destroy();
 
-            Destroy_Input();
-            Destroy_State();
+            LogicUnits_OnDestroy();
+            //Destroy_Input();
+            //Destroy_State();
 
             EntitySystem.DestroyPhysEntity(physEntity);
         }

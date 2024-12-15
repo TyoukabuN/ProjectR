@@ -4,6 +4,8 @@ using System.Security.Policy;
 using UnityEditor.Build.Content;
 using UnityEngine;
 using System;
+using UnityEngine.Animations.Rigging;
+using NPOI.SS.Formula.Functions;
 
 namespace PJR.LogicUnits
 {
@@ -11,15 +13,14 @@ namespace PJR.LogicUnits
     {
         public bool Enable { get; set; }
         public bool Valid { get;}
-        public void OnInit() { }
-        public void OnEnable() { }
+        public bool OnInit(System.Object obj);
+        public void OnEnable();
         public void OnDisable() { }
         public void OnUpdate() => OnUpdate(Time.deltaTime);
-        public void OnUpdate(float deltaTime) { }
-        public void OnFixedUpdate() { }
-        public void OnLatedUpdate() { }
-        public void OnDestroy() { }
-        public void RemoveSelf() { }
+        public void OnUpdate(float deltaTime);
+        public void OnLatedUpdate();
+        public void OnDestroy();
+        public void RemoveSelf();
 
     }
 
@@ -48,36 +49,37 @@ namespace PJR.LogicUnits
             set => manualUpdate = value;
         }
 
-
         protected bool valid = true;
         public virtual bool Valid => valid;
         public virtual int priority => 0;
         public virtual string name => string.Empty;
-        public virtual void OnInit() { }
+        public virtual bool OnInit(System.Object obj) { return false; }
         public virtual void OnEnable() { }
         public virtual void OnDisable() { }
-        public virtual void OnUpdate() => OnUpdate(Time.deltaTime);
         public virtual void OnUpdate(float deltaTime) { }
-        public virtual void OnFixedUpdate() { }
         public virtual void OnLatedUpdate() { }
         public virtual void OnDestroy() { }
         public virtual void RemoveSelf() { }
 
     }
 
-    public abstract partial class LogicUnit<ILogicUnitDependantType, ILogicUnitType> : LogicUnit where ILogicUnitDependantType : ILogicUnitDependant<ILogicUnitType>  where ILogicUnitType : ILogicUnit
+    public abstract partial class EntityLogicUnit : LogicUnit
     {
-        public abstract ILogicUnitDependantType Dependant { get; }
-        public abstract void OnInit(ILogicUnitDependantType dependency);
+        protected LogicEntity logicEntity;
+        public LogicEntity LogicEntity => logicEntity;
 
+        public override bool OnInit(System.Object dependency) {
+            if (dependency is not PJR.LogicEntity)
+            {
+                Debug.LogError($"Worry dependency type with {dependency} in {nameof(EntityLogicUnit)}");
+                return false;
+            }
+            logicEntity = (LogicEntity)dependency;
+            return true;
+        }
         public override void RemoveSelf()
         {
-            Dependant.RemoveLoginUnit<ILogicUnitType>(this);
+            LogicEntity?.RemoveLoginUnit(this);
         }
-    }
-
-    public abstract class EntityLogicUnit : LogicUnit<LogicEntity, EntityLogicUnit>
-    {
-
     }
 }

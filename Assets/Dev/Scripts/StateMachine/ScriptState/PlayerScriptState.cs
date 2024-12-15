@@ -13,7 +13,7 @@ namespace PJR.ScriptStates
 
         public virtual bool IsValid()
         {
-            return entity != null && entity.inputHandle != null;
+            return entity != null;
         }
         #region Phase
         public override void OnEnter(LogicEntity entity) { base.OnEnter(this.entity = entity);}

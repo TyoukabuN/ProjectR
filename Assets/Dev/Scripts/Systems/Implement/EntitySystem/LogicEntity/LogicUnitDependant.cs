@@ -6,10 +6,58 @@ using static UnityEngine.UI.CanvasScaler;
 
 namespace PJR.LogicUnits
 {
-    public abstract class ILogicUnitDependant<ILogicUnitType> where ILogicUnitType : ILogicUnit
+    public abstract class LogicUnitDependant<ILogicUnitType> where ILogicUnitType : LogicUnit
     {
-        private List<ILogicUnitType> units = new List<ILogicUnitType>(64);
+        protected List<ILogicUnitType> units = new List<ILogicUnitType>(8);
 
+        protected bool AnyLogicUnits => units != null && units.Count > 0; 
+        protected void LogicUnits_OnUpdate(float deltaTime)
+        {
+            if (!AnyLogicUnits)
+                return;
+            for (int i = 0; i < units.Count; i++)
+            {
+                var unit = units[i];
+                if (NullCheckAndRemove(ref i))
+                    continue;
+                unit.OnUpdate(deltaTime);
+            }
+        }
+        protected void LogicUnits_OnLatedUpdate()
+        {
+            if (!AnyLogicUnits)
+                return;
+            for (int i = 0; i < units.Count; i++)
+            {
+                var unit = units[i];
+                if (NullCheckAndRemove(ref i))
+                    continue;
+                unit.OnLatedUpdate();
+            }
+        }
+        protected void LogicUnits_OnDestroy()
+        {
+            if (!AnyLogicUnits)
+                return;
+            for (int i = 0; i < units.Count; i++)
+            {
+                var unit = units[i];
+                if (NullCheckAndRemove(ref i))
+                    continue;
+                unit.OnLatedUpdate();
+            }
+        }
+
+        private bool NullCheckAndRemove(ref int i)
+        {
+            var unit = units[i];
+            if (unit == null)
+            {
+                units.RemoveAt(i--);
+                return true;
+            }
+            return false;
+        }
         public T AddLogicUnit<T>() where T : ILogicUnitType
         {
             var unit = System.Activator.CreateInstance<T>();
@@ -18,7 +66,7 @@ namespace PJR.LogicUnits
                 Debug.LogError($"Failure to create LogicUnit {nameof(T)}");
                 return default;
             }
-            unit.OnInit();
+            unit.OnInit(this);
             if (!unit.Valid)
             {
                 unit.OnDestroy();
@@ -28,8 +76,8 @@ namespace PJR.LogicUnits
             units.Add(unit);
             return unit;
         }
-        private bool FindUnitByType<T>(out T unit) where T : ILogicUnitType => FindUnitByType<T>(out int index, out unit);
-        private bool FindUnitByType<T>(out int index, out T unit) where T : ILogicUnitType
+        protected bool FindUnitByType<T>(out T unit) where T : ILogicUnitType => FindUnitByType<T>(out int index, out unit);
+        protected bool FindUnitByType<T>(out int index, out T unit) where T : ILogicUnitType
         {
             index = 0;
             unit = default;

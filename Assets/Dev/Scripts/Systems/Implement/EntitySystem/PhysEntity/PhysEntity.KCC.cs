@@ -3,8 +3,7 @@ using KinematicCharacterController;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System;
-using UnityEngine.Rendering;
-using System.Threading;
+using PJR.ClassExtension;
 
 namespace PJR
 {

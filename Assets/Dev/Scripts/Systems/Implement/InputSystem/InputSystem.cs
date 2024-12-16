@@ -8,6 +8,7 @@ using static UnityEngine.InputSystem.InputAction;
 using System;
 using System.Collections;
 using static PJR.Systems.ResourceSystem;
+using PJR.ClassExtension;
 
 namespace PJR.Systems
 {

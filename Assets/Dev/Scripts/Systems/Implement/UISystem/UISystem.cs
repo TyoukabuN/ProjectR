@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static PJR.Systems.ResourceSystem;
+using PJR.ClassExtension;
 
 namespace PJR.Systems
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using PJR.Systems;
+using PJR.ClassExtension;
 
 namespace PJR
 {

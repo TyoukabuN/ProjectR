@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using PJR;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
+using PJR.ClassExtension;
 
 namespace PJR
 {

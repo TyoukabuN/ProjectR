@@ -4,7 +4,7 @@ using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace PJR
+namespace PJR.ClassExtension
 {
     public static class GameObjectExtension
     {

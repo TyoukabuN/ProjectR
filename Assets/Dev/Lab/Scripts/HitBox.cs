@@ -1,7 +1,7 @@
-using PJR;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Animations;
+using PJR.ClassExtension;
 
 public class HitBox : MonoBehaviour
 {

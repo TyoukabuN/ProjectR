@@ -5,6 +5,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using PJR.Systems;
+using PJR.ClassExtension;
 
 namespace PJR
 {

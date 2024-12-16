@@ -2,12 +2,13 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using PJR.ClassExtension;
+
 namespace PJR
 {
     public class UIListView : MonoBehaviour
     {
-        [LabelText("itemµÄÔ¤ÖÆ")]
+        [LabelText("itemçš„é¢„åˆ¶")]
         public GameObject itemPrefab;
         public Transform Content;
         public object data;

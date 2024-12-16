@@ -5,7 +5,7 @@ using Animancer;
 using System;
 using Sirenix.OdinInspector;
 using UnityEngine.Animations.Rigging;
-using System.Linq;
+using PJR.ClassExtension;
 
 namespace PJR
 {

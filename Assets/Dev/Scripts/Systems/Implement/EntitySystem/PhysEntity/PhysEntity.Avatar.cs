@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 using static PJR.Systems.ResourceSystem;
 using PJR.Systems;
+using PJR.ClassExtension;
 
 namespace PJR
 {

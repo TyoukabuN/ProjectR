@@ -1,7 +1,7 @@
 using System.Text;
 using System;
 
-namespace PJR.Systems
+namespace PJR.Systems.Log
 {
     public class Logger : IDisposable
     {

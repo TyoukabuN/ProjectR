@@ -1,5 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using PJR.ClassExtension;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

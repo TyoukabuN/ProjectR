@@ -4,6 +4,7 @@ using UnityEditor.SceneManagement;
 using UnityEditor;
 using System;
 using PJR.Systems;
+using PJR.ClassExtension;
 
 namespace PJR
 {

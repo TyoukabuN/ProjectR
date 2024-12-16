@@ -15,7 +15,8 @@ public class PlayerLoopTest : MonoBehaviour
     public void LogCurrentPlayerLoopSystem()
     {
         string str = null;
-        LogPlayerLoopSystem(PlayerLoop.GetCurrentPlayerLoop(), ref str);
+        using (new ReportScope(out var report))
+            LogPlayerLoopSystem2(PlayerLoop.GetCurrentPlayerLoop(),report);
         Debug.Log(str);
     }
 
@@ -29,10 +30,16 @@ public class PlayerLoopTest : MonoBehaviour
         {
             report.AppendLine("1");
             report.AppendLine("2");
-            using (report.BeginGroupScope("组1"))
+            using (report.BeginGroupScope("组2"))
             {
                 report.AppendLine("1");
                 report.AppendLine("2");
+                using (report.BeginGroupScope("组3"))
+                {
+                    report.AppendLine("1");
+                    report.AppendLine("2");
+                    report.AppendLine("3");
+                }
                 report.AppendLine("3");
             }
             report.AppendLine("3");
@@ -40,7 +47,7 @@ public class PlayerLoopTest : MonoBehaviour
         report.EndLog();
     }
 
-    private string LogPlayerLoopSystem(PlayerLoopSystem loopSys, ref string str, int depth = 0)
+    private string LogPlayerLoopSystem(PlayerLoopSystem loopSys, Report report,ref string str, int depth = 0)
     {
         string _str = "";
         if (loopSys.type != null)
@@ -59,10 +66,31 @@ public class PlayerLoopTest : MonoBehaviour
         if (loopSys.subSystemList != null)
             foreach (var sub in loopSys.subSystemList)
             {
-                LogPlayerLoopSystem(sub ,ref str, ++depth);
+                LogPlayerLoopSystem(sub , report, ref str, ++depth);
             }
 
         return str;
+    }
+    private void LogPlayerLoopSystem2(PlayerLoopSystem loopSys, Report report)
+    {
+        string loopName = "Unnamed Group";
+        if (loopSys.type != null)
+            loopName = loopSys.type.ToString();
+
+        if (loopSys.subSystemList != null)
+        {
+            using (report.BeginGroupScope(loopName))
+            {
+                foreach (var sub in loopSys.subSystemList)
+                {
+                    LogPlayerLoopSystem2(sub, report);
+                }
+            }
+        }
+        else
+        {
+            report.AppendLine(loopName);
+        }
     }
 }
 #endif

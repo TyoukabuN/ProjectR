@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PJR.ClassExtension;
+using NPOI.SS.Formula.Functions;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -147,12 +149,14 @@ namespace PJR.Systems.Log
                 return string.Empty;
             if (_groupIndex < 0)
                 return string.Empty;
-            string prefix = GroupLinePrefix;
+            var prefixStyle = GroupLinePrefix1;
+            string prefix = prefixStyle.Prefix;
             for (int i = 0; i < _groupIndex; i++)
             {
-                prefix = $"  {prefix}";
+                prefix = $"{prefixStyle.PadLeft}{prefix}";
             }
-            return prefix;
+
+            return $"{prefix}";
         }
 
         public class GroupScope : IDisposable
@@ -170,9 +174,23 @@ namespace PJR.Systems.Log
             }
         }
 
-      
 
-        public const string GroupLinePrefix = "L";
+        public struct PrefixStyle 
+        {
+            public string Prefix;
+            public string PadLeft;
+        }
+        public static PrefixStyle GroupLinePrefix1 => new PrefixStyle
+        {
+            Prefix = "L",
+            PadLeft = "  ",
+        };
+        public static PrefixStyle GroupLinePrefix2 => new PrefixStyle
+        {
+            Prefix = "├─",
+            PadLeft = "    ",
+        };
+
 
         #region Append func
         public void AppendValueModify(string title, int from, int to) => AppendValueModify(title, from, to, null, -1);
@@ -239,6 +257,23 @@ namespace PJR.Systems.Log
                 return $"<a href={href} line=\"{line}\">{context}</a>";
 
             return $"<a href={href}>{context}</a>";
+        }
+    }
+
+    public class ReportScope : IDisposable
+    {
+        private Report report;
+        public Report Report => report;
+        public ReportScope(out Report report) 
+        { 
+            report = new Report();
+            this.report = report;
+            report.BeginLog();
+        }
+
+        public void Dispose()
+        {
+            report.EndLog();
         }
     }
 }

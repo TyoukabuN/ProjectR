@@ -80,8 +80,8 @@ namespace PJR.Systems
         {
             if (handle == null || handle == instance.currentHandle)
                 return;
-            if (instance.currentHandle != null)
-                instance.currentHandle.OnUnRegister();
+            UnRegisterCurrentHandle();
+
             instance.currentHandle = handle;
 
             var actionMap = instance.inputActionAsset.FindActionMap(handle.inputActionMapName);
@@ -99,6 +99,26 @@ namespace PJR.Systems
                 action.performed += instance.OnActionPerformed;
                 action.canceled += instance.OnActionCanceled;
             }
+        }
+
+        private static void UnRegisterCurrentHandle() => UnRegisterHandle(instance?.currentHandle);
+        private static void UnRegisterHandle(InputHandle inputHandle)
+        {
+            if (inputHandle == null)
+                return;
+            if (instance.currentHandle.ActionMap != null)
+            {
+                foreach (var action in instance.currentHandle.ActionMap.actions)
+                {
+                    if (action == null)
+                        continue;
+                    instance.actions.Remove(action);
+                    action.started -= instance.OnActionStarted;
+                    action.performed -= instance.OnActionPerformed;
+                    action.canceled -= instance.OnActionCanceled;
+                }
+            }
+            inputHandle.OnUnRegister();
         }
         public void OnActionStarted(CallbackContext context)
         {

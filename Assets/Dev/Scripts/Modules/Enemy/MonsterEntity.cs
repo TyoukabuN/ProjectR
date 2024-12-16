@@ -19,7 +19,7 @@ public partial class MonsterEntity : StateMachineEntity
     protected override void Init_Input()
     {
         inputHandle = new PlayerInputHandle();
-        //InputSystem.RegisterHandle(inputHandle);
+        InputSystem.RegisterHandle(inputHandle);
         if (inputHandle == null)
         {
             LogSystem.LogError("[PlayerEntity.Init_Input]找不到对应的InputAssetMap");

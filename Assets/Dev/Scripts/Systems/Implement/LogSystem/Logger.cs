@@ -47,7 +47,14 @@ namespace PJR.Systems.Log
         {
             if (s_sb == null)
                 return string.Empty;
-            return s_sb.ToString();
+            var str = s_sb.ToString();
+            //var index = str.LastIndexOf("├");
+            //if (index >= 0)
+            //{
+            //    str = str.Remove(index, "├".Length);
+            //    str = str.Insert(index, "└");
+            //}
+            return str;
         }
 
         public void Dispose()

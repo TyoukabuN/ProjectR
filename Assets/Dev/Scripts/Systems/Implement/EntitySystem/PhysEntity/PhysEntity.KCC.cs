@@ -96,6 +96,7 @@ namespace PJR
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
         {
             var context = new KCContext { 
+                logicEntity = this.logicEntity,
                 physEntity = this,
                 currentVelocity = currentVelocity,
                 motor = motor,

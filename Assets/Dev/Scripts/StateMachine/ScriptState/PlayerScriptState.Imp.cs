@@ -34,7 +34,7 @@ namespace PJR.ScriptStates.Player
     }
     public class StandState : EntityScriptState
     {
-        public override void Update(EntityContext stateContext)
+        public override void Update(float deltaTime)
         {
             entity.entityContext.RevertJumpCount();
             entity.physEntity.Animancer_Play(EntityAnimationDefine.AnimationName.Idle);
@@ -53,7 +53,7 @@ namespace PJR.ScriptStates.Player
 
     public class WalkState : EntityScriptState
     {
-        public override void Update(EntityContext stateContext)
+        public override void Update(float deltaTime)
         {
             var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move, true);
             var nameSet = EntityAnimationDefine.AnimationName.Walk;
@@ -90,7 +90,7 @@ namespace PJR.ScriptStates.Player
     }
     public class RunningState : EntityScriptState
     {
-        public override void Update(EntityContext stateContext)
+        public override void Update(float deltaTime)
         {
             var inputAxi = inputHandle.ReadValueVec2(RegisterKeys.Move, true);
             var nameSet = EntityAnimationDefine.AnimationName.Dash;
@@ -172,9 +172,9 @@ namespace PJR.ScriptStates.Player
             }else
                 PlayerKCCFunc.OnAir(context);
         }
-        public override void Update(EntityContext entityContext)
+        public override void Update(float deltaTime)
         {
-            base.Update(entityContext);
+            base.Update(deltaTime);
         }
     }
     public class JumpFallingState : AnimationState

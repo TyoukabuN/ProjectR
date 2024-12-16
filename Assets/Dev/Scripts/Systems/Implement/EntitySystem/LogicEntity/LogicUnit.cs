@@ -1,16 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Policy;
-using UnityEditor.Build.Content;
 using UnityEngine;
-using System;
-using UnityEngine.Animations.Rigging;
-using NPOI.SS.Formula.Functions;
 
 namespace PJR.LogicUnits
 {
     public interface ILogicUnit
     {
+        public int SortOrder { get;}
         public bool Enable { get; set; }
         public bool Valid { get;}
         public bool OnInit(System.Object obj);
@@ -21,7 +15,6 @@ namespace PJR.LogicUnits
         public void OnLatedUpdate();
         public void OnDestroy();
         public void RemoveSelf();
-
     }
 
     public abstract partial class LogicUnit : ILogicUnit
@@ -51,7 +44,7 @@ namespace PJR.LogicUnits
 
         protected bool valid = true;
         public virtual bool Valid => valid;
-        public virtual int priority => 0;
+        public virtual int SortOrder => 0;
         public virtual string name => string.Empty;
         public virtual bool OnInit(System.Object obj) { return false; }
         public virtual void OnEnable() { }
@@ -59,8 +52,7 @@ namespace PJR.LogicUnits
         public virtual void OnUpdate(float deltaTime) { }
         public virtual void OnLatedUpdate() { }
         public virtual void OnDestroy() { }
-        public virtual void RemoveSelf() { }
-
+        public virtual void RemoveSelf() { valid = false; }
     }
 
     public abstract partial class EntityLogicUnit : LogicUnit

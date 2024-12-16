@@ -1,13 +1,13 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using static UnityEngine.UI.CanvasScaler;
 
 namespace PJR.LogicUnits
 {
     public abstract class LogicUnitDependant<ILogicUnitType> where ILogicUnitType : LogicUnit
     {
+        public static UnitCompareBySortOrder UnitSorter => unitSorter ??= new UnitCompareBySortOrder();
+        static UnitCompareBySortOrder unitSorter = new UnitCompareBySortOrder();
+
         protected List<ILogicUnitType> units = new List<ILogicUnitType>(8);
 
         protected bool AnyLogicUnits => units != null && units.Count > 0; 
@@ -51,7 +51,7 @@ namespace PJR.LogicUnits
         private bool NullCheckAndRemove(ref int i)
         {
             var unit = units[i];
-            if (unit == null)
+            if (unit == null || !unit.Valid)
             {
                 units.RemoveAt(i--);
                 return true;
@@ -74,8 +74,10 @@ namespace PJR.LogicUnits
             }
 
             units.Add(unit);
+            units.Sort(UnitSorter);
             return unit;
         }
+
         protected bool FindUnitByType<T>(out T unit) where T : ILogicUnitType => FindUnitByType<T>(out int index, out unit);
         protected bool FindUnitByType<T>(out int index, out T unit) where T : ILogicUnitType
         {
@@ -134,6 +136,16 @@ namespace PJR.LogicUnits
         {
             if(units.Remove(unit))
                 unit.OnDestroy();
+        }
+
+        public class UnitCompareBySortOrder : IComparer<ILogicUnitType>
+        {
+            public int Compare(ILogicUnitType a, ILogicUnitType b)
+            {
+                if (a.SortOrder == b.SortOrder)
+                    return 0;
+                return a.SortOrder > b.SortOrder ? -1 : 1;//SortOrder越小unit越先被更新
+            }
         }
     }
 }

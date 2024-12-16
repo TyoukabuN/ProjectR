@@ -146,9 +146,9 @@ namespace PJR.ScriptStates.Player
             //stateContext.grounded = Grounded ? 1 : 0;
         }
         // Update is called once per frame
-        public override void Update()
+        public override void Update(float deltaTime)
         {
-            base.Update();
+            base.Update(deltaTime);
         }
     }
 }

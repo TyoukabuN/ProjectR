@@ -22,7 +22,7 @@ namespace PJR
         }
         protected virtual void Update_State()
         {
-            scriptStateMachine?.Update();
+            scriptStateMachine?.Update(Time.deltaTime);
         }
 
         protected virtual void Destroy_State()

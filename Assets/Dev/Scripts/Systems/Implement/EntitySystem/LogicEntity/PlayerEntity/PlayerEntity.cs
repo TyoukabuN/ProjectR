@@ -62,7 +62,7 @@ namespace PJR
 
             LogicUnits_OnUpdate(Time.deltaTime);
             //Update_Input();
-            Update_State();
+            //Update_State();
         }
         public override void LateUpdate()
         {

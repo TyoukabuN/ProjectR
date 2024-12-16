@@ -8,8 +8,8 @@ namespace PJR.ScriptStates
         public InputHandle inputHandle => entity.inputHandle;
         public EntityScriptState():base() {}
         public virtual void HandleInput(LogicEntity entity) { }
-        public virtual void Update(EntityContext stateContext) { }
-        public virtual void FixedUpdate(EntityContext stateContext) { }
+        public virtual void Update(float deltaTime) { }
+        public virtual void FixedUpdate() { }
 
         public virtual bool IsValid()
         {

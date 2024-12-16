@@ -2,6 +2,7 @@ using PJR.Systems.Input;
 using PJR.ScriptStates.Player;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 
 namespace PJR.ScriptStates
 {
@@ -38,7 +39,7 @@ namespace PJR.ScriptStates
         }
         public override bool State_Change(int ePlayerState) { return true; }
 
-        public override void Update()
+        public override void Update(float deltaTime)
         {
             UpdateContext();
             if (CurrentEState != 0)
@@ -46,7 +47,7 @@ namespace PJR.ScriptStates
                 var state = states[CurrentEState];
                 if (state != null)
                 {
-                    state.Update(stateContext);
+                    state.Update(deltaTime);
                     if (CheckTransition(CurrentEState, out int toState))
                     {
                         State_Change(toState);

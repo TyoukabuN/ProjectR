@@ -19,14 +19,18 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: CShaderTest
+    path: Assets/Dev/Lab/Scenes/CShaderTest.unity
+  - name: JobSystemTest
+    path: Assets/Dev/Lab/Scenes/JobSystemTest.unity
+  - name: PolyFewDemo
+    path: Assets/PolyFew/demo/PolyFewDemo.unity
+  - name: GameEntry_KccTest
+    path: Assets/Scenes/GameEntry_KccTest.unity
   - name: StressTest
     path: Assets/Plugins/KinematicCharacterController/Examples/Scenes/StressTest.unity
   - name: CharacterPlayground
     path: Assets/Plugins/KinematicCharacterController/Examples/Scenes/CharacterPlayground.unity
-  - name: JobSystemTest
-    path: Assets/Dev/Lab/Scenes/JobSystemTest.unity
-  - name: GameEntry_KccTest
-    path: Assets/Scenes/GameEntry_KccTest.unity
   - name: PlayerLoopTest
     path: Assets/Dev/Lab/Scenes/PlayerLoopTest.unity
   - name: GameEntry_2
@@ -53,8 +57,4 @@ MonoBehaviour:
     path: Assets/__LS_Test/Test_HB/TestFlowScript/TestScene_AI_HB.unity
   - name: BitwiseTest
     path: Assets/__LS_Test/Test_JW/BitwiseTest.unity
-  - name: MagicaCloth_CloakTest
-    path: Assets/__LS_Test/Test_JW/MagicaCloth_CloakTest.unity
-  - name: UnityChanKAGURA_HDRP
-    path: Assets/Plugins/MagicaCloth2/Example (Can be deleted)/DemoScenes/HDRP/UnityChanKAGURA_HDRP.unity
   _notes: []

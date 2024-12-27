@@ -1,0 +1,19 @@
+#pragma kernel WaveMove
+
+RWStructuredBuffer<float4> originalPosBuffer;
+RWStructuredBuffer<float4> positionBuffer;
+RWStructuredBuffer<float4> debugBuffer;
+float time;
+float4 globalWidth;
+
+[numthreads(16, 16, 1)]
+void WaveMove(uint3 groupID : SV_GroupID, uint3 groupThreadID : SV_DispatchThreadID)
+{
+    uint id = groupThreadID.x + groupThreadID.y * globalWidth.y;
+    // TODO: insert actual code here!
+    float4 pos = originalPosBuffer[id];
+    pos.y += sin(sqrt(dot(pos.xz, pos.xz)) + time);
+    positionBuffer[id] = pos;
+    //debugBuffer[id].xyz = groupThreadID.xyz;
+    //debugBuffer[id].w = groupThreadID.x + groupThreadID.y * 16;
+}

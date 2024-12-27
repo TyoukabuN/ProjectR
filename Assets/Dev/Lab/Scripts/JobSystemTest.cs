@@ -11,17 +11,24 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Jobs;
 using UnityEngine.UIElements;
+using System.Runtime.InteropServices;
 using static JobSystemTest;
+using static UnityEngine.Rendering.PostProcessing.PostProcessResources;
 
 public class JobSystemTest : MonoBehaviour
 {
-    [LabelText("使用Job计算")]
-    public bool UsingJobs = false;
-    [LabelText("使用ParallelJob"), ShowIf("@UsingJobs")]
+    public enum ECalcApproach
+    {
+        MainThread = 0,
+        Job,
+        ComputeShader,
+    }
+    public ECalcApproach CalcApproach = 0;
+    [LabelText("使用ParallelJob"), ShowIf("@CalcInJobs")]
     public bool UsingParallelJob = false;
     [ShowIf("@UsingParallelJob")]
     public int InnerloopBatchCount = 1;
-    [LabelText("分阶段执行Job"), ShowIf("@UsingJobs")]
+    [LabelText("分阶段执行Job"), ShowIf("@CalcInJobs")]
     public bool SplitJobWorkingPeriod = true;
 
 
@@ -34,6 +41,9 @@ public class JobSystemTest : MonoBehaviour
     public Vector2Int PrimitiveMatrixSize = new Vector2Int(16,16);
 
     public int PrimitiveCount => PrimitiveMatrixSize.x * PrimitiveMatrixSize.y;
+    public bool CalcInMainThread => CalcApproach == ECalcApproach.MainThread;
+    public bool CalcInJobs => CalcApproach == ECalcApproach.Job;
+    public bool CalcInCShader => CalcApproach == ECalcApproach.ComputeShader;
 
 
     private void Awake()
@@ -56,11 +66,7 @@ public class JobSystemTest : MonoBehaviour
 
         if (primitiveMap != null && primitiveMap.Length > 0)
         {
-            if (UsingJobs) 
-            { 
-                JobOperate(true, !SplitJobWorkingPeriod);
-            }
-            else {
+            if (CalcInMainThread) {
                 foreach (var wrap in primitiveMap)
                 {
                     var pos = wrap.originPosition;
@@ -69,6 +75,14 @@ public class JobSystemTest : MonoBehaviour
                     wrap.gameObject.transform.position = pos;
                 }
             }
+            else if (CalcInJobs)
+            {
+                JobOperate(true, !SplitJobWorkingPeriod);
+            }
+            else if (CalcInCShader)
+            {
+                RunCShader();
+            }
         }
     }
 
@@ -76,7 +90,7 @@ public class JobSystemTest : MonoBehaviour
     {
         if (primitiveMap != null && primitiveMap.Length > 0)
         {
-            if (UsingJobs)
+            if (CalcInJobs)
             { 
                 JobOperate(false, SplitJobWorkingPeriod);
             }
@@ -169,6 +183,7 @@ public class JobSystemTest : MonoBehaviour
 
     private PrimitiveWrap[] primitiveMap;
     private NativeArray<float3> primitiveOriginalPositions;
+    private Vector4[] primitiveOriginalPositionArray;
 
     public void Clear()
     {
@@ -185,6 +200,24 @@ public class JobSystemTest : MonoBehaviour
         }
 
         if(primitiveOriginalPositions.IsCreated) primitiveOriginalPositions.Dispose();
+
+        if (positionBuffer != null)
+        {
+            positionBuffer.Release();
+            positionBuffer = null;
+        }
+
+        if (originalPosBuffer != null)
+        {
+            originalPosBuffer.Release();
+            originalPosBuffer = null;
+        }
+
+        if (debugBuffer != null)
+        {
+            debugBuffer.Release();
+            debugBuffer = null;
+        }
     }
 
     [NonSerialized]
@@ -194,6 +227,8 @@ public class JobSystemTest : MonoBehaviour
         Clear();
 
         primitiveMap = ArrayPool<PrimitiveWrap>.New(PrimitiveCount);
+        primitiveOriginalPositionArray = new Vector4[PrimitiveCount];
+        tempPositionArray = new Vector4[PrimitiveCount];
 
         int index = 0;
         primitiveOriginalPositions = new NativeArray<float3>(PrimitiveCount, Allocator.Persistent);
@@ -214,15 +249,17 @@ public class JobSystemTest : MonoBehaviour
                 primitiveMap[wrap.index] = wrap;
 
                 primitiveOriginalPositions[wrap.index] = wrap.originPosition;
+                primitiveOriginalPositionArray[wrap.index] = new Vector4(x, 0, z, 0);
+                tempPositionArray[wrap.index] = new Vector4(x, 0, z, 0);
 
                 gobj.transform.position = wrap.originPosition;
-                gobj.hideFlags = HideFlags.HideInHierarchy;
+                //gobj.hideFlags = HideFlags.HideInHierarchy;
             }
         }
-
         objectCreateDone = true;
     }
 
+    #region Job 
 
     private NativeArray<float3> parallelResult;
     public void JobOperate() => JobOperate(true, true);
@@ -240,7 +277,7 @@ public class JobSystemTest : MonoBehaviour
                     parallelResult.Dispose();
                 parallelResult = new NativeArray<float3>(PrimitiveCount, Allocator.TempJob);
 
-                var job = new PMovementJob();
+                var job = new ParallelMovementJob();
                 job.originalPositions = primitiveOriginalPositions;
                 job.time = Time.time;
                 job.result = parallelResult;
@@ -296,7 +333,7 @@ public class JobSystemTest : MonoBehaviour
     }
 
     [BurstCompile]
-    public struct PMovementJob : IJobParallelFor
+    public struct ParallelMovementJob : IJobParallelFor
     {
         public NativeArray<float3> originalPositions;
         public float time;
@@ -309,4 +346,54 @@ public class JobSystemTest : MonoBehaviour
             result[index] = pos;
         }
     }
+
+    #endregion
+
+    #region CShader
+
+    public const int KIdx_WaveMove = 0;
+    [NonSerialized]
+    public ComputeBuffer positionBuffer;
+    [NonSerialized]
+    public ComputeBuffer originalPosBuffer;
+    [NonSerialized]
+    public ComputeBuffer debugBuffer;
+    public ComputeShader computeShader;
+    public Vector4[] tempPositionArray;
+    public Vector4[] debugArray;
+    public void RunCShader()
+    {
+        if (positionBuffer == null)
+        {
+            positionBuffer = new ComputeBuffer(PrimitiveCount, Marshal.SizeOf(typeof(Vector4)));
+            Array.Fill(tempPositionArray, Vector3.zero);
+            positionBuffer.SetData(tempPositionArray);
+        }
+        if (originalPosBuffer == null)
+        {
+            originalPosBuffer = new ComputeBuffer(PrimitiveCount, Marshal.SizeOf(typeof(Vector4)));
+            originalPosBuffer.SetData(primitiveOriginalPositionArray);
+        }
+        if (debugBuffer == null)
+        {
+            debugArray = new Vector4[PrimitiveCount];
+            Array.Fill(debugArray, Vector3.zero);
+            debugBuffer = new ComputeBuffer(PrimitiveCount, Marshal.SizeOf(typeof(Vector4)));
+            debugBuffer.SetData(debugArray);
+        }
+        computeShader.SetFloat("time", Time.time);
+        computeShader.SetVector("globalWidth", new Vector4(PrimitiveMatrixSize.x, PrimitiveMatrixSize.y, 0, 0));
+        computeShader.SetBuffer(KIdx_WaveMove, "originalPosBuffer", originalPosBuffer);
+        computeShader.SetBuffer(KIdx_WaveMove, "positionBuffer", positionBuffer);
+        //computeShader.SetBuffer(KIdx_WaveMove, "debugBuffer", debugBuffer);
+        computeShader.Dispatch(KIdx_WaveMove, PrimitiveMatrixSize.x / 16, PrimitiveMatrixSize.y / 16, 1);
+        positionBuffer.GetData(tempPositionArray);
+        //debugBuffer.GetData(debugArray);
+
+        for (int i=0;i< primitiveMap.Length;i++)
+        {
+            primitiveMap[i].gameObject.transform.position = tempPositionArray[i];
+        }
+    }
+    #endregion
 }

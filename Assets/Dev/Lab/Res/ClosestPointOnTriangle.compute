@@ -1,0 +1,125 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+
+struct Triangle
+{
+    float3 a;
+    float3 b;
+    float3 c;
+};
+float3 ClosestpOnLine(float3 p, float3 a, float3 b);
+float3 ClosestpOnLineSegment(float3 p, float3 a, float3 b, float3 c);
+float3 ClosestpOnTriangle(float3 p, float3 a, float3 b, float3 c);
+bool ClosestpOnTriangle(float3 p, float3 a, float3 b, float3 c, out float3 res);
+
+
+RWStructuredBuffer<Triangle> triangles;
+RWStructuredBuffer<float3> closestPoint;
+float4 globalWidth;
+int taskAmount;
+float3 checkPoint;
+
+[numthreads(8,8,1)]
+void CSMain(uint3 groupThreadID : SV_DispatchThreadID)
+{
+    uint id = groupThreadID.x + groupThreadID.y * globalWidth.y;
+    if (id >= taskAmount)
+        return;
+    
+    Triangle tri = triangles[id];
+    closestPoint[id] = ClosestpOnTriangle(checkPoint, tri.a, tri.b, tri.c);
+}
+
+
+float3 ClosestpOnLine(float3 p, float3 a, float3 b)
+{
+    float3 ab = b - a;
+    float t = saturate(dot(p - a, ab) / dot(ab, ab));
+    return a + t * ab;
+}
+
+float3 ClosestpOnLineSegment(float3 p, float3 a, float3 b, float3 c)
+{
+    float3 closest = ClosestpOnLine(p, a, b);
+    float dist1 = (p - closest);
+    dist1 = dot(dist1, dist1);
+
+    float3 closest2 = ClosestpOnLine(p, a, c);
+    float dist2 = (p - closest2);
+    dist2 = dot(dist2, dist2);
+
+    float3 closest3 = ClosestpOnLine(p, b, c);
+    float dist3 = (p - closest3);
+    dist3 = dot(dist3, dist3);
+
+    if (dist1 < dist2 && dist1 < dist3)
+        return closest;
+
+    return dist2 < dist3 ? closest2 : closest3;
+}
+
+float3 ClosestpOnTriangle(float3 p, float3 a, float3 b, float3 c)
+{
+    // Compute floats
+    float3 ab = b - a;
+    float3 ac = c - a;
+    float3 ap = p - a;
+
+    // Compute dot products
+    float d1 = dot(ab, ap);
+    float d2 = dot(ac, ap);
+    float d3 = dot(ab, ab);
+    float d4 = dot(ac, ac);
+    float d5 = dot(ab, ac);
+
+    // Compute barycentric coordinates
+    float denom = d3 * d4 - d5 * d5;
+    float v = (d4 * d1 - d5 * d2) / denom;
+    float w = (d3 * d2 - d5 * d1) / denom;
+
+    if (v >= 0 && w >= 0 && v + w <= 1)
+    {
+        // Inside the triangle
+        return a + v * ab + w * ac;
+    }
+
+    // Outside the triangle, project onto edges
+    return ClosestpOnLineSegment(p, a, b, c);
+}
+
+bool ClosestpOnTriangle(float3 p, float3 a, float3 b, float3 c, out float3 res)
+{
+    res = float3(0,0,0);
+    // Compute floats
+    float3 ab = b - a;
+    float3 ac = c - a;
+    float3 ap = p - a;
+
+    // Compute dot products
+    float d1 = dot(ab, ap);
+    float d2 = dot(ac, ap);
+    float d3 = dot(ab, ab);
+    float d4 = dot(ac, ac);
+    float d5 = dot(ab, ac);
+
+    // Compute barycentric coordinates
+    float denom = d3 * d4 - d5 * d5;
+    float v = (d4 * d1 - d5 * d2) / denom;
+    float w = (d3 * d2 - d5 * d1) / denom;
+
+    if (v >= 0 && w >= 0 && v + w <= 1)
+    {
+        // Inside the triangle
+        res = a + v * ab + w * ac;
+        return true;
+    }
+
+    // Outside the triangle, project onto edges
+    res = ClosestpOnLineSegment(p, a, b, c);
+    return true;
+}
+

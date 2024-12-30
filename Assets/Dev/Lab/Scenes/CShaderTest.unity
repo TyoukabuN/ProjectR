@@ -317,6 +317,7 @@ MonoBehaviour:
   skinnedMeshRenderer: {fileID: 219187480443437759}
   computeApproach: 2
   computeShader: {fileID: 7200000, guid: 503c86d972f214e418121644a55f82fa, type: 3}
+  auto_innerloopBatchCount: 1
   innerloopBatchCount: 70
   checkPoint: {fileID: 544102144}
 --- !u!1 &2124265041

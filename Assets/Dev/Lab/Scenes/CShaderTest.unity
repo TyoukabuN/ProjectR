@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 544102143}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.67, y: 1.2837017, z: -0.36}
+  m_LocalPosition: {x: -0.348, y: 0.931, z: 0.588}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -294,7 +294,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1438131813}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -64.46705, y: 0.009999916, z: -61.813705}
+  m_LocalPosition: {x: -0.56, y: 0.989, z: 0.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -313,9 +313,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abbb78d16cce23c47b34b41cc1bb5411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDebug: 0
   skinnedMeshRenderer: {fileID: 219187480443437759}
-  computeApproach: 0
-  computeShader: {fileID: 0}
+  computeApproach: 2
+  computeShader: {fileID: 7200000, guid: 503c86d972f214e418121644a55f82fa, type: 3}
+  innerloopBatchCount: 70
   checkPoint: {fileID: 544102144}
 --- !u!1 &2124265041
 GameObject:

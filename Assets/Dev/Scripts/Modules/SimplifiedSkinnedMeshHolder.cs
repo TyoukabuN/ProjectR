@@ -446,11 +446,9 @@ namespace PJR
             return info;
         }
 
-        public static Vector3 FindClosestPointOnMesh(Mesh mesh, Vector3 point, Matrix4x4 meshToWorldMatrix)
+        public static Vector3 FindClosestPointOnMesh(Mesh mesh, Vector3 point, Matrix4x4 meshToWorldMatrix) => FindClosestPointOnMesh(mesh.vertices, mesh.triangles, point, meshToWorldMatrix);
+        public static Vector3 FindClosestPointOnMesh(Vector3[] vertices, int[] triangles, Vector3 point, Matrix4x4 meshToWorldMatrix)
         {
-            Vector3[] vertices = mesh.vertices;
-            int[] triangles = mesh.triangles;
-
             Vector3 closestPoint = Vector3.zero;
             float closestDistanceSqr = Mathf.Infinity;
 
@@ -476,7 +474,7 @@ namespace PJR
         }
 
         #region Math things
-        static Vector3 ClosestPointOnTriangle(Vector3 point, Vector3 a, Vector3 b, Vector3 c)
+        public static Vector3 ClosestPointOnTriangle(Vector3 point, Vector3 a, Vector3 b, Vector3 c)
         {
             // Compute vectors
             Vector3 ab = b - a;

@@ -11,6 +11,7 @@ using Unity.Jobs;
 using Unity.Collections;
 using Unity.Burst;
 using static CShaderPerformanceTest;
+using Unity.Jobs.LowLevel.Unsafe;
 
 public class CShaderPerformanceTest : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class CShaderPerformanceTest : MonoBehaviour
     public ComputeShader computeShader;
 
     [BoxGroup("Job", VisibleIf = "@computeApproach == EComputeApproach.CPU_Job")]
+    public bool auto_innerloopBatchCount = true;
+    [LabelText("innerloopBatchCount"), BoxGroup("Job"), HideIf("@auto_innerloopBatchCount")]
     public int innerloopBatchCount = 10;
 
     [InlineButton("FindClosetPoint", "找Mesh最近点")]
@@ -106,6 +109,14 @@ public class CShaderPerformanceTest : MonoBehaviour
                 triangles = nTriangles,
                 triClosestPoints = result,
             };
+
+            int innerloopBatchCount = this.innerloopBatchCount;
+            if (auto_innerloopBatchCount)
+            { 
+                int workerCount = JobsUtility.JobWorkerCount; // 获取实际 Worker 数量
+                innerloopBatchCount = Mathf.CeilToInt(triangles.Length / (workerCount * 2f));
+            }
+
             var jobHandle = job.Schedule(triangles.Length, innerloopBatchCount);
             jobHandle.Complete();
 

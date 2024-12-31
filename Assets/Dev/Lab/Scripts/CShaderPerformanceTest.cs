@@ -45,6 +45,7 @@ public class CShaderPerformanceTest : MonoBehaviour
     }
 
     Vector3[] vertices = null;
+    int[] triangles = null;
     int[] triangleIdx = null;
     public void FindClosetPoint()
     {
@@ -56,6 +57,7 @@ public class CShaderPerformanceTest : MonoBehaviour
         if (computeApproach == EComputeApproach.CPU)
         {
             vertices ??= skinnedMeshRenderer.sharedMesh.vertices;
+            triangles ??= skinnedMeshRenderer.sharedMesh.triangles;
             triangleIdx ??= skinnedMeshRenderer.sharedMesh.triangles;
 
             var closestPoint = SimplifiedSkinnedMeshHolder.FindClosestPointOnMesh(vertices, triangleIdx, checkPoint.position, skinnedMeshRenderer.localToWorldMatrix);
@@ -64,7 +66,7 @@ public class CShaderPerformanceTest : MonoBehaviour
         }
         else if (computeApproach == EComputeApproach.GPU)
         {
-            if (this.triangles == null || CBuffer_tri == null || CBuffer_triClosestP == null)
+            if (this.trianglePoints == null || CBuffer_tri == null || CBuffer_triClosestP == null)
                 Setup();
 
             var checkPoint = this.checkPoint.position;
@@ -72,14 +74,14 @@ public class CShaderPerformanceTest : MonoBehaviour
             computeShader.SetVector("checkPoint", new Vector4(checkPoint.x, checkPoint.y, checkPoint.z, 0));
             computeShader.SetMatrix("local2world", skinnedMeshRenderer.localToWorldMatrix);
 
-            computeShader.Dispatch(0, triangles.Length, 1, 1);
+            computeShader.Dispatch(0, trianglePoints.Length, 1, 1);
 
             CBuffer_triClosestP.GetData(triClosestPoints);
 
             Vector3 p = Vector3.zero;
             float closestDistanceSqr = Mathf.Infinity;
 
-            for (int i = 0; i < triangles.Length; i++)
+            for (int i = 0; i < trianglePoints.Length; i++)
             {
                 float distanceSqr = (checkPoint - triClosestPoints[i]).sqrMagnitude;
 
@@ -96,17 +98,17 @@ public class CShaderPerformanceTest : MonoBehaviour
         else if (computeApproach == EComputeApproach.CPU_Job)
         {
             if(!result.IsCreated)
-                result = new NativeArray<float3>(triangles.Length, Allocator.TempJob);
-            if (!nTriangles.IsCreated)
-            { 
-                nTriangles = new NativeArray<Triangle>(triangles.Length, Allocator.TempJob);
-                nTriangles.CopyFrom(triangles);
+                result = new NativeArray<Vector3>(trianglePoints.Length, Allocator.TempJob);
+            if (!trianglePointsBuffer.IsCreated)
+            {
+                trianglePointsBuffer = new NativeArray<Triangle>(trianglePoints.Length, Allocator.TempJob);
+                trianglePointsBuffer.CopyFrom(trianglePoints);
             }
-            
+
 
             var job = new ClosestPointOnTriangleJob() {
                 point = checkPoint.position,
-                triangles = nTriangles,
+                triangles = trianglePointsBuffer,
                 triClosestPoints = result,
             };
 
@@ -114,18 +116,18 @@ public class CShaderPerformanceTest : MonoBehaviour
             if (auto_innerloopBatchCount)
             { 
                 int workerCount = JobsUtility.JobWorkerCount; // 获取实际 Worker 数量
-                innerloopBatchCount = Mathf.CeilToInt(triangles.Length / (workerCount * 2f));
+                innerloopBatchCount = Mathf.CeilToInt(trianglePoints.Length / (workerCount * 2f));
             }
 
-            var jobHandle = job.Schedule(triangles.Length, innerloopBatchCount);
+            var jobHandle = job.Schedule(trianglePoints.Length, innerloopBatchCount);
             jobHandle.Complete();
 
             Vector3 p = Vector3.zero;
             float closestDistanceSqr = Mathf.Infinity;
-            float3 checkP = new float3(checkPoint.position.x, checkPoint.position.y, checkPoint.position.z);
+            //float3 checkP = new float3(checkPoint.position.x, checkPoint.position.y, checkPoint.position.z);
             for (int i = 0; i < result.Length; i++)
             {
-                float distanceSqr = math.lengthsq(checkP - result[i]);
+                float distanceSqr = math.lengthsq(checkPoint.position - result[i]);
 
                 if (distanceSqr < closestDistanceSqr)
                 {
@@ -134,16 +136,23 @@ public class CShaderPerformanceTest : MonoBehaviour
                 }
             }
 
+            if (vertexBuffer.IsCreated)
+                vertexBuffer.Dispose();
+            if (triangleBuffer.IsCreated)
+                triangleBuffer.Dispose();
             if (result.IsCreated)
                 result.Dispose();
 
 
-            Debug.DrawLine(checkP, p, Color.green, 1f);
+            Debug.DrawLine(checkPoint.position, p, Color.green, 1f);
         }
     }
 
-    private NativeArray<float3> result;
-    private NativeArray<Triangle> nTriangles;
+    private NativeArray<Vector3> result;
+    private NativeArray<Triangle> trianglePointsBuffer;
+
+    private NativeArray<Vector3> vertexBuffer;
+    private NativeArray<int> triangleBuffer;
 
     Vector3[] closestPoints;
 
@@ -218,28 +227,28 @@ public class CShaderPerformanceTest : MonoBehaviour
         public Vector3 b;
         public Vector3 c;
     }
-    Triangle[] triangles = null;
+    Triangle[] trianglePoints = null;
     Triangle[] FillTriangle(Mesh mesh)
     {
-        triangles = new Triangle[mesh.triangles.Length / 3];
+        trianglePoints = new Triangle[mesh.triangles.Length / 3];
         for (int i = 0,j = 0; i < mesh.triangles.Length; i += 3, j++)
         {
-            triangles[j].a = mesh.vertices[mesh.triangles[i]];
-            triangles[j].b = mesh.vertices[mesh.triangles[i + 1]];
-            triangles[j].c = mesh.vertices[mesh.triangles[i + 2]];
+            trianglePoints[j].a = mesh.vertices[mesh.triangles[i]];
+            trianglePoints[j].b = mesh.vertices[mesh.triangles[i + 1]];
+            trianglePoints[j].c = mesh.vertices[mesh.triangles[i + 2]];
         }
-        return triangles;
+        return trianglePoints;
     }
     Triangle[] FillTriangle(Mesh mesh, Matrix4x4 local2World)
     {
-        triangles = new Triangle[mesh.triangles.Length / 3];
+        trianglePoints = new Triangle[mesh.triangles.Length / 3];
         for (int i = 0,j = 0; i < mesh.triangles.Length; i += 3, j++)
         {
-            triangles[j].a = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i]]);
-            triangles[j].b = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i + 1]]);
-            triangles[j].c = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i + 2]]);
+            trianglePoints[j].a = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i]]);
+            trianglePoints[j].b = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i + 1]]);
+            trianglePoints[j].c = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i + 2]]);
         }
-        return triangles;
+        return trianglePoints;
     }
 
     [Button]
@@ -298,12 +307,12 @@ public class CShaderPerformanceTest : MonoBehaviour
         public Vector3 point;
         public NativeArray<Triangle> triangles;
 
-        public NativeArray<float3> triClosestPoints;
+        public NativeArray<Vector3> triClosestPoints;
         public void Execute(int index)
         {
-            var v0 = triangles[index].a;
-            var v1 = triangles[index].b;
-            var v2 = triangles[index].c;
+            Vector3 v0 = triangles[index].a;
+            Vector3 v1 = triangles[index].b;
+            Vector3 v2 = triangles[index].c;
             triClosestPoints[index] = SimplifiedSkinnedMeshHolder.ClosestPointOnTriangle(point, v0, v1, v2);
         }
     }

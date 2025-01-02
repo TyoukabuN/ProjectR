@@ -4,6 +4,7 @@ using PJR.Systems.Log;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using Logger = PJR.Systems.Log.Logger;
@@ -19,6 +20,13 @@ public class PlayerLoopTest : MonoBehaviour
             LogPlayerLoopSystem2(PlayerLoop.GetCurrentPlayerLoop(),report);
         Debug.Log(str);
     }
+
+    [Button]
+    public void Test2()
+    {
+        var copyList = PlayerLoop.GetCurrentPlayerLoop().subSystemList.ToArray();
+    }
+
 
     [Button]
     public void ReportTest()

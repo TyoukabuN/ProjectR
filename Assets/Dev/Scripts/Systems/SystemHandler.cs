@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace PJR
 {
@@ -41,7 +40,22 @@ namespace PJR
         }
         void Update() 
         {
-            systemInstances?.ForEach(instance => instance.OnUpdate(Time.deltaTime));
+            for (int i = 0; i < systemInstances.Count; i++)
+            { 
+                var sysInstance = systemInstances[i];
+                if (sysInstance == null)
+                    continue;
+#if UNITY_EDITOR
+                Profiler.BeginSample($"[SysUpdate]{sysInstance.Name}");
+#endif
+
+                sysInstance.OnUpdate(Time.deltaTime);
+
+#if UNITY_EDITOR
+                Profiler.EndSample();
+#endif
+
+            }
         }
     }
 }

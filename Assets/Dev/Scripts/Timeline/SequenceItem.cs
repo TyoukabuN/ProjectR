@@ -6,7 +6,7 @@ namespace PJR.Timeline
     [Serializable]
     public abstract class SequenceItem
     {
-        public SequenceObject sequence;
+        public Sequence sequence;
 
         public int[] dependencyIDs;
         public enum EState

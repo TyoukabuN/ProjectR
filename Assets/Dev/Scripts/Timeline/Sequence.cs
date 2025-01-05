@@ -4,7 +4,7 @@ using UnityEngine;
 namespace PJR.Timeline
 {
     [Serializable]
-    public class SequenceObject : ScriptableObject
+    public class Sequence : ScriptableObject
     {
         public SequenceItem[] items;
         public enum EState

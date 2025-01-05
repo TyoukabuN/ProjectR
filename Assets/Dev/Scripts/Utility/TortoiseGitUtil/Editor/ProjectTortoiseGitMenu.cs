@@ -13,13 +13,13 @@ namespace InfinityCode.UltimateEditorEnhancer.ProjectTools
         }
 
         private static Texture2D _tortoiseGitThumb;
-        private static string _tortoiseGitThumbPath = "Assets/Dev/Scripts/Utility/TortoiseGitUtility/Resources/Icons/TortoiseGitThumb.png";
+        private static string _tortoiseGitThumbPath_Resource = "TortoiseGitUtil/Icons/TortoiseGitThumb";
         public static Texture2D TortoiseGitThumb
         {
             get
             {
                 if (_tortoiseGitThumb == null)
-                    _tortoiseGitThumb = AssetDatabase.LoadAssetAtPath<Texture2D>(_tortoiseGitThumbPath);
+                    _tortoiseGitThumb = UnityEngine.Resources.Load<Texture2D>(_tortoiseGitThumbPath_Resource);
                 return _tortoiseGitThumb;
             }
         }

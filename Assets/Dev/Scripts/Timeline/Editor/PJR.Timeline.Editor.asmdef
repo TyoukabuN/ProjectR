@@ -1,0 +1,18 @@
+{
+    "name": "PJR.Timeline.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a21cd18263a1bd547b5be512576001ca"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

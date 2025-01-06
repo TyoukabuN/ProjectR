@@ -4,6 +4,7 @@ using System.Security.Policy;
 using UnityEngine;
 using UnityEngine.Events;
 using static PJR.Timeline.Define;
+using static PJR.Timeline.Utility;
 
 namespace PJR.Timeline
 {
@@ -19,21 +20,26 @@ namespace PJR.Timeline
         }
         public EState state = 0;
         public List<ClipHandle> clipHandles => _clipHandles;
-        public float totalTime = 0f;
+        public float UpdateFrequency => _secondPerFrame;
 
         List<ClipHandle> _clipHandles;
         private Sequence _sequence;
         Clip2ClipHandleFunc _clip2ClipHandle;
 
+        public float totalTime = 0f;
+        float _secondPerFrame;
+        float _timeCounter = 0f;
+
         public SequenceHandle(Sequence sequence):this(sequence, Global.Clip2ClipHandleFunc) { }
         public SequenceHandle(Sequence sequence, Clip2ClipHandleFunc clip2ClipHandle) 
         {
             _sequence = sequence;
-            if (sequence != null)
+            if (sequence == null)
             { 
                 state = EState.Failure;
                 return;
             }
+            _secondPerFrame = GetSecondPerFrame();
             if (clip2ClipHandle == null)
             {
                 state = EState.Failure;
@@ -65,15 +71,20 @@ namespace PJR.Timeline
         {
             if (state >= EState.Done)
                 return;
-
-            totalTime += Time.deltaTime;
-            var context = UpdateContext();
-
             if (clipHandles == null)
             {
                 state = EState.Done;
                 return;
             }
+
+            totalTime += Time.deltaTime;
+            _timeCounter += Time.deltaTime;
+            if (_timeCounter < UpdateFrequency)
+                return;
+            _timeCounter -= UpdateFrequency;
+
+            var context = UpdateContext();
+
             bool allDone = true;
             for (int i = 0; i < clipHandles.Count; i++)
             {
@@ -146,14 +157,7 @@ namespace PJR.Timeline
                 return false;
             return true;
         }
-    }
-    
-    public struct UpdateContext
-    {
-        public int frameCount;
-        public float timeScale;
-        public float totalTime;
 
-        public float deltaTime;
+        float GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.frameRateType ?? EFrameRate.Game);
     }
 }

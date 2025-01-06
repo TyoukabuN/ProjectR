@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using UnityEditor.PackageManager;
-using UnityEngine;
+using System;
+using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
@@ -14,19 +11,19 @@ namespace PJR.Timeline
             Running,
             Done,
             Failure,
+            Diposed,
         }
         public EState state;
         public bool WaitingForStart => state == EState.None;
         public bool Running => state == EState.Running;
-        public abstract int ClipType { get; }
+        public abstract Type ClipType { get; }
         public abstract Clip Clip {get;}
 
         public string error;
-        public virtual bool CanStart() => true;
-        public virtual void OnInit() { }
-        public virtual void OnStart() { }
+        public virtual void OnInit() { state = EState.None; }
+        public virtual void OnStart() { state = EState.Running; }
         public abstract void OnUpdate(UpdateContext context);
-        public virtual void OnDispose() { }
+        public virtual void OnDispose() { state = EState.Diposed; }
 
         public SequenceHandle sequenceHandle;
     }
@@ -36,16 +33,15 @@ namespace PJR.Timeline
         public override Clip Clip => clip;
         public TClip clip => _clip;
         public TClip _clip;
-        public ClipHandle(SequenceHandle seqHandle, TClip clip)
+        public ClipHandle(TClip clip)
         {
-            sequenceHandle = seqHandle;
-
-            if (clip == null || clip.ClipType != ClipType)
+            if (clip == null || clip.GetType() != ClipType)
             {
                 state = EState.Failure;
                 error = clip == null ? Define.ErrCode_ClipHandle_ClipIsNull : Define.ErrCode_ClipHandle_ClipTypeNotMatched;
                 return;
             }
+            _clip = clip;
         }
     }
 }

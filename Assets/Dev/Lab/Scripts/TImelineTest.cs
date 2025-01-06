@@ -1,24 +1,56 @@
+using PJR;
+using PJR.Timeline;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class TImelineTest : MonoBehaviour
 {
-    const string k_ImagePath_C = "Assets/Plugins/com.unity.timeline@1.7.5/Editor/StyleSheets/Images/Icons/{0}.png";
+    //[Button]
+    //void Test()
+    //{
+    //    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+    //    var derivedTypes = assemblies
+    //    .SelectMany(assembly => assembly.GetTypes()) // 获取所有类型
+    //    .Where(type => PJR.Timeline.Utility.InheritsFrom(type, typeof(ClipHandle<>)) && !type.IsAbstract) // 筛选继承类，排除抽象类
+    //    .ToList();
+    //    foreach (var _handleType in derivedTypes)
+    //    {
+    //        var clipType = PJR.Timeline.Utility.GetGenericType(_handleType, typeof(ClipHandle<>));
+    //        Debug.Log($"{clipType.Name}  {_handleType.Name}");
+    //    }
+    //}
 
     [Button]
-    public void IconLoadTest()
+    void Test2()
     {
-        var iconName = ResolveIcon("TimelineEditModeRippleON");
-        var icon = AssetDatabase.LoadAssetAtPath<Texture>(iconName);
-        Debug.Log(icon);
+        Debug.Log(PJR.Timeline.Utility.GetGenericType(typeof(TestClipHandle), typeof(ClipHandle<>))?.Name ?? "Null");
     }
 
-    static string ResolveIcon(string icon)
+
+    [Button]
+    void RunTestClip()
     {
-        return string.Format(k_ImagePath_C, icon);
-        //return string.Format(k_ImagePath, icon);
+        Sequence seq = new Sequence();
+        seq.frameRateType = Define.EFrameRate.Game;
+        
+        var clips = new Clip[] {
+            new TestClip() { 
+                start = 0,
+                end = 2,
+                intValue = 3 
+            }
+        };
+
+        seq.clips = clips;
+        handle = new SequenceHandle(seq);
+    }
+
+    SequenceHandle handle;
+    private void Update()
+    {
+        if (handle != null)
+        { 
+            handle.OnUpdate();
+        }
     }
 }

@@ -8,15 +8,10 @@ namespace PJR.Timeline
 {
     public partial class TimelineWindow
     {
-        static class Constants 
-        {
-            public const float timelineAreaYPosition = 19f;
-        }
-
         public float headerHeight
         {
             get {
-                return WindowConstants.markerRowYPosition;
+                return Constants.markerRowYPosition;
             }
         }
         public Rect controlBarRect
@@ -27,29 +22,28 @@ namespace PJR.Timeline
         }
         public Rect headerRect
         {
-            get { return new Rect(0.0f, WindowConstants.markerRowYPosition, WindowConstants.defaultHeaderWidth, position.height - WindowConstants.timeAreaYPosition); }
+            get { return new Rect(0.0f, Constants.markerRowYPosition, Constants.defaultHeaderWidth, position.height - Constants.timelineAreaYPosition); }
         }
         public Rect timelineRulerRect
         {
-            get { return new Rect(headerRect.width, 0, position.width - headerRect.width, WindowConstants.timeAreaYPosition); }
-        }
-        
-        public Rect timeRuleRect
-        {
-            get { return new Rect(0.0f, WindowConstants.markerRowYPosition, WindowConstants.defaultHeaderWidth, position.height - WindowConstants.timeAreaYPosition); }
+            get { return new Rect(headerRect.width, Constants.timelineAreaYPosition + 1, position.width - headerRect.width, Constants.timelineRulerHeight); }
         }
 
-        
 
-        static class WindowConstants
+        static class Constants
         {
-            public const float timeAreaYPosition = 19.0f;
+            public const float timelineAreaYPosition = 19.0f;
+            public const float timelineRulerHeight = 22.0f;
+            public const float timelineRulerPreSpace = 5.0f;
+
+            public const int pixelPerFrame = 10;
+            //
             public const float timeAreaHeight = 22.0f;
             public const float timeAreaMinWidth = 50.0f;
             public const float timeAreaShownRangePadding = 5.0f;
 
             public const float markerRowHeight = 18.0f;
-            public const float markerRowYPosition = timeAreaYPosition + timeAreaHeight;
+            public const float markerRowYPosition = timelineAreaYPosition + timeAreaHeight;
 
             public const float defaultHeaderWidth = 315.0f;
             public const float defaultBindingAreaWidth = 40.0f;

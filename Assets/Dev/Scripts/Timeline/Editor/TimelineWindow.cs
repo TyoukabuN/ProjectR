@@ -22,6 +22,11 @@ namespace PJR.Timeline
         }
         void OnGUI()
         {
+            Rect rect = position;
+            rect.x = 0;
+            rect.y = Constants.timelineAreaYPosition;
+            rect.height -= Constants.timelineAreaYPosition;
+            EditorGUI.DrawRect(rect, Color.white);
             Draw_Toolbar();
             //Draw_TimelineRuler();
         }
@@ -42,7 +47,11 @@ namespace PJR.Timeline
                     }
                 }
 
-                Draw_HeaderEditBar();
+                using (new GUILayout.HorizontalScope())
+                { 
+                    Draw_HeaderEditBar();
+                    Draw_TimelineRuler();
+                }
             }
         }
 
@@ -103,12 +112,21 @@ namespace PJR.Timeline
         }
         void Draw_TimelineRuler()
         {
+            EditorGUI.DrawRect(timelineRulerRect, Color.black);
+
             GUILayout.BeginArea(timelineRulerRect);
-            using(new GUILayout.HorizontalScope())
-            {
-                GUILayout.Button("Button", GUILayout.Width(64f));
+            Handles.BeginGUI();
+            var rect = timelineRulerRect;
+            for (int i = 0; i < rect.width; i += Constants.pixelPerFrame)
+            { 
+                Handles.color = Color.white;
+                Handles.DrawLine(new Vector3(i, 0), new Vector3(i, rect.height));
             }
+            Handles.EndGUI();
             GUILayout.EndArea();
+        }
+        public void InteractiveTest(Rect rect)
+        {
         }
     }
 }

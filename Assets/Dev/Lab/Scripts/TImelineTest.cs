@@ -20,6 +20,8 @@ public class TImelineTest : MonoBehaviour
     //    }
     //}
 
+    public Color color;
+
     [Button]
     void Test2()
     {

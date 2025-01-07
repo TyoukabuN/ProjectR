@@ -4,39 +4,46 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace PJR.Timeline
+namespace PJR.Timeline.Editor
 {
     public partial class TimelineWindow
     {
         public float headerHeight
         {
             get {
-                return Constants.markerRowYPosition;
+                return Constants.clipStartPositionY;
             }
         }
         public Rect controlBarRect
         {
             get {
-                return new Rect(0.0f, Constants.timelineAreaYPosition, position.width, 22f);
+                return new Rect(0.0f, Constants.timelineAreaYPosition, position.width, Constants.timelineRulerHeight);
             }
         }
         public Rect headerRect
         {
-            get { return new Rect(0.0f, Constants.markerRowYPosition, Constants.defaultHeaderWidth, position.height - Constants.timelineAreaYPosition); }
+            get { return new Rect(0.0f, Constants.clipStartPositionY, Constants.defaultHeaderWidth, position.height - Constants.timelineAreaYPosition); }
         }
         public Rect timelineRulerRect
         {
-            get { return new Rect(headerRect.width, Constants.timelineAreaYPosition + 1, position.width - headerRect.width, Constants.timelineRulerHeight); }
+            get { return new Rect(headerRect.width, Constants.timelineRulerHeight, position.width - headerRect.width, Constants.timelineRulerHeight); }
         }
 
+        public Rect trackRect
+        {
+            get
+            {
+                var yMinHeight = headerHeight;
+                return new Rect(0, yMinHeight, position.width, position.height - yMinHeight - 0);
+            }
+        }
 
         static class Constants
         {
             public const float timelineAreaYPosition = 19.0f;
-            public const float timelineRulerHeight = 22.0f;
+            public const float timelineRulerHeight = 21.0f;
             public const float timelineRulerPreSpace = 5.0f;
-
-            public const int pixelPerFrame = 10;
+            public const float clipStartPositionY = timelineAreaYPosition + timelineRulerHeight + 3;
             //
             public const float timeAreaHeight = 22.0f;
             public const float timeAreaMinWidth = 50.0f;
@@ -78,6 +85,19 @@ namespace PJR.Timeline
             public const int autoPanPaddingInPixels = 50;
 
             public const float overlayTextPadding = 40.0f;
+
+            /// <summary>
+            /// 默认每帧占多少像素
+            /// </summary>
+            public const int pixelPerFrame = 10;
+            /// <summary>
+            /// 最大默认每帧占多少像素的倍率
+            /// </summary>
+            public const int maxPixelPerFrameRate = 10;
+            /// <summary>
+            /// 最大默认每帧占多少像素
+            /// </summary>
+            public const int maxPixelPerFrame = pixelPerFrame * maxPixelPerFrameRate;
         }
     }
 }

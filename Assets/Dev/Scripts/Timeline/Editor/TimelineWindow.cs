@@ -1,14 +1,27 @@
+using NPOI.SS.Formula.Functions;
+using NPOI.SS.UserModel;
+using Sirenix.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEditor;
 using UnityEngine;
-using Styles = PJR.Timeline.Styles;
+using UnityEngine.UIElements;
+using Styles = PJR.Timeline.Editor.Styles;
 
-namespace PJR.Timeline
+namespace PJR.Timeline.Editor
 {
     public partial class TimelineWindow : EditorWindow
     {
         public static TimelineWindow instance { get; private set; }
+
+        public WindowState state;
+
+        public TimelineWindow()
+        {
+            state ??= new WindowState();
+        }
 
         [MenuItem("PJR/Timeline", false, 1)]
         public static void ShowWindow()
@@ -26,9 +39,8 @@ namespace PJR.Timeline
             rect.x = 0;
             rect.y = Constants.timelineAreaYPosition;
             rect.height -= Constants.timelineAreaYPosition;
-            EditorGUI.DrawRect(rect, Color.white);
+            EditorGUI.DrawRect(rect, Color.gray);
             Draw_Toolbar();
-            //Draw_TimelineRuler();
         }
 
         void Draw_Toolbar()
@@ -48,13 +60,16 @@ namespace PJR.Timeline
                 }
 
                 using (new GUILayout.HorizontalScope())
-                { 
+                {
                     Draw_HeaderEditBar();
                     Draw_TimelineRuler();
                 }
+
+                DrawClips();
             }
         }
 
+        #region Control buttons
         void Draw_GotoBeginingButton()
         {
             if (GUILayout.Button(Styles.gotoBeginingContent, EditorStyles.toolbarButton, GUILayout.ExpandWidth(false)))
@@ -86,7 +101,7 @@ namespace PJR.Timeline
             {
             }
         }
-
+        #endregion
 
         void Draw_HeaderEditBar()
         {
@@ -96,7 +111,7 @@ namespace PJR.Timeline
                 Draw_AddTrackButton();
                 GUILayout.FlexibleSpace();
             }
-        } 
+        }
 
         void Draw_AddTrackButton()
         {
@@ -110,23 +125,71 @@ namespace PJR.Timeline
                 menu.ShowAsContext();
             }
         }
+
         void Draw_TimelineRuler()
         {
-            EditorGUI.DrawRect(timelineRulerRect, Color.black);
+            EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
+            GUIUtility.CheckWheelEvent(timelineRulerRect, evt =>
+            {
+                state.currentPixelPerFrame -= (int)evt.delta.y;
+                state.currentPixelPerFrame = Mathf.Clamp(state.currentPixelPerFrame, Constants.pixelPerFrame, Constants.maxPixelPerFrame);
+                Repaint();
+            });
+
+            int tickStep = Constants.pixelPerFrame + 1 - (state.currentPixelPerFrame / Constants.pixelPerFrame);
+            tickStep /= 2;
+            tickStep = Mathf.Max(tickStep, 1);
 
             GUILayout.BeginArea(timelineRulerRect);
             Handles.BeginGUI();
             var rect = timelineRulerRect;
-            for (int i = 0; i < rect.width; i += Constants.pixelPerFrame)
-            { 
-                Handles.color = Color.white;
-                Handles.DrawLine(new Vector3(i, 0), new Vector3(i, rect.height));
+            int frameIndex = 0;
+            float longTickStartY = 6f;
+            float shortTickStartY = rect.height - 6f;
+
+            for (int i = 0; i < rect.width; i += state.currentPixelPerFrame, frameIndex++)
+            {
+                if (frameIndex % tickStep == 0)
+                {
+                    Handles.color = Color.white;
+                    Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
+
+                    GUI.Label(new Rect(i, -3f, 40f, 20f), frameIndex.ToString(), Styles.Instance.timeAreaStyles.timelineTick);
+                }
+                else
+                {
+                    Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
+                }
             }
             Handles.EndGUI();
             GUILayout.EndArea();
         }
-        public void InteractiveTest(Rect rect)
+
+
+
+        public class WindowState
         {
+            /// <summary>
+            /// current pixel per frame
+            /// </summary>
+            public int currentPixelPerFrame = Constants.pixelPerFrame;
         }
+
+        public void DrawClips()
+        {
+            //GUIUtility.DrawBorder(trackRect);
+
+            GUILayout.BeginArea(trackRect);
+            GUIUtility.DrawBorder(trackRect.ToLocal(), Color.blue);
+            GUILayout.Space(6f);
+            GUILayout.Box("123");
+            GUIUtility.DrawBorder(GUILayoutUtility.GetLastRect(), Color.red);
+            var rect = GUILayoutUtility.GetAspectRect(1).Shrink(3);
+            Debug.Log(rect);
+            GUIUtility.DrawBorder(rect, Color.red);
+            GUILayout.EndArea();
+        }
+
+       
     }
 }

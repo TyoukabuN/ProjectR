@@ -7,17 +7,17 @@ using UnityEngine;
 
 namespace PJR.Timeline.Editor
 {
-    public static class GUIUtility
+    public static class GUIUtil
     {
         public static void DrawBorder(Rect position) => DrawBorder(position, Color.red);
         public static void DrawBorder(Rect position, Color color)
         {
             Handles.BeginGUI();
             var rect = position;
-            Vector3 topLeft = new Vector3(rect.xMin, rect.yMax, 0);
-            Vector3 topRight = new Vector3(rect.xMax, rect.yMax, 0);
-            Vector3 bottomRight = new Vector3(rect.xMax, rect.yMin, 0);
-            Vector3 bottomLeft = new Vector3(rect.xMin, rect.yMin, 0);
+            Vector3 topLeft = new Vector3(rect.xMin, rect.yMin, 0);
+            Vector3 topRight = new Vector3(rect.xMax, rect.yMin, 0);
+            Vector3 bottomRight = new Vector3(rect.xMax, rect.yMax, 0);
+            Vector3 bottomLeft = new Vector3(rect.xMin, rect.yMax, 0);
 
             // 设置线条颜色
             Handles.color = color;
@@ -27,6 +27,8 @@ namespace PJR.Timeline.Editor
             Handles.DrawLine(topRight, bottomRight);
             Handles.DrawLine(bottomRight, bottomLeft);
             Handles.DrawLine(bottomLeft, topLeft);
+
+            Handles.DrawLine(topLeft, bottomRight);
 
             Handles.EndGUI();
         }

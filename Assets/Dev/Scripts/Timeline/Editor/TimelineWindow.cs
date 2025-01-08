@@ -39,7 +39,7 @@ namespace PJR.Timeline.Editor
             rect.x = 0;
             rect.y = Constants.timelineAreaYPosition;
             rect.height -= Constants.timelineAreaYPosition;
-            EditorGUI.DrawRect(rect, Color.gray);
+            EditorGUI.DrawRect(rect, Color.green);
             Draw_Toolbar();
         }
 
@@ -129,7 +129,7 @@ namespace PJR.Timeline.Editor
         void Draw_TimelineRuler()
         {
             EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
-            GUIUtility.CheckWheelEvent(timelineRulerRect, evt =>
+            GUIUtil.CheckWheelEvent(timelineRulerRect, evt =>
             {
                 state.currentPixelPerFrame -= (int)evt.delta.y;
                 state.currentPixelPerFrame = Mathf.Clamp(state.currentPixelPerFrame, Constants.pixelPerFrame, Constants.maxPixelPerFrame);
@@ -175,21 +175,156 @@ namespace PJR.Timeline.Editor
             public int currentPixelPerFrame = Constants.pixelPerFrame;
         }
 
+        private float sliderValue = 0f;
         public void DrawClips()
         {
+            EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
             //GUIUtility.DrawBorder(trackRect);
-
             GUILayout.BeginArea(trackRect);
-            GUIUtility.DrawBorder(trackRect.ToLocal(), Color.blue);
+            GUIUtil.DrawBorder(trackRect.ToLocal(), Color.blue);
             GUILayout.Space(6f);
-            GUILayout.Box("123");
-            GUIUtility.DrawBorder(GUILayoutUtility.GetLastRect(), Color.red);
-            var rect = GUILayoutUtility.GetAspectRect(1).Shrink(3);
-            Debug.Log(rect);
-            GUIUtility.DrawBorder(rect, Color.red);
+
+
+            var sliderRt = new Rect(1, 18, 100, 20);
+            var position = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button, GUILayout.MinWidth(100));
+            if (Event.current.type == EventType.Repaint)
+                Debug.Log($"{position}");
+            sliderValue = CustomSlider(position, sliderValue);
+
+
+            //FlashingButton(sliderRt, new GUIContent("123"), GUI.skin.button);
+            GUIUtil.DrawBorder(position, Color.yellow);
+
+            //GUI.Button(new Rect(1, 1, 40, 20), "123");
+            //GUI.Label(new Rect(1, 1, 40, 20), GUI.tooltip);
+
+            //GUILayout.Box("123");
+            //GUIUtil.DrawBorder(GUILayoutUtility.GetLastRect(), Color.red);
+            var rect = GUILayoutUtility.GetAspectRect(10f);
+            //Debug.Log($"{Event.current.type} {rect}");
+            GUIUtil.DrawBorder(rect, Color.yellow);
             GUILayout.EndArea();
         }
 
-       
+
+        public static float CustomSlider(Rect position, float value)
+        {
+            int controlID = GUIUtility.GetControlID(FocusType.Passive);
+
+            Action changeValue = () =>
+            {
+                if (GUIUtility.hotControl != controlID)
+                    return;
+                float relativeX = Event.current.mousePosition.x - position.x;
+                value = Mathf.Clamp01(relativeX / position.width);
+                GUI.changed = true;
+                Event.current.Use();
+            };
+
+            switch (Event.current.GetTypeForControl(controlID))
+            { 
+                case EventType.Repaint:
+                    {
+                        int pixelWidth = (int)Mathf.Lerp(1f, position.width, value);
+                        Rect targetRect = new Rect(position) { width = pixelWidth };
+                        var color = Color.Lerp(Color.red, Color.green, value);
+                        //GUI.DrawTexture(targetRect,)
+                        EditorGUI.DrawRect(targetRect, color);
+                        break;
+                    }
+                case EventType.MouseDown:
+                    {
+                        if (position.Contains(Event.current.mousePosition) && Event.current.button == 0)
+                            GUIUtility.hotControl = controlID;
+                        break;
+                    }
+                case EventType.MouseDrag:
+                    {
+                        changeValue();
+                        break;
+                    }
+                case EventType.MouseUp:
+                    {
+                        changeValue();
+                        if (GUIUtility.hotControl == controlID)
+                            GUIUtility.hotControl = 0;
+                        break;
+                    }
+                default:
+                    return value;
+            }
+            return value;
+        }
+
+        public static bool FlashingButton(Rect rc, GUIContent content, GUIStyle style)
+        {
+            int controlID = GUIUtility.GetControlID(FocusType.Passive);
+
+            // Get (or create) the state object
+            var state = (FlashingButtonInfo)GUIUtility.GetStateObject(
+                                                 typeof(FlashingButtonInfo),
+                                                 controlID);
+
+            switch (Event.current.GetTypeForControl(controlID))
+            {
+                case EventType.Repaint:
+                    {
+                        var color = state.IsFlashing(controlID)
+                            ? Color.red
+                            : Color.white;
+                        //style.Draw(rc, content, controlID);
+                        EditorGUI.DrawRect(rc, color);
+                        break;
+                    }
+                case EventType.MouseDrag:
+                    {
+                        Event.current.Use();
+                        GUI.changed = true; 
+                        break;
+                    }
+                case EventType.MouseDown:
+                    {
+                        if (rc.Contains(Event.current.mousePosition)
+                         && Event.current.button == 0
+                         && GUIUtility.hotControl == 0)
+                        {
+                            GUIUtility.hotControl = controlID;
+                            state.MouseDownNow();
+                        }
+                        break;
+                    }
+                case EventType.MouseUp:
+                    {
+                        if (GUIUtility.hotControl == controlID)
+                            GUIUtility.hotControl = 0;
+                        break;
+                    }
+            }
+
+            return GUIUtility.hotControl == controlID;
+        }
+
+        public class FlashingButtonInfo
+        {
+            private double mouseDownAt;
+
+            public void MouseDownNow()
+            {
+                mouseDownAt = EditorApplication.timeSinceStartup;
+            }
+
+            public bool IsFlashing(int controlID)
+            {
+                if (GUIUtility.hotControl != controlID)
+                    return false;
+
+                double elapsedTime = EditorApplication.timeSinceStartup - mouseDownAt;
+                Debug.Log(elapsedTime);
+                if (elapsedTime < 2f)
+                    return false;
+
+                return (int)((elapsedTime - 2f) / 0.1f) % 2 == 0;
+            }
+        }
     }
 }

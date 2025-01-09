@@ -13,7 +13,29 @@ namespace PJR.Timeline.Editor
         const string k_DarkSkinPath = resourcesPath + "Timeline_DarkSkin.txt";
         const string k_LightSkinPath = resourcesPath + "Timeline_LightSkin.txt";
         //Timeline resources
+        public const string newTimelineDefaultNameSuffix = "Timeline";
 
+        public static readonly GUIContent referenceTrackLabel = TrTextContent("R", "This track references an external asset");
+        public static readonly GUIContent recordingLabel = TrTextContent("Recording...");
+        public static readonly GUIContent noTimelineAssetSelected = TrTextContent("To start creating a timeline, select a GameObject");
+        public static readonly GUIContent createTimelineOnSelection = TrTextContent("To begin a new timeline with {0}, create {1}");
+        public static readonly GUIContent noTimelinesInScene = TrTextContent("No timeline found in the scene");
+        public static readonly GUIContent createNewTimelineText = TrTextContent("Create a new Timeline and Director Component for Game Object");
+        public static readonly GUIContent previewContent = TrTextContent("Preview", "Enable/disable scene preview mode");
+        public static readonly GUIContent previewDisabledContent = L10n.TextContentWithIcon("Preview", "Scene preview is disabled for this TimelineAsset", MessageType.Info);
+        public static readonly GUIContent mixOff = TrIconContent("TimelineEditModeMixOFF", "Mix Mode (1)");
+        public static readonly GUIContent mixOn = TrIconContent("TimelineEditModeMixON", "Mix Mode (1)");
+        public static readonly GUIContent rippleOff = TrIconContent("TimelineEditModeRippleOFF", "Ripple Mode (2)");
+        public static readonly GUIContent rippleOn = TrIconContent("TimelineEditModeRippleON", "Ripple Mode (2)");
+        public static readonly GUIContent replaceOff = TrIconContent("TimelineEditModeReplaceOFF", "Replace Mode (3)");
+        public static readonly GUIContent replaceOn = TrIconContent("TimelineEditModeReplaceON", "Replace Mode (3)");
+        public static readonly GUIContent showMarkersOn = TrIconContent("TimelineCollapseMarkerButtonEnabled", "Show / Hide Timeline Markers");
+        public static readonly GUIContent showMarkersOff = TrIconContent("TimelineCollapseMarkerButtonDisabled", "Show / Hide Timeline Markers");
+        public static readonly GUIContent showMarkersOnTimeline = TrTextContent("Show markers");
+        public static readonly GUIContent timelineMarkerTrackHeader = TrTextContentWithIcon("Markers", string.Empty, "TimelineHeaderMarkerIcon");
+        public static readonly GUIContent signalTrackIcon = IconContent("TimelineSignal");
+
+        public static readonly GUIContent debugContent = TrTextContent("Debug", "Enable/Debug mode");
 
         //Unity Default Resources
         public static readonly GUIContent playContent = L10n.IconContent("Animation.Play", "Play the timeline (Space)");
@@ -91,7 +113,7 @@ namespace PJR.Timeline.Editor
         {
             get
             {
-                if (s_Instance == null)
+                if (s_Instance == null || s_Instance.ShouldLoadStyles())
                 {
                     s_Instance = new Styles();
                     s_Instance.Initialize();
@@ -168,14 +190,6 @@ namespace PJR.Timeline.Editor
             m_DefaultSkinColors = CreateDefaultSkin();
             m_DarkSkinColors = LoadColorSkin(k_DarkSkinPath);
             m_LightSkinColors = LoadColorSkin(k_LightSkinPath);
-        }
-        static Styles()
-        {
-            if (s_Instance == null)
-            {
-                s_Instance = new Styles();
-                s_Instance.Initialize();
-            }
         }
 
         Styles()
@@ -297,6 +311,21 @@ namespace PJR.Timeline.Editor
             result.a = color.a;
             return result;
         }
+        public static GUIContent IconContent(string iconName)
+        {
+            return EditorGUIUtility.IconContent(iconName == null ? null : ResolveIcon(iconName));
+        }
+
+        public static GUIContent TrTextContentWithIcon(string text, string tooltip, string iconName)
+        {
+            return L10n.TextContentWithIcon(text, tooltip, iconName == null ? null : ResolveIcon(iconName));
+        }
+
+        public static GUIContent TrTextContent(string text, string tooltip = null)
+        {
+            return L10n.TextContent(text, tooltip);
+        }
+
         #endregion
         public class Styles2
         {

@@ -33,7 +33,7 @@ namespace PJR.Timeline.Editor
         {
             get
             {
-                var yMinHeight = headerHeight;
+                var yMinHeight = headerHeight - 1;
                 return new Rect(0, yMinHeight, position.width, position.height - yMinHeight - 0);
             }
         }

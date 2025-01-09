@@ -169,9 +169,9 @@ namespace PJR.Timeline.Editor
 
         public void SetDefault()
         {
-            colorPlayhead = Styles.Instance.timeCursor.normal.textColor;
-            colorSelection = Styles.Instance.selectedStyle.normal.textColor;
-            colorEndmarker = Styles.Instance.endmarker.normal.textColor;
+            colorPlayhead = Styles.Instance?.timeCursor.normal.textColor ?? Color.gray;
+            colorSelection = Styles.Instance?.selectedStyle.normal.textColor ?? Color.gray;
+            colorEndmarker = Styles.Instance?.endmarker.normal.textColor ?? Color.gray;
 
             colorGroup = new Color(0.094f, 0.357f, 0.384f, 0.310f);
             colorGroupTrackBackground = new Color(0f, 0f, 0f, 1f);

@@ -1,17 +1,19 @@
 using Sirenix.Utilities;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace PJR.Timeline.Editor
 {
     public static class GUIUtil
     {
-        public static void DrawBorder(Rect position) => DrawBorder(position, Color.red);
-        public static void DrawBorder(Rect position, Color color)
+        public static void DebugRect(Rect position) => DebugRect(position, Color.green);
+        public static void DebugRect(Rect position, Color color)
         {
+            if (!(TimelineWindow.instance?.state.debugging ?? false))
+                return;
+
             Handles.BeginGUI();
             var rect = position;
             Vector3 topLeft = new Vector3(rect.xMin, rect.yMin, 0);
@@ -32,6 +34,9 @@ namespace PJR.Timeline.Editor
 
             Handles.EndGUI();
         }
+        public static void Debug(this Rect rect, Color color) => DebugRect(rect, color);
+        public static void Debug(this Rect rect) => DebugRect(rect);
+
         public static void EventCheck(Rect rect, EventType eventType, Action<Event> callback) => EventCheck(rect, eventType, callback, false, false);
         public static void EventCheck(Rect rect, EventType eventType, Action<Event> callback, bool ctrl, bool alt)
         {
@@ -45,7 +50,7 @@ namespace PJR.Timeline.Editor
 
         public static void CheckWheelEvent(Rect rect, Action<Event> callback) => EventCheck(rect, EventType.ScrollWheel, callback);
 
-        public static Rect ToLocal(this Rect rect)
+        public static Rect ToOrigin(this Rect rect)
         {
             rect.x = 0;
             rect.y = 0;
@@ -53,5 +58,46 @@ namespace PJR.Timeline.Editor
         }
         public static Rect Shrink(this Rect rect) => rect.Expand(-1);
         public static Rect Shrink(this Rect rect, float pixel) => rect.Expand(-pixel);
+    }
+
+    public static class UIControlUtil
+    {
+        public static Button GetButton() => GetButton(null);
+        public static Button GetButton(string name)
+        {
+            Button button = new Button();
+            button.name = name;
+            button.SetMargin(3, 1);
+            button.SetPadding(5, 2);
+
+            return button;
+        }
+
+        public static void SetMargin0(this VisualElement visualElement)=> SetMargin(visualElement, 0,0,0,0);
+        public static void SetMargin(this VisualElement visualElement, StyleLength lr, StyleLength tb)=> SetMargin(visualElement, lr, lr, tb, tb);
+        public static void SetMargin(this VisualElement visualElement, StyleLength left, StyleLength right, StyleLength top, StyleLength bottom)
+        {
+            visualElement.style.marginLeft = left;
+            visualElement.style.marginRight = right;
+            visualElement.style.marginTop = top;
+            visualElement.style.marginBottom = bottom;
+        }
+        public static void SetPadding0(this VisualElement visualElement) => SetPadding(visualElement, 0, 0, 0, 0);
+        public static void SetPadding(this VisualElement visualElement, StyleLength lr, StyleLength tb)=> SetPadding(visualElement, lr, lr, tb, tb);
+        public static void SetPadding(this VisualElement visualElement, StyleLength left, StyleLength right, StyleLength top, StyleLength bottom)
+        {
+            visualElement.style.paddingLeft = left;
+            visualElement.style.paddingRight = right;
+            visualElement.style.paddingTop = top;
+            visualElement.style.paddingBottom = bottom;
+        }
+        public static void SetBorderRadius0(this VisualElement visualElement) => SetBorderRadius(visualElement, 0, 0, 0, 0);
+        public static void SetBorderRadius(this VisualElement visualElement, StyleLength topLeft, StyleLength topRight, StyleLength bottomLeft, StyleLength bottomRight)
+        {
+            visualElement.style.borderTopLeftRadius = topLeft;
+            visualElement.style.borderTopRightRadius = topRight;
+            visualElement.style.borderBottomLeftRadius = bottomLeft;
+            visualElement.style.borderBottomRightRadius = bottomRight;
+        }
     }
 }

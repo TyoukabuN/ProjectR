@@ -1,5 +1,8 @@
+using NPOI.SS.Formula.Functions;
+using Sirenix.OdinInspector.Editor;
 using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using UnityEditor;
 using UnityEngine;
 using Styles = PJR.Timeline.Editor.Styles;
@@ -31,11 +34,11 @@ namespace PJR.Timeline.Editor
         {
             Styles.ReloadStylesIfNeeded();
 
-            Rect rect = position;
-            rect.x = 0;
-            rect.y = Constants.timelineAreaYPosition;
-            rect.height -= Constants.timelineAreaYPosition;
-            EditorGUI.DrawRect(rect, Color.green);
+            //Rect rect = position;
+            //rect.x = 0;
+            //rect.y = Constants.timelineAreaYPosition;
+            //rect.height -= Constants.timelineAreaYPosition;
+            //EditorGUI.DrawRect(rect, Color.green);
 
             Draw_Toolbar();
         }
@@ -45,19 +48,21 @@ namespace PJR.Timeline.Editor
 
             using (new GUILayout.VerticalScope())
             {
+
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
-                    using (new GUILayout.HorizontalScope())
-                    {
-                        Draw_DebugButton();
-                        Draw_GotoBeginingButton();
-                        Draw_PreviousFrameButton();
-                        Draw_PlayerButton();
-                        Draw_NewFrameButton();
-                        Draw_GotoEndButton();
-                        GUILayout.FlexibleSpace();
-            headerRect.Debug();
+                    Draw_DebugButton();
+                    if (state.debugging)
+                    { 
+                        Draw_RepaintButton();
                     }
+                    Draw_GotoBeginingButton();
+                    Draw_PreviousFrameButton();
+                    Draw_PlayerButton();
+                    Draw_NewFrameButton();
+                    Draw_GotoEndButton();
+                    GUILayout.FlexibleSpace();
+                    //headerRect.Debug();
                 }
 
                 using (new GUILayout.HorizontalScope())
@@ -66,7 +71,21 @@ namespace PJR.Timeline.Editor
                     Draw_TimelineRuler();
                 }
 
+                //segment-line trackMenu-trackClip
+                var rect = GUILayoutUtility.GetRect(3, position.height);
+                rect.xMin = state.trackMenuAreaWidth - 2;
+                rect.xMax = state.trackMenuAreaWidth + 2;
+
                 DrawClips();
+
+                //segment-line trackMenu-trackClip
+                GUIUtil.DebugRect(rect, Color.green, false, true);
+
+                rect.DragEventCheck((rect) =>
+                {
+                    float relativeX = Event.current.mousePosition.x - rect.x;
+                    state.trackMenuAreaWidth = Mathf.Clamp(state.trackMenuAreaWidth + relativeX, Constants.trackMenuMinAreaWidth, Constants.trackMenuMaxAreaWidth);
+                });
             }
         }
         
@@ -78,13 +97,22 @@ namespace PJR.Timeline.Editor
             var enabled = state.debugging;
             state.debugging = GUILayout.Toggle(enabled, Styles.debugContent, EditorStyles.toolbarButton);
         }
+        void Draw_RepaintButton()
+        {
+            EditorGUI.BeginChangeCheck();
+            if (GUILayout.Button(Styles.repaint, EditorStyles.toolbarButton))
+            {
+                Repaint();
+                //OdinEditorWindow.InspectObject(Styles.Instance.customSkin);
+            } 
+        }
+
         void Draw_GotoBeginingButton()
         {
             if (GUILayout.Button(Styles.gotoBeginingContent, EditorStyles.toolbarButton))
             {
             }
         }
-
         void Draw_PreviousFrameButton()
         {
             if (GUILayout.Button(Styles.previousFrameContent, EditorStyles.toolbarButton))
@@ -113,7 +141,8 @@ namespace PJR.Timeline.Editor
 
         void Draw_HeaderEditBar()
         {
-            using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(headerRect.width)))
+            //using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(headerRect.width)))
+            using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(state.trackMenuAreaWidth)))
             {
                 GUILayout.Space(15f);
                 Draw_AddTrackButton();
@@ -173,7 +202,6 @@ namespace PJR.Timeline.Editor
         }
 
 
-
         public class WindowState
         {
             /// <summary>
@@ -185,6 +213,8 @@ namespace PJR.Timeline.Editor
 
             private TrackGUI trackGUI;
             public TrackGUI TrackGUI => trackGUI ??= new TrackGUI();
+
+            public float trackMenuAreaWidth = Constants.trackMenuDefaultAreaWidth;
         }
 
         public class TrackGUI
@@ -196,30 +226,72 @@ namespace PJR.Timeline.Editor
             {
                 DOTest();
             }
-            public void OnGUI(Rect totalArea)
-            {
-                using (new GUILayout.VerticalScope())
-                {
-                    GUILayout.Space(6f);
-                    for (int i = 0; i < clips.Count; i++)
-                    {
-                        var clip = clips[i];
-                        using (new GUILayout.HorizontalScope())
-                        {
-                            //GUILayout.Button($"Button{i}");
-                            //var clipMeumRect = new Rect(0, 1, Constants.defaultHeaderWidth, 100);
-                            //clipMeumRect.xMax -= 8f;
-                            //clipMeumRect.Debug();
-                            //var clipTrackRect = new Rect(Constants.defaultHeaderWidth, 1, totalArea.width - Constants.defaultHeaderWidth, 100);
-                            //clipTrackRect.Debug();
-                            GUILayout.Space(18f);
-                            GUILayout.Box(clip.GetDisplayName(),EditorStyles.helpBox,GUILayout.Height(34));
 
-                            
+            public virtual float CalculateHeight()
+            {
+                return Constants.trackHeight;
+            }
+            public virtual void OnGUI(Rect totalArea)
+            {
+                using (new GUILayout.HorizontalScope())
+                {
+                    //TrackMenu（左边）
+                    using (new GUILayout.VerticalScope(GUILayout.Width(windowState.trackMenuAreaWidth - 2)))
+                    {
+                        GUILayout.Space(Constants.trackMenuAreaTop);
+                        for (int i = 0; i < clips.Count; i++)
+                        {
+                            GUILayout.Space(Constants.trackMenuPadding);
+                            var clip = clips[i];
+                            var clipGUI = GetClipGUI(clip);
+                            if (clipGUI == null)
+                                continue;
+
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                //GUILayout.Button($"Button{i}");
+                                //var clipMeumRect = new Rect(0, 1, Constants.defaultHeaderWidth, 100);
+                                //clipMeumRect.xMax -= 8f;
+                                //clipMeumRect.Debug();
+                                //var clipTrackRect = new Rect(Constants.defaultHeaderWidth, 1, totalArea.width - Constants.defaultHeaderWidth, 100);
+                                //clipTrackRect.Debug();
+
+                                //Color backgroundColor = SelectionManager.Contains(track)
+                                //    ? DirectorStyles.Instance.customSkin.colorSelection
+                                //    : DirectorStyles.Instance.customSkin.colorTrackHeaderBackground;
+
+                                GUILayout.Space(Constants.trackMenuLeftSpace);
+                                clipGUI.OnGUI(GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight()));
+                                //GUILayout.Box(clip.GetDisplayName(), EditorStyles.helpBox, GUILayout.Height(Constants.trackHeight));
+                            }
                         }
                     }
+                    //TrackClip（右边）
+                }
+            }
+
+            private Dictionary<Clip, ClipGUI> clip2clipGUI; 
+            public ClipGUI GetClipGUI(Clip clip)
+            {
+                ClipGUI guiObject = null;
+                if (clip == null)
+                    return guiObject;
+
+                if(clip2clipGUI == null)
+                    clip2clipGUI = new Dictionary<Clip, ClipGUI>();
+
+                #region test
+                if (clip2clipGUI.TryGetValue(clip, out guiObject))
+                    return guiObject;
+
+                if (clip is TestClip)
+                { 
+                    guiObject = new TestClipGUI(clip as TestClip);
+                    clip2clipGUI[clip] = guiObject;
                 }
 
+                return null;
+                #endregion
             }
 
             #region test
@@ -234,6 +306,25 @@ namespace PJR.Timeline.Editor
             public class TestClip : Clip
             {
                 public int intValue;
+
+                public override string GetDisplayName()
+                {
+                    return "TestClip";
+                }
+            }
+
+            public static Clip hotClip = null;
+            public class TestClipGUI : ClipGUI<TestClip>
+            {
+                public TestClipGUI(TestClip clip) : base(clip)
+                { 
+                }
+
+                public override void OnGUI(Rect menuRect)
+                {
+                    base.OnGUI(menuRect);
+
+                }
             }
             #endregion
         }

@@ -11,7 +11,9 @@ namespace PJR.Timeline.Editor
         const string resourcesPath = "Assets/Plugins/com.unity.timeline@1.7.5/Editor/StyleSheets/res/";
 
         const string k_DarkSkinPath = resourcesPath + "Timeline_DarkSkin.txt";
+        const string k_DarkSkinAssetPath = resourcesPath + "Timeline_DarkSkin.asset";
         const string k_LightSkinPath = resourcesPath + "Timeline_LightSkin.txt";
+        const string k_LightSkinAssetPath = resourcesPath + "Timeline_LightSkin.asset";
         //Timeline resources
         public const string newTimelineDefaultNameSuffix = "Timeline";
 
@@ -36,6 +38,11 @@ namespace PJR.Timeline.Editor
         public static readonly GUIContent signalTrackIcon = IconContent("TimelineSignal");
 
         public static readonly GUIContent debugContent = TrTextContent("Debug", "Enable/Debug mode");
+        public static readonly GUIContent repaint = TrTextContent("Repaint", "Repaint GUI");
+        public static readonly GUIContent reloadSkin = TrTextContent("ReloadSkin", "Reload Skin Object");
+        public static readonly GUIContent inspectSkin = TrTextContent("InspectSkin", "Inspect CurrentSkin Object");
+        public static readonly GUIContent lightSkin = TrTextContent("LightSkin", "Inspect LightSkin Object");
+        public static readonly GUIContent darkSkin = TrTextContent("DrakSkin", "Inspect DrakSkin Object");
 
         //Unity Default Resources
         public static readonly GUIContent playContent = L10n.IconContent("Animation.Play", "Play the timeline (Space)");
@@ -156,6 +163,11 @@ namespace PJR.Timeline.Editor
 
             return m_DefaultSkinColors;
         }
+        DirectorNamedColor LoadColorSkinAsset(string path)
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<DirectorNamedColor>(path);
+            return asset;
+        }
 
         static DirectorNamedColor CreateDefaultSkin()
         {
@@ -175,21 +187,26 @@ namespace PJR.Timeline.Editor
 
         public void ReloadSkin()
         {
-            if (customSkin == m_DarkSkinColors)
+            m_DarkSkinColors = LoadColorSkinAsset(k_DarkSkinAssetPath);
+            if (m_DarkSkinColors == null)
             {
                 m_DarkSkinColors = LoadColorSkin(k_DarkSkinPath);
+                AssetDatabase.CreateAsset(m_DarkSkinColors, k_DarkSkinAssetPath);
             }
-            else if (customSkin == m_LightSkinColors)
+
+            m_LightSkinColors = LoadColorSkinAsset(k_LightSkinAssetPath);
+            if (m_LightSkinColors == null)
             {
-                m_LightSkinColors = LoadColorSkin(k_LightSkinPath);
+                m_LightSkinColors = LoadColorSkin(k_DarkSkinPath);
+                AssetDatabase.CreateAsset(m_LightSkinColors, k_LightSkinAssetPath);
             }
         }
 
         public void Initialize()
         {
             m_DefaultSkinColors = CreateDefaultSkin();
-            m_DarkSkinColors = LoadColorSkin(k_DarkSkinPath);
-            m_LightSkinColors = LoadColorSkin(k_LightSkinPath);
+
+            ReloadSkin();
         }
 
         Styles()

@@ -22,11 +22,13 @@ namespace PJR.Timeline.Editor
         }
         public Rect headerRect
         {
-            get { return new Rect(0.0f, Constants.clipStartPositionY, Constants.defaultHeaderWidth, position.height - Constants.timelineAreaYPosition); }
+            //get { return new Rect(0.0f, Constants.clipStartPositionY, Constants.defaultHeaderWidth, position.height - Constants.timelineAreaYPosition); }
+            get { return new Rect(0.0f, Constants.clipStartPositionY, state.trackMenuAreaWidth, position.height - Constants.timelineAreaYPosition); }
         }
         public Rect timelineRulerRect
         {
-            get { return new Rect(headerRect.width, Constants.timelineRulerHeight, position.width - headerRect.width, Constants.timelineRulerHeight); }
+            //get { return new Rect(headerRect.width, Constants.timelineRulerHeight, position.width - headerRect.width, Constants.timelineRulerHeight); }
+            get { return new Rect(state.trackMenuAreaWidth, Constants.timelineRulerHeight, position.width - state.trackMenuAreaWidth, Constants.timelineRulerHeight); }
         }
 
         public Rect trackRect
@@ -38,13 +40,25 @@ namespace PJR.Timeline.Editor
             }
         }
 
-        static class Constants
+        public static class Constants
         {
             public const float timelineAreaYPosition = 19.0f;
             public const float timelineRulerHeight = 21.0f;
             public const float timelineRulerPreSpace = 5.0f;
             public const float clipStartPositionY = timelineAreaYPosition + timelineRulerHeight + 3;
-            //
+
+            public const float trackHeight = 34f;
+            public const float trackMenuLeftSpace = 18f;
+            public const float trackMenuAreaTop = 6f;
+            public const float trackMenuPadding = 6f;
+
+            //track左边
+            public const float trackMenuDefaultAreaWidth = 315f;
+            public const float trackMenuMinAreaWidth = 195.0f;
+            public const float trackMenuMaxAreaWidth = 650.0f;
+
+
+            /////
             public const float timeAreaHeight = 22.0f;
             public const float timeAreaMinWidth = 50.0f;
             public const float timeAreaShownRangePadding = 5.0f;

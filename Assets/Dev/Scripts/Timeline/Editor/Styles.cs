@@ -8,7 +8,7 @@ namespace PJR.Timeline.Editor
     public class Styles
     {
         const string k_ImagePath = "Assets/Dev/Scripts/Timeline/Editor/StyleSheets/Images/Icons/{0}.png";
-        const string resourcesPath = "Assets/Plugins/com.unity.timeline@1.7.5/Editor/StyleSheets/res/";
+        const string resourcesPath = "Assets/Dev/Scripts/Timeline/Editor/StyleSheets/res/";
 
         const string k_DarkSkinPath = resourcesPath + "Timeline_DarkSkin.txt";
         const string k_DarkSkinAssetPath = resourcesPath + "Timeline_DarkSkin.asset";

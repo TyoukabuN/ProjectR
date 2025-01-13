@@ -75,6 +75,7 @@ namespace PJR.Timeline.Editor
                 var rect = GUILayoutUtility.GetRect(3, position.height);
                 rect.xMin = state.trackMenuAreaWidth - 2;
                 rect.xMax = state.trackMenuAreaWidth + 2;
+                state.headerSizeHandleRect = rect;
 
                 DrawClips();
 
@@ -215,6 +216,8 @@ namespace PJR.Timeline.Editor
             public TrackGUI TrackGUI => trackGUI ??= new TrackGUI();
 
             public float trackMenuAreaWidth = Constants.trackMenuDefaultAreaWidth;
+
+            public Rect headerSizeHandleRect;
         }
 
         public class TrackGUI
@@ -222,6 +225,7 @@ namespace PJR.Timeline.Editor
             public List<Clip> clips;
             public WindowState windowState => TimelineWindow.instance.state;
 
+            public Rect position => TimelineWindow.instance.position;
             public TrackGUI()
             {
                 DOTest();
@@ -236,7 +240,7 @@ namespace PJR.Timeline.Editor
                 using (new GUILayout.HorizontalScope())
                 {
                     //TrackMenu（左边）
-                    using (new GUILayout.VerticalScope(GUILayout.Width(windowState.trackMenuAreaWidth - 2)))
+                    using (new GUILayout.VerticalScope(GUILayout.Width(windowState.trackMenuAreaWidth - windowState.headerSizeHandleRect.width / 2)))
                     {
                         GUILayout.Space(Constants.trackMenuAreaTop);
                         for (int i = 0; i < clips.Count; i++)
@@ -249,24 +253,35 @@ namespace PJR.Timeline.Editor
 
                             using (new GUILayout.HorizontalScope())
                             {
-                                //GUILayout.Button($"Button{i}");
-                                //var clipMeumRect = new Rect(0, 1, Constants.defaultHeaderWidth, 100);
-                                //clipMeumRect.xMax -= 8f;
-                                //clipMeumRect.Debug();
-                                //var clipTrackRect = new Rect(Constants.defaultHeaderWidth, 1, totalArea.width - Constants.defaultHeaderWidth, 100);
-                                //clipTrackRect.Debug();
-
-                                //Color backgroundColor = SelectionManager.Contains(track)
-                                //    ? DirectorStyles.Instance.customSkin.colorSelection
-                                //    : DirectorStyles.Instance.customSkin.colorTrackHeaderBackground;
-
                                 GUILayout.Space(Constants.trackMenuLeftSpace);
-                                clipGUI.OnGUI(GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight()));
-                                //GUILayout.Box(clip.GetDisplayName(), EditorStyles.helpBox, GUILayout.Height(Constants.trackHeight));
+                                clipGUI.OnDrawMenu(GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight()));
                             }
                         }
                     }
+
+                    //Menu和Track之间的空间
+                    //用于修改HeaderWidth
+                    GUILayout.Space(4);
+
                     //TrackClip（右边）
+                    using (new GUILayout.VerticalScope(GUILayout.Width(position.width - windowState.trackMenuAreaWidth + windowState.headerSizeHandleRect.width / 2)))
+                    {
+                        GUILayout.Space(Constants.trackMenuAreaTop);
+
+                        for (int i = 0; i < clips.Count; i++)
+                        {
+                            GUILayout.Space(Constants.trackMenuPadding);
+                            var clip = clips[i];
+                            var clipGUI = GetClipGUI(clip);
+                            if (clipGUI == null)
+                                continue;
+
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                clipGUI.OnDrawTrack(GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight()));
+                            }
+                        }
+                    }
                 }
             }
 
@@ -320,9 +335,9 @@ namespace PJR.Timeline.Editor
                 { 
                 }
 
-                public override void OnGUI(Rect menuRect)
+                public override void OnDrawMenu(Rect menuRect)
                 {
-                    base.OnGUI(menuRect);
+                    base.OnDrawMenu(menuRect);
 
                 }
             }
@@ -340,34 +355,17 @@ namespace PJR.Timeline.Editor
         public void DrawClips()
         {
             EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
-            //GUIUtility.DrawBorder(trackRect);
             GUILayout.BeginArea(trackRect);
 
             var localTrackRect = trackRect.ToOrigin();
 
             state.TrackGUI.OnGUI(localTrackRect);
 
-            //GUILayout.Space(6f);
-
-
-            var sliderRt = new Rect(1, 18, 100, 20);
             var position = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button, GUILayout.MinWidth(100));
             if (Event.current.type == EventType.Repaint)
                 Debug.Log($"{position}");
             sliderValue = CustomSlider(position, sliderValue);
 
-
-            //FlashingButton(sliderRt, new GUIContent("123"), GUI.skin.button);
-            //GUIUtil.DebugRect(position, Color.yellow);
-
-            //GUI.Button(new Rect(1, 1, 40, 20), "123");
-            //GUI.Label(new Rect(1, 1, 40, 20), GUI.tooltip);
-
-            //GUILayout.Box("123");
-            //GUIUtil.DrawBorder(GUILayoutUtility.GetLastRect(), Color.red);
-            var rect = GUILayoutUtility.GetAspectRect(10f);
-            //Debug.Log($"{Event.current.type} {rect}");
-            //GUIUtil.DebugRect(rect, Color.yellow);
             GUILayout.EndArea();
         }
 

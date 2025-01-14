@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 #if UNITY_EDITOR
 #endif
 
@@ -15,8 +16,17 @@ namespace PJR.Timeline
         public string clipName;
         public int ClipType;
 
+        /// <summary>
+        /// clip start seconds
+        /// </summary>
         public float start;
+        /// <summary>
+        /// clip end seconds
+        /// </summary>
         public float end;
+
+        public int startFrame => Mathf.RoundToInt(start / Define.SPF_Gane);
+        public int endFrame => Mathf.RoundToInt(end / Define.SPF_Gane);
 
         public int[] dependencyIDs;
 

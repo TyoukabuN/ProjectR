@@ -1,6 +1,7 @@
 using Sirenix.Utilities;
 using System;
 using UnityEditor;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,10 +9,11 @@ namespace PJR.Timeline.Editor
 {
     public static class GUIUtil
     {
+        public static TimelineWindow.WindowState windowState => TimelineWindow.instance?.state;
         public static void DebugRect(Rect position) => DebugRect(position, Color.green, true, false);
         public static void DebugRect(Rect position, Color color, bool displaySize, bool forceDraw)
         {
-            if (!forceDraw && !(TimelineWindow.instance?.state.debugging ?? false))
+            if (!forceDraw && !(windowState?.debugging ?? false))
                 return;
 
             Handles.BeginGUI();

@@ -1,8 +1,5 @@
-using NPOI.SS.Formula.Functions;
-using Sirenix.OdinInspector.Editor;
 using System;
 using System.Collections.Generic;
-using System.Security.Policy;
 using UnityEditor;
 using UnityEngine;
 using Styles = PJR.Timeline.Editor.Styles;
@@ -82,6 +79,7 @@ namespace PJR.Timeline.Editor
                 //segment-line trackMenu-trackClip
                 GUIUtil.DebugRect(rect, Color.green, false, true);
 
+                EditorGUIUtility.AddCursorRect(rect, MouseCursor.SplitResizeLeftRight);
                 rect.DragEventCheck((rect) =>
                 {
                     float relativeX = Event.current.mousePosition.x - rect.x;
@@ -177,12 +175,20 @@ namespace PJR.Timeline.Editor
             tickStep /= 2;
             tickStep = Mathf.Max(tickStep, 1);
 
+            timelineRulerRect.Debug();
+
             GUILayout.BeginArea(timelineRulerRect);
+
+            if (timelineRulerRect.ToOrigin().Contains(Event.current.mousePosition))
+            { 
+                Debug.Log(Event.current.mousePosition);
+            }
             Handles.BeginGUI();
             var rect = timelineRulerRect;
             int frameIndex = 0;
             float longTickStartY = 6f;
             float shortTickStartY = rect.height - 6f;
+
 
             for (int i = 0; i < rect.width; i += state.currentPixelPerFrame, frameIndex++)
             {
@@ -218,6 +224,10 @@ namespace PJR.Timeline.Editor
             public float trackMenuAreaWidth = Constants.trackMenuDefaultAreaWidth;
 
             public Rect headerSizeHandleRect;
+
+            public ClipGUI hotTrack = null;
+
+            public Clip hotClip = null;
         }
 
         public class TrackGUI
@@ -261,7 +271,7 @@ namespace PJR.Timeline.Editor
 
                     //Menu和Track之间的空间
                     //用于修改HeaderWidth
-                    GUILayout.Space(4);
+                    GUILayout.Space(windowState.headerSizeHandleRect.width);
 
                     //TrackClip（右边）
                     using (new GUILayout.VerticalScope(GUILayout.Width(position.width - windowState.trackMenuAreaWidth + windowState.headerSizeHandleRect.width / 2)))
@@ -322,13 +332,18 @@ namespace PJR.Timeline.Editor
             {
                 public int intValue;
 
+                public TestClip()
+                {
+                    start = 0;
+                    end = Define.SPF_Gane * 10;
+                }
                 public override string GetDisplayName()
                 {
                     return "TestClip";
                 }
             }
 
-            public static Clip hotClip = null;
+
             public class TestClipGUI : ClipGUI<TestClip>
             {
                 public TestClipGUI(TestClip clip) : base(clip)
@@ -362,8 +377,6 @@ namespace PJR.Timeline.Editor
             state.TrackGUI.OnGUI(localTrackRect);
 
             var position = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button, GUILayout.MinWidth(100));
-            if (Event.current.type == EventType.Repaint)
-                Debug.Log($"{position}");
             sliderValue = CustomSlider(position, sliderValue);
 
             GUILayout.EndArea();

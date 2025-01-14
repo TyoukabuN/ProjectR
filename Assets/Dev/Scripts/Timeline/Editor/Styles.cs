@@ -13,7 +13,7 @@ namespace PJR.Timeline.Editor
         const string k_DarkSkinPath = resourcesPath + "Timeline_DarkSkin.txt";
         const string k_DarkSkinAssetPath = resourcesPath + "Timeline_DarkSkin.asset";
         const string k_LightSkinPath = resourcesPath + "Timeline_LightSkin.txt";
-        const string k_LightSkinAssetPath = resourcesPath + "Timeline_LightSkin.asset";
+        const string k_LightSkinAssetPath = resourcesPath + "Timeline_LightSkin.asset"; 
         //Timeline resources
         public const string newTimelineDefaultNameSuffix = "Timeline";
 
@@ -197,7 +197,7 @@ namespace PJR.Timeline.Editor
             m_LightSkinColors = LoadColorSkinAsset(k_LightSkinAssetPath);
             if (m_LightSkinColors == null)
             {
-                m_LightSkinColors = LoadColorSkin(k_DarkSkinPath);
+                m_LightSkinColors = LoadColorSkin(k_LightSkinPath);
                 AssetDatabase.CreateAsset(m_LightSkinColors, k_LightSkinAssetPath);
             }
         }

@@ -228,6 +228,23 @@ namespace PJR.Timeline.Editor
             public ClipGUI hotTrack = null;
 
             public Clip hotClip = null;
+
+            public int PixelToFrame(float pixel)
+            {
+                return (int)(pixel / currentPixelPerFrame);
+            }
+            public float FrameToPixel(int frames)
+            {
+                return frames * currentPixelPerFrame;
+            }
+
+            public double CurrentFrameRate
+            {
+                get {
+                    return Define.FPS_Default;
+                }
+            }
+            public double CurrentSecondPerFrame => 1/ CurrentFrameRate;
         }
 
         public class TrackGUI
@@ -245,12 +262,20 @@ namespace PJR.Timeline.Editor
             {
                 return Constants.trackHeight;
             }
+
+            GUIStyle backgroundStyle = new GUIStyle(GUI.skin.box)
+            {
+                padding = new RectOffset(0, 0, 0, 0), // 内边距
+                margin = new RectOffset(0, 0, 0, 0),     // 外边距
+                alignment = TextAnchor.MiddleLeft        // 文本对齐方式
+            };
             public virtual void OnGUI(Rect totalArea)
             {
                 using (new GUILayout.HorizontalScope())
                 {
+                    var normalClipMenuWidth = windowState.trackMenuAreaWidth - 2;
                     //TrackMenu（左边）
-                    using (new GUILayout.VerticalScope(GUILayout.Width(windowState.trackMenuAreaWidth - windowState.headerSizeHandleRect.width / 2)))
+                    using (new GUILayout.VerticalScope(GUILayout.Width(normalClipMenuWidth)))
                     {
                         GUILayout.Space(Constants.trackMenuAreaTop);
                         for (int i = 0; i < clips.Count; i++)
@@ -260,6 +285,12 @@ namespace PJR.Timeline.Editor
                             var clipGUI = GetClipGUI(clip);
                             if (clipGUI == null)
                                 continue;
+
+                            //using (new GUILayout.HorizontalScope(clipGUI.BackgroundStyle))
+                            //{
+                            //    //GUILayout.Space(Constants.trackMenuLeftSpace); //用style的Padding代替了
+                            //    clipGUI.OnDrawMenu(GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight()));
+                            //}
 
                             using (new GUILayout.HorizontalScope())
                             {
@@ -276,6 +307,7 @@ namespace PJR.Timeline.Editor
                     //TrackClip（右边）
                     using (new GUILayout.VerticalScope(GUILayout.Width(position.width - windowState.trackMenuAreaWidth + windowState.headerSizeHandleRect.width / 2)))
                     {
+                        //GUILayoutUtility.GetRect(50, 50).Debug();
                         GUILayout.Space(Constants.trackMenuAreaTop);
 
                         for (int i = 0; i < clips.Count; i++)
@@ -334,8 +366,8 @@ namespace PJR.Timeline.Editor
 
                 public TestClip()
                 {
-                    start = 0;
-                    end = Define.SPF_Gane * 10;
+                    m_Start = 0;
+                    m_End = Define.SPF_Gane * 10;
                 }
                 public override string GetDisplayName()
                 {
@@ -350,9 +382,9 @@ namespace PJR.Timeline.Editor
                 { 
                 }
 
-                public override void OnDrawMenu(Rect menuRect)
+                public override void OnDrawMenu(Rect rect)
                 {
-                    base.OnDrawMenu(menuRect);
+                    base.OnDrawMenu(rect);
 
                 }
             }

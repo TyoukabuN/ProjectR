@@ -34,7 +34,7 @@ namespace PJR.Timeline.Editor
             Handles.DrawLine(bottomLeft, topLeft);
 
             //对角线
-            if (rect.width > 100)
+            if (rect.width > 50)
                 Handles.DrawLine(topLeft, bottomRight);
 
             //在中显示大小

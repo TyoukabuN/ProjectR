@@ -16,17 +16,29 @@ namespace PJR.Timeline
         public string clipName;
         public int ClipType;
 
+        protected double m_Start;
+        protected double m_End;
         /// <summary>
         /// clip start seconds
         /// </summary>
-        public float start;
+        public double start 
+        {
+            get => m_Start;
+            set => m_Start = value;
+        }
         /// <summary>
         /// clip end seconds
         /// </summary>
-        public float end;
+        public double end
+        {
+            get => m_End;
+            set => m_End = value;
+        }
 
-        public int startFrame => Mathf.RoundToInt(start / Define.SPF_Gane);
-        public int endFrame => Mathf.RoundToInt(end / Define.SPF_Gane);
+        public double length => end - start;
+
+        public int startFrame => Utility.Time.ToFrames(start, Define.DefaultFrameRate);
+        public int endFrame => Utility.Time.ToFrames(end, Define.DefaultFrameRate);
 
         public int[] dependencyIDs;
 

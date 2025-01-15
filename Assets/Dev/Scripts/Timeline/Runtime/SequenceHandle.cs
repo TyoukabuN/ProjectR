@@ -4,7 +4,6 @@ using System.Security.Policy;
 using UnityEngine;
 using UnityEngine.Events;
 using static PJR.Timeline.Define;
-using static PJR.Timeline.Utility;
 
 namespace PJR.Timeline
 {
@@ -20,15 +19,15 @@ namespace PJR.Timeline
         }
         public EState state = 0;
         public List<ClipHandle> clipHandles => _clipHandles;
-        public float UpdateFrequency => _secondPerFrame;
+        public double UpdateFrequency => _secondPerFrame;
 
         List<ClipHandle> _clipHandles;
         private Sequence _sequence;
         Clip2ClipHandleFunc _clip2ClipHandle;
 
-        public float totalTime = 0f;
-        float _secondPerFrame;
-        float _timeCounter = 0f;
+        public double totalTime = 0f;
+        double _secondPerFrame;
+        double _timeCounter = 0f;
 
         public SequenceHandle(Sequence sequence):this(sequence, Global.Clip2ClipHandleFunc) { }
         public SequenceHandle(Sequence sequence, Clip2ClipHandleFunc clip2ClipHandle) 
@@ -158,6 +157,6 @@ namespace PJR.Timeline
             return true;
         }
 
-        float GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.frameRateType ?? EFrameRate.Game);
+        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.frameRateType ?? EFrameRate.Game);
     }
 }

@@ -13,18 +13,28 @@ namespace PJR.Timeline
             Game, //60 fps 
         }
 
-        public const float SPF_Film = 0.04166667f;
-        public const float SPF_HD = 0.03333334f;
-        public const float SPF_Gane = 0.01666667f;
+        public const double SPF_Film = 0.04166667f;
+        public const double SPF_HD = 0.03333334f;
+        public const double SPF_Gane = 0.01666667f;
+        public const double SPF_Default = SPF_Gane;
 
-        public const float SPF_Default = SPF_Gane;
+        public const double FPS_Film = 24;
+        public const double FPS_HD = 30;
+        public const double FPS_Gane = 60;
+        public const double FPS_Default = FPS_Gane;
+
+        public const double MinFrameRate = Utility.Time.kFrameRateEpsilon;
+        public const double MaxFrameRate = 1000.0;
+        public const double DefaultFrameRate = 60.0;
+
+        
         public struct UpdateContext
         {
             public int frameCount;
-            public float timeScale;
-            public float totalTime;
+            public double timeScale;
+            public double totalTime;
 
-            public float deltaTime;
+            public double deltaTime;
         }
 
         //ClipHandle ErrorCode

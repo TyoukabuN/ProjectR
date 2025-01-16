@@ -11,90 +11,35 @@ namespace PJR.Timeline.Editor
 {
     public abstract class ClipGUI
     {
-
-        public static GUIStyle NormalBackgroundStyle = new GUIStyle(GUI.skin.box)
-        {
-            padding = new RectOffset(0,0, 0, 0), // 内边距
-            //margin = new RectOffset((int)Constants.trackMenuLeftSpace, -(int)Constants.trackMenuLeftSpace, 0, 0),     // 外边距
-            margin = new RectOffset((int)Constants.trackMenuLeftSpace, 0, 0, 0),     // 外边距
-            //border = new RectOffset(0, 0, 0, 0),
-            
-            alignment = TextAnchor.MiddleLeft,        // 文本对齐方式
-        };
-
-        static Texture2D m_BGTex_Normal;
-        public static Texture2D BGTex_Normal
-        {
-            get {
-                if (m_BGTex_Normal == null)
-                {
-                    m_BGTex_Normal = new Texture2D(1, 1);
-                    m_BGTex_Normal.SetPixel(0, 0, Styles.Instance.customSkin.colorTrackHeaderBackground);
-                    m_BGTex_Normal.Apply();
-                }
-                return m_BGTex_Normal;
-            }
-        }
-
-        static Texture2D m_BGTex_Selected;
-        public static Texture2D BGTex_Selected
-        {
-            get {
-                if (m_BGTex_Selected == null)
-                {
-                    m_BGTex_Selected = new Texture2D(1, 1);
-                    m_BGTex_Selected.SetPixel(0, 0, Styles.Instance.customSkin.colorSelection);
-                    m_BGTex_Selected.Apply();
-                }
-                return m_BGTex_Selected;
-            }
-        }
-
-
-        public GUIStyle BackgroundStyle
-        {
-            get {
-                var style = NormalBackgroundStyle;
-                    style.normal.background = BGTex_Normal;
-                if(windowState.hotTrack == this)
-                    style.normal.background = BGTex_Selected;
-                return style;
-            }
-        }
+        private static GUIStyle labelStyle;
 
         public Clip Clip { get; set; }
         public virtual float CalculateHeight() => Constants.trackHeight;
 
         protected WindowState windowState => instance.state;
 
-
         public virtual void OnDrawMenu(Rect rect) 
         {
-            //EditorGUI.DrawRect(rect, GetMenuBgColor());
-            //rect.Debug();
-
-            //GUILayout.BeginArea(rect.ToOrigin());
-            //var temp = new Rect(50, 50, 30, 30);
-            //temp.Debug(false);
-
-            //GUILayout.Label("Custom Background with DrawRect", EditorStyles.boldLabel);
-            //GUILayout.EndArea();
-
             EditorGUI.DrawRect(rect, GetMenuBgColor());
             rect.Debug();
 
-            //Handles.Label(Vector3.zero, new GUIContent(Clip.GetDisplayName()));
-            //GUI.Label(rect, new GUIContent(Clip.GetDisplayName()));
-            //EditorGUI.LabelField(rect, new GUIContent(Clip.GetDisplayName()));
-            //GUILayout.Label(new GUIContent(Clip.GetDisplayName()));
+            var labelSize = Styles.CalcLabelSize(Clip.GetDisplayName());
 
-            GUIStyle labelStyle = new GUIStyle(GUI.skin.label)
-            {
-                normal = { textColor = Color.white },
-                alignment = TextAnchor.MiddleCenter
-            };
+            GUILayout.Label(new GUIContent(Clip.GetDisplayName(), Clip.GetDisplayName()), GUILayout.Width(labelSize.x), GUILayout.ExpandHeight(true));
 
-            EditorGUI.LabelField(rect, new GUIContent(Clip.GetDisplayName()), labelStyle);
+            GUILayout.FlexibleSpace();
+
+
+            using (new MidAlignmentScope.Horizontal())
+            { 
+                if (GUILayout.Button(Clip.mute ? Styles.trackMuteEnabledIcon : Styles.trackMuteDisabledIcon, EditorStyles.iconButton))
+                {
+                    Clip.mute = !Clip.mute;
+                }
+            }
+
+            GUILayoutUtility.GetLastRect().Debug(Color.green);
+
 
             var evtRect = rect;
             evtRect.xMin -= Constants.trackMenuLeftSpace;
@@ -108,6 +53,7 @@ namespace PJR.Timeline.Editor
 
             EventCheck(rect);
         }
+
         public virtual void OnDrawClip(Rect rect)
         {
             var start = Clip.startFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
@@ -125,12 +71,17 @@ namespace PJR.Timeline.Editor
             }
 
             EditorGUI.DrawRect(clipRect, Styles.Instance.customSkin.clipBckg);
-            clipRect.Debug();
+            clipRect.DrawOutline(1 ,Styles.Instance.customSkin.colorSequenceBackground);
 
             DrawHandle(clipRect);
 
             ClipRectEvent(clipRect);
         }
+
+        /// <summary>
+        /// 画Resize用的区域
+        /// </summary>
+        /// <param name="rect"></param>
         public virtual void DrawHandle(Rect rect)
         {
             var handleWidth = Mathf.Clamp(rect.width * 0.3f, Constants.clipMinHandleWidth, Constants.clipMaxHandleWidth);
@@ -160,8 +111,10 @@ namespace PJR.Timeline.Editor
         {
             return windowState.hotTrack == this
                 ? Styles.Instance.customSkin.colorSelection
-                : Styles.Instance.customSkin.colorTrackHeaderBackground;
+                : Styles.Instance.customSkin.colorTrackBackground;
         }
+
+        #region Clip Resize
         public enum ResizePurpose
         { 
             None,
@@ -237,7 +190,9 @@ namespace PJR.Timeline.Editor
                     }
             }
         }
+        #endregion
 
+        #region clip Drag
         protected Vector2 clipDrag_startPosition = Vector2.zero;
         protected bool clipDragging = false;
         protected int clipDrag_draggedFrameOffset = 0;
@@ -298,6 +253,7 @@ namespace PJR.Timeline.Editor
                     }
             }
         }
+        #endregion
 
         public void SetClipRangeSafe(double start, double end)
         {

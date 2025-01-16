@@ -10,6 +10,20 @@ namespace PJR.Timeline.Editor
     public static class GUIUtil
     {
         public static TimelineWindow.WindowState windowState => TimelineWindow.instance?.state;
+
+        public static void DrawOutline(this Rect rect, float size, Color color)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                Color color2 = GUI.color;
+                GUI.color *= color;
+                GUI.DrawTexture(new Rect(rect.x, rect.y, rect.width, size), EditorGUIUtility.whiteTexture);
+                GUI.DrawTexture(new Rect(rect.x, rect.yMax - size, rect.width, size), EditorGUIUtility.whiteTexture);
+                GUI.DrawTexture(new Rect(rect.x, rect.y + 1f, size, rect.height - 2f * size), EditorGUIUtility.whiteTexture);
+                GUI.DrawTexture(new Rect(rect.xMax - size, rect.y + 1f, size, rect.height - 2f * size), EditorGUIUtility.whiteTexture);
+                GUI.color = color2;
+            }
+        }
         public static void DebugRect(Rect position) => DebugRect(position, Color.green, true, false);
         public static void DebugRect(Rect position, Color color, bool displaySize, bool forceDraw)
         {

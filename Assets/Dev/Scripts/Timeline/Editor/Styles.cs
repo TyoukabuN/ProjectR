@@ -7,13 +7,16 @@ namespace PJR.Timeline.Editor
 {
     public class Styles
     {
+        const string k_Elipsis = "…";
         const string k_ImagePath = "Assets/Dev/Scripts/Timeline/Editor/StyleSheets/Images/Icons/{0}.png";
         const string resourcesPath = "Assets/Dev/Scripts/Timeline/Editor/StyleSheets/res/";
 
         const string k_DarkSkinPath = resourcesPath + "Timeline_DarkSkin.txt";
         const string k_DarkSkinAssetPath = resourcesPath + "Timeline_DarkSkin.asset";
         const string k_LightSkinPath = resourcesPath + "Timeline_LightSkin.txt";
-        const string k_LightSkinAssetPath = resourcesPath + "Timeline_LightSkin.asset"; 
+        const string k_LightSkinAssetPath = resourcesPath + "Timeline_LightSkin.asset";
+
+        static readonly GUIContent s_TempContent = new GUIContent();
         //Timeline resources
         public const string newTimelineDefaultNameSuffix = "Timeline";
 
@@ -56,6 +59,8 @@ namespace PJR.Timeline.Editor
         public static readonly GUIContent audioTrackIcon = EditorGUIUtility.IconContent("AudioSource Icon");
         public static readonly GUIContent playableTrackIcon = EditorGUIUtility.IconContent("cs Script Icon");
         public static readonly GUIContent timelineSelectorArrow = L10n.IconContent("icon dropdown", "Timeline Selector");
+        public static readonly GUIContent trackMuteEnabledIcon = L10n.IconContent("d_scenevis_hidden_hover", "Mute Track");
+        public static readonly GUIContent trackMuteDisabledIcon = L10n.IconContent("d_scenevis_visible_hover", "UnMute Track");
 
         public static readonly Color kMixToolColor = Color.white;
         public static readonly Color kRippleToolColor = new Color(255f / 255f, 210f / 255f, 51f / 255f);
@@ -128,6 +133,22 @@ namespace PJR.Timeline.Editor
 
                 return s_Instance;
             }
+        }
+
+
+        static Texture2D m_Texture_Black;
+        public static Texture2D Texture_Black => m_Texture_Black ??= MakeTex(1, 1, Color.black);
+        public static Texture2D MakeTex(int width, int height, Color color)
+        {
+            Color[] pixels = new Color[width * height];
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i] = color;
+            }
+            Texture2D texture = new Texture2D(width, height);
+            texture.SetPixels(pixels);
+            texture.Apply();
+            return texture;
         }
 
         public static void ReloadStylesIfNeeded()
@@ -342,6 +363,49 @@ namespace PJR.Timeline.Editor
         {
             return L10n.TextContent(text, tooltip);
         }
+
+        public static Vector2 CalcLabelSize(string label) => CalcLabelSize(label, GUI.skin.label);
+        public static Vector2 CalcLabelSize(string label, GUIStyle style)
+        {
+            s_TempContent.text = label;
+            return style.CalcSize(s_TempContent);
+        }
+        public static string Elipsify(string label, Rect rect, GUIStyle style)
+        {
+            var ret = label;
+
+            if (label.Length == 0)
+                return ret;
+
+            s_TempContent.text = label;
+            float neededWidth = style.CalcSize(s_TempContent).x;
+
+            return Elipsify(label, rect.width, neededWidth);
+        }
+
+        public static string Elipsify(string label, float destinationWidth, float neededWidth)
+        {
+            var ret = label;
+
+            if (label.Length == 0)
+                return ret;
+
+            if (destinationWidth < neededWidth)
+            {
+                float averageWidthOfOneChar = neededWidth / label.Length;
+                int floor = Mathf.Max((int)Mathf.Floor(destinationWidth / averageWidthOfOneChar), 0);
+
+                if (floor < k_Elipsis.Length)
+                    ret = string.Empty;
+                else if (floor == k_Elipsis.Length)
+                    ret = k_Elipsis;
+                else if (floor < label.Length)
+                    ret = label.Substring(0, floor - k_Elipsis.Length) + k_Elipsis;
+            }
+
+            return ret;
+        }
+
 
         #endregion
         public class Styles2

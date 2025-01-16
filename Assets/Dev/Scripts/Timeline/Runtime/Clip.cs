@@ -8,9 +8,8 @@ namespace PJR.Timeline
     [Serializable]
     public abstract class Clip
     {
-    //#if UNITY_EDITOR
-    //        public abstract ClipGUI 
-    //#endif
+        public bool mute = false;
+
         public const string DefaultName = "EmptyName";
 
         public string clipName;

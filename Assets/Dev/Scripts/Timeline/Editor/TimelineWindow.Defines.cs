@@ -39,6 +39,13 @@ namespace PJR.Timeline.Editor
                 return new Rect(0, yMinHeight, position.width, position.height - yMinHeight - 0);
             }
         }
+        public Rect headerSizeHandleRect
+        {
+            get
+            {
+                return Rect.MinMaxRect(state.trackMenuAreaWidth - 2, trackRect.yMin, state.trackMenuAreaWidth + 2, trackRect.yMax);
+            }
+        }
 
         public static class Constants
         {

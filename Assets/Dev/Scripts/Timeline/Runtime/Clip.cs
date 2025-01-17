@@ -36,8 +36,8 @@ namespace PJR.Timeline
 
         public double length => end - start;
 
-        public int startFrame => Utility.Time.ToFrames(start, Define.DefaultFrameRate);
-        public int endFrame => Utility.Time.ToFrames(end, Define.DefaultFrameRate);
+        public int startFrame => TimeUtil.ToFrames(start, Define.DefaultFrameRate);
+        public int endFrame => TimeUtil.ToFrames(end, Define.DefaultFrameRate);
 
         public int[] dependencyIDs;
 

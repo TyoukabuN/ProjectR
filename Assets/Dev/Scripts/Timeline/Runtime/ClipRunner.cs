@@ -3,7 +3,7 @@ using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public abstract class ClipHandle
+    public abstract class ClipRunner : IDisposable
     {
         public enum EState
         {
@@ -23,25 +23,37 @@ namespace PJR.Timeline
         public virtual void OnInit() { state = EState.None; }
         public virtual void OnStart() { state = EState.Running; }
         public abstract void OnUpdate(UpdateContext context);
+        public virtual void OnEnd() { state = EState.Done; }
         public virtual void OnDispose() { state = EState.Diposed; }
 
-        public SequenceHandle sequenceHandle;
+        public virtual void Dispose()
+        {
+            state = EState.Diposed;
+            error = string.Empty;
+        }
+
+        public TrackRunner sequenceHandle;
     }
 
-    public abstract class ClipHandle<TClip> : ClipHandle where TClip : Clip
+    public abstract class ClipRunner<TClip> : ClipRunner where TClip : Clip
     {
         public override Clip Clip => clip;
         public TClip clip => _clip;
         public TClip _clip;
-        public ClipHandle(TClip clip)
+        public ClipRunner(TClip clip)
         {
             if (clip == null || clip.GetType() != ClipType)
             {
                 state = EState.Failure;
-                error = clip == null ? Define.ErrCode_ClipHandle_ClipIsNull : Define.ErrCode_ClipHandle_ClipTypeNotMatched;
+                error = clip == null ? Define.ErrCode_ClipRunner_ClipIsNull : Define.ErrCode_ClipRunner_ClipTypeNotMatched;
                 return;
             }
             _clip = clip;
+        }
+        public override void Dispose()
+        {
+            base.Dispose();
+            _clip = null;
         }
     }
 }

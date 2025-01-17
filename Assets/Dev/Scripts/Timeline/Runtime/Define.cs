@@ -1,3 +1,4 @@
+using NPOI.POIFS.FileSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace PJR.Timeline
         public const double FPS_Gane = 60;
         public const double FPS_Default = FPS_Gane;
 
-        public const double MinFrameRate = Utility.Time.kFrameRateEpsilon;
+        public const double MinFrameRate = TimeUtil.kFrameRateEpsilon;
         public const double MaxFrameRate = 1000.0;
         public const double DefaultFrameRate = 60.0;
 
@@ -32,15 +33,21 @@ namespace PJR.Timeline
         {
             public int frameCount;
             public double timeScale;
-            public double totalTime;
+            public double elapseTime;
+            public int elapseFrame;
 
+            public double unscaledDeltaTime;
             public double deltaTime;
+
+            public bool frameChanged;
         }
 
+        public const string ErrCode_TrackRuner_TrackIsNull = "[TrackRuner] Track is null";
+        public const string ErrCode_TrackRuner_Clip2ClipHandle = "[TrackRuner] clip2ClipHandle is null";
         //ClipHandle ErrorCode
-        public const string ErrCode_ClipHandle_ClipIsNull = "Clip is null";
-        public const string ErrCode_ClipHandle_ClipTypeNotMatched = "clip.ClipType not matched with clipHandle.ClipType";
+        public const string ErrCode_ClipRunner_ClipIsNull = "[ClipRunner] Clip is null";
+        public const string ErrCode_ClipRunner_ClipTypeNotMatched = "[ClipRunner] clip.ClipType not matched with clipHandle.ClipType";
 
-        public delegate ClipHandle Clip2ClipHandleFunc(Clip clip);
+        public delegate ClipRunner Clip2ClipHandleFunc(Clip clip);
     }
 }

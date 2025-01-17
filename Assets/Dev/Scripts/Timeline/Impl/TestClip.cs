@@ -11,7 +11,7 @@ namespace PJR
         public int intValue;
     }
 
-    public class TestClipHandle : ClipHandle<TestClip>
+    public class TestClipHandle : ClipRunner<TestClip>
     {
         public override Type ClipType => typeof(TestClip);
         int _counter = 0;
@@ -19,7 +19,8 @@ namespace PJR
         public TestClipHandle(TestClip clip) : base(clip) { }
         public override void OnUpdate(Define.UpdateContext context)
         {
-            Debug.Log(_counter += clip.intValue);
+            //Debug.Log(_counter += clip.intValue);
+            Debug.Log(context.elapseTime);
         }
     }
 }

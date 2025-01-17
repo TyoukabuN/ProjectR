@@ -5,22 +5,24 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static PJR.Timeline.Editor.TimelineWindow;
-using Constants = PJR.Timeline.Editor.TimelineWindow.Constants;
 
 namespace PJR.Timeline.Editor
 {
     public abstract class ClipGUI
     {
-        private static GUIStyle labelStyle;
-
         public Clip Clip { get; set; }
-        public virtual float CalculateHeight() => Constants.trackHeight;
+        public virtual float CalculateHeight() => Constants.trackHeight + draggedMenuSpace;
+
+        float m_DraggedMenuSpace = 0f;
+        public float draggedMenuSpace => m_DraggedMenuSpace;
 
         protected WindowState windowState => instance.state;
 
         public virtual void OnDrawMenu(Rect rect) 
         {
             EditorGUI.DrawRect(rect, GetMenuBgColor());
+
+
             rect.Debug();
 
             var labelSize = Styles.CalcLabelSize(Clip.GetDisplayName());
@@ -40,20 +42,42 @@ namespace PJR.Timeline.Editor
 
             GUILayoutUtility.GetLastRect().Debug(Color.green);
 
+            DrawMenuHandle(rect);
 
             var evtRect = rect;
             evtRect.xMin -= Constants.trackMenuLeftSpace;
             EventCheck(evtRect);
         }
+
+        public virtual void DrawMenuHandle(Rect rect)
+        {
+            rect.yMin = rect.yMax - Constants.trackMenuDragHandleHeight;
+            rect.Debug();
+            EditorGUIUtility.AddCursorRect(rect, MouseCursor.SplitResizeUpDown);
+
+            var controlId = GUIUtility.GetControlID(FocusType.Passive);
+            switch (Event.current.GetTypeForControl(controlId))
+            { 
+                case EventType.MouseDown:
+                    {
+                        if (rect.Contains(Event.current.mousePosition))
+                        { 
+                            Event.current.Use();
+                        }
+                        break;
+                    }
+            }
+        }
+
         public virtual void OnDrawTrack(Rect rect) 
         {
             EditorGUI.DrawRect(rect, GetTrackBgColor());
+
             //rect.Debug();
             OnDrawClip(rect);
 
             EventCheck(rect);
         }
-
         public virtual void OnDrawClip(Rect rect)
         {
             var start = Clip.startFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
@@ -61,7 +85,7 @@ namespace PJR.Timeline.Editor
             Rect clipRect = Rect.MinMaxRect(start, rect.yMin, end, rect.yMax);
 
             if (clipDragging)
-                clipRect.x += clipDrag_draggedFrameOffset * windowState.currentPixelPerFrame;
+                clipRect.x += clipDrag_draggedPixelOffsetClamped;// clipDrag_draggedFrameOffset * windowState.currentPixelPerFrame;
             if (clipResizing)
             { 
                 if(clipResie_purpose == ResizePurpose.Left)
@@ -77,7 +101,6 @@ namespace PJR.Timeline.Editor
 
             ClipRectEvent(clipRect);
         }
-
         /// <summary>
         /// 画Resize用的区域
         /// </summary>
@@ -158,16 +181,17 @@ namespace PJR.Timeline.Editor
 
                         if (clipResizing)
                         {
-                            double durationOffset = clipResize_draggedFrameOffset / windowState.CurrentFrameRate;
+                            double rangeOffset = clipResize_draggedFrameOffset / windowState.CurrentFrameRate;
                             if (clipResie_purpose == ResizePurpose.Left)
-                                SetClipStartSafe(Clip.start + durationOffset);
+                                Clip.SetClipStartSafe(Clip.start + rangeOffset);
                             else if (clipResie_purpose == ResizePurpose.Right)
-                                SetClipEndSafe(Clip.end + durationOffset);
+                                Clip.SetClipEndSafe(Clip.end + rangeOffset);
 
                             clipResie_startPosition = Vector2.zero;
                             clipResizing = false;
                             clipResie_purpose = ResizePurpose.None;
                         }
+
                         Repaint();
                         Event.current.Use();
                         break;
@@ -180,9 +204,9 @@ namespace PJR.Timeline.Editor
                         float pixel = Event.current.mousePosition.x - clipResie_startPosition.x;
                         
                         if(clipResie_purpose == ResizePurpose.Left)
-                            clipResize_draggedFrameOffset = ClampClipStartChange_Frame(Clip.startFrame + windowState.PixelToFrame(pixel)) - Clip.startFrame;
+                            clipResize_draggedFrameOffset = Clip.ClampClipStartChange_Frame(Clip.startFrame + windowState.PixelToFrame(pixel)) - Clip.startFrame;
                         if (clipResie_purpose == ResizePurpose.Right)
-                            clipResize_draggedFrameOffset = ClampClipEndChange_Frame(Clip.endFrame + windowState.PixelToFrame(pixel)) - Clip.endFrame;
+                            clipResize_draggedFrameOffset = Clip.ClampClipEndChange_Frame(Clip.endFrame + windowState.PixelToFrame(pixel)) - Clip.endFrame;
 
                         Repaint();
                         Event.current.Use();
@@ -195,13 +219,15 @@ namespace PJR.Timeline.Editor
         #region clip Drag
         protected Vector2 clipDrag_startPosition = Vector2.zero;
         protected bool clipDragging = false;
+        protected float clipDrag_draggedPixelOffset = 0f;
+        protected float clipDrag_draggedPixelOffsetClamped = 0f;
         protected int clipDrag_draggedFrameOffset = 0;
         public virtual void ClipRectEvent(Rect position)
         {
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
 
             switch (Event.current.GetTypeForControl(controlID))
-            { 
+            {
                 case EventType.MouseDown:
                     {
                         if (position.Contains(Event.current.mousePosition) && Event.current.button == 0)
@@ -209,7 +235,8 @@ namespace PJR.Timeline.Editor
                             GUIUtility.hotControl = controlID;
                             windowState.hotClip = Clip;
                             clipDrag_startPosition = Event.current.mousePosition;
-                            clipDrag_draggedFrameOffset = 0;
+                            clipDrag_draggedPixelOffset = 0;
+                            clipDrag_draggedPixelOffsetClamped = 0;
                             Event.current.Use();
                         }
                         break;
@@ -227,10 +254,10 @@ namespace PJR.Timeline.Editor
                             GUIUtility.hotControl = 0;
 
                         if (clipDragging)
-                        { 
-                            double durationOffset = clipDrag_draggedFrameOffset / windowState.CurrentFrameRate;
-                            Clip.start += durationOffset;
-                            Clip.end += durationOffset;
+                        {
+                            double rangeOffset = windowState.PixelToSecond(clipDrag_draggedPixelOffsetClamped);
+                            Clip.start += rangeOffset;
+                            Clip.end += rangeOffset;
                             clipDrag_startPosition = Vector2.zero;
                             clipDragging = false;
                         }
@@ -243,9 +270,16 @@ namespace PJR.Timeline.Editor
                         if (GUIUtility.hotControl != controlID)
                             return;
                         clipDragging = true;
-                        float pixel = Event.current.mousePosition.x - clipDrag_startPosition.x;
-                        if(ValidToChangeRangeByPixel(pixel, out int frameOffset))
-                            clipDrag_draggedFrameOffset = frameOffset;
+                        float draggedPixelOffset = Event.current.mousePosition.x - clipDrag_startPosition.x;
+                        int frames = TimeUtil.ToFrames(windowState.PixelToSecond(draggedPixelOffset), windowState.CurrentFrameRate);
+
+                        if (Clip.ValidRangeChangeableByFrame(frames))
+                        {
+                            clipDrag_draggedPixelOffsetClamped = windowState.FrameToPixel(frames);
+                            clipDrag_draggedFrameOffset = frames ;
+                        }
+                        clipDrag_draggedPixelOffset = draggedPixelOffset;
+
 
                         Repaint();
                         Event.current.Use();
@@ -255,61 +289,6 @@ namespace PJR.Timeline.Editor
         }
         #endregion
 
-        public void SetClipRangeSafe(double start, double end)
-        {
-            if (start < 0)
-                start = 0;
-            if((end - start) < windowState.CurrentSecondPerFrame)
-                end = windowState.CurrentSecondPerFrame;
-            Clip.start = start;
-            Clip.end = end;
-        }
-        public void SetClipStartSafe(double start)
-        {
-            SetClipRangeSafe(start, Clip.end);
-        }
-        public void SetClipEndSafe(double end)
-        {
-            SetClipRangeSafe(Clip.start, end);
-        }
-        public bool ValidToChangeRange(int frames)
-        {
-            double durationOffset = frames / windowState.CurrentFrameRate;
-            return (Clip.start + durationOffset) >= 0;
-        }
-        public bool ValidToChangeRangeByPixel(float pixel, out int frameOffset)
-        {
-            frameOffset = windowState.PixelToFrame(pixel);
-            return ValidToChangeRange(frameOffset);
-        }
-        public bool ValidToChangeRangeByPixel(float pixel) => ValidToChangeRangeByPixel(pixel, out var frameOffset);
-
-
-        #region Clip Start/End Clamp 得出一个限制后的对应单位的Start/End
-
-        public double ClampClipEndChange(double end)
-        {
-            var start = Clip.start;
-            if ((end - start) < windowState.CurrentSecondPerFrame)
-                end = start + windowState.CurrentSecondPerFrame;
-            return end;
-        }
-        public float ClampClipEndChange_Pixel(float pixel) => windowState.FrameToPixel(ClampClipEndChange_Frame(windowState.PixelToFrame(pixel)));
-        public int ClampClipEndChange_Frame(int frames) => Utility.Time.ToFrames(ClampClipEndChange(frames / windowState.CurrentFrameRate), windowState.CurrentFrameRate);
-
-
-        public double ClampClipStartChange(double start)
-        {
-            var end = Clip.end;
-            if (start < 0)
-                start = 0;
-            if((end - start) < windowState.CurrentSecondPerFrame)
-                start = end - windowState.CurrentSecondPerFrame;
-            return start;
-        }
-        public float ClampClipStartChange_Pixel(float pixel) => ClampClipStartChange_Frame(windowState.PixelToFrame(pixel));
-        public int ClampClipStartChange_Frame(int frames) => Utility.Time.ToFrames(ClampClipStartChange(frames / windowState.CurrentFrameRate), windowState.CurrentFrameRate);
-        #endregion
 
         protected void EventCheck(Rect rect)
         {
@@ -334,9 +313,6 @@ namespace PJR.Timeline.Editor
         }
         public virtual void OnContextClick(Rect rect)
         {
-            if (windowState.hotTrack == this)
-                return;
-            windowState.hotTrack = this;
             DisplayRightClickMenu(rect);
             Event.current.Use();
         }
@@ -356,7 +332,8 @@ namespace PJR.Timeline.Editor
         protected GenericMenu GetDefaultGenericMenu()
         {
             var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("右键默认选项"), false, () => { Debug.Log("1"); });
+            menu.AddDisabledItem(new GUIContent("右键默认选项"));
+            menu.AddSeparator($"{Clip.GetDisplayName()}");
             return menu;
         }
         public virtual void DisplayRightClickMenu(Rect rect)

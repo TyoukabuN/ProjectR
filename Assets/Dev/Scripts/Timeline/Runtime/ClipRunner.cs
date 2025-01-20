@@ -16,10 +16,12 @@ namespace PJR.Timeline
         public EState state;
         public bool WaitingForStart => state == EState.None;
         public bool Running => state == EState.Running;
+        public bool Done => state == EState.Done;
+
+        public string error;
         public abstract Type ClipType { get; }
         public abstract Clip Clip {get;}
 
-        public string error;
         public virtual void OnInit() { state = EState.None; }
         public virtual void OnStart() { state = EState.Running; }
         public abstract void OnUpdate(UpdateContext context);

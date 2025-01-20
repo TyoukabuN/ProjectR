@@ -42,6 +42,8 @@ namespace PJR.Timeline
         }
         public virtual void Dispose()
         {
+            ForEachClipRunner(DisposeClipRunner);
+
             if (_clipRunners != null)
             {
                 UnityEngine.Pool.CollectionPool<List<ClipRunner>, ClipRunner>.Release(_clipRunners);
@@ -54,8 +56,6 @@ namespace PJR.Timeline
             totalTime = 0f;
             _timeCounter = 0f;
             _state = EState.Diposed;
-
-            ForEachClipRunner(DisposeClipRunner);
         }
 
         public virtual bool Init(Sequence sequence, Track track) => Init(sequence, track, Global.Clip2ClipHandleFunc);
@@ -96,6 +96,9 @@ namespace PJR.Timeline
             _state = EState.None;
             return true;
         }
+        public virtual void OnInit()
+        {
+        }
         public virtual void OnStart()
         {
             _state = EState.Running;
@@ -118,7 +121,7 @@ namespace PJR.Timeline
                 if (!IsClipRunnerUpdatable(clipHandle))
                     continue;
 
-                if (!IsClipInPlayRange(clipHandle))
+                if (clipHandle.Clip.OutOfRange(context.totalTime))
                 {
                     if (clipHandle.Running)
                         clipHandle.OnEnd();
@@ -161,15 +164,6 @@ namespace PJR.Timeline
                 return false;
             return true;
         }
-        public bool IsClipInPlayRange(ClipRunner clipHandle)
-        {
-            if (clipHandle == null)
-                return false;
-            if (totalTime < clipHandle.Clip.start || totalTime > clipHandle.Clip.end)
-                return false;
-            return true;
-        }
-
         double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.frameRateType ?? EFrameRate.Game);
 
 
@@ -179,7 +173,9 @@ namespace PJR.Timeline
         public bool AnyError => !string.IsNullOrEmpty(Error);
         #endregion
 
+        #region Pool
         public static TrackRunner Get() => ObjectPool<TrackRunner>.Get();
         public void Pool() => ObjectPool<TrackRunner>.Release(this);
+        #endregion
     }
 }

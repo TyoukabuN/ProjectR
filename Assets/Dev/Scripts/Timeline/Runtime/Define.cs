@@ -24,22 +24,30 @@ namespace PJR.Timeline
         public const double FPS_Gane = 60;
         public const double FPS_Default = FPS_Gane;
 
-        public const double MinFrameRate = TimeUtil.kFrameRateEpsilon;
+        public const double MinFrameRate = 1e-6;
         public const double MaxFrameRate = 1000.0;
         public const double DefaultFrameRate = 60.0;
 
-        
+        public enum IntervalType
+        {
+            Second = 0,
+            Frame,
+        }
         public struct UpdateContext
         {
-            public int frameCount;
             public double timeScale;
-            public double elapseTime;
-            public int elapseFrame;
+            public double totalTime;
+            public int totalFrame;
 
             public double unscaledDeltaTime;
             public double deltaTime;
 
             public bool frameChanged;
+
+            /// <summary>
+            /// 不用更新间隔类型，所更新字段不一样
+            /// </summary>
+            public IntervalType updateIntervalType;
         }
 
         public const string ErrCode_TrackRuner_TrackIsNull = "[TrackRuner] Track is null";

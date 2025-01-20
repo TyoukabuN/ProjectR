@@ -1,9 +1,12 @@
 using PJR;
+using PJR.ClassExtension;
 using PJR.Timeline;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 
-public class TImelineTest : MonoBehaviour
+public class TimelineTest : MonoBehaviour
 {
     //[Button]
     //void Test()
@@ -19,40 +22,78 @@ public class TImelineTest : MonoBehaviour
     //        Debug.Log($"{clipType.Name}  {_handleType.Name}");
     //    }
     //}
-
+    public Transform trans;
+    public float speed;
     public Color color;
+    public AnimationClip animationClip;
 
-    [Button]
-    void Test2()
-    {
-        Debug.Log(PJR.Timeline.Utility.GetGenericType(typeof(TestClipHandle), typeof(ClipHandle<>))?.Name ?? "Null");
-    }
+    //[Button]
+    //void Test2()
+    //{
+    //    Debug.Log(PJR.Timeline.Utility.GetGenericType(typeof(TestClipHandle), typeof(ClipRunner<>))?.Name ?? "Null");
+    //}
 
 
     [Button]
     void RunTestClip()
     {
+        if (!EditorApplication.isPlaying)
+        { 
+            EditorApplication.isPlaying = true;
+            return;
+        }
+        Clear();
+
         Sequence seq = new Sequence();
         seq.frameRateType = Define.EFrameRate.Game;
-        
-        var clips = new Clip[] {
-            new TestClip() { 
+
+        seq.tracks = new Track[] {
+            new Track()
+        };
+
+        trans.ResetValue();
+        seq.tracks[0].clips = new Clip[] {
+            new TestClip() {
                 start = 0,
                 end = 2,
-                intValue = 3 
+                intValue = 3,
+                floatValue = speed,
+                transValue = trans,
+                animationClip = animationClip
             }
         };
 
-        seq.clips = clips;
-        handle = new SequenceHandle(seq);
+        handle = SequenceRunner.Get();
+        handle.Init(seq);
     }
 
-    SequenceHandle handle;
+    [Button, HorizontalGroup("OP")]
+    void Clear()
+    {
+         handle?.Pool();
+         handle = null;
+    }
+    [Button, HorizontalGroup("OP")]
+    void Pause()
+    { 
+    }
+
+    SequenceRunner handle;
     private void Update()
     {
         if (handle != null)
-        { 
-            handle.OnUpdate();
+        {
+            if (handle.state == SequenceRunner.EState.None)
+            {
+                Profiler.BeginSample("SequenceStart");
+                handle.OnStart();
+                handle.OnUpdate(Time.unscaledDeltaTime);
+                Profiler.EndSample();
+            }
+            else
+            {
+                handle.OnUpdate(Time.unscaledDeltaTime);
+            }
         }
     }
 }

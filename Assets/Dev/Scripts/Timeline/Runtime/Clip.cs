@@ -45,5 +45,12 @@ namespace PJR.Timeline
 
         public Clip() { this.clipName = DefaultName; }
         public Clip(string clipName) { this.clipName = clipName; }
+
+        public bool OutOfRange(double runTotalTime)
+        {
+            if (runTotalTime < start || runTotalTime > end)
+                return true;
+            return false;
+        }
     }
 }

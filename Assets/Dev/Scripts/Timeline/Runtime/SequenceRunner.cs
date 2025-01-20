@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static PJR.Timeline.Define;
 using PJR.Timeline.Pool;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 namespace PJR.Timeline
 {
@@ -25,15 +26,17 @@ namespace PJR.Timeline
         List<TrackRunner> _trackRunners;
         private Sequence _sequence;
 
-
-        public double elapseTime = 0f;
-        public double unscaleElapseTime = 0f;
-        double _secondPerFrame = 0;
-        double _timeCounter = 0f;
+        double _totalTime = 0f;
+        double _unscaleTotalTime = 0f;
+        double _secondPerFrame = 0f;
+        double _frameUpdateCounter = 0f;
 
         UpdateContext _updateContext;
 
 
+        public SequenceRunner()
+        { 
+        }
         public SequenceRunner(Sequence sequence)
         {
             Init(sequence);
@@ -82,10 +85,13 @@ namespace PJR.Timeline
 
             ForEachTrackRunner(StartTrackRunner);
 
-            OnUpdate(0);
+            _updateContext = new UpdateContext();
+            _updateContext.totalTime = 0;
+            _updateContext.frameChanged = true;
+            OnUpdate(_updateContext);
         }
 
-        public void OnUpdate(float deltaTime)
+        void OnUpdate(UpdateContext context)
         {
             if (_state != EState.Running)
                 return;
@@ -94,15 +100,6 @@ namespace PJR.Timeline
                 _state = EState.Done;
                 return;
             }
-
-            unscaleElapseTime += deltaTime;
-
-
-            var scaledDeltaTime = GetTimeScale() * deltaTime;
-            elapseTime += scaledDeltaTime;
-
-
-            var context = UpdateContext(scaledDeltaTime, unscaleElapseTime);
 
             bool allDone = true;
             for (int i = 0; i < _trackRunners.Count; i++)
@@ -117,44 +114,61 @@ namespace PJR.Timeline
             _state = allDone ? EState.Done : _state;
         }
 
-
-
-        public void Dispose()
+        public float _remainDeltaTime;
+        public void OnUpdate(float deltaTime)
         {
-            if (_trackRunners != null)
+            if (_state != EState.Running)
+                return;
+            if (_trackRunners == null)
             {
-                UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Release(_trackRunners);
-                _trackRunners = null;
+                _state = EState.Done;
+                return;
             }
 
-            _sequence = null;
-            _state = EState.Diposed;
-        }
+            float scaledDeltaTime = deltaTime * (float)GetTimeScale();
+            _remainDeltaTime += scaledDeltaTime;
 
-        UpdateContext UpdateContext(double unscaledDeltaTime) => UpdateContext(unscaledDeltaTime * GetTimeScale(), unscaledDeltaTime);
+            //以deltaTime间隔更新
+            var context = UpdateContext(scaledDeltaTime, deltaTime);
+            context.updateIntervalType = IntervalType.Second;
+            OnUpdate(context);
+
+            int frameUpdateRound = 0;
+            //以帧间隔更新
+            while (_remainDeltaTime >= FrameUpdateFrequency)
+            {
+                _remainDeltaTime -= (float)FrameUpdateFrequency;
+                context = UpdateContext(1);
+                OnUpdate(context);
+                frameUpdateRound++;
+            }
+        }
         UpdateContext UpdateContext(double scaledDeltaTime, double unscaledDeltaTime)
         {
-            _updateContext.frameCount = Time.frameCount;
             _updateContext.timeScale = GetTimeScale();
-            _updateContext.elapseTime = elapseTime;
+            _updateContext.totalTime = _totalTime += scaledDeltaTime;
 
             _updateContext.unscaledDeltaTime = unscaledDeltaTime;
             _updateContext.deltaTime = scaledDeltaTime;
 
-
-            _updateContext.frameChanged = false;
-            _timeCounter += scaledDeltaTime;
-            if (_timeCounter < FrameUpdateFrequency)
-            {
-                _timeCounter -= FrameUpdateFrequency;
-                _updateContext.frameCount++;
-                _updateContext.frameChanged = true;
-            }
+            _updateContext.updateIntervalType = IntervalType.Second;
 
             return _updateContext;
         }
 
-        double GetTimeScale() => Time.timeScale;
+        UpdateContext UpdateContext(int frame)
+        {
+            if (frame > 0)
+            {
+                _updateContext.frameChanged = true;
+                _updateContext.totalFrame += frame;
+            }
+            _updateContext.updateIntervalType = IntervalType.Frame;
+
+            return _updateContext;
+        }
+
+        public double GetTimeScale() => Time.timeScale;
         double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.frameRateType ?? EFrameRate.Game);
 
         void StartTrackRunner(TrackRunner clipHandle) => clipHandle?.OnStart();
@@ -172,6 +186,33 @@ namespace PJR.Timeline
                 func.Invoke(clipHandle);
             }
         }
+        public void Dispose()
+        {
+            ForEachTrackRunner(DisposeTrackRunner);
+
+            if (_trackRunners != null)
+            {
+                UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Release(_trackRunners);
+                _trackRunners = null;
+            }
+
+            _state = EState.Diposed;
+            _sequence = null;
+
+            _totalTime = 0f;
+            _unscaleTotalTime = 0f;
+            _secondPerFrame = 0;
+            _frameUpdateCounter = 0f;
+            _remainDeltaTime = 0f;
+
+            _updateContext = default;
+        }
+
+
+        #region Pool
+        public static SequenceRunner Get() => ObjectPool<SequenceRunner>.Get();
+        public void Pool() => ObjectPool<SequenceRunner>.Release(this);
+        #endregion
     }
 
 }

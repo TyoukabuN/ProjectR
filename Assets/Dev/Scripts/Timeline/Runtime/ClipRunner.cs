@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
@@ -14,16 +15,18 @@ namespace PJR.Timeline
             Diposed,
         }
         public EState state;
+        public string error;
         public bool WaitingForStart => state == EState.None;
         public bool Running => state == EState.Running;
         public bool Done => state == EState.Done;
 
-        public string error;
         public abstract Type ClipType { get; }
         public abstract Clip Clip {get;}
 
+        public void AsFailure(string error = null) { state = EState.Failure; this.error = error; }
+
         public virtual void OnInit() { state = EState.None; }
-        public virtual void OnStart() { state = EState.Running; }
+        public virtual void OnStart(UpdateContext context) { state = EState.Running; }
         public abstract void OnUpdate(UpdateContext context);
         public virtual void OnEnd() { state = EState.Done; }
         public virtual void OnDispose() { state = EState.Diposed; }

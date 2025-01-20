@@ -4,6 +4,7 @@ using UnityEngine;
 using static PJR.Timeline.Define;
 using PJR.Timeline.Pool;
 using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using System.Security.Cryptography;
 
 namespace PJR.Timeline
 {
@@ -30,20 +31,21 @@ namespace PJR.Timeline
         double _unscaleTotalTime = 0f;
         double _secondPerFrame = 0f;
         double _frameUpdateCounter = 0f;
+        GameObject _gameObject;
 
         UpdateContext _updateContext;
-
 
         public SequenceRunner()
         { 
         }
-        public SequenceRunner(Sequence sequence)
+        public SequenceRunner(GameObject gameObject, Sequence sequence)
         {
-            Init(sequence);
+            Init(gameObject, sequence);
         }
 
-        public void Init(Sequence sequence)
+        public void Init(GameObject gameObject, Sequence sequence)
         {
+            _gameObject = gameObject;
             _sequence = sequence;
 
             if (_sequence == null)
@@ -88,6 +90,7 @@ namespace PJR.Timeline
             _updateContext = new UpdateContext();
             _updateContext.totalTime = 0;
             _updateContext.frameChanged = true;
+            _updateContext.gameObject = _gameObject;
             OnUpdate(_updateContext);
         }
 

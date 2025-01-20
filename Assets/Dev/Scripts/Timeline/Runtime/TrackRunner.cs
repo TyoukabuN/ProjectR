@@ -129,7 +129,7 @@ namespace PJR.Timeline
                 else
                 { 
                     if (clipHandle.WaitingForStart)
-                        clipHandle.OnStart();
+                        clipHandle.OnStart(context);
                     if (clipHandle.Running)
                         clipHandle.OnUpdate(context);
                 }

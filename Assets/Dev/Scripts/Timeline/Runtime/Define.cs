@@ -48,6 +48,8 @@ namespace PJR.Timeline
             /// 不用更新间隔类型，所更新字段不一样
             /// </summary>
             public IntervalType updateIntervalType;
+
+            public GameObject gameObject;
         }
 
         public const string ErrCode_TrackRuner_TrackIsNull = "[TrackRuner] Track is null";

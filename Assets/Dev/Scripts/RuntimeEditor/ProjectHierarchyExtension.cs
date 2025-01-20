@@ -66,7 +66,7 @@ namespace PJR
             {"Assets/Dev/Scripts/Core/NumericalControl",new GUIContent("数值控制")},
             {"Assets/Dev/Scripts/Gen",new GUIContent("程序生成代码")},
             {"Assets/Dev/Scripts/Manager",new GUIContent("管理器相关")},
-            {"Assets/Dev/Scripts/Modules",new GUIContent("模块(对Systems下基类的实现)")},
+            {"Assets/Dev/Scripts/Modules",new GUIContent("实现")},
             {"Assets/Dev/Scripts/Profiler",new GUIContent("性能分析相关")},
             {"Assets/Dev/Scripts/RuntimeEditor",new GUIContent("运行时Editor")},
             {"Assets/Dev/Scripts/StateMachine",new GUIContent("状态机相关")},

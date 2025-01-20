@@ -53,4 +53,13 @@ namespace PJR.Timeline
             return false;
         }
     }
+
+    public class CreateClipMenuItemAttribute : Attribute
+    {
+        public string menuItemName;
+        public CreateClipMenuItemAttribute(string menuItemName) 
+        { 
+            this.menuItemName = menuItemName;
+        }
+    }
 }

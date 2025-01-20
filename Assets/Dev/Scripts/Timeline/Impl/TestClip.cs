@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using PJR.Timeline;
 using Animancer;
+using static PJR.Timeline.Define;
 
 namespace PJR
 {
@@ -15,18 +16,18 @@ namespace PJR
         public AnimationClip animationClip;
     }
 
-    public class TestClipHandle : ClipRunner<TestClip>
+    public class TestClipRunner : ClipRunner<TestClip>
     {
         public override Type ClipType => typeof(TestClip);
         int _counter = 0;
         private AnimancerComponent animancer;
-        private AnimancerState state;
+        private AnimancerState animancerState;
 
-        public TestClipHandle(TestClip clip) : base(clip) { }
+        public TestClipRunner(TestClip clip) : base(clip) { }
 
-        public override void OnStart()
-        {
-            base.OnStart();
+        public override void OnStart(UpdateContext context)
+        { 
+            base.OnStart(context);
             animancer = clip.transValue.GetComponent<AnimancerComponent>();
         }
         public override void OnUpdate(Define.UpdateContext context)
@@ -36,10 +37,10 @@ namespace PJR
                 if (clip.animationClip != null)
                 {
 
-                    state ??= animancer.Layers[0].GetOrCreateState(clip.animationClip);
-                    animancer.Layers[0].Play(state);
-                    state.Time = (float)context.totalTime;
-                    Debug.Log(state.Time);
+                    animancerState ??= animancer.Layers[0].GetOrCreateState(clip.animationClip);
+                    animancer.Layers[0].Play(animancerState);
+                    animancerState.Time = (float)context.totalTime;
+                    Debug.Log(animancerState.Time);
                 }
                 else
                 { 
@@ -54,12 +55,12 @@ namespace PJR
         public override void OnEnd()
         {
             base.OnEnd();
-            state.IsPlaying = false;
+            animancerState.IsPlaying = false;
         }
         public override void Dispose()
         {
             base.Dispose();
-            state.IsPlaying = false;
+            animancerState.IsPlaying = false;
         }
     }
 }

@@ -53,18 +53,15 @@ public class TimelineTest : MonoBehaviour
 
         trans.ResetValue();
         seq.tracks[0].clips = new Clip[] {
-            new TestClip() {
+            new AnimancerClip() {
                 start = 0,
                 end = 2,
-                intValue = 3,
-                floatValue = speed,
-                transValue = trans,
                 animationClip = animationClip
             }
         };
 
         handle = SequenceRunner.Get();
-        handle.Init(seq);
+        handle.Init(trans.gameObject, seq);
     }
 
     [Button, HorizontalGroup("OP")]

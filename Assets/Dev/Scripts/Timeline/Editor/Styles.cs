@@ -115,6 +115,14 @@ namespace PJR.Timeline.Editor
         public GUIStyle trackButtonSuite;
         public GUIStyle previewButtonDisabled;
 
+        #region Custom GUIStyle
+        GUIStyle _centerAlignmentLabel; 
+        public static GUIStyle centerAlignmentLabel => Instance._centerAlignmentLabel ??= new GUIStyle(GUI.skin.label)
+        {
+            alignment = TextAnchor.MiddleCenter,
+        };
+        #endregion
+
         public Styles2 timeAreaStyles;
 
         static Styles s_Instance;

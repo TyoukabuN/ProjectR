@@ -52,12 +52,14 @@ namespace PJR.Timeline
             public GameObject gameObject;
         }
 
+        public const string Label_NonEditingSequenceTip = "没有选中任何Sequence asset";
+
         public const string ErrCode_TrackRuner_TrackIsNull = "[TrackRuner] Track is null";
         public const string ErrCode_TrackRuner_Clip2ClipHandle = "[TrackRuner] clip2ClipHandle is null";
         //ClipHandle ErrorCode
         public const string ErrCode_ClipRunner_ClipIsNull = "[ClipRunner] Clip is null";
         public const string ErrCode_ClipRunner_ClipTypeNotMatched = "[ClipRunner] clip.ClipType not matched with clipHandle.ClipType";
 
-        public delegate ClipRunner Clip2ClipHandleFunc(Clip clip);
+        public delegate ClipRunner Clip2ClipHandleFunc(IClip clip);
     }
 }

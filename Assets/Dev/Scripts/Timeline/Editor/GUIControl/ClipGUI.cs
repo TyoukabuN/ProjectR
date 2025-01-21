@@ -9,7 +9,7 @@ namespace PJR.Timeline.Editor
 {
     public abstract class ClipGUI
     {
-        public Clip Clip { get; set; }
+        public IClip Clip { get; set; }
         public virtual float CalculateHeight() => Constants.trackHeight + draggedMenuSpace;
 
         float m_DraggedMenuSpace = 0f;
@@ -33,9 +33,9 @@ namespace PJR.Timeline.Editor
 
             using (new MidAlignmentScope.Horizontal())
             { 
-                if (GUILayout.Button(Clip.mute ? Styles.trackMuteEnabledIcon : Styles.trackMuteDisabledIcon, EditorStyles.iconButton))
+                if (GUILayout.Button(Clip.Mute ? Styles.trackMuteEnabledIcon : Styles.trackMuteDisabledIcon, EditorStyles.iconButton))
                 {
-                    Clip.mute = !Clip.mute;
+                    Clip.Mute = !Clip.Mute;
                 }
             }
 
@@ -346,11 +346,23 @@ namespace PJR.Timeline.Editor
             TimelineWindow.instance?.Repaint();
         }
     }
-    public abstract class ClipGUI<TClip> : ClipGUI where TClip : Clip 
+    public abstract class ClipGUI<TClip> : ClipGUI where TClip : IClip
     {
-        public ClipGUI(TClip clip)
+        public ClipGUI(IClip clip)
         {
             Clip = clip;
+        }
+    }
+    public class DefaultClipGUI : ClipGUI
+    {
+        public DefaultClipGUI(IClip clip) { 
+            Clip = clip;
+        }
+
+        public override void OnDrawMenu(Rect rect)
+        {
+            base.OnDrawMenu(rect);
+
         }
     }
 }

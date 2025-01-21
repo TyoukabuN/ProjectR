@@ -5,14 +5,31 @@ using UnityEngine;
 
 namespace PJR.Timeline
 {
-    [Serializable]
-    public abstract class Clip
+    public interface IClip
     {
-        public bool mute = false;
+        bool Mute { get; set; }
+        string ClipName { get; set; }
+        double start { get; set; }
+        double end { get; set; }
+        double length { get; }
+        int startFrame { get; }
+        int endFrame { get; }
+        string GetDisplayName();
+    }
+
+    [Serializable]
+    public abstract class Clip : ScriptableObject, IClip
+    {
+        public bool Mute { get => mute; set => mute = value; }
+        public string ClipName { get => clipName; set => clipName = value; }
+
+
+        bool mute = false;
 
         public const string DefaultName = "EmptyName";
 
         public string clipName;
+
         public int ClipType;
 
         protected double m_Start;
@@ -39,9 +56,8 @@ namespace PJR.Timeline
         public int startFrame => TimeUtil.ToFrames(start, Define.DefaultFrameRate);
         public int endFrame => TimeUtil.ToFrames(end, Define.DefaultFrameRate);
 
-        public int[] dependencyIDs;
 
-        public virtual string GetDisplayName() => clipName;
+        public string GetDisplayName() => clipName;
 
         public Clip() { this.clipName = DefaultName; }
         public Clip(string clipName) { this.clipName = clipName; }
@@ -54,10 +70,10 @@ namespace PJR.Timeline
         }
     }
 
-    public class CreateClipMenuItemAttribute : Attribute
+    public class TrackCreateMenuItemAttribute : Attribute
     {
         public string menuItemName;
-        public CreateClipMenuItemAttribute(string menuItemName) 
+        public TrackCreateMenuItemAttribute(string menuItemName) 
         { 
             this.menuItemName = menuItemName;
         }

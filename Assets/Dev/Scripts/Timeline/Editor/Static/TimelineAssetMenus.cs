@@ -1,0 +1,22 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using Sirenix.Utilities;
+
+namespace PJR.Timeline.Editor
+{
+    public static class TimelineAssetMenus
+    {
+        [MenuItem("Assets/PJR/Timeline/Create/Sequence Asset")]
+        public static void CreateSequenceAsset()
+        {
+            string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
+            assetPath = $"{assetPath}/New_Sequence_Asset.asset";
+            assetPath = AssetDatabase.GenerateUniqueAssetPath(assetPath);
+            var asset = ScriptableObject.CreateInstance<SequenceAsset>();
+            asset.Sequence = new Sequence();
+            AssetDatabase.CreateAsset(asset, assetPath);
+        }
+    }
+}

@@ -164,7 +164,7 @@ namespace PJR.Timeline
                 return false;
             return true;
         }
-        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.frameRateType ?? EFrameRate.Game);
+        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.FrameRateType ?? EFrameRate.Game);
 
 
         #region IErrorRecorder Impl

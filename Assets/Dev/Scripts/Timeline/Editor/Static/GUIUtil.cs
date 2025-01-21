@@ -73,6 +73,24 @@ namespace PJR.Timeline.Editor
             if (Event.current.type == eventType && rect.Contains(Event.current.mousePosition))
                 callback?.Invoke(Event.current);
         }
+        public static bool EventCheck(Rect rect, EventType eventType) => EventCheck(rect, eventType, true, false, false);
+        public static bool EventCheck(Rect rect, EventType eventType, bool useEvent) => EventCheck(rect, eventType, useEvent, false, false);
+        public static bool EventCheck(Rect rect, EventType eventType, bool useEvent,bool ctrl, bool alt)
+        {
+            var controlID = GUIUtility.GetControlID(FocusType.Passive);
+
+            if (ctrl && !Event.current.control)
+                return false;
+            if (alt && !Event.current.alt)
+                return false;
+            if (Event.current.GetTypeForControl(controlID) == eventType && rect.Contains(Event.current.mousePosition))
+            { 
+                if(useEvent) 
+                    Event.current.Use();
+                return true;
+            }
+            return false;
+        }
 
         public static Vector2 msPos => Event.current.mousePosition;
         public static void DragEventCheck(this Rect position, Action<Rect> OnMouseDrag)

@@ -6,15 +6,14 @@ using static PJR.Timeline.Define;
 namespace PJR.Timeline
 {
     [Serializable]
-    [CreateClipMenuItem(ClipCategory.Animation + "/" + nameof(AnimancerClip))]
+    [TrackCreateMenuItem(nameof(AnimancerClip))]
     public class AnimancerClip : Clip
     {
         public AnimationClip animationClip;
 
 #if UNITY_EDITOR
         public static void Create()
-        { 
-
+        {
         }
 #endif
     }

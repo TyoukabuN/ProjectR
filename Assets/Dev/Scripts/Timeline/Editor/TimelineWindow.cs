@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.EditorGUI;
 using Styles = PJR.Timeline.Editor.Styles;
+using PJR.Timeline;
 
 namespace PJR.Timeline.Editor
 {
@@ -22,15 +24,33 @@ namespace PJR.Timeline.Editor
         private void OnEnable()
         {
             instance = this;
+            RegisterEvent(true);
         }
-        
+
+        void RegisterEvent(bool enable)
+        {
+            Selection.selectionChanged -= OnSelectionChanged;
+            if (enable)
+            { 
+                Selection.selectionChanged += OnSelectionChanged;
+            }
+        }
+        void OnSelectionChanged()
+        {
+            CheckSelectionChange();
+        }
+        public void OnDestroy()
+        {
+            RegisterEvent(false);
+        }
+
         void OnGUI()
         {
             Styles.ReloadStylesIfNeeded();
 
             //GUILayoutLab();
 
-            Draw_Toolbar();
+            Draw_Headers();
             TrackViewsGUI();
         }
 
@@ -52,7 +72,7 @@ namespace PJR.Timeline.Editor
                 //rect.width = 200 - 10;
                 //rect.height = 50;
                 EditorGUI.DrawRect(rect, Styles.Instance.customSkin.colorTrackHeaderBackground);
-                rect.Debug(Color.red);
+                //rect.Debug(Color.red);
 
 
                 //GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
@@ -72,24 +92,13 @@ namespace PJR.Timeline.Editor
             GUILayoutUtility.GetLastRect().Debug(Color.blue);
         }
 
-        void Draw_Toolbar()
+        void Draw_Headers()
         {
             using (new GUILayout.VerticalScope())
             {
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
                 {
-                    Draw_DebugButton();
-                    if (state.debugging)
-                    {
-                        Draw_RepaintButton();
-                    }
-                    Draw_GotoBeginingButton();
-                    Draw_PreviousFrameButton();
-                    Draw_PlayerButton();
-                    Draw_NewFrameButton();
-                    Draw_GotoEndButton();
-                    GUILayout.FlexibleSpace();
-                    //headerRect.Debug();
+                    Draw_ControlBar();
                 }
 
                 using (new GUILayout.HorizontalScope())
@@ -99,11 +108,44 @@ namespace PJR.Timeline.Editor
                 }
             }
         }
+
+        void Draw_ControlBar()
+        {
+            Draw_DebugButton();
+            using (new DisabledScope(instance.state.DisableControlBar()))
+            { 
+                if (state.debugging)
+                {
+                    Draw_RepaintButton();
+                }
+                Draw_GotoBeginingButton();
+                Draw_PreviousFrameButton();
+                Draw_PlayerButton();
+                Draw_NewFrameButton();
+                Draw_GotoEndButton();
+                GUILayout.FlexibleSpace();
+                //headerRect.Debug();
+            }
+        }
+
         public void TrackViewsGUI()
         {
             trackRect.Debug();
-
             EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
+
+            if (GUIUtil.EventCheck(trackRect, EventType.MouseDown))
+            {
+                state.ClearHotspots();
+                Repaint();
+                return;
+            }
+
+            if (state.NonEditingSequence())
+            {
+                Draw_NonEditingSequenceTrackView();
+                return;
+            }    
+
             GUILayout.BeginArea(trackRect);
             var localTrackRect = trackRect.ToOrigin();
 
@@ -125,6 +167,31 @@ namespace PJR.Timeline.Editor
                 float relativeX = Event.current.mousePosition.x - rect.x;
                 state.trackMenuAreaWidth = Mathf.Clamp(state.trackMenuAreaWidth + relativeX, Constants.trackMenuMinAreaWidth, Constants.trackMenuMaxAreaWidth);
             });
+        }
+
+        public void Draw_NonEditingSequenceTrackView()
+        {
+            using (new GUIViewportScope(trackRect))
+            {
+                using (new GUILayout.VerticalScope())
+                {
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label(Define.Label_NonEditingSequenceTip, Styles.centerAlignmentLabel);
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.Button("Nothing", GUILayout.ExpandWidth(false)))
+                        {
+
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    GUILayoutUtility.GetLastRect().Debug(Color.red);
+                    GUILayout.FlexibleSpace();
+                }
+                GUILayoutUtility.GetLastRect().Debug();
+            }
+
         }
 
         #region Control buttons
@@ -178,29 +245,53 @@ namespace PJR.Timeline.Editor
 
         void Draw_HeaderEditBar()
         {
-            //using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(headerRect.width)))
-            using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(state.trackMenuAreaWidth)))
-            {
-                GUILayout.Space(15f);
-                Draw_AddTrackButton();
-                GUILayout.FlexibleSpace();
+            using (new EditorGUI.DisabledScope(state.NonEditingSequence()))
+            { 
+                using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(state.trackMenuAreaWidth)))
+                {
+                    GUILayout.Space(15f);
+                    Draw_AddTrackButton();
+                    GUILayout.FlexibleSpace();
+                }
             }
+        }
+
+        public class TestClip : Clip
+        { 
         }
 
         void Draw_AddTrackButton()
         {
             if (EditorGUILayout.DropdownButton(Styles.newContent, FocusType.Passive, EditorStyles.toolbarPopup))
             {
-                var menu = new GenericMenu();
-                menu.AddItem(new GUIContent("1"), false, () => { Debug.Log("1"); });
-                menu.AddItem(new GUIContent("2"), false, () => { Debug.Log("2"); });
-                menu.AddItem(new GUIContent("3"), false, () => { Debug.Log("3"); });
-                menu.ShowAsContext();
+                var menu = Global.GetTrackCreateMenu(OnCreateTrack);
+                menu?.ShowAsContext();
             }
+        }
+        void OnCreateTrack(Type type)
+        {
+            if (state.NonEditingSequence())
+                return;
+            var tracks = state.editingSequence.Sequence.Tracks;
+
+            //var track = ScriptableObject.CreateInstance<Track>();
+            var track = new Track();
+            track.clips = new IClip[] {
+                ScriptableObject.CreateInstance(type) as IClip,
+            };
+
+            ArrayUtility.Add(ref tracks, track);
+            state.editingSequence.Sequence.Tracks = tracks;
+            if(state.editingSequence.Asset != null)
+                EditorUtility.SetDirty(state.editingSequence.Asset);
+            Repaint();
         }
 
         void Draw_TimelineRuler()
         {
+            if (state.NonEditingSequence())
+                return;
+
             EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
             GUIUtil.CheckWheelEvent(timelineRulerRect, evt =>
             {
@@ -244,49 +335,6 @@ namespace PJR.Timeline.Editor
             }
             Handles.EndGUI();
             GUILayout.EndArea();
-        }
-
-
-        public class WindowState
-        {
-            /// <summary>
-            /// current pixel per frame
-            /// </summary>
-            public int currentPixelPerFrame = Constants.pixelPerFrame;
-
-            public bool debugging = true;
-
-            private TrackGUI trackGUI;
-            public TrackGUI TrackGUI => trackGUI ??= new TrackGUI();
-
-            public float trackMenuAreaWidth = Constants.trackMenuDefaultAreaWidth;
-
-            public Rect headerSizeHandleRect;// = instance.headerSizeHandleRect;
-
-            public ClipGUI hotTrack = null;
-
-            public Clip hotClip = null;
-
-            public int PixelToFrame(float pixel)
-            {
-                return (int)(pixel / currentPixelPerFrame);
-            }
-            public double PixelToSecond(float pixel)
-            {
-                return (int)(pixel / currentPixelPerFrame) / CurrentFrameRate;
-            }
-            public float FrameToPixel(int frames)
-            {
-                return frames * currentPixelPerFrame;
-            }
-
-            public double CurrentFrameRate
-            {
-                get {
-                    return Define.FPS_Default;
-                }
-            }
-            public double CurrentSecondPerFrame => 1/ CurrentFrameRate;
         }
 
         private float sliderValue = 0f;

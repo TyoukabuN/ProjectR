@@ -45,14 +45,14 @@ public class TimelineTest : MonoBehaviour
         Clear();
 
         Sequence seq = new Sequence();
-        seq.frameRateType = Define.EFrameRate.Game;
+        seq.FrameRateType = Define.EFrameRate.Game;
 
-        seq.tracks = new Track[] {
+        seq.Tracks = new Track[] {
             new Track()
         };
 
         trans.ResetValue();
-        seq.tracks[0].clips = new Clip[] {
+        seq.Tracks[0].clips = new Clip[] {
             new AnimancerClip() {
                 start = 0,
                 end = 2,
@@ -73,6 +73,12 @@ public class TimelineTest : MonoBehaviour
     [Button, HorizontalGroup("OP")]
     void Pause()
     { 
+    }
+
+    [Button]
+    void LogClipType()
+    {
+        Global.GetAllClipType();
     }
 
     SequenceRunner handle;

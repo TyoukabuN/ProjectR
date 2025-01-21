@@ -8,13 +8,11 @@ namespace PJR.Timeline.Editor
 {
     public class TrackGUI
     {
-        public List<Clip> clips;
+        public Track[] tracks => windowState.editingSequence.Sequence?.Tracks;
         public WindowState windowState => TimelineWindow.instance.state;
-
         public Rect position => TimelineWindow.instance.position;
         public TrackGUI()
         {
-            DOTest();
         }
 
         public virtual float CalculateHeight()
@@ -30,6 +28,8 @@ namespace PJR.Timeline.Editor
         };
         public virtual void OnGUI(Rect totalArea)
         {
+            if (tracks == null)
+                return;
             using (new GUILayout.HorizontalScope(GUILayout.Width(instance.trackRect.width)))
             {
                 var trackMenuAreaWidth = windowState.trackMenuAreaWidth - 2;
@@ -37,10 +37,13 @@ namespace PJR.Timeline.Editor
                 using (new GUILayout.VerticalScope(GUILayout.Width(trackMenuAreaWidth)))
                 {
                     GUILayout.Space(Constants.trackMenuAreaTop);
-                    for (int i = 0; i < clips.Count; i++)
+                    for (int i = 0; i < tracks.Length; i++)
                     {
                         GUILayout.Space(Constants.trackMenuPadding);
-                        var clip = clips[i];
+                        var clip = tracks[i]?.clips[0];
+                        if (clip == null)
+                            continue;
+
                         var clipGUI = GetClipGUI(clip);
                         if (clipGUI == null)
                             continue;
@@ -66,10 +69,13 @@ namespace PJR.Timeline.Editor
                     //GUILayoutUtility.GetRect(50, 50).Debug();
                     GUILayout.Space(Constants.trackMenuAreaTop);
 
-                    for (int i = 0; i < clips.Count; i++)
+                    for (int i = 0; i < tracks.Length; i++)
                     {
                         GUILayout.Space(Constants.trackMenuPadding);
-                        var clip = clips[i];
+                        var clip = tracks[i]?.clips[0];
+                        if (clip == null)
+                            continue;
+
                         var clipGUI = GetClipGUI(clip);
                         if (clipGUI == null)
                             continue;
@@ -85,68 +91,25 @@ namespace PJR.Timeline.Editor
         }
 
 
-        private Dictionary<Clip, ClipGUI> clip2clipGUI;
-        public ClipGUI GetClipGUI(Clip clip)
+        private Dictionary<IClip, ClipGUI> clip2clipGUI;
+        public ClipGUI GetClipGUI(IClip clip)
         {
             ClipGUI guiObject = null;
             if (clip == null)
                 return guiObject;
 
             if (clip2clipGUI == null)
-                clip2clipGUI = new Dictionary<Clip, ClipGUI>();
+                clip2clipGUI = new Dictionary<IClip, ClipGUI>();
+
 
             #region test
-            if (clip2clipGUI.TryGetValue(clip, out guiObject))
-                return guiObject;
-
-            if (clip is TestClip)
+            if (!clip2clipGUI.TryGetValue(clip, out guiObject))
             {
-                guiObject = new TestClipGUI(clip as TestClip);
-                clip2clipGUI[clip] = guiObject;
+                clip2clipGUI[clip] = new DefaultClipGUI(clip);
             }
 
-            return null;
+            return guiObject;
             #endregion
         }
-
-        #region test
-        void DOTest()
-        {
-            clips = new List<Clip>();
-            clips.Add(new TestClip("TestClip1"));
-            clips.Add(new TestClip("TestClip2"));
-            clips.Add(new TestClip("TestClip3"));
-        }
-
-        public class TestClip : Clip
-        {
-            public int intValue;
-
-            public TestClip()
-            {
-                m_Start = 0;
-                m_End = Define.SPF_Gane * 10;
-                clipName = nameof(TestClip);
-            }
-            public TestClip(string name):base()
-            {
-                clipName = name;
-            }
-        }
-
-
-        public class TestClipGUI : ClipGUI<TestClip>
-        {
-            public TestClipGUI(TestClip clip) : base(clip)
-            {
-            }
-
-            public override void OnDrawMenu(Rect rect)
-            {
-                base.OnDrawMenu(rect);
-
-            }
-        }
-        #endregion
     }
 }

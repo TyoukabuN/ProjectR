@@ -8,7 +8,7 @@ namespace PJR.Timeline
     [Serializable]
     public static class Utility
     {
-        public static double GetSecondPerFrame(Sequence sequence) => GetSecondPerFrame(sequence?.frameRateType ?? EFrameRate.Game);
+        public static double GetSecondPerFrame(Sequence sequence) => GetSecondPerFrame(sequence?.FrameRateType ?? EFrameRate.Game);
         public static double GetSecondPerFrame(EFrameRate eFrameRate)
         {
             if (eFrameRate == EFrameRate.Film)
@@ -24,7 +24,7 @@ namespace PJR.Timeline
         {
             if(sequence == null)
                 return false;
-            var tracks = sequence.tracks;
+            var tracks = sequence.Tracks;
             if (tracks == null || tracks.Length <= 0)
                 return false;
             return true;

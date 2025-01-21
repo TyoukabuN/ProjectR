@@ -6,8 +6,8 @@ using static PJR.Timeline.Define;
 namespace PJR.Timeline
 {
     [Serializable]
-    public class Track : ScriptableObject
+    public class Track
     {
-        public Clip[] clips;
+        public IClip[] clips;
     }
 }

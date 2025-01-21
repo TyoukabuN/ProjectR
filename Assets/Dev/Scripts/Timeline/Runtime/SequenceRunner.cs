@@ -60,9 +60,9 @@ namespace PJR.Timeline
             }
 
             _trackRunners = UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Get();
-            for (int i = 0; i < _sequence.tracks.Length; i++)
+            for (int i = 0; i < _sequence.Tracks.Length; i++)
             { 
-                var track = _sequence.tracks[i];
+                var track = _sequence.Tracks[i];
                 if (!track.IsValid())
                     continue;
                 var trackRunner = TrackRunner.Get();
@@ -172,7 +172,7 @@ namespace PJR.Timeline
         }
 
         public double GetTimeScale() => Time.timeScale;
-        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.frameRateType ?? EFrameRate.Game);
+        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.FrameRateType ?? EFrameRate.Game);
 
         void StartTrackRunner(TrackRunner clipHandle) => clipHandle?.OnStart();
         void DisposeTrackRunner(TrackRunner clipHandle) => clipHandle?.Dispose();

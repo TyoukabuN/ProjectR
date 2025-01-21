@@ -8,6 +8,7 @@ using static PJR.Timeline.Define;
 
 namespace PJR
 {
+    [Serializable]
     public class TestClip : Clip
     {
         public int intValue;

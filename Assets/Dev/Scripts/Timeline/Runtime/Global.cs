@@ -1,6 +1,9 @@
+using NPOI.SS.Formula.Functions;
+using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using static PJR.Timeline.Define;
 using static PJR.Timeline.Utility;
@@ -11,7 +14,8 @@ namespace PJR.Timeline
     {
         public static Clip2ClipHandleFunc Clip2ClipHandleFunc = Default_Clip2ClipHandleFunc;
 
-        public static ClipRunner Default_Clip2ClipHandleFunc(Clip clip)
+        static Dictionary<Type, Type> clipType2HandleType = null;
+        public static ClipRunner Default_Clip2ClipHandleFunc(IClip clip)
         {
             if (clipType2HandleType == null)
             {
@@ -37,6 +41,37 @@ namespace PJR.Timeline
             return Activator.CreateInstance(handleType, clip) as ClipRunner;
         }
 
-        static Dictionary<Type, Type> clipType2HandleType = null;
+
+#if UNITY_EDITOR
+        static Type[] _clipTypes;
+        public static Type[] GetAllClipType()
+        {
+            if (_clipTypes == null)
+            {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                _clipTypes = assemblies
+                .SelectMany(assembly => assembly.GetTypes()) // 获取所有类型
+                .Where(type => type.InheritsFrom(typeof(Clip)) && !type.IsAbstract) // 筛选继承类，排除抽象类
+                .ToArray();
+            }
+            return _clipTypes;
+        }
+        static GenericMenu _trackCreateMenu;
+        public static GenericMenu GetTrackCreateMenu(Action<Type> onCreateTrack)
+        {
+            if (_trackCreateMenu == null)
+            {
+                var menu = new GenericMenu();
+                for (int i = 0; i < GetAllClipType().Length; i++)
+                {
+                    var clipType = GetAllClipType()[i];
+                    menu.AddItem(new GUIContent(clipType.GetNiceName()), false, () => { onCreateTrack?.Invoke(clipType); });
+                }
+                _trackCreateMenu = menu;
+            }
+            return _trackCreateMenu;
+        }
+
+#endif
     }
 }

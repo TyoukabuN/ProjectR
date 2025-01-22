@@ -8,6 +8,7 @@ namespace PJR.Timeline
     [Serializable]
     public class Track
     {
+        [SerializeReference]
         public IClip[] clips;
     }
 }

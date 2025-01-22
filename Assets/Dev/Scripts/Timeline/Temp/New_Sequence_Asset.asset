@@ -13,12 +13,49 @@ MonoBehaviour:
   m_Name: New_Sequence_Asset
   m_EditorClassIdentifier: 
   Sequence:
-    frameRateType: 0
-    tracks:
-    - rid: 4443409521668522006
-    runtimeInstance: 0
+    rid: 4443409521668522011
   references:
     version: 2
     RefIds:
-    - rid: 4443409521668522006
+    - rid: 4443409521668522011
+      type: {class: Sequence, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
+      data:
+        frameRateType: 0
+        tracks:
+        - rid: 4443409521668522015
+        - rid: 4443409521668522017
+        - rid: 4443409521668522019
+        runtimeInstance: 0
+    - rid: 4443409521668522015
       type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
+      data:
+        clips:
+        - rid: 4443409521668522016
+    - rid: 4443409521668522016
+      type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
+      data:
+        clipName: EmptyName
+        ClipType: 0
+        animationClip: {fileID: 0}
+    - rid: 4443409521668522017
+      type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
+      data:
+        clips:
+        - rid: 4443409521668522018
+    - rid: 4443409521668522018
+      type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
+      data:
+        clipName: EmptyName
+        ClipType: 0
+        animationClip: {fileID: 0}
+    - rid: 4443409521668522019
+      type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
+      data:
+        clips:
+        - rid: 4443409521668522020
+    - rid: 4443409521668522020
+      type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
+      data:
+        clipName: EmptyName
+        ClipType: 0
+        animationClip: {fileID: 0}

@@ -23,15 +23,18 @@ namespace PJR.Timeline.Editor
             /// </summary>
             public bool debugging = true;
 
+            public bool requireRepaint = false;
+
             private TrackGUI trackGUI;
             public TrackGUI TrackGUI => trackGUI ??= new TrackGUI();
 
-            #region 一些动态的Rect
+#region 一些动态的Rect
             public float trackMenuAreaWidth = Constants.trackMenuDefaultAreaWidth;
             public Rect headerSizeHandleRect;// = instance.headerSizeHandleRect;
-            #endregion
+#endregion
 
-            #region 一些hotspot
+
+#region 一些hotspot
             public ClipGUI hotTrack = null;
             public IClip hotClip = null;
             public void ClearHotspots()
@@ -39,7 +42,7 @@ namespace PJR.Timeline.Editor
                 hotTrack = null;
                 hotClip = null;
             }
-            #endregion
+ #endregion
 
             #region 一些单位转换用的方法
             public int PixelToFrame(float pixel)

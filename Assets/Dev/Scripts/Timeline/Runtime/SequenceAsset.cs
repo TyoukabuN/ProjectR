@@ -6,6 +6,7 @@ namespace PJR.Timeline
 {
     public class SequenceAsset : ScriptableObject
     {
+        [SerializeReference]
         public Sequence Sequence;
     }
 }

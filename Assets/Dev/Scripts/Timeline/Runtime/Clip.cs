@@ -18,7 +18,7 @@ namespace PJR.Timeline
     }
 
     [Serializable]
-    public abstract class Clip : ScriptableObject, IClip
+    public abstract class Clip : IClip
     {
         public bool Mute { get => mute; set => mute = value; }
         public string ClipName { get => clipName; set => clipName = value; }

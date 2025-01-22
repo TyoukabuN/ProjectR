@@ -50,6 +50,14 @@ namespace PJR.Timeline.Editor
 
             //GUILayoutLab();
 
+            if (Event.current.type == EventType.Repaint)
+                if (state.requireRepaint)
+                { 
+                    state.requireRepaint = false;
+                    Repaint();
+                    return;
+                }
+
             Draw_Headers();
             TrackViewsGUI();
         }
@@ -277,14 +285,14 @@ namespace PJR.Timeline.Editor
             //var track = ScriptableObject.CreateInstance<Track>();
             var track = new Track();
             track.clips = new IClip[] {
-                ScriptableObject.CreateInstance(type) as IClip,
+                Activator.CreateInstance(type)as IClip,
             };
 
             ArrayUtility.Add(ref tracks, track);
             state.editingSequence.Sequence.Tracks = tracks;
             if(state.editingSequence.Asset != null)
                 EditorUtility.SetDirty(state.editingSequence.Asset);
-            Repaint();
+            state.requireRepaint = true;
         }
 
         void Draw_TimelineRuler()

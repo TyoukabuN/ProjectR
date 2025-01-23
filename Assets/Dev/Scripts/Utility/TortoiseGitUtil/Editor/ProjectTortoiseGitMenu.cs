@@ -48,11 +48,11 @@ namespace InfinityCode.UltimateEditorEnhancer.ProjectTools
 
                     string itemFullPath = PJR.PathUtility.GetFullPath(item.path);
 
-                    menu.Add("Log", () => TortoiseGitUtility.SVNLog(itemFullPath));
-                    menu.Add("Commit", () => TortoiseGitUtility.SVNCommit(itemFullPath));
-                    menu.Add("Revert", () => TortoiseGitUtility.SVNRevert(itemFullPath));
-                    menu.Add("Pull", () => TortoiseGitUtility.SVNPull(itemFullPath));
-                    menu.Add("Push", () => TortoiseGitUtility.SVNPush(itemFullPath));
+                    menu.Add("Log", () => TortoiseGitUtility.SVNLog(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
+                    menu.Add("Commit", () => TortoiseGitUtility.SVNCommit(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
+                    menu.Add("Revert", () => TortoiseGitUtility.SVNRevert(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
+                    menu.Add("Pull", () => TortoiseGitUtility.SVNPull(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
+                    menu.Add("Push", () => TortoiseGitUtility.SVNPush(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
                     menu.Add("需要安装TortoiseGit", () => { });
 
                     menu.Show();

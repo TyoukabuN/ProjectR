@@ -61,13 +61,13 @@ public class UnitaskTest : MonoBehaviour
         await UniTask.WaitForFixedUpdate();
 
         // yield return WaitUntil 的替代方案
-        await UniTask.WaitUntil(() => isActive == false);
+        await UniTask.WaitUntil(() => isActiveAndEnabled == false);
 
         // WaitUntil 扩展，指定某个值改变时触发
-        await UniTask.WaitUntilValueChanged(this, x => x.isActive);
+        await UniTask.WaitUntilValueChanged(this, x => x.isActiveAndEnabled);
 
         // 您可以直接 await 一个 IEnumerator 协程
-        await FooCoroutineEnumerator();
+        //await FooCoroutineEnumerator();
 
         // 您可以直接 await 一个原生 task
         await Task.Run(() => 100);

@@ -13,6 +13,12 @@ public class UnitaskTest : MonoBehaviour
     {
         AsyncTest();
     }
+    [Button("Test2")]
+    void Test2()
+    {
+        DemoAsync();
+    }
+
 
     async void AsyncTest()
     {
@@ -27,7 +33,7 @@ public class UnitaskTest : MonoBehaviour
         // 您可以等待一个 Unity 异步对象
         var asset = await Resources.LoadAsync<TextAsset>("foo");
         var txt = (await UnityWebRequest.Get("https://...").SendWebRequest()).downloadHandler.text;
-        await SceneManager.LoadSceneAsync("scene2");
+        //await SceneManager.LoadSceneAsync("scene2").WithCancellation(new System.Threading.CancellationToken);
 
         // .WithCancellation 会启用取消功能，GetCancellationTokenOnDestroy 表示获取一个依赖对象生命周期的 Cancel 句柄，当对象被销毁时，将会调用这个 Cancel 句柄，从而实现取消的功能
         // 在 Unity 2022.2之后，您可以在 MonoBehaviour 中使用`destroyCancellationToken`

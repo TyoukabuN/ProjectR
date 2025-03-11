@@ -5,7 +5,7 @@ using UnityEditor;
 using System.IO;
 using PJR;
 
-public static class TortoiseGitUtility
+public static class TortoiseGitUtil
 {
     public static void SVNLog(string path)
     {
@@ -60,33 +60,33 @@ public static class TortoiseGitMenu
     [MenuItem("Assets/TortoiseGit/Log")]
     public static void Log()
     {
-        TortoiseGitUtility.SVNLog(GetSeletedAssetPaths());
+        TortoiseGitUtil.SVNLog(GetSeletedAssetPaths());
     }
     [MenuItem("Assets/TortoiseGit/Commit")]
     public static void Commit()
     {
-        TortoiseGitUtility.SVNCommit(GetSeletedAssetPaths());
+        TortoiseGitUtil.SVNCommit(GetSeletedAssetPaths());
     }
     [MenuItem("Assets/TortoiseGit/Revert")]
     public static void Revert()
     {
-        TortoiseGitUtility.SVNRevert(GetSeletedAssetPaths());
+        TortoiseGitUtil.SVNRevert(GetSeletedAssetPaths());
     }
     [MenuItem("Assets/TortoiseGit/Pull")]
     public static void Pull()
     {
-        TortoiseGitUtility.SVNPull(GetSeletedAssetPaths());
+        TortoiseGitUtil.SVNPull(GetSeletedAssetPaths());
     }
     [MenuItem("Assets/TortoiseGit/Push")]
     public static void Push()
     {
-        TortoiseGitUtility.SVNPush(GetSeletedAssetPaths());
+        TortoiseGitUtil.SVNPush(GetSeletedAssetPaths());
     }
     [MenuItem("Assets/TortoiseGit/需要安装TortoiseGit")]
     public static void Tips()
     {
         //Debug.Log(GetSeletedAssetPaths());
-        var assetPaths = AssetSelectionUtility.GetAllPrefabsUnderSelectedFolder();
+        var assetPaths = AssetSelectionUtil.GetAllPrefabsUnderSelectedFolder();
         if (assetPaths != null)
             foreach (var assetPath in assetPaths)
             {
@@ -112,13 +112,13 @@ public static class TortoiseGitMenu
         string res = string.Empty;
         for (int i = 0; i < paths.Count; i++)
         {
-            string fullPath = PathUtility.GetFullPath(paths[i]);
+            string fullPath = PathUtil.GetFullPath(paths[i]);
             if (string.IsNullOrEmpty(res))
                 res = fullPath;
             else
                 res = $"{res}*{fullPath}";
 
-            if (tryIncludeMeta && TortoiseGitUtility.GetAssetMetaFilePath(fullPath, out var metaFilePath))
+            if (tryIncludeMeta && TortoiseGitUtil.GetAssetMetaFilePath(fullPath, out var metaFilePath))
                 res = $"{res}*{metaFilePath}";
         }
         return res;

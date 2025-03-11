@@ -19,6 +19,10 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: UnitaskTest
+    path: Assets/Dev/Lab/Scenes/UnitaskTest.unity
+  - name: TimelineTest
+    path: Assets/Dev/Lab/Scenes/TimelineTest.unity
   - name: CShaderTest
     path: Assets/Dev/Lab/Scenes/CShaderTest.unity
   - name: JobSystemTest
@@ -53,8 +57,4 @@ MonoBehaviour:
     path: Assets/__LS/Resources/DevScene/BuildScene_SplashScreen.unity
   - name: CreateIconScene
     path: Assets/__LS_Test/Test_CPX/CreateIconScene.unity
-  - name: TestScene_AI_HB
-    path: Assets/__LS_Test/Test_HB/TestFlowScript/TestScene_AI_HB.unity
-  - name: BitwiseTest
-    path: Assets/__LS_Test/Test_JW/BitwiseTest.unity
   _notes: []

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PJR
 {
-    public static class PathUtility 
+    public static class PathUtil 
     {
         /// <summary>
         /// 项目内配置根目录

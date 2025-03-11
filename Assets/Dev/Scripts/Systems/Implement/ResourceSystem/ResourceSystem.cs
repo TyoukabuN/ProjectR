@@ -108,7 +108,7 @@ namespace PJR.Systems
         /// <returns></returns>
         private static bool LoadResDesc()
         {
-            string filePath = PathUtility.GetDescFilePath();
+            string filePath = PathUtil.GetDescFilePath();
             if (!File.Exists(filePath))
             {
 #if UNITY_EDITOR

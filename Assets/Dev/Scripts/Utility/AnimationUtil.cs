@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PJR
 {
-    public static class AnimationUtility
+    public static class AnimationUtil
     {
         private static Dictionary<AnimationClip, TransformCurveHandle> clip2transCurveHandle = new Dictionary<AnimationClip, TransformCurveHandle>();
 

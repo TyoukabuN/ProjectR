@@ -67,7 +67,7 @@ namespace PJR
 
         public static void CreateDesc()
         {
-            string filePath = PathUtility.GetDescFilePath();
+            string filePath = PathUtil.GetDescFilePath();
             if (File.Exists(filePath))
                 return;
             string json = JsonUtility.ToJson(new ResourceDescription(), true);

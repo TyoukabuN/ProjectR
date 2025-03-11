@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace PJR
 {
-    public static class BeizerUtility
+    public static class BeizerUtil
     {
         private static Vector3[] vec3Cache = new Vector3[100];
 
-        static BeizerUtility()
+        static BeizerUtil()
         {
             if (vec3Cache == null || vec3Cache.Length <= 0)
                 vec3Cache = new Vector3[100];

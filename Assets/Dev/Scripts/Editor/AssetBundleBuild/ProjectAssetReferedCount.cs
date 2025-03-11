@@ -74,7 +74,7 @@ namespace PJR.Editor
             if (!item.path.Contains(dir))
                 return;
 
-            dir = PathUtility.RegularPath(dir);
+            dir = PathUtil.RegularPath(dir);
             //var pInfo_dir = new PathUtil.PathInfo(dir);
 
             bool isMessRef = false;

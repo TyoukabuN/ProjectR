@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using PJR.ClassExtension;
+using PJR.Editor;
 
 namespace PJR
 {
-    public partial class ProjectHierarchyExtension : MonoBehaviour
+    public partial class ProjectHierarchyExtension 
     {
         static Dictionary<string, GUIContent> s_HierarchyDesc = new Dictionary<string, GUIContent>()
         {
@@ -33,7 +34,7 @@ namespace PJR
             GUIContent content;
             if (s_HierarchyDesc.TryGetValue(go.name, out content))
             {
-                EditorGUI.LabelField(selectionRect, content, GetLabelStyle(true));
+                EditorGUI.LabelField(selectionRect, content, Styles.GetMiddleRightLabel);
             }
         }
 

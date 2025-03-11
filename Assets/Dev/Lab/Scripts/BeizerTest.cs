@@ -29,7 +29,7 @@ public class BeizerTest : MonoBehaviour
     [Button("PrintCurve")]
     public void PrintCurve()
     {
-        var points = BeizerUtility.SampleBeizerCurve(wpoints, 20);
+        var points = BeizerUtil.SampleBeizerCurve(wpoints, 20);
         for (int i = 0; i < points.Count - 1; i++)
         {
             Vector3 p0 = points[i];

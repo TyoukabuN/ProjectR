@@ -46,13 +46,13 @@ namespace InfinityCode.UltimateEditorEnhancer.ProjectTools
 
                     GenericMenuEx menu = GenericMenuEx.Start();
 
-                    string itemFullPath = PJR.PathUtility.GetFullPath(item.path);
+                    string itemFullPath = PJR.PathUtil.GetFullPath(item.path);
 
-                    menu.Add("Log", () => TortoiseGitUtility.SVNLog(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
-                    menu.Add("Commit", () => TortoiseGitUtility.SVNCommit(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
-                    menu.Add("Revert", () => TortoiseGitUtility.SVNRevert(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
-                    menu.Add("Pull", () => TortoiseGitUtility.SVNPull(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
-                    menu.Add("Push", () => TortoiseGitUtility.SVNPush(TortoiseGitUtility.CombineWithMeta(itemFullPath)));
+                    menu.Add("Log", () => TortoiseGitUtil.SVNLog(TortoiseGitUtil.CombineWithMeta(itemFullPath)));
+                    menu.Add("Commit", () => TortoiseGitUtil.SVNCommit(TortoiseGitUtil.CombineWithMeta(itemFullPath)));
+                    menu.Add("Revert", () => TortoiseGitUtil.SVNRevert(TortoiseGitUtil.CombineWithMeta(itemFullPath)));
+                    menu.Add("Pull", () => TortoiseGitUtil.SVNPull(TortoiseGitUtil.CombineWithMeta(itemFullPath)));
+                    menu.Add("Push", () => TortoiseGitUtil.SVNPush(TortoiseGitUtil.CombineWithMeta(itemFullPath)));
                     menu.Add("需要安装TortoiseGit", () => { });
 
                     menu.Show();

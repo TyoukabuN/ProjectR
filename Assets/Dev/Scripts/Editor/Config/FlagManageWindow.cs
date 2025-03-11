@@ -48,7 +48,7 @@ namespace PJR.Editor
         [MenuItem("PJR/配置/Tools/Flag/上传Flag配置文件(TortoiseGit)")]
         public static void Editor_CommitFlagConfigAsset()
         {
-            TortoiseGitUtility.SVNCommit(FlagConfig.FlagConfigFileRoot);
+            TortoiseGitUtil.SVNCommit(FlagConfig.FlagConfigFileRoot);
         }
 
         [MenuItem("PJR/配置/Tools/Flag/文档")]

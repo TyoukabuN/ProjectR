@@ -21,7 +21,7 @@ namespace PJR.Editor
         {
             if (content == null)
                 content = new GUIContent(LoadIcon("d_Prefab Icon"), "QuickMenu");
-            if (GUILayoutUtils.Button(content, Styles.appToolbarButtonLeft, GUILayout.Width(32), GUILayout.Height(18)) == ButtonEvent.click)
+            if (GUILayoutUtils.Button(content, InfinityCode.UltimateEditorEnhancer.Styles.appToolbarButtonLeft, GUILayout.Width(32), GUILayout.Height(18)) == ButtonEvent.click)
             {
                 Event e = Event.current;
 
@@ -62,9 +62,9 @@ namespace PJR.Editor
             //
             menu.AddItem(new GUIContent("Debug/Setting/ResourceSystem.DebugLevel/0"), ResourceSystem.DebugLevel == 0, () => { ResourceSystem.DebugLevel = 0; });
             menu.AddItem(new GUIContent("Debug/Setting/ResourceSystem.DebugLevel/1"), ResourceSystem.DebugLevel == 1, () => { ResourceSystem.DebugLevel = 1; });
-            menu.AddItem(new GUIContent("Debug/编译测试"), false, () => { EditorUtility.Build.BuildCurrentTargetCompiles(); });
+            menu.AddItem(new GUIContent("Debug/编译测试"), false, () => { EditorUtil.Build.BuildCurrentTargetCompiles(); });
             //
-            menu.AddItem(new GUIContent("编辑菜单脚本"), false, () => { EditorUtility.Asset.OpenScriptOfType(typeof(QuickMenuLeftToolbar)); });
+            menu.AddItem(new GUIContent("编辑菜单脚本"), false, () => { EditorUtil.Asset.OpenScriptOfType(typeof(QuickMenuLeftToolbar)); });
             menu.AddItem(new GUIContent("文档"), false, () => {
                 Application.OpenURL("https://docs.qq.com/doc/DY2JrSGhiblVRVUhH");
             });

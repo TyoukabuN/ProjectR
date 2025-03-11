@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace PJR
 {
-    public static class AssetSelectionUtility
+    public static class AssetSelectionUtil
     {
         public static bool GetSeletedFirstFolder(out string assetPath, out Object asset, bool requireFullPath = false)
         {
@@ -26,7 +26,7 @@ namespace PJR
                 if (!AssetDatabase.IsValidFolder(assetPath))
                     continue;
                 if (requireFullPath)
-                    assetPath = PathUtility.GetFullPath(assetPath);
+                    assetPath = PathUtil.GetFullPath(assetPath);
                 return true;
             }
             return false;

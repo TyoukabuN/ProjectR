@@ -111,8 +111,10 @@ namespace PJR.Editor
         public static GUIStyle EntryErrorIconSmallTextless { get; } = new GUIStyle("CN EntryErrorIconSmall");
         public static Texture Icon_Corner_On { get; } = EditorGUIUtility.IconContent("d_winbtn_mac_max").image;
         public static Texture Icon_Corner_Off { get; } = EditorGUIUtility.IconContent("d_winbtn_mac_close").image;
-        public static Texture Icon_GreenCheckMark { get; } = EditorGUIUtility.IconContent("d_GreenCheckmark").image;
-        public static Texture Icon_RedCrossMark { get; } = EditorGUIUtility.IconContent("winbtn_mac_close_h").image;
+        public static Texture Icon_GreenCheckMark { get; } = EditorGUIUtility.IconContent("winbtn_mac_max").image;
+        //public static Texture Icon_GreenCheckMark { get; } = EditorGUIUtility.IconContent("d_GreenCheckmark").image;
+        public static Texture Icon_RedCrossMark { get; } = EditorGUIUtility.IconContent("winbtn_mac_close").image;
+        //public static Texture Icon_RedCrossMark { get; } = EditorGUIUtility.IconContent("winbtn_mac_close_h").image;
         public static Texture Icon_Warm { get; } = EditorGUIUtility.IconContent("d_console.warnicon.sml").image;
 
         public static Texture WarningIcon { get; } = EditorGUIUtility.IconContent("d_console.warnicon.sml").image;

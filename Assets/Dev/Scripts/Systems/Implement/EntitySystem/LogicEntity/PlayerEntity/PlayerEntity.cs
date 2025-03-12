@@ -16,7 +16,7 @@ namespace PJR
 
         public override bool OnCreate(EntityContext context)
         { 
-            var physEntity = EntitySystem.CreatePhysEntity();
+            var physEntity = EntitySystem.GetPhysEntityInstance();
             if (physEntity == null)
             {
                 LogSystem.LogError("Failure to create a PhysEntity", true);
@@ -79,7 +79,7 @@ namespace PJR
             //Destroy_Input();
             //Destroy_State();
 
-            EntitySystem.DestroyPhysEntity(physEntity);
+            EntitySystem.ReleasePhysEntity(physEntity);
         }
 
 #if UNITY_EDITOR

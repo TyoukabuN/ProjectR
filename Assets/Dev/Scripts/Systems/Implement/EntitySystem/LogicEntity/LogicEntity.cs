@@ -25,8 +25,9 @@ namespace PJR
         public virtual void Update() { }
         public virtual void LateUpdate() { }
         public virtual void Destroy() { }
-        public virtual bool OnCreate(EntityContext context) {
-            physEntity = EntitySystem.CreatePhysEntity();
+        public virtual bool OnCreate(EntityContext context) 
+        {
+            physEntity = EntitySystem.GetPhysEntityInstance();
             if (physEntity == null)
             {
                 LogSystem.LogError("Failure to create a PhysEntity", true);

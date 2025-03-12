@@ -34,7 +34,7 @@ namespace PJR
 
             Destroy_State();
 
-            EntitySystem.DestroyPhysEntity(physEntity);
+            EntitySystem.ReleasePhysEntity(physEntity);
         }
 
 #if UNITY_EDITOR

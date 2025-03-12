@@ -3,55 +3,122 @@ using System.Collections.Generic;
 
 namespace PJR.Core.Pooling
 {
-    public interface IPoolItem
+    public interface IObjectPool<T> where T : class
     {
-        public void OnGet();
-        public void OnRelease();
+        int CountInactive { get; }
+
+        T Get();
+
+        PooledObject<T> Get(out T v);
+
+        void Release(T element);
+
+        void Clear();
     }
-    public class ObjectPool<ObjectType> where ObjectType : IPoolItem, new()
+
+    public struct PooledObject<T> : IDisposable where T : class
     {
-        private static Dictionary<Type, Queue<ObjectType>> typeToTransition;
+        private readonly T m_ToReturn;
+        private readonly IObjectPool<T> m_Pool;
 
-        private static Queue<ObjectType> GetQueue()
+        internal PooledObject(T value, IObjectPool<T> pool)
         {
-            if (typeToTransition == null)
-                typeToTransition = new Dictionary<Type, Queue<ObjectType>>();
-
-            Type type = typeof(ObjectType);
-            if (!typeToTransition.TryGetValue(typeof(ObjectType), out var queue))
-            {
-                queue = new Queue<ObjectType>();
-                typeToTransition[type] = queue;
-            }
-            return queue;
+            this.m_ToReturn = value;
+            this.m_Pool = pool;
         }
-        public static ObjectType Get()
-        {
-            var list = GetQueue();
 
-            ObjectType transition = default;
-            if (list.Count > 0)
+        void IDisposable.Dispose() => this.m_Pool.Release(this.m_ToReturn);
+    }
+
+    public class ObjectPool<T> : IDisposable, IObjectPool<T> where T : class
+    {
+        internal readonly Stack<T> m_Stack;
+        private readonly Func<T> m_CreateFunc;
+        private readonly Action<T> m_ActionOnGet;
+        private readonly Action<T> m_ActionOnRelease;
+        private readonly Action<T> m_ActionOnDestroy;
+        private readonly int m_MaxSize;
+        internal bool m_CollectionCheck;
+
+        public int CountAll { get; private set; }
+
+        public int CountActive => this.CountAll - this.CountInactive;
+
+        public int CountInactive => this.m_Stack.Count;
+
+        public ObjectPool(
+          Func<T> createFunc,
+          Action<T> actionOnGet = null,
+          Action<T> actionOnRelease = null,
+          Action<T> actionOnDestroy = null,
+          bool collectionCheck = true,
+          int defaultCapacity = 10,
+          int maxSize = 10000)
+        {
+            if (createFunc == null)
+                throw new ArgumentNullException(nameof(createFunc));
+            if (maxSize <= 0)
+                throw new ArgumentException("Max Size must be greater than 0", nameof(maxSize));
+            this.m_Stack = new Stack<T>(defaultCapacity);
+            this.m_CreateFunc = createFunc;
+            this.m_MaxSize = maxSize;
+            this.m_ActionOnGet = actionOnGet;
+            this.m_ActionOnRelease = actionOnRelease;
+            this.m_ActionOnDestroy = actionOnDestroy;
+            this.m_CollectionCheck = collectionCheck;
+        }
+
+        public T Get()
+        {
+            T obj;
+            if (this.m_Stack.Count == 0)
             {
-                transition = list.Dequeue();
+                obj = this.m_CreateFunc();
+                ++this.CountAll;
+            }
+            else
+                obj = this.m_Stack.Pop();
+            Action<T> actionOnGet = this.m_ActionOnGet;
+            if (actionOnGet != null)
+                actionOnGet(obj);
+            return obj;
+        }
+
+        public PooledObject<T> Get(out T v)
+        {
+            return new PooledObject<T>(v = this.Get(), (IObjectPool<T>)this);
+        }
+
+        public void Release(T element)
+        {
+            if (this.m_CollectionCheck && this.m_Stack.Count > 0 && this.m_Stack.Contains(element))
+                throw new InvalidOperationException("Trying to release an object that has already been released to the pool.");
+            Action<T> actionOnRelease = this.m_ActionOnRelease;
+            if (actionOnRelease != null)
+                actionOnRelease(element);
+            if (this.CountInactive < this.m_MaxSize)
+            {
+                this.m_Stack.Push(element);
             }
             else
             {
-                transition = (ObjectType)Activator.CreateInstance(typeof(ObjectType), true);
+                Action<T> actionOnDestroy = this.m_ActionOnDestroy;
+                if (actionOnDestroy != null)
+                    actionOnDestroy(element);
             }
-
-            transition.OnGet();
-            return transition;
         }
 
-        public static bool Release(ObjectType transition)
+        public void Clear()
         {
-            if (transition == null)
-                return false;
-            var list = GetQueue();
-            list.Enqueue(transition);
-
-            transition.OnRelease();
-            return true;
+            if (this.m_ActionOnDestroy != null)
+            {
+                foreach (T obj in this.m_Stack)
+                    this.m_ActionOnDestroy(obj);
+            }
+            this.m_Stack.Clear();
+            this.CountAll = 0;
         }
+
+        public void Dispose() => this.Clear();
     }
 }

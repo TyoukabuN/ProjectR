@@ -10,7 +10,7 @@ namespace PJR
         public TrapConfigHost configHost;
         public override bool OnCreate(EntityContext context)
         {
-            physEntity = EntitySystem.CreatePhysEntity();
+            physEntity = EntitySystem.GetPhysEntityInstance();
             if (physEntity == null)
             {
                 LogSystem.LogError("Failure to create a PhysEntity", true);

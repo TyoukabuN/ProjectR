@@ -4,7 +4,7 @@ using PJR.Core.Pooling;
 
 namespace PJR.ScriptStates
 {
-    public abstract class ScriptTransition : IPoolItem
+    public abstract class ScriptTransition
     {
         public int toState = -1;
         public bool inverse = false;

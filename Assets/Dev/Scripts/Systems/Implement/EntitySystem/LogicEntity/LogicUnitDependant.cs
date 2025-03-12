@@ -8,7 +8,14 @@ namespace PJR.LogicUnits
         public static UnitCompareBySortOrder UnitSorter => unitSorter ??= new UnitCompareBySortOrder();
         static UnitCompareBySortOrder unitSorter = new UnitCompareBySortOrder();
 
-        protected List<ILogicUnitType> units = new List<ILogicUnitType>(8);
+        // 默认初始容量
+        private const int DEFAULT_CAPACITY = 8;
+        protected List<ILogicUnitType> units;
+
+        protected LogicUnitDependant(int initialCapacity = DEFAULT_CAPACITY)
+        {
+            units = new List<ILogicUnitType>(initialCapacity);
+        }
 
         protected bool AnyLogicUnits => units != null && units.Count > 0; 
         protected void LogicUnits_OnUpdate(float deltaTime)
@@ -44,7 +51,7 @@ namespace PJR.LogicUnits
                 var unit = units[i];
                 if (NullCheckAndRemove(ref i))
                     continue;
-                unit.OnLatedUpdate();
+                unit.OnDestroy();
             }
         }
 

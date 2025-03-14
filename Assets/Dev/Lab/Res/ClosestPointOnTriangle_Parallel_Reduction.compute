@@ -10,44 +10,71 @@ struct Triangle
 RWStructuredBuffer<Triangle> triangles;
 RWStructuredBuffer<float3> triClosestPoints;
 
-RWStructuredBuffer<int> closestDistance;
 RWStructuredBuffer<float3> closestPoint;
 
-float4 globalWidth;
+RWStructuredBuffer<float4> debugs;
+
+
 int taskAmount;
 float4 checkPoint;
 float4x4 local2world;
+float3 InvalidFloat3 = float3(999999, 999999, 999999);
+
+groupshared float3 Shared_hitPoint2triPoint[1024];
 
 float3 ClosestPointOnTriangle(float3 p, float3 a, float3 b, float3 c);
 
-[numthreads(1,1,1)]
-void CSMain(uint3 groupThreadID : SV_DispatchThreadID)
+[numthreads(1024,1,1)]
+void CSMain(uint3 groupThreadID : SV_DispatchThreadID, uint localIndex : SV_GroupIndex, uint3 groupID : SV_GroupID)
 {
-    uint id = groupThreadID.x + groupThreadID.y * globalWidth.y;
-    if (id >= taskAmount)
-        return;
+    uint id = groupThreadID.x;
     
-    Triangle tri = triangles[id];
-    float3 p1 = mul(local2world, float4(tri.a, 1)).xyz;
-    float3 p2 = mul(local2world, float4(tri.b, 1)).xyz;
-    float3 p3 = mul(local2world, float4(tri.c, 1)).xyz;
-    
-    float3 p = ClosestPointOnTriangle(checkPoint.xyz, p1, p2, p3);
-    triClosestPoints[id] = p;
-    
-    int dis2hitPoint = distance(p, checkPoint.xyz) * 1000;
-    int closestDis = closestDistance[0];
-    if (dis2hitPoint < closestDis)
-    {
-        //因为Kernal是并行的运行的, 又想往closestDistance[0]这同一个地址写入数据,
-        //所以需要使用原子操作来保证线程安全
-        InterlockedMin(closestDistance[0], dis2hitPoint);
+    debugs[groupThreadID.x].x = localIndex;
+    debugs[groupThreadID.x].y = groupThreadID.x;
+    debugs[groupThreadID.x].z = id;
+    debugs[groupThreadID.x].w = groupID.x;
 
-        // 如果成功将dis2hitPoint写入closestDistance[0]，再改变最近点
-        if (dis2hitPoint == closestDistance[0])
+    
+    //因为每个模型未必是能被numthreads里定的1024整除
+    //比如一个有2148面的模型，2148%1024=100，所有会有一个线程组里只有100个线程是有效的
+    //所在Dispatch的时候传了个任务数taskAmount
+    //id < taskAmount 让任务数后面id的线程结果不输入
+    if (id >= taskAmount)
+    {
+        //任务数外的线程填一个极远的向量
+        Shared_hitPoint2triPoint[localIndex] = float3(999999, 999999, 999999);
+    }
+    else
+    {
+        Triangle tri = triangles[id];
+        float3 p1 = mul(local2world, float4(tri.a, 1)).xyz;
+        float3 p2 = mul(local2world, float4(tri.b, 1)).xyz;
+        float3 p3 = mul(local2world, float4(tri.c, 1)).xyz;
+    
+        float3 triPoint = ClosestPointOnTriangle(checkPoint.xyz, p1, p2, p3);
+        triClosestPoints[id] = triPoint;
+    
+        float dis2hitPoint = distance(triPoint, checkPoint.xyz);
+        float3 hitPoint2triPoint = triPoint - checkPoint.xyz;
+    
+        Shared_hitPoint2triPoint[localIndex] = hitPoint2triPoint;
+    }
+    
+    GroupMemoryBarrierWithGroupSync();
+    
+    for (uint stride = 512; stride > 0; stride >>= 1)
+    {
+        if (localIndex < stride)
         {
-            closestPoint[0] = p;
+            if (length(Shared_hitPoint2triPoint[localIndex + stride]) < length(Shared_hitPoint2triPoint[localIndex]))
+                Shared_hitPoint2triPoint[localIndex] = Shared_hitPoint2triPoint[localIndex + stride];
         }
+        GroupMemoryBarrierWithGroupSync();
+    }
+    
+    if (localIndex == 0)
+    {
+        closestPoint[groupID.x] = Shared_hitPoint2triPoint[0] + checkPoint.xyz;
     }
 }
 

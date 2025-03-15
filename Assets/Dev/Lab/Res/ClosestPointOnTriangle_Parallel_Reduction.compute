@@ -7,18 +7,14 @@ struct Triangle
     float3 c;
 };
 
-RWStructuredBuffer<Triangle> triangles;
-RWStructuredBuffer<float3> triClosestPoints;
-
-RWStructuredBuffer<float3> closestPoint;
-
-RWStructuredBuffer<float4> debugs;
-
+RWStructuredBuffer<float3> vertexBuf;
+RWStructuredBuffer<int> indexBuf;
+RWStructuredBuffer<float3> closestPointBuf;
+RWStructuredBuffer<float4> debugBuf;
 
 int taskAmount;
 float4 checkPoint;
 float4x4 local2world;
-float3 InvalidFloat3 = float3(999999, 999999, 999999);
 
 groupshared float3 Shared_hitPoint2triPoint[1024];
 
@@ -29,12 +25,8 @@ void CSMain(uint3 groupThreadID : SV_DispatchThreadID, uint localIndex : SV_Grou
 {
     uint id = groupThreadID.x;
     
-    debugs[groupThreadID.x].x = localIndex;
-    debugs[groupThreadID.x].y = groupThreadID.x;
-    debugs[groupThreadID.x].z = id;
-    debugs[groupThreadID.x].w = groupID.x;
+    debugBuf[groupThreadID.x].x = id;
 
-    
     //因为每个模型未必是能被numthreads里定的1024整除
     //比如一个有2148面的模型，2148%1024=100，所有会有一个线程组里只有100个线程是有效的
     //所在Dispatch的时候传了个任务数taskAmount
@@ -46,13 +38,16 @@ void CSMain(uint3 groupThreadID : SV_DispatchThreadID, uint localIndex : SV_Grou
     }
     else
     {
-        Triangle tri = triangles[id];
-        float3 p1 = mul(local2world, float4(tri.a, 1)).xyz;
-        float3 p2 = mul(local2world, float4(tri.b, 1)).xyz;
-        float3 p3 = mul(local2world, float4(tri.c, 1)).xyz;
+        int sIndex = id * 3;
+        float3 p1 = mul(local2world, float4(vertexBuf[indexBuf[sIndex + 0]],1)).xyz;
+        float3 p2 = mul(local2world, float4(vertexBuf[indexBuf[sIndex + 1]],1)).xyz;
+        float3 p3 = mul(local2world, float4(vertexBuf[indexBuf[sIndex + 2]],1)).xyz;
+
+        debugBuf[groupThreadID.x].y = sIndex;
+        debugBuf[groupThreadID.x].z = 0;
+        debugBuf[groupThreadID.x].w = groupID.x;
     
         float3 triPoint = ClosestPointOnTriangle(checkPoint.xyz, p1, p2, p3);
-        triClosestPoints[id] = triPoint;
     
         float dis2hitPoint = distance(triPoint, checkPoint.xyz);
         float3 hitPoint2triPoint = triPoint - checkPoint.xyz;
@@ -74,7 +69,7 @@ void CSMain(uint3 groupThreadID : SV_DispatchThreadID, uint localIndex : SV_Grou
     
     if (localIndex == 0)
     {
-        closestPoint[groupID.x] = Shared_hitPoint2triPoint[0] + checkPoint.xyz;
+        closestPointBuf[groupID.x] = Shared_hitPoint2triPoint[0] + checkPoint.xyz;
     }
 }
 

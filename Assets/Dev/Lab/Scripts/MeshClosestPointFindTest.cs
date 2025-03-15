@@ -1,11 +1,10 @@
+using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEditor;
 using UnityEngine;
-using static CShaderPerformanceTest;
-using static UnityEngine.Rendering.PostProcessing.PostProcessResources;
+using UnityEngine.Profiling;
 
 public class MeshClosestPointFindTest : MonoBehaviour
 {
@@ -13,19 +12,15 @@ public class MeshClosestPointFindTest : MonoBehaviour
     public ComputeShader computeShader;
     public Transform referTransform;
 
-
     public bool isDebug = false;
+    [DisableIf("@true")]
+    public bool setuped = false;
 
-    [NonSerialized]
-    ComputeBuffer triBuffer;
-    [NonSerialized]
-    ComputeBuffer triClosestPointBuf;
-    [NonSerialized]
+    ComputeBuffer vertexBuf;
+    ComputeBuffer indexBuf;
     ComputeBuffer closestPointBuf;
-    [NonSerialized]
     ComputeBuffer debugBuf;
 
-    public bool setuped = false;
 
     public void OnEnable()
     {
@@ -51,25 +46,26 @@ public class MeshClosestPointFindTest : MonoBehaviour
     {
         if (playerModeStateChange == PlayModeStateChange.ExitingPlayMode)
             Clearup();
+        if (playerModeStateChange == PlayModeStateChange.EnteredPlayMode)
+            Clearup();
     }
 
     public const int GroudThreadsX = 1024;
     public void Setup()
     {
-        var mesh = skinnedMeshRenderer.sharedMesh;
-        var vertices = mesh.vertices;
-        var triangles = mesh.triangles;
-        var meshToWorldMatrix = skinnedMeshRenderer.localToWorldMatrix;
+        if (meshHandle == null)
+            meshHandle = new MeshHandle(skinnedMeshRenderer);
+        meshHandle.Bake();
 
-        triBuffer ??= new ComputeBuffer(triangles.Length, Marshal.SizeOf<Triangle>());
-        triClosestPointBuf ??= new ComputeBuffer(triangles.Length, Marshal.SizeOf<Vector3>());
-        closestPointBuf ??= new ComputeBuffer(GroudThreadsX, Marshal.SizeOf<Vector3>());
-        debugBuf ??= new ComputeBuffer(triangles.Length, Marshal.SizeOf<Vector4>());
+        vertexBuf ??= new ComputeBuffer(meshHandle.vertexCount, Marshal.SizeOf<Vector3>());
+        indexBuf ??= new ComputeBuffer(meshHandle.indexCount, Marshal.SizeOf<int>());
+        closestPointBuf ??= new ComputeBuffer(groudThreadsX, Marshal.SizeOf<Vector3>());
+        debugBuf ??= new ComputeBuffer(meshHandle.indexCount, Marshal.SizeOf<Vector4>());
         //
-        computeShader.SetBuffer(0, "triangles", triBuffer);
-        computeShader.SetBuffer(0, "triClosestPoints", triClosestPointBuf);
-        computeShader.SetBuffer(0, "closestPoint", closestPointBuf);
-        computeShader.SetBuffer(0, "debugs", debugBuf);
+        computeShader.SetBuffer(0, "vertexBuf", vertexBuf);
+        computeShader.SetBuffer(0, "indexBuf", indexBuf);
+        computeShader.SetBuffer(0, "closestPointBuf", closestPointBuf);
+        computeShader.SetBuffer(0, "debugBuf", debugBuf);
 
         setuped = true;
     }
@@ -79,53 +75,55 @@ public class MeshClosestPointFindTest : MonoBehaviour
             return false;
         if (computeShader == null)
             return false;
-        return false;
+        return true;
     }
 
     public int groudThreadsX = 16;
     public Vector3[] closestPoints;
     public static Vector3 Invalid = new Vector3(999999, 999999, 999999);
+
+
+    private MeshHandle meshHandle;
+    //private List<MeshUtil.Triangle> triangleStructs;
+
     public void FindPoint()
     {
-        var mesh = skinnedMeshRenderer.sharedMesh;
-        var triangles = mesh.triangles;
-        var local2WorldMatrix = skinnedMeshRenderer.localToWorldMatrix;
-        int taskAmount = triangles.Length;
+        Profiler.BeginSample("FindPoint");
+        if (!IsValid() || !setuped)
+            return;
+        meshHandle.Bake();
+        var local2WorldMatrix = meshHandle.SkinnedMeshRenderer.localToWorldMatrix;
+        int taskAmount = meshHandle.indexCount / 3;
+        int triangleCount = meshHandle.indexCount / 3;
+
         Vector3 checkPoint = this.referTransform != null ? this.referTransform.transform.position : Vector3.zero;
 
         //给Buffer填SetData
-        var tri = FillTriangle(mesh);
-        triBuffer.SetData(tri);
-        var res = new Vector3[tri.Length];
-        triClosestPointBuf.SetData(res);
+        vertexBuf.SetData(meshHandle.vertices);
+        indexBuf.SetData(meshHandle.triangles);
 
         closestPoints = new Vector3[groudThreadsX];
         Array.Fill(closestPoints, Invalid);
         closestPointBuf.SetData(closestPoints);
 
-        var debug = new Vector4[triangles.Length];
+        var debug = new Vector4[taskAmount];
         debugBuf.SetData(debug);
 
         //
-
-
         computeShader.SetInt("taskAmount", taskAmount);
         computeShader.SetVector("checkPoint", new Vector4(checkPoint.x, checkPoint.y, checkPoint.z, 0));
         computeShader.SetMatrix("local2world", local2WorldMatrix);
 
-        computeShader.Dispatch(0, Mathf.CeilToInt(triangles.Length / 1024.0f), 1, 1);
-
-        triClosestPointBuf.GetData(res);
-        Vector3 p = GetClosestPointReferTo(res, checkPoint);
-        Debug.DrawLine(checkPoint + Vector3.up * 0.02f, p, Color.yellow, 1f);
-        //Debug.Log(p);
+        computeShader.Dispatch(0, Mathf.CeilToInt(taskAmount / 1024.0f), 1, 1);
 
         closestPointBuf.GetData(closestPoints);
         Vector3 p1 = GetClosestPointReferTo(closestPoints, checkPoint);
         Debug.DrawLine(checkPoint, p1, Color.red, 1f);
-        //Debug.Log(p1);
 
         debugBuf.GetData(debug);
+
+        meshHandle.Dispose();
+        Profiler.EndSample();
     }
     public Vector3 GetClosestPointReferTo(Vector3[] point, Vector3 referPoint)
     {
@@ -148,46 +146,134 @@ public class MeshClosestPointFindTest : MonoBehaviour
 
     public void Clearup()
     {
-        triBuffer.Dispose();
-        triClosestPointBuf.Dispose();
-        closestPointBuf.Dispose();
-        debugBuf.Dispose();
+        indexBuf?.Dispose();
+        closestPointBuf?.Dispose();
+        debugBuf?.Dispose();
 
-        triBuffer = null;
-        triClosestPointBuf = null;
+        indexBuf = null;
         closestPointBuf = null;
         debugBuf = null;
+
+        meshHandle?.Dispose();
+        meshHandle = null;
+
+        setuped = false;
     }
 
+    [Button]
+    public void Test()
+    {
+        Clearup();
+        Setup();
+        FindPoint();
+    }
+    public struct Vertex
+    {
+        public Vector3 pos;
+        public Vector3 us;
+    }
 
-    Vector3[] triClosestPoints;
-    public struct Triangle
+    public class MeshHandle : IDisposable
     {
-        public Vector3 a;
-        public Vector3 b;
-        public Vector3 c;
-    }
-    Triangle[] trianglePoints = null;
-    Triangle[] FillTriangle(Mesh mesh)
-    {
-        trianglePoints = new Triangle[mesh.triangles.Length / 3];
-        for (int i = 0, j = 0; i < mesh.triangles.Length; i += 3, j++)
+        public SkinnedMeshRenderer SkinnedMeshRenderer
         {
-            trianglePoints[j].a = mesh.vertices[mesh.triangles[i]];
-            trianglePoints[j].b = mesh.vertices[mesh.triangles[i + 1]];
-            trianglePoints[j].c = mesh.vertices[mesh.triangles[i + 2]];
+            get=> _skinnedMeshRenderer;
+            set
+            {
+                if (_skinnedMeshRenderer == value)
+                    return;
+                _skinnedMeshRenderer = value;
+                triangles = null;
+            }
         }
-        return trianglePoints;
-    }
-    Triangle[] FillTriangle(Mesh mesh, Matrix4x4 local2World)
-    {
-        trianglePoints = new Triangle[mesh.triangles.Length / 3];
-        for (int i = 0, j = 0; i < mesh.triangles.Length; i += 3, j++)
+
+        private SkinnedMeshRenderer _skinnedMeshRenderer;
+
+
+        public List<Vector3> vertices;
+        public int[] triangles;
+        public int vertexCount => vertices.Count;
+        public int indexCount => triangles.Length;
+
+        public Mesh mesh = new Mesh();
+
+        public MeshHandle(SkinnedMeshRenderer skinnedMeshRenderer)
         {
-            trianglePoints[j].a = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i]]);
-            trianglePoints[j].b = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i + 1]]);
-            trianglePoints[j].c = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i + 2]]);
+            this.SkinnedMeshRenderer = skinnedMeshRenderer;
         }
-        return trianglePoints;
+
+        public void Bake()
+        {
+            SkinnedMeshRenderer.BakeMesh(mesh);
+            vertices ??= new List<Vector3>();
+
+            mesh.GetVertices(vertices);
+            if (triangles == null)
+                triangles = mesh.triangles;
+        }
+
+        public void Dispose()
+        {
+            vertices = null;
+            triangles = null;
+        }
+    }
+
+    public static class MeshUtil
+    {
+        public struct Triangle
+        {
+            public Vector3 a;
+            public Vector3 b;
+            public Vector3 c;
+        }
+        public static Triangle[] trianglePoints = null;
+        public static Triangle[] FillTriangle(Mesh mesh) => FillTriangle(mesh.vertices, mesh.triangles);
+        public static Triangle[] FillTriangle(Vector3[] vertices, int[] triangles)
+        {
+            trianglePoints = new Triangle[triangles.Length / 3];
+            for (int i = 0, j = 0; i < triangles.Length; i += 3, j++)
+            {
+                trianglePoints[j].a = vertices[triangles[i]];
+                trianglePoints[j].b = vertices[triangles[i + 1]];
+                trianglePoints[j].c = vertices[triangles[i + 2]];
+            }
+            return trianglePoints;
+        }
+        public static void FillTriangle(Mesh mesh, List<Triangle> triangleStructs) => FillTriangle(mesh.vertices, mesh.triangles, triangleStructs);
+        public static void FillTriangle(Vector3[] vertices, int[] triangles, List<Triangle> triangleStructs)
+        {
+            for (int i = 0, j = 0; i < triangles.Length; i += 3, j++)
+            {
+                triangleStructs[j] = new Triangle
+                {
+                    a = vertices[triangles[i]],
+                    b = vertices[triangles[i + 1]],
+                    c = vertices[triangles[i + 2]]
+                };
+            }
+        }
+        public static Triangle[] FillTriangle(List<Vector3> vertices, List<int> triangles)
+        {
+            trianglePoints = new Triangle[triangles.Count / 3];
+            for (int i = 0, j = 0; i < triangles.Count; i += 3, j++)
+            {
+                trianglePoints[j].a = vertices[triangles[i]];
+                trianglePoints[j].b = vertices[triangles[i + 1]];
+                trianglePoints[j].c = vertices[triangles[i + 2]];
+            }
+            return trianglePoints;
+        }
+        public static Triangle[] FillTriangle(Mesh mesh, Matrix4x4 local2World)
+        {
+            trianglePoints = new Triangle[mesh.triangles.Length / 3];
+            for (int i = 0, j = 0; i < mesh.triangles.Length; i += 3, j++)
+            {
+                trianglePoints[j].a = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i]]);
+                trianglePoints[j].b = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i + 1]]);
+                trianglePoints[j].c = local2World.MultiplyPoint(mesh.vertices[mesh.triangles[i + 2]]);
+            }
+            return trianglePoints;
+        }
     }
 }

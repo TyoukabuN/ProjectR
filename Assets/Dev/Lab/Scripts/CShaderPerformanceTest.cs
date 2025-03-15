@@ -82,7 +82,7 @@ public class CShaderPerformanceTest : MonoBehaviour
         //    //computeShader.SetBuffer(0, "closestPoint", CBuffer_closetPoint);
 
         //    computeShader.SetVector("checkPoint", new Vector4(checkPoint.x, checkPoint.y, checkPoint.z, 0));
-        //    computeShader.SetMatrix("local2world", skinnedMeshRenderer.localToWorldMatrix);
+        //    computeShader.SetMatrix("local2world", SkinnedMeshRenderer.localToWorldMatrix);
 
         //    closetDistance ??= new int[1];
         //    closetDistance[0] = int.MaxValue;
@@ -202,7 +202,7 @@ public class CShaderPerformanceTest : MonoBehaviour
             //CBuffer_closetDistance?.Release();
             //CBuffer_closetPoint?.Release();
 
-            //var triangles = FillTriangle(skinnedMeshRenderer.sharedMesh);
+            //var triangles = FillTriangle(SkinnedMeshRenderer.sharedMesh);
 
             //CBuffer_tri = new ComputeBuffer(triangles.Length, Marshal.SizeOf<Triangle>());
             //CBuffer_triClosestP = new ComputeBuffer(triangles.Length, Marshal.SizeOf<Vector3>());

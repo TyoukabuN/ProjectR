@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 544102143}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.014, y: 1.09, z: 1.331}
+  m_LocalPosition: {x: -0.646, y: 1.09, z: 0.936}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -269,6 +269,52 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!1 &1388484038
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1388484040}
+  - component: {fileID: 1388484039}
+  m_Layer: 0
+  m_Name: Ultimate Editor Enhancer References
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1388484039
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388484038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a46b737512f948c0a1e2352a94d18709, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bookmarks: []
+  hierarchyBackgrounds: []
+--- !u!4 &1388484040
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388484038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1438131813
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,6 +325,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1438131814}
   - component: {fileID: 1438131815}
+  - component: {fileID: 1438131816}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -308,7 +355,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1438131813}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: abbb78d16cce23c47b34b41cc1bb5411, type: 3}
   m_Name: 
@@ -321,6 +368,41 @@ MonoBehaviour:
   innerloopBatchCount: 70
   checkPoint: {fileID: 544102144}
   groudThreadsX: 16
+--- !u!114 &1438131816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438131813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72a466bb9db834b4e8e908638e57a125, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skinnedMeshRenderer: {fileID: 219187480443437759}
+  computeShader: {fileID: 7200000, guid: 3c6476404320a3c4d8ed691c6d98f5db, type: 3}
+  referTransform: {fileID: 544102144}
+  isDebug: 1
+  setuped: 1
+  groudThreadsX: 16
+  closestPoints:
+  - {x: -0.3983848, y: 1.1119162, z: 1.0904503}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
+  - {x: 999999, y: 999999, z: 999999}
 --- !u!1 &1673773241
 GameObject:
   m_ObjectHideFlags: 0

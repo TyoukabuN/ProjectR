@@ -1,5 +1,4 @@
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using System;
 using UnityEngine;
 
@@ -24,12 +23,16 @@ namespace LS.Game
                 return true;
             }
         }
+        public virtual int CompareTo(IOrdinalConfigItem other)
+        {
+            return ID.CompareTo(other.ID);
+        }
+
 #if UNITY_EDITOR
         public virtual string Editor_LabelName => Name;
         [NonSerialized, HideIf("@true")]
         public bool Editing = false;
         public virtual bool Editable => Editing;
 #endif
-
     }
 }

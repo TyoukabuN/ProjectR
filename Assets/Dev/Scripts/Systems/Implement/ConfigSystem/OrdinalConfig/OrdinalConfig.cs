@@ -1,12 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using Sirenix.OdinInspector;
 using System.IO;
 using System;
 
 #if UNITY_EDITOR
-using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 #endif
 

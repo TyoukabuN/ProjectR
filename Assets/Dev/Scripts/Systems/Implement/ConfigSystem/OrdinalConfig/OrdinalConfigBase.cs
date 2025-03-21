@@ -4,7 +4,6 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using System.IO;
 using System;
-using PJR.Systems;
 
 
 #if UNITY_EDITOR
@@ -416,6 +415,11 @@ namespace LS.Game
             Application.OpenURL(docUrl);
         }
 
+        public virtual void Editor_OpenMenuEditorWindow()
+        {
+            Debug.LogError($"你可能需要重写下{this.GetType().Name}.{nameof(Editor_OpenMenuEditorWindow)}");
+        }
+
         protected static Dictionary<int, PropertyTree> editor_id2PropertyTree = new Dictionary<int, PropertyTree>();
         /// <summary>
         /// 根据配置获取用来在界面上画Item的PropertyTree，直接联系到ItemAsset
@@ -439,6 +443,7 @@ namespace LS.Game
 
         protected virtual void Editor_AddDefautlMenuItem(GenericMenu menu)
         {
+            menu.AddItem(new GUIContent("打开配置窗口"), false, Editor_OpenMenuEditorWindow);
             menu.AddItem(new GUIContent("刷新"), false, Editor_RefreshConfig);
             menu.AddItem(new GUIContent("收集+纠错"), false, Editor_CorrectConfig);
             menu.AddItem(new GUIContent("Ping ConfigAsset"), false, () => { EditorGUIUtility.PingObject(Editor_Asset); });

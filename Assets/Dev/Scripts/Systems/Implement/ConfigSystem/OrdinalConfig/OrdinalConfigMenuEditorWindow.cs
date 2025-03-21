@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -27,14 +28,14 @@ namespace LS.Game
 
         public enum HierarchyType
         {
-            顺序,
+            ID顺序,
             文件路径,
         }
 
         protected OdinMenuTree _tree = null;
         protected TConfig _config = null;
         protected string _error = null;
-        protected HierarchyType _hierarchyType = HierarchyType.顺序;
+        protected HierarchyType _hierarchyType = HierarchyType.ID顺序;
         protected bool _inited = false;
 
         protected abstract string ItemAssetRoot { get; }
@@ -82,7 +83,7 @@ namespace LS.Game
                         }
                     }
                 }
-                else if (_hierarchyType == HierarchyType.顺序)
+                else if (_hierarchyType == HierarchyType.ID顺序)
                 {
                     Editor_DrawCreateConfigBtn();
                 }
@@ -174,11 +175,13 @@ namespace LS.Game
                 return;
             }
 
-            if (_hierarchyType == HierarchyType.顺序)
+            if (_hierarchyType == HierarchyType.ID顺序)
             {
-                for (int i = 0; i < _config.Editor_Asset.itemAssets.Count; i++)
+                var temp = new List<TItemAsset>(_config.Editor_Asset.itemAssets);
+                temp.Sort(); 
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    var itemAsset = _config.Editor_Asset.itemAssets[i];
+                    var itemAsset = temp[i];
                     if (itemAsset == null)
                         continue;
 
@@ -266,11 +269,21 @@ namespace LS.Game
                 var assetItem = (TItemAsset)menuItem.Value;
                 rightClickMenu.AddDisabledItem(new GUIContent("ItemAsset"));
                 rightClickMenu.AddItem(new GUIContent("Ping"), false, () => { PingAsset((Object)menuItem.Value); });
-                rightClickMenu.AddItem(new GUIContent("Delect"), false, () => {
-                    if (_config.Editor_ContainItemAsset(assetItem))
-                        _config.Editor_RemoveItem(assetItem.ID);
-                    else
-                        _config.Editor_RemoveItem(assetItem);
+                rightClickMenu.AddItem(new GUIContent("复制一份"), false, () =>
+                {
+                    var errCode =_config.Editor_CopyItemAsset(assetItem, out var copy);
+                    if(!string.IsNullOrEmpty(errCode))
+                        Debug.LogError($"[复制失败] {errCode}");
+                });
+                rightClickMenu.AddItem(new GUIContent("删除"), false, () =>
+                {
+                    if (EditorUtility.DisplayDialog("提示", "您确定要删除这个ItemAsset? \n这是一个不可撤销的操作!\n你只能通过版本管理工具还原!", "确定", "取消"))
+                    {
+                        if (_config.Editor_ContainItemAsset(assetItem))
+                            _config.Editor_RemoveItem(assetItem.ID);
+                        else
+                            _config.Editor_RemoveItem(assetItem);
+                    }
                 });
             }
             rightClickMenu.ShowAsContext();

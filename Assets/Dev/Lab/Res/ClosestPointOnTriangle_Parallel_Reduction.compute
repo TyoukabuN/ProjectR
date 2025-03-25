@@ -1,12 +1,5 @@
 #pragma kernel CSMain
 
-struct Triangle
-{
-    float3 a;
-    float3 b;
-    float3 c;
-};
-
 RWStructuredBuffer<float3> vertexBuf;
 RWStructuredBuffer<int> indexBuf;
 RWStructuredBuffer<float3> closestPointBuf;
@@ -20,6 +13,7 @@ groupshared float3 Shared_hitPoint2triPoint[1024];
 
 float3 ClosestPointOnTriangle(float3 p, float3 a, float3 b, float3 c);
 
+//TODO:这里的线程组固定为1024，后面可能需要增加512，256来适配小面数的模型
 [numthreads(1024,1,1)]
 void CSMain(uint3 groupThreadID : SV_DispatchThreadID, uint localIndex : SV_GroupIndex, uint3 groupID : SV_GroupID)
 {
@@ -27,13 +21,13 @@ void CSMain(uint3 groupThreadID : SV_DispatchThreadID, uint localIndex : SV_Grou
     
     debugBuf[groupThreadID.x].x = id;
 
-    //因为每个模型未必是能被numthreads里定的1024整除
-    //比如一个有2148面的模型，2148%1024=100，所有会有一个线程组里只有100个线程是有效的
-    //所在Dispatch的时候传了个任务数taskAmount
-    //id < taskAmount 让任务数后面id的线程结果不输入
+    //在使用这个shader的时候会传入vertices和indices
+    //直接在shader里获取Mesh里的每个triangle
+    //所以实际有效执行的任务数会是taskAmound =indices/3
+    //所以当id>=taskAmount时是拿不到对应的index的,也就是说拿不多对应(正确)的triangle的
+    //所以这个给taskAmount的结果直接填一个极远的向量,确保这个结果(点)无效,在归约的时候会被过滤掉
     if (id >= taskAmount)
     {
-        //任务数外的线程填一个极远的向量
         Shared_hitPoint2triPoint[localIndex] = float3(999999, 999999, 999999);
     }
     else
@@ -57,6 +51,7 @@ void CSMain(uint3 groupThreadID : SV_DispatchThreadID, uint localIndex : SV_Grou
     
     GroupMemoryBarrierWithGroupSync();
     
+    //并行归约
     for (uint stride = 512; stride > 0; stride >>= 1)
     {
         if (localIndex < stride)
@@ -73,6 +68,8 @@ void CSMain(uint3 groupThreadID : SV_DispatchThreadID, uint localIndex : SV_Grou
     }
 }
 
+//Gen by AI
+//找点到三角面上的最近点
 float3 ClosestPointOnTriangle(float3 p, float3 a, float3 b, float3 c)
 {
     // Compute edges and vectors

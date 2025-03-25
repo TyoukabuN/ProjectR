@@ -1,8 +1,10 @@
-using Sirenix.OdinInspector;
 using System;
+using System.IO;
+using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 using LogicEntityType = PJR.EntityDefine.LogicEntityType;
+using Object = UnityEngine.Object;
 
 namespace PJR
 {
@@ -63,7 +65,7 @@ namespace PJR
         //
         [LabelText("模型资源名字")]
         [ValidateInput("IsAssetNameValid_Prefab", "", InfoMessageType.Warning)]
-        [InlineButton("ChooseAsset", SdfIconType.Folder,"")]
+        [InlineButton("ChooseModelAsset", SdfIconType.Folder,"")]
         public string modelName = string.Empty;
         [LabelText("动画集合名字")]
         [ValidateInput("IsAssetNameValid_Asset", "", InfoMessageType.Warning)]
@@ -88,12 +90,51 @@ namespace PJR
             return true;
         }
 
-        public void ChooseAsset(string searchFilter)
+
+        [NonSerialized]
+        private Action<Object> _setter;
+
+        void ChooseModelAsset()
         {
-            //UnityEngine.Object @object = null;
-            //EditorGUIUtility.ShowObjectPicker<UnityEngine.Object>(@object, false, searchFilter, 0);
-            //if(@object!= null)
-            Debug.Log("还没有空弄...");
+            EditorGUIUtility.ShowObjectPicker<Object>(null, false, "t:prefab", 0);
+            _setter = (obj) =>
+            {
+                var assetPath = AssetDatabase.GetAssetPath(obj);
+                modelName = Path.GetFileName(assetPath);
+            };
+        }
+        void ChooseAsset()
+        {
+            EditorGUIUtility.ShowObjectPicker<Object>(null, false, "t:prefab", 0);
+            _setter = (obj) =>
+            {
+                var assetPath = AssetDatabase.GetAssetPath(obj);
+                animationClipSet = Path.GetFileName(assetPath);
+            };
+        }
+        [OnInspectorGUI]
+        void OnInspectorGUI()
+        {
+            if (Event.current != null && Event.current.type == EventType.ExecuteCommand)
+            {
+                if (Event.current.commandName == "ObjectSelectorUpdated")
+                {
+                    var selected = EditorGUIUtility.GetObjectPickerObject();
+                    if (_setter != null)
+                    {
+                        _setter.Invoke(selected);
+                    }
+                }
+                else if (Event.current.commandName == "ObjectSelectorClosed")
+                {
+                    var selected = EditorGUIUtility.GetObjectPickerObject();
+                    if (_setter != null)
+                    {
+                        _setter.Invoke(selected);
+                        _setter = null;
+                    }
+                }
+            }
         }
 #endif
     }

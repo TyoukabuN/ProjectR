@@ -1,5 +1,6 @@
 using System;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace PJR.Config
 {
@@ -19,7 +20,9 @@ namespace PJR.Config
 
     public abstract class OrdinalConfigItemAssetTemplate : OrdinalConfigItemAsset
     {
+        [SerializeField, DisableIf("@true")]
         protected int _id;
+        [SerializeField]
         protected string _name; 
         public override int ID { get => _id; set => _id = value; }
         public override string Name { get => _name; set => _name = value; }

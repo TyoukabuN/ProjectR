@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class OrdinalConfigTest : MonoBehaviour
 {
-    
+    [AvatarConfigID]
     public int AvatarConfigId;
 }

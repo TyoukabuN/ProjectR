@@ -38,6 +38,12 @@ namespace PJR.Config
 
         public class Selector : OrdinalConfigSelector<__OrdinalConfig, __OrdinalConfigAsset, __OrdinalConfigItemAsset>
         {
+            public static void Show(Action<__OrdinalConfigItemAsset> onChanged)
+            {
+                var window = GetWindow<Selector>();
+                window.ClearCallBacks();
+                window.Init(Instance, onChanged);
+            }
         }
 #endif
     }

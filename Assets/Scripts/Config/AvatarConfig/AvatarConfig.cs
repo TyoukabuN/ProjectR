@@ -37,6 +37,12 @@ namespace PJR.Config
 
         public class Selector : OrdinalConfigSelector<AvatarConfig, AvatarConfigAsset, AvatarConfigItemAsset>
         {
+            public static void Show(Action<AvatarConfigItemAsset> onChanged)
+            {
+                var window = GetWindow<Selector>();
+                window.ClearCallBacks();
+                window.Init(Instance, onChanged);
+            }
         }
 #endif
     }

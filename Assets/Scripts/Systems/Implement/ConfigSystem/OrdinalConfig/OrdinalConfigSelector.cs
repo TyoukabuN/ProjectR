@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector.Editor;
 using System;
 using UnityEditor;
+using UnityEngine;
 
 namespace PJR.Config
 {
@@ -79,6 +80,11 @@ namespace PJR.Config
             for (int i = 0; i < configItems.Count; i++)
             {
                 var item = configItems[i];
+                if (item == null)
+                {
+                    Debug.LogError($"[{_configInstance.ConfigName}]配置文件的[index:{i}]为空!");
+                    continue;
+                }
                 string idStr = $"[{item.ID}]".PadRight(12);
                 tree.Add($"{item.Editor_LabelName}", item);
             }

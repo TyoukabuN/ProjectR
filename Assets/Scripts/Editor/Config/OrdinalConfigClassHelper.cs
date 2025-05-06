@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
@@ -22,10 +22,29 @@ namespace PJR.Editor
             [LabelText("配置类ItemAsset类名")]
             [DisableIf("@true")] 
             public string ConfigItemAssetName;
-
+            [DisableIf("@true")]
+            public OdinEditorWindow Window;
             // [LabelText("是否同步关联类名")] 
             // [OnValueChanged("OnSyncRelatedClassNameChanged")] 
             // public bool SyncRelatedClassName = true;
+
+            protected string _error = string.Empty;
+
+            [OnInspectorGUI]
+            protected void OnGUI()
+            {
+                DrawErrorTips();
+            }
+            
+            public void DrawErrorTips()
+            {
+                _error = string.Empty;
+                if (ExistClass(ConfigName))
+                    _error = "已存在相同顺序表类";
+
+                if (!string.IsNullOrEmpty(_error))
+                    EditorGUILayout.HelpBox(_error, MessageType.Error);
+            }
 
             void OnConfigNameChanged() => DoSyncRelatedClassName();
             void OnSyncRelatedClassNameChanged() => DoSyncRelatedClassName();
@@ -43,6 +62,11 @@ namespace PJR.Editor
                 var templates = LoadTemplateFile();
                 if (templates == null)
                     return;
+                if (ExistClass(ConfigName))
+                {
+                    EditorUtility.DisplayDialog("Tips", $"已存在同名类{GetClassFullName(ConfigName)}","ok");
+                    return;
+                }
                 var scriptDirectory = $"Assets/Scripts/Config/{ConfigName}";
                 if (!Directory.Exists(scriptDirectory))
                     Directory.CreateDirectory(scriptDirectory);
@@ -58,6 +82,36 @@ namespace PJR.Editor
                 
                 AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
                 Window.Close();
+            }
+
+            public string GetClassFullName(string className) => $"{GetConfigAssemblyName()}.Config.{className}";
+            public string GetConfigAssemblyName() => "PJR";
+            public bool ExistClass(string className)
+            {
+                if (TryGetLoadedAssemblyByName(GetConfigAssemblyName(), out var assembly))
+                    return assembly.GetType(GetClassFullName(className)) != null;
+
+                var type = Type.GetType(GetClassFullName(className));
+                return type != null;
+            }
+            bool TryGetLoadedAssemblyByName(string assemblyName,out Assembly res)
+            {
+                res = null;
+                // 获取所有已加载的程序集
+                Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+    
+                // 查找匹配的程序集（不包含版本等信息的基本名称）
+                foreach (Assembly assembly in assemblies)
+                {
+                    string name = assembly.GetName().Name;
+                    if (name.Equals(assemblyName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        res = assembly;
+                        return true;
+                    }
+                }
+    
+                return false;
             }
 
             private static string ReplaceTemplate(string templateFileStr, string className)
@@ -90,6 +144,8 @@ namespace PJR.Editor
                 "Assets/Resources/OrdinalConfigTemplate/__OrdinalConfig.cs",
                 "Assets/Resources/OrdinalConfigTemplate/__OrdinalConfigAsset.cs",
                 "Assets/Resources/OrdinalConfigTemplate/__OrdinalConfigItemAsset.cs",
+                "Assets/Resources/OrdinalConfigTemplate/__OrdinalConfigIDAttribute.cs",
+                "Assets/Resources/OrdinalConfigTemplate/__OrdinalConfigIDAttributeDrawer.cs",
             };
 
             private List<TextAsset> _templates = null;
@@ -109,36 +165,14 @@ namespace PJR.Editor
                 return _templates;
             }
             
-            public OdinEditorWindow Window;
         }
 
         public static void OrdinalConfigClassDialog()
         {
             var window = new CreateWindow();
-            var odinEditorWindow =OdinEditorWindow.InspectObject(window);
+            var odinEditorWindow = OdinEditorWindow.InspectObject(window);
+            odinEditorWindow.titleContent = new GUIContent("创建顺序表");
             window.Window = odinEditorWindow;
-        }
-
-        public abstract class Skeleton
-        {
-            public abstract Transform GetBoneByName(string name);
-        }
-        public class AvatarPart
-        {
-            public void ReSkinned(Skeleton skeleton, SkinnedMeshRenderer ownSkinnedMeshRenderer)
-            {
-                var temp = new List<Transform>();
-                for (var i = 0; i < ownSkinnedMeshRenderer.bones.Length; i++)
-                {
-                    var originBone = ownSkinnedMeshRenderer.bones[i];
-                    var targetBone = skeleton.GetBoneByName(originBone.name);
-                    if (targetBone == null)
-                        throw new Exception($"found not [bone:{originBone.name} in skeleton]");
-                    temp.Add(targetBone);
-                }
-
-                ownSkinnedMeshRenderer.bones = temp.ToArray();
-            }
         }
     }
 }

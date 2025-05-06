@@ -14,23 +14,23 @@ namespace PJR.Config
     {
         public delegate void OnConfigIdChange(TItem item);
 
-        protected int configId = 0;
-        protected OnConfigIdChange onChanged;
+        protected int _configId = 0;
+        protected OnConfigIdChange _onChanged;
         protected bool _doClose = false;
-        protected OdinMenuTree tree = null;
+        protected OdinMenuTree _menuTree = null;
 
         protected TConfig _configInstance;
         public virtual void Init(TConfig configInstance, OnConfigIdChange onChanged)
         { 
             _configInstance = configInstance;
-            this.onChanged = onChanged;
+            this._onChanged = onChanged;
         }
 
         protected virtual bool Valid
         {
             get
             {
-                if (_configInstance == null || onChanged == null)
+                if (_configInstance == null || _onChanged == null)
                     return false;
                 return true;
             }
@@ -65,17 +65,17 @@ namespace PJR.Config
             if (!Valid)
                 return null;
 
-            tree = new OdinMenuTree();
+            _menuTree = new OdinMenuTree();
             //tree.Config.SelectFirstWhenBuildTree = false;
-            tree.Selection.SelectionChanged += OnItemSelectionChange;
-            tree.Selection.SupportsMultiSelect = true;
-            tree.Config.DrawSearchToolbar = true;
-            tree.Config.SearchFunction = SearchItem;
+            _menuTree.Selection.SelectionChanged += OnItemSelectionChange;
+            _menuTree.Selection.SupportsMultiSelect = false;
+            _menuTree.Config.DrawSearchToolbar = true;
+            _menuTree.Config.SearchFunction = SearchItem;
 
             var configItems = _configInstance.Items;
             if (configItems == null)
-                return tree;
-            tree.DefaultMenuStyle = OdinMenuStyle.TreeViewStyle;
+                return _menuTree;
+            _menuTree.DefaultMenuStyle = OdinMenuStyle.TreeViewStyle;
 
             for (int i = 0; i < configItems.Count; i++)
             {
@@ -86,12 +86,12 @@ namespace PJR.Config
                     continue;
                 }
                 string idStr = $"[{item.ID}]".PadRight(12);
-                tree.Add($"{item.Editor_LabelName}", item);
+                _menuTree.Add($"{item.Editor_LabelName}", item);
             }
 
-            tree.EnumerateTree().AddThumbnailIcons();
+            _menuTree.EnumerateTree().AddThumbnailIcons();
 
-            return tree;
+            return _menuTree;
         }
         private bool SearchItem(OdinMenuItem odinMenuItem)
         {
@@ -105,34 +105,47 @@ namespace PJR.Config
         }
         public bool IsSelected(int configId)
         {
-            return configId == this.configId;
+            return configId == this._configId;
         }
+        public void OnSelectionConfirmed(OdinMenuTreeSelection odinMenuTreeSelection)
+        {
+            Debug.Log("OnSelectionConfirmed");
+            TItem item = (TItem)odinMenuTreeSelection.SelectedValue;
+            if (item == null)
+                return;
+            _configId = item.ID;
+            _onChanged?.Invoke(item);
+            _doClose = true;
+        }
+
         public void OnItemSelectionChange(SelectionChangedType selectionChangedType)
         {
             if (selectionChangedType == SelectionChangedType.ItemAdded)
             {
-                if (tree == null)
+                if (_doClose)
                     return;
-                if (tree.Selection.SelectedValue == null)
+                if (_menuTree == null)
                     return;
-                TItem item = (TItem)tree.Selection.SelectedValue;
-                bool selected = false;
+                if (_menuTree.Selection.SelectedValue == null)
+                    return;
+                TItem item = (TItem)_menuTree.Selection.SelectedValue;
                 if (item == null)
                     return;
-                if (item.ID == configId)
-                    configId = 0;
-                else
-                    configId = item.ID;
-                selected = configId == item.ID;
+                if (_configId == item.ID)
+                {
+                    OnSelectionConfirmed(_menuTree.Selection);
+                    return;
+                }
 
-                onChanged?.Invoke(item);
-                _doClose = true;
+                _configId = item.ID;
             }
+            Debug.Log(selectionChangedType);
         }
+        
         protected virtual void ClearCallBacks()
         {
-            configId = 0;
-            onChanged = null;
+            _configId = 0;
+            _onChanged = null;
         }
 
         protected override void OnDestroy()
@@ -148,23 +161,23 @@ namespace PJR.Config
         where TAsset : OrdinalConfigAsset<TItemAsset>
         where TItemAsset : OrdinalConfigItemAsset
     {
-        protected int configId = 0;
-        protected Action<TItemAsset> onChanged;
+        protected int? _configId = 0;
+        protected Action<TItemAsset> _onChanged;
         protected bool _doClose = false;
-        protected OdinMenuTree tree = null;
+        protected OdinMenuTree _menuTree = null;
 
         protected TConfig _configInstance;
         public virtual void Init(TConfig configInstance, Action<TItemAsset> onChanged)
         {
             _configInstance = configInstance;
-            this.onChanged = onChanged;
+            _onChanged = onChanged;
         }
 
         protected virtual bool Valid
         {
             get
             {
-                if (_configInstance == null || onChanged == null)
+                if (_configInstance == null || _onChanged == null)
                     return false;
                 return true;
             }
@@ -199,28 +212,35 @@ namespace PJR.Config
             if (!Valid)
                 return null;
 
-            tree = new OdinMenuTree();
-            //tree.Config.SelectFirstWhenBuildTree = false;
-            tree.Selection.SelectionChanged += OnItemSelectionChange;
-            tree.Selection.SupportsMultiSelect = true;
-            tree.Config.DrawSearchToolbar = true;
-            tree.Config.SearchFunction = SearchItem;
+            _menuTree = new OdinMenuTree();
+            _menuTree.Config.DrawSearchToolbar = true;
+            _menuTree.Config.ConfirmSelectionOnDoubleClick = true;
+            _menuTree.Config.SearchFunction += SearchItem;
+            
+            _menuTree.Selection.SupportsMultiSelect = false;
+            _menuTree.Selection.SelectionChanged += OnItemSelectionChange;
+            _menuTree.Selection.SelectionConfirmed += OnSelectionConfirmed;
 
             var configItems = _configInstance.ItemAssets;
             if (configItems == null)
-                return tree;
-            tree.DefaultMenuStyle = OdinMenuStyle.TreeViewStyle;
+                return _menuTree;
+            _menuTree.DefaultMenuStyle = OdinMenuStyle.TreeViewStyle; 
 
             for (int i = 0; i < configItems.Count; i++)
             {
                 var item = configItems[i];
+                if (item == null)
+                {
+                    Debug.LogError($"[{_configInstance.ConfigName}]配置文件的[index:{i}]为空!");
+                    continue;
+                }
                 string idStr = $"[{item.ID}]".PadRight(12);
-                tree.Add($"{item.Editor_LabelName}", item);
+                _menuTree.Add($"{item.Editor_LabelName}", item);
             }
 
-            tree.EnumerateTree().AddThumbnailIcons();
+            _menuTree.EnumerateTree().AddThumbnailIcons();
 
-            return tree;
+            return _menuTree;
         }
         private bool SearchItem(OdinMenuItem odinMenuItem)
         {
@@ -234,34 +254,48 @@ namespace PJR.Config
         }
         public bool IsSelected(int configId)
         {
-            return configId == this.configId;
+            return configId == _configId;
         }
+
+        public void OnSelectionConfirmed(OdinMenuTreeSelection odinMenuTreeSelection)
+        {
+            Debug.Log("OnSelectionConfirmed");
+            TItemAsset item = (TItemAsset)odinMenuTreeSelection.SelectedValue;
+            if (item == null)
+                return;
+            _configId = item.ID;
+            _onChanged?.Invoke(item);
+            _doClose = true;
+        }
+
         public void OnItemSelectionChange(SelectionChangedType selectionChangedType)
         {
             if (selectionChangedType == SelectionChangedType.ItemAdded)
             {
-                if (tree == null)
+                if (_doClose)
                     return;
-                if (tree.Selection.SelectedValue == null)
+                if (_menuTree == null)
                     return;
-                TItemAsset item = (TItemAsset)tree.Selection.SelectedValue;
-                bool selected = false;
+                if (_menuTree.Selection.SelectedValue == null)
+                    return;
+                TItemAsset item = (TItemAsset)_menuTree.Selection.SelectedValue;
                 if (item == null)
                     return;
-                if (item.ID == configId)
-                    configId = 0;
-                else
-                    configId = item.ID;
-                selected = configId == item.ID;
+                if (_configId == item.ID)
+                {
+                    OnSelectionConfirmed(_menuTree.Selection);
+                    return;
+                }
 
-                onChanged?.Invoke(item);
-                _doClose = true;
+                _configId = item.ID;
             }
+            Debug.Log(selectionChangedType);
         }
         protected virtual void ClearCallBacks()
         {
-            configId = 0;
-            onChanged = null;
+            _onChanged = null;
+            _configId = null;
+            _doClose = false;
         }
 
         protected override void OnDestroy()

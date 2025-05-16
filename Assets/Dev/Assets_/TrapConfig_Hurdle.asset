@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bbc38ef980d9054a86534dd120d4e65, type: 3}
   m_Name: TrapConfig_Hurdle
   m_EditorClassIdentifier: 
+  isPhysics: 0
   entityPhaseEvents:
   - entityPhase: 3
     events:
     - actionApproach:
         rid: 7174546564607901704
   CanTriggerTimes: 1
-  isPhysics: 0
   references:
     version: 2
     RefIds:

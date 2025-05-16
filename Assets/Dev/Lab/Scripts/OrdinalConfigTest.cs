@@ -11,8 +11,6 @@ public class OrdinalConfigTest : MonoBehaviour
 {
     [AvatarConfigID]
     public int AvatarConfigId;
-    [TestConfigAID]
-    public int TestConfigA;
 
     public string ClassName;
 
@@ -24,8 +22,8 @@ public class OrdinalConfigTest : MonoBehaviour
         // Debug.Log(Assembly.GetExecutingAssembly());
         // Debug.Log("+++++++++++++++++++++++++++++++++");
 
-        var assembly1 = typeof(TestConfigA).Assembly;
-        Debug.Log(assembly1.GetType(GetClassFullName(ClassName)) != null);
+        // var assembly1 = typeof(TestConfigA).Assembly;
+        // Debug.Log(assembly1.GetType(GetClassFullName(ClassName)) != null);
         
         Debug.Log(TryGetLoadedAssemblyByName(GetConfigAssemblyName(), out var assembly));
         Debug.Log(ExistClass(GetClassFullName(ClassName)));

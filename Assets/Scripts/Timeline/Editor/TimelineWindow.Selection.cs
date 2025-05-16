@@ -12,7 +12,7 @@ namespace PJR.Timeline.Editor
             CheckSelectionChange();
         }
 
-        void CheckSelectionChange()
+        public void CheckSelectionChange()
         {
             if (instance?.state == null)
                 return;

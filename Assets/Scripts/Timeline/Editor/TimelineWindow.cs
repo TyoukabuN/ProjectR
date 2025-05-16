@@ -16,14 +16,16 @@ namespace PJR.Timeline.Editor
         public WindowState state => m_State ??= new WindowState();
 
         [MenuItem("PJR/Timeline", false, 1)]
-        public static void ShowWindow()
+        public static TimelineWindow ShowWindow()
         {
-            GetWindow<TimelineWindow>();
+            instance = GetWindow<TimelineWindow>();
             instance.Focus();
+            return instance;
         }
         private void OnEnable()
         {
             instance = this;
+            CheckSelectionChange();
             RegisterEvent(true);
         }
 

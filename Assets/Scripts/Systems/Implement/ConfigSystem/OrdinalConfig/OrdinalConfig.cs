@@ -39,7 +39,7 @@ namespace PJR.Config
             if (!_id2Item.TryGetValue(item.ID, out var temp))
                 _id2Item[item.ID] = item;
             else
-                Debug.LogError($"[{this.GetType().Name}._id2Item] 有重复ID = {item.ID}  [{itemAsset.Name}]  [{temp.Name}]");
+                Debug.LogError($"[{this.GetType().Name}._  id2Item] 有重复ID = {item.ID}  [{itemAsset.Name}]  [{temp.Name}]");
 
             _items.Add(item);
              

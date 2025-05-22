@@ -8,12 +8,12 @@ namespace PJR.Config
         private static AvatarConfig _instance;
         public static AvatarConfig Instance => _instance ??= new AvatarConfig();
 
+#if UNITY_EDITOR
         public override void Editor_OpenItemCreateWindow(Action<AvatarConfigItemAsset> onFinish, string directory = null)
         {
             ItemCreateWindow.OpenWindow();
         }
 
-#if UNITY_EDITOR
         public class ItemCreateWindow : OrdinalConfigItemCreateWindow<AvatarConfig, AvatarConfigAsset, AvatarConfigItemAsset>
         {
             public static void OpenWindow()

@@ -1,6 +1,5 @@
-using JetBrains.Annotations;
+#if UNITY_EDITOR
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor.Drawers;
 using System;
 using Unity.Burst;
 using Unity.Collections;
@@ -9,11 +8,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Jobs;
-using UnityEngine.UIElements;
 using System.Runtime.InteropServices;
-using static JobSystemTest;
-using static UnityEngine.Rendering.PostProcessing.PostProcessResources;
 
 public class JobSystemTest : MonoBehaviour
 {
@@ -397,3 +392,4 @@ public class JobSystemTest : MonoBehaviour
     }
     #endregion
 }
+#endif

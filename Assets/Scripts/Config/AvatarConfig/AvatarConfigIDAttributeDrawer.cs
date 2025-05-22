@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using PJR.Config;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
@@ -109,3 +110,4 @@ public class AvatarConfigIDAttributeDrawer : OdinAttributeDrawer<AvatarConfigIDA
         });
     }
 }
+#endif

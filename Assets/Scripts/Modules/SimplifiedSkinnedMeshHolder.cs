@@ -349,6 +349,7 @@ namespace PJR
         private static Dictionary<int, Mesh> _originalMeshHash2SimplifiedMesh;
         public static Dictionary<int, Mesh> OriginalMeshHash2SimplifiedMesh => _originalMeshHash2SimplifiedMesh ??= new Dictionary<int, Mesh>();
 
+    #if UNITY_EDITOR
         public static bool GetSimplifiedMesh(SkinnedMeshRenderer skinnedMeshRenderer, out Mesh mesh, bool cache = true)
         {
             mesh = null;
@@ -384,6 +385,7 @@ namespace PJR
 
             return true;
         }
+    #endif
         public static ClosestPointInfo FindClosestPointOnMesh(SkinnedMeshRenderer skinnedMeshRenderer, Mesh mesh, Vector3 point, Matrix4x4 meshToWorldMatrix)
         {
             var bones = skinnedMeshRenderer.bones;

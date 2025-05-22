@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using PJR;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -5,12 +6,9 @@ using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine.Profiling;
 using System;
-using static UnityEngine.Rendering.PostProcessing.PostProcessResources;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 using Unity.Jobs;
 using Unity.Collections;
 using Unity.Burst;
-using static CShaderPerformanceTest;
 using Unity.Jobs.LowLevel.Unsafe;
 
 public class CShaderPerformanceTest : MonoBehaviour
@@ -398,4 +396,4 @@ public class CShaderPerformanceTest : MonoBehaviour
     }
     #endregion
 }
-    
+#endif

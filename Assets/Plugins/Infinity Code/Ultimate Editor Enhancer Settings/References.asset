@@ -19,6 +19,8 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: OrdinalConfigTest
+    path: Assets/Dev/Lab/Scenes/OrdinalConfigTest.unity
   - name: UnitaskTest
     path: Assets/Dev/Lab/Scenes/UnitaskTest.unity
   - name: TimelineTest
@@ -55,6 +57,4 @@ MonoBehaviour:
     path: Assets/__LS_Test/Test_JW/AnimationTest.unity
   - name: BuildScene_SplashScreen
     path: Assets/__LS/Resources/DevScene/BuildScene_SplashScreen.unity
-  - name: CreateIconScene
-    path: Assets/__LS_Test/Test_CPX/CreateIconScene.unity
   _notes: []

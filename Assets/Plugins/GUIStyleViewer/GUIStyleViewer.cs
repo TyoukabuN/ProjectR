@@ -7,13 +7,15 @@
 // Shift + 左右キー：GUIStyleの表示数を変更
 // Ctrl + 左右キー：GUIStyleの表示分割数を変更
 // Shift + Tab：Toolbarの切り替え
-
+#if UNITY_EDITOR
 using GUIStyleViewer.DrawStyle;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+
 
 namespace GUIStyleViewer
 {
@@ -440,3 +442,4 @@ namespace GUIStyleViewer.DrawStyle
         }
     }
 }
+#endif

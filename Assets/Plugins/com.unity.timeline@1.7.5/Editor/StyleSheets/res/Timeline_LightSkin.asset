@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7116e04a377b195458798657c617e324, type: 3}
+  m_Name: Timeline_LightSkin
+  m_EditorClassIdentifier: 
+  colorPlayhead: {r: 1, g: 1, b: 1, a: 1}
+  colorSelection: {r: 0.29, g: 0.494, b: 0.878, a: 1}
+  colorEndmarker: {r: 0.368, g: 0.599, b: 1, a: 1}
+  colorGroup: {r: 0.518, g: 0.569, b: 0.576, a: 1}
+  colorGroupTrackBackground: {r: 0.023, g: 0.235, b: 0.258, a: 0.157}
+  colorAnimation: {r: 0.09, g: 0.388, b: 0.627, a: 1}
+  colorAnimationRecorded: {r: 0.084, g: 0.45, b: 0.588, a: 1}
+  colorAudio: {r: 1, g: 0.678, b: 0, a: 1}
+  colorAudioWaveform: {r: 0.333, g: 0.388, b: 0.466, a: 1}
+  colorActivation: {r: 0, g: 0.684, b: 0.148, a: 1}
+  colorDropTarget: {r: 0.667, g: 0.788, b: 0.918, a: 1}
+  colorClipFont: {r: 0, g: 0, b: 0, a: 0.804}
+  colorInvalidClipOverlay: {r: 0.981, g: 0, b: 0, a: 0.502}
+  colorTrackBackground: {r: 0.55, g: 0.55, b: 0.55, a: 0.561}
+  colorTrackHeaderBackground: {r: 0.824, g: 0.824, b: 0.824, a: 1}
+  colorTrackDarken: {r: 0.29, g: 0.29, b: 0.29, a: 0.591}
+  colorTrackBackgroundRecording: {r: 0.422, g: 0, b: 0, a: 0.529}
+  colorInfiniteTrackBackgroundRecording: {r: 0.41, g: 0, b: 0, a: 0.941}
+  colorTrackBackgroundSelected: {r: 0.274, g: 0.466, b: 0.828, a: 0.459}
+  colorTrackFont: {r: 0, g: 0, b: 0, a: 1}
+  colorClipUnion: {r: 0.702, g: 0.741, b: 0.772, a: 0.472}
+  colorTopOutline3: {r: 0.274, g: 0.274, b: 0.274, a: 1}
+  colorDurationLine: {r: 0.467, g: 0.635, b: 0.925, a: 0.697}
+  colorRange: {r: 1, g: 1, b: 1, a: 0.172}
+  colorSequenceBackground: {r: 0.665, g: 0.665, b: 0.665, a: 1}
+  colorTooltipBackground: {r: 0.266, g: 0.266, b: 0.266, a: 1}
+  colorInfiniteClipLine: {r: 0.804, g: 0.804, b: 0.804, a: 1}
+  colorDefaultTrackDrawer: {r: 0.855, g: 0.863, b: 0.871, a: 1}
+  colorDuration: {r: 0.66, g: 0.66, b: 0.66, a: 1}
+  colorRecordingClipOutline: {r: 1, g: 0.083, b: 0.083, a: 0.9}
+  colorAnimEditorBinding: {r: 0.815, g: 0.815, b: 0.815, a: 1}
+  colorTimelineBackground: {r: 0.855, g: 0.855, b: 0.855, a: 1}
+  colorLockTextBG: {r: 0.341, g: 0.341, b: 0.341, a: 0.866}
+  colorInlineCurveVerticalLines: {r: 1, g: 1, b: 1, a: 0.2}
+  colorInlineCurveOutOfRangeOverlay: {r: 0.915, g: 0.915, b: 0.915, a: 0.569}
+  colorInlineCurvesBackground: {r: 0.245, g: 0.245, b: 0.245, a: 0.471}
+  markerDrawerBackgroundColor: {r: 0.517, g: 0.517, b: 0.517, a: 1}
+  markerHeaderDrawerBackgroundColor: {r: 0.824, g: 0.824, b: 0.824, a: 1}
+  colorControl: {r: 0.192, g: 0.693, b: 0.629, a: 1}
+  colorSubSequenceBackground: {r: 0.695, g: 0.695, b: 0.695, a: 1}
+  colorTrackSubSequenceBackground: {r: 0.28, g: 0.405, b: 0.389, a: 0.329}
+  colorTrackSubSequenceBackgroundSelected: {r: 0.073, g: 0.252, b: 0.252, a: 1}
+  colorSubSequenceOverlay: {r: 0.053, g: 0.118, b: 0.118, a: 0.3}
+  colorSubSequenceDurationLine: {r: 0.2, g: 0.723, b: 0.654, a: 1}
+  clipBckg: {r: 0.534, g: 0.551, b: 0.58, a: 1}
+  clipSelectedBckg: {r: 0.69, g: 0.714, b: 0.753, a: 1}
+  clipBorderColor: {r: 0.459, g: 0.476, b: 0.5, a: 1}
+  clipEaseBckgColor: {r: 0.651, g: 0.651, b: 0.651, a: 1}
+  clipBlendIn: {r: 0.533, g: 0.553, b: 0.58, a: 1}
+  clipBlendInSelected: {r: 0.69, g: 0.714, b: 0.753, a: 1}
+  clipBlendOut: {r: 0.533, g: 0.553, b: 0.58, a: 1}
+  clipBlendOutSelected: {r: 0.69, g: 0.714, b: 0.753, a: 1}

@@ -1,6 +1,6 @@
 #if UNITY_EDITOR
 using System;
-using System.Diagnostics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace PJR.Config
@@ -10,9 +10,11 @@ namespace PJR.Config
         private static __OrdinalConfig _instance;
         public static __OrdinalConfig Instance => _instance ??= new __OrdinalConfig();
 
+        public int[] array;
 #if UNITY_EDITOR
         public override void Editor_OpenItemCreateWindow(Action<__OrdinalConfigItemAsset> onFinish, string directory = null)
         {
+            array.Free();
             ItemCreateWindow.OpenWindow();
         }
 

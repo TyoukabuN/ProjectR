@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using PJR.Config;
+using System.Reflection;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
@@ -22,10 +23,27 @@ namespace PJR.Editor
             [LabelText("配置类ItemAsset类名")]
             [DisableIf("@true")] 
             public string ConfigItemAssetName;
-
             // [LabelText("是否同步关联类名")] 
             // [OnValueChanged("OnSyncRelatedClassNameChanged")] 
             // public bool SyncRelatedClassName = true;
+            
+            protected string _error = string.Empty;
+
+            [OnInspectorGUI]
+            protected void OnGUI()
+            {
+                DrawErrorTips();
+            }
+            
+            public void DrawErrorTips()
+            {
+                _error = string.Empty;
+                if (ExistClass(ConfigName))
+                    _error = "已存在相同顺序表类";
+
+                if (!string.IsNullOrEmpty(_error))
+                    EditorGUILayout.HelpBox(_error, MessageType.Error);
+            }
 
             void OnConfigNameChanged() => DoSyncRelatedClassName();
             void OnSyncRelatedClassNameChanged() => DoSyncRelatedClassName();
@@ -37,7 +55,7 @@ namespace PJR.Editor
                 ConfigItemAssetName = $"{ConfigName}ItemAsset";
             }
 
-            private const string ConfigScriptRoot = "Assets/Scripts/0_Infrastructure/ConfigSystem/ConfigImpl";
+            private const string ConfigScriptRoot = "Assets/Scripts/Config";
             
             [Button("Create")]
             public void Confirm()
@@ -45,6 +63,11 @@ namespace PJR.Editor
                 var templates = LoadTemplateFile();
                 if (templates == null)
                     return;
+                if (ExistClass(ConfigName))
+                {
+                    EditorUtility.DisplayDialog("Tips", $"已存在同名类{GetClassFullName(ConfigName)}","ok");
+                    return;
+                }
                 var scriptDirectory = $"{ConfigScriptRoot}/{ConfigName}";
                 if (!Directory.Exists(scriptDirectory))
                     Directory.CreateDirectory(scriptDirectory);
@@ -73,6 +96,36 @@ namespace PJR.Editor
                 }
                 classStr = classStr.Replace(TemplateClassName, className);
                 return classStr;
+            }
+            
+            public string GetClassFullName(string className) => $"{GetConfigAssemblyName()}.Config.{className}";
+            public string GetConfigAssemblyName() => "PJR";
+            public bool ExistClass(string className)
+            {
+                if (TryGetLoadedAssemblyByName(GetConfigAssemblyName(), out var assembly))
+                    return assembly.GetType(GetClassFullName(className)) != null;
+
+                var type = Type.GetType(GetClassFullName(className));
+                return type != null;
+            }
+            bool TryGetLoadedAssemblyByName(string assemblyName,out Assembly res)
+            {
+                res = null;
+                // 获取所有已加载的程序集
+                Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+    
+                // 查找匹配的程序集（不包含版本等信息的基本名称）
+                foreach (Assembly assembly in assemblies)
+                {
+                    string name = assembly.GetName().Name;
+                    if (name.Equals(assemblyName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        res = assembly;
+                        return true;
+                    }
+                }
+    
+                return false;
             }
 
             public const string TemplateTrimStart = "#if UNITY_EDITOR";

@@ -175,9 +175,9 @@ namespace PJR.Timeline.Editor
             GUILayout.EndArea();
             
             //点击下方空白区域后,取消Hotspot
-            if (GUIUtil.EventCheck(trackRect, EventType.MouseDown, false))
+            if (EventUtil.EventCheck(trackRect, EventType.MouseDown, false))
             {
-                state.ClearHotspots();
+                state.ClearHotspot();
                 Repaint();
                 return;
             }

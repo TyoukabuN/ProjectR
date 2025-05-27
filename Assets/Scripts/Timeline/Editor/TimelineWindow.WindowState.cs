@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Policy;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace PJR.Timeline.Editor
 {
@@ -35,14 +37,38 @@ namespace PJR.Timeline.Editor
 
 
 #region 一些hotspot
-            public ClipGUI hotTrack = null;
-            public IClip hotClip = null;
-            public void ClearHotspots()
+            public void ClearHotspot()
             {
-                hotTrack = null;
-                hotClip = null;
+                Hotspot?.OnDeselect();
+                Hotspot = null;
             }
- #endregion
+            
+            public Action<TimelineGUIElement, TimelineGUIElement> OnHotspotChanged;
+            public void SetHotspot(TimelineGUIElement timelineGUIElement)
+            {
+                if (timelineGUIElement != null)
+                    if (timelineGUIElement == _hotspot)
+                        return;
+                OnHotspotChanged?.Invoke(_hotspot,timelineGUIElement);
+                _hotspot = timelineGUIElement;
+            }
+            public void UnSetHotspot(TimelineGUIElement timelineGUIElement)
+            {
+                if (timelineGUIElement == null)
+                    return;
+                if (timelineGUIElement != _hotspot)
+                    return;
+                timelineGUIElement.OnDeselect();
+                _hotspot = null;
+            }
+            private TimelineGUIElement _hotspot;
+            public TimelineGUIElement Hotspot
+            {
+                get => _hotspot;
+                set => SetHotspot(value);
+            }
+
+            #endregion
 
             #region 一些单位转换用的方法
             public int PixelToFrame(float pixel)
@@ -89,6 +115,14 @@ namespace PJR.Timeline.Editor
             {
                 get=>  Sequence != null && SequenceAsset != null;
             }
+        }
+
+        public struct HotSpot
+        {
+            public static HotSpot Empty => new(){};
+            private bool _IsEmpty;
+            public bool IsEmpty => _IsEmpty;
+
         }
     }
 }

@@ -7,7 +7,7 @@ using PJR.Timeline.Pool;
 
 namespace PJR.Timeline
 {
-    public class TrackRunner : IDisposable, IErrorRecorder
+    public class TrackRunner : PoolableObject, IDisposable, IErrorRecorder
     {
         public enum EState
         {
@@ -38,7 +38,7 @@ namespace PJR.Timeline
         public TrackRunner(Sequence sequence, Track track):this(sequence, track, Global.Clip2ClipHandleFunc) { }
         public TrackRunner(Sequence sequence, Track track, Clip2ClipHandleFunc clip2ClipHandle) 
         {
-            Init(sequence, track, clip2ClipHandle);
+            Reset(sequence, track, clip2ClipHandle);
         }
         public virtual void Dispose()
         {
@@ -58,8 +58,8 @@ namespace PJR.Timeline
             _state = EState.Diposed;
         }
 
-        public virtual bool Init(Sequence sequence, Track track) => Init(sequence, track, Global.Clip2ClipHandleFunc);
-        public virtual bool Init(Sequence sequence, Track track, Clip2ClipHandleFunc clip2ClipHandle)
+        public virtual bool Reset(Sequence sequence, Track track) => Reset(sequence, track, Global.Clip2ClipHandleFunc);
+        public virtual bool Reset(Sequence sequence, Track track, Clip2ClipHandleFunc clip2ClipHandle)
         {
             _sequence = sequence;
             _track = track;
@@ -121,7 +121,7 @@ namespace PJR.Timeline
                 if (!IsClipRunnerUpdatable(clipHandle))
                     continue;
 
-                if (clipHandle.Clip.OutOfRange(context.totalTime))
+                if (clipHandle.Clip.OutOfRange(context.totalTime, _sequence.FrameRateType.SPF()))
                 {
                     if (clipHandle.Running)
                         clipHandle.OnEnd();
@@ -175,7 +175,7 @@ namespace PJR.Timeline
 
         #region Pool
         public static TrackRunner Get() => ObjectPool<TrackRunner>.Get();
-        public void Pool() => ObjectPool<TrackRunner>.Release(this);
+        public override void Release() => ObjectPool<TrackRunner>.Release(this);
         #endregion
     }
 }

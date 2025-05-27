@@ -11,7 +11,7 @@ public static class SeqenceAssetOpenHandler
         var asset = AssetDatabase.GetMainAssetTypeAtPath(AssetDatabase.GetAssetPath(instanceID));
         if (asset == typeof(SequenceAsset))
         {
-            TimelineWindow.ShowWindow()?.CheckSelectionChange();
+            TimelineWindow.ShowWindow()?.Selection_CheckSelectionChange();
             return true;
         }
 

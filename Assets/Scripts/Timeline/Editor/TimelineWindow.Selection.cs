@@ -7,36 +7,40 @@ namespace PJR.Timeline.Editor
 {
     public partial class TimelineWindow
     {
-        private void OnSelectionChange()
+        private void Selection_OnSelectionChange()
         {
-            CheckSelectionChange();
+            Selection_CheckSelectionChange();
         }
 
-        public void CheckSelectionChange()
+        public void Selection_CheckSelectionChange()
         {
             if (instance?.state == null)
                 return;
 
             //from ProjectWindow
-            SequenceAsset asset = Selection.activeObject as SequenceAsset;
-            if (asset != null)
+            SequenceAsset sequenceAsset = Selection.activeObject as SequenceAsset;
+            if (sequenceAsset != null)
             {
-                state.editingSequence = new EditingSequare()
-                {
-                    Asset = asset,
-                    Sequence = asset.Sequence,
-                };
-                Repaint();
+                Selection_OnSelectedSequenceAsset(sequenceAsset);
                 return;
             }
 
-            if (asset == null)
+            if (sequenceAsset == null)
             {
-                state.editingSequence = EditingSequare.Empty;
-                Repaint();
-                return;
+                //可能有没选中时候的处理
             }
-            //from Hierarchy
+
+            //需要加个从Hierarchy选中的功能
+        }
+
+        public void Selection_OnSelectedSequenceAsset(SequenceAsset sequenceAsset)
+        {
+            if (sequenceAsset == null)
+                return;
+            if (!state.editingSequence.IsEmpty && state.editingSequence.SequenceAsset == sequenceAsset)
+                return;
+            state.editingSequence = new EditingSequare(sequenceAsset);
+            Repaint();
         }
     }
 }

@@ -24,6 +24,8 @@ namespace PJR.Timeline
         int _counter = 0;
         private AnimancerComponent animancer;
         private AnimancerState animancerState;
+
+        public AnimancerClipRunner() : base(null){}
         public AnimancerClipRunner(AnimancerClip clip) : base(clip) { }
 
         public override void OnStart(UpdateContext context)
@@ -50,6 +52,13 @@ namespace PJR.Timeline
         {
             base.Dispose();
             animancerState.IsPlaying = false;
+            
+        }
+        
+        
+        public override void Release()
+        {
+            Pool.ObjectPool<AnimancerClipRunner>.Release(this);
         }
     }
 }

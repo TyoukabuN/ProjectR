@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 using static PJR.Timeline.Editor.TimelineWindow;
@@ -17,10 +18,13 @@ namespace PJR.Timeline.Editor
 
         protected WindowState windowState => instance.state;
 
+        /// <summary>
+        /// 画Track左边TrackMenu
+        /// </summary>
+        /// <param name="rect"></param>
         public virtual void OnDrawMenu(Rect rect) 
         {
             EditorGUI.DrawRect(rect, GetMenuBgColor());
-
 
             rect.Debug();
 
@@ -29,7 +33,6 @@ namespace PJR.Timeline.Editor
             GUILayout.Label(new GUIContent(Clip.GetDisplayName(), Clip.GetDisplayName()), GUILayout.Width(labelSize.x), GUILayout.ExpandHeight(true));
 
             GUILayout.FlexibleSpace();
-
 
             using (new MidAlignmentScope.Horizontal())
             { 
@@ -48,10 +51,14 @@ namespace PJR.Timeline.Editor
             EventCheck(evtRect);
         }
 
+        /// <summary>
+        /// TrackMenu底部的SplitResizeUpDown
+        /// </summary>
+        /// <param name="rect"></param>
         public virtual void DrawMenuHandle(Rect rect)
         {
             rect.yMin = rect.yMax - Constants.trackMenuDragHandleHeight;
-            rect.Debug();
+            rect.Debug(Color.magenta);
             EditorGUIUtility.AddCursorRect(rect, MouseCursor.SplitResizeUpDown);
 
             var controlId = GUIUtility.GetControlID(FocusType.Passive);
@@ -61,26 +68,34 @@ namespace PJR.Timeline.Editor
                     {
                         if (rect.Contains(Event.current.mousePosition))
                         { 
-                            Event.current.Use();
+                            //还不知道有没有必要Resize
+                            EventType.MouseDown.Use();
                         }
                         break;
                     }
             }
         }
 
+        /// <summary>
+        /// 画Track右边的TrackView里的Clip的入口
+        /// </summary>
+        /// <param name="rect"></param>
         public virtual void OnDrawTrack(Rect rect) 
         {
             EditorGUI.DrawRect(rect, GetTrackBgColor());
 
-            //rect.Debug();
             OnDrawClip(rect);
-
             EventCheck(rect);
         }
-        public virtual void OnDrawClip(Rect rect)
+        
+        /// <summary>
+        /// 画Track右边的TrackView里的Clip
+        /// </summary>
+        /// <param name="rect"></param>
+        protected virtual void OnDrawClip(Rect rect)
         {
-            var start = Clip.startFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
-            var end = Clip.endFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
+            var start = Clip.StartFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
+            var end = Clip.EndFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
             Rect clipRect = Rect.MinMaxRect(start, rect.yMin, end, rect.yMax);
 
             if (clipDragging)
@@ -93,18 +108,39 @@ namespace PJR.Timeline.Editor
                     clipRect.xMax += clipResize_draggedFrameOffset * windowState.currentPixelPerFrame;
             }
 
+            //背景
             EditorGUI.DrawRect(clipRect, Styles.Instance.customSkin.clipBckg);
+            //描边
             clipRect.DrawOutline(1 ,Styles.Instance.customSkin.colorSequenceBackground);
+            //标题
+            DrawLabel(clipRect,GetLabel());
 
-            DrawHandle(clipRect);
-
+            DrawResizeHandle(clipRect);
             ClipRectEvent(clipRect);
         }
+
+        static readonly GUIContent s_TitleContent = new GUIContent();
+        protected virtual void DrawLabel(Rect rect, string title)
+        {
+            float border = 5;
+            rect = rect.Expand(-border, -border, 0, 0);
+            
+            s_TitleContent.text = title;
+            var neededTextWidth = Styles.Instance.fontClip.CalcSize(s_TitleContent).x;
+            if (neededTextWidth > rect.width)
+                s_TitleContent.text = Styles.Elipsify(title, rect.width, neededTextWidth);
+            
+            GUI.Label(rect, s_TitleContent, Styles.Instance.fontClip);
+        }
+
+        public static string DefaultLabel = "Default Label";
+        public virtual string GetLabel() => DefaultLabel;
+
         /// <summary>
         /// 画Resize用的区域
         /// </summary>
         /// <param name="rect"></param>
-        public virtual void DrawHandle(Rect rect)
+        public virtual void DrawResizeHandle(Rect rect)
         {
             var handleWidth = Mathf.Clamp(rect.width * 0.3f, Constants.clipMinHandleWidth, Constants.clipMaxHandleWidth);
 
@@ -152,7 +188,8 @@ namespace PJR.Timeline.Editor
         {
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
 
-            switch (Event.current.GetTypeForControl(controlID))
+            var eventType = Event.current.GetTypeForControl(controlID);
+            switch (eventType)
             {
                 case EventType.MouseDown:
                     {
@@ -163,7 +200,7 @@ namespace PJR.Timeline.Editor
                             clipResie_startPosition = Event.current.mousePosition;
                             clipResize_draggedFrameOffset = 0;
                             clipResie_purpose = resizePurpose;
-                            Event.current.Use();
+                            EventType.MouseDown.Use();
                         }
                         break;
                     }
@@ -185,6 +222,7 @@ namespace PJR.Timeline.Editor
                                 Clip.SetClipStartSafe(Clip.start + rangeOffset);
                             else if (clipResie_purpose == ResizePurpose.Right)
                                 Clip.SetClipEndSafe(Clip.end + rangeOffset);
+                            Clip.TrySave();
 
                             clipResie_startPosition = Vector2.zero;
                             clipResizing = false;
@@ -192,7 +230,7 @@ namespace PJR.Timeline.Editor
                         }
 
                         Repaint();
-                        Event.current.Use();
+                        EventType.MouseUp.Use();
                         break;
                     }
                 case EventType.MouseDrag:
@@ -203,12 +241,12 @@ namespace PJR.Timeline.Editor
                         float pixel = Event.current.mousePosition.x - clipResie_startPosition.x;
                         
                         if(clipResie_purpose == ResizePurpose.Left)
-                            clipResize_draggedFrameOffset = Clip.ClampClipStartChange_Frame(Clip.startFrame + windowState.PixelToFrame(pixel)) - Clip.startFrame;
+                            clipResize_draggedFrameOffset = Clip.ClampClipStartChange_Frame(Clip.StartFrame + windowState.PixelToFrame(pixel)) - Clip.StartFrame;
                         if (clipResie_purpose == ResizePurpose.Right)
-                            clipResize_draggedFrameOffset = Clip.ClampClipEndChange_Frame(Clip.endFrame + windowState.PixelToFrame(pixel)) - Clip.endFrame;
+                            clipResize_draggedFrameOffset = Clip.ClampClipEndChange_Frame(Clip.EndFrame + windowState.PixelToFrame(pixel)) - Clip.EndFrame;
 
                         Repaint();
-                        Event.current.Use();
+                        EventType.MouseDrag.Use();
                         break;
                     }
             }
@@ -236,7 +274,7 @@ namespace PJR.Timeline.Editor
                             clipDrag_startPosition = Event.current.mousePosition;
                             clipDrag_draggedPixelOffset = 0;
                             clipDrag_draggedPixelOffsetClamped = 0;
-                            Event.current.Use();
+                            EventType.MouseDown.Use();
                         }
                         break;
                     }
@@ -261,7 +299,7 @@ namespace PJR.Timeline.Editor
                             clipDragging = false;
                         }
                         Repaint();
-                        Event.current.Use();
+                        EventType.MouseUp.Use();
                         break;
                     }
                 case EventType.MouseDrag:
@@ -281,7 +319,7 @@ namespace PJR.Timeline.Editor
 
 
                         Repaint();
-                        Event.current.Use();
+                        EventType.MouseDrag.Use();
                         break;
                     }
             }
@@ -307,13 +345,13 @@ namespace PJR.Timeline.Editor
             if (windowState.hotTrack == this)
                 return;
             windowState.hotTrack = this;
-            Event.current.Use();
+            EventType.MouseDown.Use();
             Repaint();
         }
         public virtual void OnContextClick(Rect rect)
         {
             DisplayRightClickMenu(rect);
-            Event.current.Use();
+            EventType.MouseDown.Use();
         }
         public virtual void OnClipClick(Rect rect)
         {
@@ -321,7 +359,7 @@ namespace PJR.Timeline.Editor
                 return;
             windowState.hotClip = Clip;
             Debug.Log("Clip Clicked");
-            Event.current.Use();
+            EventType.MouseDown.Use();
         }
 
         /// <summary>
@@ -358,11 +396,9 @@ namespace PJR.Timeline.Editor
         public DefaultClipGUI(IClip clip) { 
             Clip = clip;
         }
-
         public override void OnDrawMenu(Rect rect)
         {
             base.OnDrawMenu(rect);
-
         }
     }
 }

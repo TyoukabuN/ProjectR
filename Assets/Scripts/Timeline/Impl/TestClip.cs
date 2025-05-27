@@ -24,6 +24,7 @@ namespace PJR
         private AnimancerComponent animancer;
         private AnimancerState animancerState;
 
+        public TestClipRunner():base(null){}
         public TestClipRunner(TestClip clip) : base(clip) { }
 
         public override void OnStart(UpdateContext context)
@@ -63,5 +64,19 @@ namespace PJR
             base.Dispose();
             animancerState.IsPlaying = false;
         }
+
+
+        #region Pool
+        public static TestClipRunner Get(TestClip clip)
+        {
+            var runner = Timeline.Pool.ObjectPool<TestClipRunner>.Get();
+            runner?.Reset(clip);
+            return runner;
+        }
+        public override void Release()
+        {
+            Timeline.Pool.ObjectPool<TestClipRunner>.Release(this);
+        }
+        #endregion
     }
 }

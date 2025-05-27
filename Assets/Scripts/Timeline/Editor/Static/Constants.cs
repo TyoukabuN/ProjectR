@@ -22,7 +22,9 @@ namespace PJR.Timeline.Editor
         public const float timelineAreaYPosition = 19.0f;
         public const float timelineRulerHeight = 21.0f;
         public const float timelineRulerPreSpace = 5.0f;
-        public const float clipStartPositionY = timelineAreaYPosition + timelineRulerHeight + 3;
+        public const float clipStartOffsetY = 3;
+        public const float clipStartPositionY_Offseted = timelineAreaYPosition + timelineRulerHeight + clipStartOffsetY;
+        public const float clipStartPositionY = timelineAreaYPosition + timelineRulerHeight;
 
         public const float trackHeight = 30f;
         public const float trackMenuLeftSpace = 18f;

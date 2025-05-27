@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using static PJR.Timeline.Editor.TimelineWindow;
 
@@ -8,6 +9,15 @@ namespace PJR.Timeline.Editor
     public static class ClipEditorHelper
     {
         static WindowState windowState => TimelineWindow.instance.state;
+
+        public static void TrySave(this IClip clip)
+        {
+            var sequenceAsset = windowState.editingSequence.SequenceAsset;
+            if (sequenceAsset == null)
+                return;
+            EditorUtility.SetDirty(sequenceAsset);
+        }
+
         public static void SetClipRangeSafe(this IClip clip, double start, double end)
         {
             if (start < 0)

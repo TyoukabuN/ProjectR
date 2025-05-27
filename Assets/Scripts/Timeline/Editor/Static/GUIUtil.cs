@@ -86,7 +86,7 @@ namespace PJR.Timeline.Editor
             if (Event.current.GetTypeForControl(controlID) == eventType && rect.Contains(Event.current.mousePosition))
             { 
                 if(useEvent) 
-                    Event.current.Use();
+                    eventType.Use();
                 return true;
             }
             return false;
@@ -122,12 +122,24 @@ namespace PJR.Timeline.Editor
                         if (GUIUtility.hotControl != controlID)
                             return;
                         OnMouseDrag.Invoke(position);
-                        Event.current.Use();
+                        EventType.MouseDrag.Use();
                         break;
                     }
             }
         }
-        
+
+        public static void UseCurrentEvent()
+        {
+            Event.current.Use();
+        }
+        public static void Use(this EventType eventType)
+        {
+            //走通用的use,不然后面use多起来了,都不知道哪里use了
+            //这里可以加个log
+            //UnityEngine.Debug.Log($"[Event Using] {eventType}");
+            Event.current.Use();
+        }
+
         public static void CheckWheelEvent(Rect rect, Action<Event> callback) => EventCheck(rect, EventType.ScrollWheel, callback);
 
         public static Rect ToOrigin(this Rect rect)

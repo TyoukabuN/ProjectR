@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using static UnityEditor.EditorGUI;
-using Styles = PJR.Timeline.Editor.Styles;
-using PJR.Timeline;
 
 namespace PJR.Timeline.Editor
 {
@@ -25,7 +22,7 @@ namespace PJR.Timeline.Editor
         private void OnEnable()
         {
             instance = this;
-            CheckSelectionChange();
+            Selection_CheckSelectionChange();
             RegisterEvent(true);
         }
 
@@ -39,9 +36,11 @@ namespace PJR.Timeline.Editor
         }
         void OnSelectionChanged()
         {
-            CheckSelectionChange();
+            Selection_CheckSelectionChange();
         }
-        public void OnDestroy()
+        public void OnDisable() => Clear();
+        public void OnDestroy() => Clear();
+        public void Clear()
         {
             RegisterEvent(false);
         }
@@ -49,21 +48,33 @@ namespace PJR.Timeline.Editor
         void OnGUI()
         {
             Styles.ReloadStylesIfNeeded();
+            
+            if (CheckRepaintRequired())
+                return;
 
-            //GUILayoutLab();
-
-            if (Event.current.type == EventType.Repaint)
-                if (state.requireRepaint)
-                { 
-                    state.requireRepaint = false;
-                    Repaint();
-                    return;
-                }
+            if (!state.editingSequence.IsEmpty && !state.editingSequence.Valid)
+            {
+                state.editingSequence = EditingSequare.Empty;
+                return;
+            }
 
             Draw_Headers();
             TrackViewsGUI();
         }
 
+        /// <summary>
+        /// 检测是不是要重新绘制
+        /// </summary>
+        bool CheckRepaintRequired()
+        {
+            if (Event.current.type != EventType.Repaint)
+                return false;
+            if (!state.requireRepaint)
+                return false;
+            state.requireRepaint = false;
+            Repaint();
+            return true;
+        }
         void GUILayoutLab()
         {
             var r1 = new Rect(0, 0, 500, 200);
@@ -143,13 +154,11 @@ namespace PJR.Timeline.Editor
             trackRect.Debug();
             EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
 
-            if (GUIUtil.EventCheck(trackRect, EventType.MouseDown))
-            {
-                state.ClearHotspots();
-                Repaint();
-                return;
-            }
-
+            Draw_TimelineRuler_TrackView();
+                
+            //分割TrackMenu和View边界部分
+            DrawSpliterAboutTrackMenuAndView();
+            
             if (state.NonEditingSequence())
             {
                 Draw_NonEditingSequenceTrackView();
@@ -158,18 +167,29 @@ namespace PJR.Timeline.Editor
 
             GUILayout.BeginArea(trackRect);
             var localTrackRect = trackRect.ToOrigin();
-
+            
             using (new GUIViewportScope(localTrackRect))
             {
                 state.TrackGUI.OnGUI(localTrackRect);
-                //var position = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button, GUILayout.MinWidth(100));
-                //sliderValue = CustomSlider(position, sliderValue);
             }
-
             GUILayout.EndArea();
+            
+            //点击下方空白区域后,取消Hotspot
+            if (GUIUtil.EventCheck(trackRect, EventType.MouseDown, false))
+            {
+                state.ClearHotspots();
+                Repaint();
+                return;
+            }
+        }
 
-            //segment-line trackMenu-trackClip
-            GUIUtil.DebugRect(headerSizeHandleRect, Color.green, false, true);
+        /// <summary>
+        /// 分割TrackMenu和View边界部分
+        /// </summary>
+        void DrawSpliterAboutTrackMenuAndView()
+        {
+            if(state.debugging)
+                GUIUtil.DebugRect(headerSizeHandleRect, Color.cyan, false, true);
 
             EditorGUIUtility.AddCursorRect(headerSizeHandleRect, MouseCursor.SplitResizeLeftRight);
             headerSizeHandleRect.DragEventCheck((rect) =>
@@ -284,16 +304,25 @@ namespace PJR.Timeline.Editor
                 return;
             var tracks = state.editingSequence.Sequence.Tracks;
 
-            //var track = ScriptableObject.CreateInstance<Track>();
-            var track = new Track();
-            track.clips = new IClip[] {
-                Activator.CreateInstance(type)as IClip,
+            var clip = Activator.CreateInstance(type) as IClip;
+            if (clip == null)
+            {
+                Debug.Log($"创建[类型:{type.Name}]失败");
+                return;
+            }
+
+            clip.FrameRateType = state.editingSequence.Sequence.FrameRateType;
+            clip.StartFrame = 0;
+            clip.EndFrame = 5;
+            
+            var track = new Track{
+                clips = new[]{clip},
             };
 
             ArrayUtility.Add(ref tracks, track);
             state.editingSequence.Sequence.Tracks = tracks;
-            if(state.editingSequence.Asset != null)
-                EditorUtility.SetDirty(state.editingSequence.Asset);
+            if(state.editingSequence.SequenceAsset != null)
+                EditorUtility.SetDirty(state.editingSequence.SequenceAsset);
             state.requireRepaint = true;
         }
 
@@ -315,7 +344,7 @@ namespace PJR.Timeline.Editor
             tickStep = Mathf.Max(tickStep, 1);
 
             timelineRulerRect.Debug();
-
+            //新开一个坐标系
             GUILayout.BeginArea(timelineRulerRect);
 
             if (timelineRulerRect.ToOrigin().Contains(Event.current.mousePosition))
@@ -333,15 +362,112 @@ namespace PJR.Timeline.Editor
             {
                 if (frameIndex % tickStep == 0)
                 {
-                    Handles.color = Color.white;
-                    Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
+                    using (new Handles.DrawingScope(Color.white))
+                    {
+                        Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
 
-                    GUI.Label(new Rect(i, -3f, 40f, 20f), frameIndex.ToString(), Styles.Instance.timeAreaStyles.timelineTick);
+                        GUI.Label(new Rect(i + 1f, -3f, 40f, 20f), frameIndex.ToString(),
+                            Styles.Instance.timeAreaStyles.timelineTick);
+                    }
                 }
                 else
                 {
-                    Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
+                    using (new Handles.DrawingScope(Color.white * 0.733f))
+                        Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
                 }
+            }
+            Handles.EndGUI();
+            GUILayout.EndArea();
+
+
+            //TrackView下的刻度
+            var rulerInTrackView = new Rect(
+                state.trackMenuAreaWidth, 
+                Constants.clipStartPositionY, 
+                position.width - state.trackMenuAreaWidth, 
+                position.height - Constants.clipStartPositionY);
+            
+            //新开一个坐标系
+            GUILayout.BeginArea(rulerInTrackView);
+            Handles.BeginGUI();
+            
+            rect = rulerInTrackView;
+            frameIndex = 0;
+            longTickStartY = 0f;
+            shortTickStartY = 0f;
+
+            for (int i = 0; i < rect.width; i += state.currentPixelPerFrame, frameIndex++)
+            {
+                if (frameIndex % tickStep == 0)
+                {
+                    using (new Handles.DrawingScope(Color.white))
+                    {
+                        Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
+
+                        GUI.Label(new Rect(i + 1f, -3f, 40f, 20f), frameIndex.ToString(),
+                            Styles.Instance.timeAreaStyles.timelineTick);
+                    }
+                }
+                else
+                {
+                    using (new Handles.DrawingScope(Color.white * 0.733f))
+                        Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
+                }
+            }
+            Handles.EndGUI();
+            GUILayout.EndArea();
+        }
+
+        void Draw_TimelineRuler_TrackView()
+        {
+            if (state.NonEditingSequence())
+                return;
+            
+            //TrackView下的刻度
+            var rect = new Rect(
+                state.trackMenuAreaWidth, 
+                Constants.clipStartPositionY, 
+                position.width - state.trackMenuAreaWidth, 
+                position.height - Constants.clipStartPositionY);
+
+            DrawRect(rect, Styles.Instance.customSkin.colorSubSequenceBackground);
+
+            int tickStep = Constants.pixelPerFrame + 1 - (state.currentPixelPerFrame / Constants.pixelPerFrame);
+            tickStep /= 2;
+            tickStep = Mathf.Max(tickStep, 1);
+
+            rect.Debug();
+            //新开一个坐标系
+            GUILayout.BeginArea(rect);
+            //debug用的local坐标log
+            // if (rect.ToOrigin().Contains(Event.current.mousePosition))
+            //     Debug.Log(Event.current.mousePosition);
+            
+            Handles.BeginGUI();
+            int frameIndex = 0;
+            float longTickStartY = 0f;
+            float shortTickStartY = 0f;
+
+            var color = Color.white * 0.533f;
+
+            for (int i = 0; i < rect.width; i += state.currentPixelPerFrame, frameIndex++)
+            {
+                if (frameIndex % tickStep == 0)
+                {
+                    using (new Handles.DrawingScope(color))
+                    {
+                        Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
+                        // 可能后面还会用到标题
+                        // GUI.Label(new Rect(i + 1f, -3f, 40f, 20f), frameIndex.ToString(),
+                        //     Styles.Instance.timeAreaStyles.timelineTick);
+                    }
+                }
+                //TrackView可能不需要画短的
+                // else
+                // {
+                //     using (new Handles.DrawingScope(color))
+                //         Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
+                // }
             }
             Handles.EndGUI();
             GUILayout.EndArea();
@@ -351,9 +477,7 @@ namespace PJR.Timeline.Editor
 
         public void Draw_MenuTrackBoundary()
         { 
-
         }
-
         public static float CustomSlider(Rect position, float value)
         {
             int controlID = GUIUtility.GetControlID(FocusType.Passive);

@@ -11,7 +11,7 @@ namespace PJR.Timeline.Editor
         public float headerHeight
         {
             get {
-                return Constants.clipStartPositionY;
+                return Constants.clipStartPositionY_Offseted;
             }
         }
         public Rect controlBarRect
@@ -23,7 +23,7 @@ namespace PJR.Timeline.Editor
         public Rect headerRect
         {
             //get { return new Rect(0.0f, Constants.clipStartPositionY, Constants.defaultHeaderWidth, position.height - Constants.timelineAreaYPosition); }
-            get { return new Rect(0.0f, Constants.clipStartPositionY, state.trackMenuAreaWidth, position.height - Constants.timelineAreaYPosition); }
+            get { return new Rect(0.0f, Constants.clipStartPositionY_Offseted, state.trackMenuAreaWidth, position.height - Constants.timelineAreaYPosition); }
         }
         public Rect timelineRulerRect
         {

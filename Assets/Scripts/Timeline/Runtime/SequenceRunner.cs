@@ -6,7 +6,7 @@ using PJR.Timeline.Pool;
 
 namespace PJR.Timeline
 {
-    public class SequenceRunner : IDisposable
+    public class SequenceRunner :PoolableObject, IDisposable
     {
         public enum EState
         {
@@ -38,10 +38,10 @@ namespace PJR.Timeline
         }
         public SequenceRunner(GameObject gameObject, Sequence sequence)
         {
-            Init(gameObject, sequence);
+            Reset(gameObject, sequence);
         }
 
-        public void Init(GameObject gameObject, Sequence sequence)
+        public void Reset(GameObject gameObject, Sequence sequence)
         {
             _gameObject = gameObject;
             _sequence = sequence;
@@ -64,10 +64,10 @@ namespace PJR.Timeline
                 if (!track.IsValid())
                     continue;
                 var trackRunner = TrackRunner.Get();
-                trackRunner.Init(_sequence, track);
+                trackRunner.Reset(_sequence, track);
                 if (trackRunner.Invalid)
                 {
-                    trackRunner.Pool();
+                    trackRunner.Release();
                     continue;
                 }
 
@@ -212,7 +212,7 @@ namespace PJR.Timeline
 
         #region Pool
         public static SequenceRunner Get() => ObjectPool<SequenceRunner>.Get();
-        public void Pool() => ObjectPool<SequenceRunner>.Release(this);
+        public override void Release() => ObjectPool<SequenceRunner>.Release(this);
         #endregion
     }
 

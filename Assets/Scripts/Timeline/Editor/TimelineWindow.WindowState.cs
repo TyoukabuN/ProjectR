@@ -69,12 +69,26 @@ namespace PJR.Timeline.Editor
             #endregion
 
         }
+
         public struct EditingSequare
         {
-            public static EditingSequare Empty = new EditingSequare();
-
+            public static EditingSequare Empty = new() { _isEmpty = true };
+            private bool _isEmpty;
+            public bool IsEmpty => _isEmpty;
             public Sequence Sequence;
-            public SequenceAsset Asset;
+            public SequenceAsset SequenceAsset;
+
+            public EditingSequare(SequenceAsset sequenceAsset)
+            {
+                SequenceAsset = sequenceAsset;
+                Sequence = sequenceAsset.Sequence;
+                _isEmpty = false;
+            }
+
+            public bool Valid
+            {
+                get=>  Sequence != null && SequenceAsset != null;
+            }
         }
     }
 }

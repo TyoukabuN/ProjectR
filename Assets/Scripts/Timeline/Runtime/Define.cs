@@ -1,6 +1,7 @@
 using NPOI.POIFS.FileSystem;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace PJR.Timeline
@@ -9,10 +10,43 @@ namespace PJR.Timeline
     {
         public enum EFrameRate
         {
-            Film, //24 fps
+            [LabelText("游戏(60fps)")]
+            Game = 0, //60 fps 
+            [LabelText("高清(30fps)")]
             HD, //30 fps
-            Game, //60 fps 
+            [LabelText("电影(24fps)")]
+            Film, //24 fps
         }
+        public static double SPF(this EFrameRate frameRateType)
+        {
+            switch (frameRateType)
+            {
+                case EFrameRate.Film:
+                    return SPF_Film;
+                case EFrameRate.HD:
+                    return SPF_HD;
+                case EFrameRate.Game:
+                    return SPF_Gane;
+                default:
+                    return SPF_Default;
+            }        
+        }
+        
+        public static double FPS(this EFrameRate frameRateType)
+        {
+            switch (frameRateType)
+            {
+                case EFrameRate.Film:
+                    return FPS_Film;
+                case EFrameRate.HD:
+                    return FPS_HD;
+                case EFrameRate.Game:
+                    return FPS_Gane;
+                default:
+                    return FPS_Default;
+            }        
+        }
+
 
         public const double SPF_Film = 0.04166667f;
         public const double SPF_HD = 0.03333334f;

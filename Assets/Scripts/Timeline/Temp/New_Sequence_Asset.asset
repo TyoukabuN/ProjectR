@@ -13,49 +13,45 @@ MonoBehaviour:
   m_Name: New_Sequence_Asset
   m_EditorClassIdentifier: 
   Sequence:
-    rid: 4443409521668522011
+    rid: 928521673803563017
   references:
     version: 2
     RefIds:
-    - rid: 4443409521668522011
+    - rid: 928521673803563017
       type: {class: Sequence, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
       data:
         frameRateType: 0
         tracks:
-        - rid: 4443409521668522015
-        - rid: 4443409521668522017
-        - rid: 4443409521668522019
+        - rid: 928521673803563018
+        - rid: 928521673803563020
         runtimeInstance: 0
-    - rid: 4443409521668522015
+    - rid: 928521673803563018
       type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
       data:
         clips:
-        - rid: 4443409521668522016
-    - rid: 4443409521668522016
+        - rid: 928521673803563019
+    - rid: 928521673803563019
       type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
       data:
+        _frameRateType: 0
         clipName: EmptyName
-        ClipType: 0
+        _start: 0.3833333333333334
+        _end: 0.6500000136593979
+        _startFrame: 23
+        _endFrame: 39
         animationClip: {fileID: 0}
-    - rid: 4443409521668522017
+    - rid: 928521673803563020
       type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
       data:
         clips:
-        - rid: 4443409521668522018
-    - rid: 4443409521668522018
+        - rid: 928521673803563021
+    - rid: 928521673803563021
       type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
       data:
+        _frameRateType: 0
         clipName: EmptyName
-        ClipType: 0
-        animationClip: {fileID: 0}
-    - rid: 4443409521668522019
-      type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
-      data:
-        clips:
-        - rid: 4443409521668522020
-    - rid: 4443409521668522020
-      type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
-      data:
-        clipName: EmptyName
-        ClipType: 0
+        _start: 0.13333333333333333
+        _end: 0.38333334699273125
+        _startFrame: 8
+        _endFrame: 23
         animationClip: {fileID: 0}

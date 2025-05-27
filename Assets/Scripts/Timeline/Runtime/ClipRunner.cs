@@ -1,10 +1,11 @@
 using System;
+using PJR.Timeline.Pool;
 using UnityEngine;
 using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public abstract class ClipRunner : IDisposable
+    public abstract class ClipRunner : PoolableObject , IDisposable
     {
         public enum EState
         {
@@ -43,9 +44,10 @@ namespace PJR.Timeline
     public abstract class ClipRunner<TClip> : ClipRunner where TClip : Clip
     {
         public override Clip Clip => clip;
+        protected TClip _clip;
         public TClip clip => _clip;
-        public TClip _clip;
-        public ClipRunner(TClip clip)
+        public ClipRunner(TClip clip)=>Reset(clip);
+        public void Reset(TClip clip)
         {
             if (clip == null || clip.GetType() != ClipType)
             {
@@ -55,6 +57,7 @@ namespace PJR.Timeline
             }
             _clip = clip;
         }
+
         public override void Dispose()
         {
             base.Dispose();

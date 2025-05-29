@@ -286,10 +286,6 @@ namespace PJR.Timeline.Editor
             }
         }
 
-        public class TestClip : Clip
-        { 
-        }
-
         void Draw_AddTrackButton()
         {
             if (EditorGUILayout.DropdownButton(Styles.newContent, FocusType.Passive, EditorStyles.toolbarPopup))
@@ -349,7 +345,7 @@ namespace PJR.Timeline.Editor
 
             if (timelineRulerRect.ToOrigin().Contains(Event.current.mousePosition))
             { 
-                Debug.Log(Event.current.mousePosition);
+                //Debug.Log(Event.current.mousePosition);
             }
             Handles.BeginGUI();
             var rect = timelineRulerRect;
@@ -506,7 +502,7 @@ namespace PJR.Timeline.Editor
                 case EventType.MouseDown:
                     {
                         if (position.Contains(Event.current.mousePosition) && Event.current.button == 0)
-                            GUIUtility.hotControl = controlID;
+                            controlID.AsHotControl();
                         break;
                     }
                 case EventType.MouseDrag:

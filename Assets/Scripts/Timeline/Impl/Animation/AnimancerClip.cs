@@ -1,5 +1,6 @@
 using Animancer;
 using System;
+using PJR.Timeline.Editor;
 using UnityEngine;
 using static PJR.Timeline.Define;
 
@@ -7,21 +8,34 @@ namespace PJR.Timeline
 {
     [Serializable]
     [TrackCreateMenuItem(nameof(AnimancerClip))]
+    [BindingTrackDrawer(typeof(TrackDrawer))]
     public class AnimancerClip : Clip
     {
         public AnimationClip animationClip;
-
-#if UNITY_EDITOR
-        public static void Create()
+        public override string GetClipName() => "播放动画";
+        public override string GetClipInfo()
         {
+            if (animationClip == null)
+                return "[播放动画] null";
+            return $"[播放动画] {animationClip?.name ?? string.Empty}";
         }
-#endif
+        public override ClipRunner GetRunner() => Pool.ObjectPool<AnimancerClipRunner>.Get();
+
+    #region 例子用
+        public class TrackDrawer : TrackDrawer<AnimancerClip>
+        {
+            public TrackDrawer(AnimancerClip clip) : base(clip){}
+        }
+        public class ClipDrawer : ClipDrawer<AnimancerClip>
+        {
+            public ClipDrawer(AnimancerClip clip) : base(clip){}
+        }
+    #endregion
     }
 
     public class AnimancerClipRunner : ClipRunner<AnimancerClip>
     {
         public override Type ClipType => typeof(AnimancerClip);
-        int _counter = 0;
         private AnimancerComponent animancer;
         private AnimancerState animancerState;
 
@@ -52,10 +66,7 @@ namespace PJR.Timeline
         {
             base.Dispose();
             animancerState.IsPlaying = false;
-            
         }
-        
-        
         public override void Release()
         {
             Pool.ObjectPool<AnimancerClipRunner>.Release(this);

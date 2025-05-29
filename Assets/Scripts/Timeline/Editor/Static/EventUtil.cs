@@ -54,7 +54,7 @@ namespace PJR.Timeline.Editor
                 case EventType.MouseDown:
                 {
                     if (position.Contains(msPos) && Event.current.button == 0)
-                        GUIUtility.hotControl = controlID;
+                        controlID.AsHotControl();
                     break;
                 }
                 case EventType.MouseUp:
@@ -85,6 +85,14 @@ namespace PJR.Timeline.Editor
             //获知你直接在这里断点,来看看哪次use覆盖了
             //UnityEngine.Debug.Log($"[Event Using] {eventType}");
             Event.current.Use();
+        }
+        public static void AsHotControl(this int controlID)
+        {
+            //走通用的GUIUtility.hotControl赋值
+            //这里可以加个log,
+            //获知你直接在这里断点,看哪次赋值覆盖了
+            //UnityEngine.Debug.Log($"[Event Using] {eventType}");
+            GUIUtility.hotControl = controlID;
         }
         
         public static class MouseEvent

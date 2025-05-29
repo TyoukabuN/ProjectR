@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -91,25 +92,38 @@ namespace PJR.Timeline.Editor
         }
 
 
-        private Dictionary<IClip, ClipGUI> clip2clipGUI;
-        public ClipGUI GetClipGUI(IClip clip)
+        private Dictionary<IClip, TrackDrawer> clip2clipGUI;
+        public TrackDrawer GetClipGUI(IClip clip)
         {
-            ClipGUI guiObject = null;
+            TrackDrawer trackDrawerObj = null;
             if (clip == null)
-                return guiObject;
+                return trackDrawerObj;
 
             if (clip2clipGUI == null)
-                clip2clipGUI = new Dictionary<IClip, ClipGUI>();
+                clip2clipGUI = new Dictionary<IClip, TrackDrawer>();
 
-
-            #region test
-            if (!clip2clipGUI.TryGetValue(clip, out guiObject))
+            if (!clip2clipGUI.TryGetValue(clip, out trackDrawerObj))
             {
-                clip2clipGUI[clip] = new DefaultClipGUI(clip);
-            }
+                if(TryGetBindingClipGUI(clip, out var bindingClipGUI))
+                    trackDrawerObj = bindingClipGUI;
+                else
+                    trackDrawerObj = new DefaultTrackDrawer(clip);
 
-            return guiObject;
-            #endregion
+                clip2clipGUI[clip] = trackDrawerObj;
+            }
+            return trackDrawerObj;
+        }
+
+        public bool TryGetBindingClipGUI(IClip clip, out TrackDrawer bindingTrackDrawer)
+        {
+            bindingTrackDrawer = null;
+            var bindingClipGUIAttribute = Attribute.GetCustomAttribute(clip.GetType(), typeof(BindingTrackDrawerAttribute)) as BindingTrackDrawerAttribute;
+            if (bindingClipGUIAttribute == null)
+                return false;
+            if (!bindingClipGUIAttribute.Type.InheritsFrom(typeof(TrackDrawer<>)))
+                return false;
+            bindingTrackDrawer = Activator.CreateInstance(bindingClipGUIAttribute.Type, clip) as TrackDrawer;
+            return true;
         }
     }
 }

@@ -4,23 +4,31 @@ using UnityEngine;
 
 namespace PJR.Timeline.Editor
 {
-    public partial class ClipDrawer : TimelineGUIElement
+    public class DefaultClipDrawer : ClipDrawer<IClip>
     {
-        public IClip Clip;
-        public ClipDrawer(IClip clip) => Reset(clip);
-        public void Reset(IClip clip)
+        public DefaultClipDrawer(IClip clip):base(clip){}
+    }
+    public abstract class ClipDrawer<TClip> : ClipDrawer where TClip : IClip
+    {
+        protected TClip _clip;
+        public override IClip IClip => _clip;
+        public TClip Clip => _clip;
+        public ClipDrawer(TClip clip)
         {
-            Clip = clip;
+            _clip = clip;
         }
-
+    }
+    public abstract partial class ClipDrawer : TimelineGUIElement
+    {
+        public abstract IClip IClip { get; }
         /// <summary>
         /// 画Track右边的TrackView里的Clip
         /// </summary>
         /// <param name="rect"></param>
         public virtual void DrawClip(Rect rect)
         {
-            var start = Clip.StartFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
-            var end = Clip.EndFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
+            var start = IClip.StartFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
+            var end = IClip.EndFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
             Rect clipRect = Rect.MinMaxRect(start, rect.yMin, end, rect.yMax);
 
             if (clipDragging)
@@ -37,9 +45,9 @@ namespace PJR.Timeline.Editor
             EditorGUI.DrawRect(clipRect, GetClipBgColor(IsSelect));
             //描边
             clipRect.DrawOutline(1 ,GetClipBorderColor(IsSelect));
-            //标题
-            DrawLabel(clipRect,GetLabel());
-
+            //描述(具体作用)
+            DrawLabel(clipRect,IClip.GetClipInfo());
+            
             DrawResizeHandle(clipRect);
             ClipRectEvent(clipRect);
         }
@@ -57,9 +65,6 @@ namespace PJR.Timeline.Editor
             
             GUI.Label(rect, s_TitleContent, Styles.Instance.fontClip);
         }
-
-        public static string DefaultLabel = "Default Label";
-        public virtual string GetLabel() => DefaultLabel;
 
         /// <summary>
         /// 画Resize用的区域
@@ -107,7 +112,7 @@ namespace PJR.Timeline.Editor
                     {
                         if (position.Contains(Event.current.mousePosition) && Event.current.button == 0)
                         {
-                            GUIUtility.hotControl = controlID;
+                            controlID.AsHotControl();
                             Select();
                             clipResie_startPosition = Event.current.mousePosition;
                             clipResize_draggedFrameOffset = 0;
@@ -131,10 +136,10 @@ namespace PJR.Timeline.Editor
                         {
                             double rangeOffset = clipResize_draggedFrameOffset / windowState.CurrentFrameRate;
                             if (clipResie_purpose == ResizePurpose.Left)
-                                Clip.SetClipStartSafe(Clip.start + rangeOffset);
+                                IClip.SetClipStartSafe(IClip.start + rangeOffset);
                             else if (clipResie_purpose == ResizePurpose.Right)
-                                Clip.SetClipEndSafe(Clip.end + rangeOffset);
-                            Clip.TrySave();
+                                IClip.SetClipEndSafe(IClip.end + rangeOffset);
+                            IClip.TrySave();
 
                             clipResie_startPosition = Vector2.zero;
                             clipResizing = false;
@@ -153,9 +158,9 @@ namespace PJR.Timeline.Editor
                         float pixel = Event.current.mousePosition.x - clipResie_startPosition.x;
                         
                         if(clipResie_purpose == ResizePurpose.Left)
-                            clipResize_draggedFrameOffset = Clip.ClampClipStartChange_Frame(Clip.StartFrame + windowState.PixelToFrame(pixel)) - Clip.StartFrame;
+                            clipResize_draggedFrameOffset = IClip.ClampClipStartChange_Frame(IClip.StartFrame + windowState.PixelToFrame(pixel)) - IClip.StartFrame;
                         if (clipResie_purpose == ResizePurpose.Right)
-                            clipResize_draggedFrameOffset = Clip.ClampClipEndChange_Frame(Clip.EndFrame + windowState.PixelToFrame(pixel)) - Clip.EndFrame;
+                            clipResize_draggedFrameOffset = IClip.ClampClipEndChange_Frame(IClip.EndFrame + windowState.PixelToFrame(pixel)) - IClip.EndFrame;
 
                         Repaint();
                         EventType.MouseDrag.Use();
@@ -182,8 +187,7 @@ namespace PJR.Timeline.Editor
                     if (position.Contains(Event.current.mousePosition) && Event.current.button == 0)
                     {
                         Select();
-                        GUIUtility.hotControl = controlID;
-                        Select();
+                        controlID.AsHotControl();
                         clipDrag_startPosition = Event.current.mousePosition;
                         clipDrag_draggedPixelOffset = 0;
                         clipDrag_draggedPixelOffsetClamped = 0;
@@ -193,10 +197,10 @@ namespace PJR.Timeline.Editor
                 }
                 case EventType.MouseUp:
                 {
-                    if (!clipDragging)
-                    {
-                        return;
-                    }
+                    // if (!clipDragging)
+                    // {
+                    //     return;
+                    // }
                     if (!IsSelect)
                         return;
                     
@@ -206,8 +210,8 @@ namespace PJR.Timeline.Editor
                     if (clipDragging)
                     {
                         double rangeOffset = windowState.PixelToSecond(clipDrag_draggedPixelOffsetClamped);
-                        Clip.start += rangeOffset;
-                        Clip.end += rangeOffset;
+                        IClip.start += rangeOffset;
+                        IClip.end += rangeOffset;
                         clipDrag_startPosition = Vector2.zero;
                         clipDragging = false;
                     }
@@ -223,7 +227,7 @@ namespace PJR.Timeline.Editor
                     float draggedPixelOffset = Event.current.mousePosition.x - clipDrag_startPosition.x;
                     int frames = TimeUtil.ToFrames(windowState.PixelToSecond(draggedPixelOffset), windowState.CurrentFrameRate);
 
-                    if (Clip.ValidRangeChangeableByFrame(frames))
+                    if (IClip.ValidRangeChangeableByFrame(frames))
                     {
                         clipDrag_draggedPixelOffsetClamped = windowState.FrameToPixel(frames);
                         clipDrag_draggedFrameOffset = frames ;

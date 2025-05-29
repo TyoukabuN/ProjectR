@@ -1,33 +1,35 @@
-using Sirenix.Utilities;
+using System;
 using UnityEditor;
 using UnityEngine;
 using static PJR.Timeline.Editor.TimelineWindow;
 
 namespace PJR.Timeline.Editor
 {
-    public abstract class ClipGUI : TimelineGUIElement
+    public abstract class TrackDrawer : TimelineGUIElement
     {
-        public IClip Clip { get; set; }
-        public virtual float CalculateHeight() => Constants.trackHeight + draggedMenuSpace;
+        public abstract IClip IClip { get; }
+        public virtual float CalculateHeight() => Constants.trackHeight + DraggedMenuSpace;
 
-        float m_DraggedMenuSpace = 0f;
-        public float draggedMenuSpace => m_DraggedMenuSpace;
-
+        float _draggedMenuSpace = 0f;
+        public float DraggedMenuSpace => _draggedMenuSpace;
         protected WindowState windowState => instance.state;
-
+        
+        
         protected MenuDrawer _menuDrawer;
-        protected MenuDrawer MenuDrawer=> _menuDrawer ??= new(Clip);
+        public virtual Type MenuDrawerType => typeof(DefaultMenuDrawer);
+        public virtual MenuDrawer MenuDrawer  => _menuDrawer ??= Activator.CreateInstance(MenuDrawerType,IClip) as MenuDrawer;
+        
         
         protected ClipDrawer _clipDrawer;
-        protected ClipDrawer ClipDrawer=> _clipDrawer ??= new(Clip);
-        
+        public virtual Type ClipDrawerType => typeof(DefaultClipDrawer);
+        public virtual ClipDrawer ClipDrawer => _clipDrawer ??= Activator.CreateInstance(ClipDrawerType,IClip) as ClipDrawer; 
+
         public static Color GetTrackBgColor(bool selected)
         {
             return selected
                 ? Styles.Instance.customSkin.colorSelection
                 : Styles.Instance.customSkin.colorTrackBackground;
         }
-
         //以选中Menu为准
         public override bool IsSelect => MenuDrawer?.IsSelect ?? false;
         //Track选中时，也选中Menu
@@ -96,7 +98,7 @@ namespace PJR.Timeline.Editor
         {
             var menu = new GenericMenu();
             menu.AddDisabledItem(new GUIContent("右键默认选项"));
-            menu.AddSeparator($"{Clip.GetDisplayName()}");
+            menu.AddSeparator($"{IClip.GetClipName()}");
             return menu;
         }
         public virtual void DisplayRightClickMenu(Rect rect)
@@ -110,17 +112,23 @@ namespace PJR.Timeline.Editor
             TimelineWindow.instance?.Repaint();
         }
     }
-    public abstract class ClipGUI<TClip> : ClipGUI where TClip : IClip
+    
+    public abstract class TrackDrawer<TClip> : TrackDrawer where TClip : IClip
     {
-        public ClipGUI(IClip clip)
+        protected TClip _clip;
+        public override IClip IClip => _clip;
+        public TClip Clip => _clip;
+        public override MenuDrawer MenuDrawer=> _menuDrawer ??= new DefaultMenuDrawer(IClip);
+        public override ClipDrawer ClipDrawer=> _clipDrawer ??= new DefaultClipDrawer(IClip);
+
+        public TrackDrawer(TClip clip)
         {
-            Clip = clip;
+            _clip = clip;
         }
     }
-    public class DefaultClipGUI : ClipGUI
+    public class DefaultTrackDrawer : TrackDrawer<IClip>
     {
-        public DefaultClipGUI(IClip clip) { 
-            Clip = clip;
+        public DefaultTrackDrawer(IClip clip):base(clip) { 
         }
         public override void OnDrawMenu(Rect rect)
         {

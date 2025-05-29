@@ -16,13 +16,13 @@ namespace PJR.Timeline.Editor
             SelectMethed = Default_SelectMethod;
             DeSelectMethed = Default_DeSelectMethod;
         }
-        public virtual void Select()=>TimelineWindow.instance.state.Hotspot = this;
-        public virtual void DeSelect() => TimelineWindow.instance.state.UnSetHotspot(this);
+        public virtual void Select()=> SelectMethed?.Invoke();
+        public virtual void DeSelect() => DeSelectMethed?.Invoke();
         public virtual void OnDeselect()
         {
         }
         protected void Default_SelectMethod() => TimelineWindow.instance.state.Hotspot = this;
-        protected void Default_DeSelectMethod() => TimelineWindow.instance.state.Hotspot = this;
+        protected void Default_DeSelectMethod() => TimelineWindow.instance.state.UnSetHotspot(this);
 
         public virtual void Repaint() => TimelineWindow.instance?.Repaint();
     }

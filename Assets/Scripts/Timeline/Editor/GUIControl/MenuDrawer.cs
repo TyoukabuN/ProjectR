@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace PJR.Timeline.Editor
 {
+    public class DefaultMenuDrawer : MenuDrawer
+    {
+        public DefaultMenuDrawer(IClip clip) : base(clip){}
+    }
     public partial class MenuDrawer : TimelineGUIElement
     {
         public IClip Clip;
@@ -31,7 +35,36 @@ namespace PJR.Timeline.Editor
                 onRightClick = OnContextClick
             };
         }
-        public virtual void Draw(Rect rect) => DrawTrackMenu(GetDrawContext(rect));
+        public virtual void Draw(Rect rect) => DrawTrackMenu(rect);
+        public void DrawTrackMenu(Rect rect)
+        {
+            EditorGUI.DrawRect(rect, GetMenuBgColor(IsSelect));
+
+            rect.Debug();
+
+            var labelSize = Styles.CalcLabelSize(Clip.GetClipName());
+
+            GUILayout.Label(new GUIContent(Clip.GetClipName(), Clip.GetClipName()), GUILayout.Width(labelSize.x),
+                GUILayout.ExpandHeight(true));
+
+            GUILayout.FlexibleSpace();
+
+            using (new MidAlignmentScope.Horizontal())
+            {
+                if (GUILayout.Button(Clip.Mute ? Styles.trackMuteEnabledIcon : Styles.trackMuteDisabledIcon,
+                        EditorStyles.iconButton))
+                {
+                    Clip.Mute = !Clip.Mute;
+                }
+            }
+
+            GUILayoutUtility.GetLastRect().Debug(Color.green);
+
+            var evtRect = rect;
+            evtRect.xMin -= Constants.trackMenuLeftSpace;
+            EventUtil.MouseEvent.LeftOrRightClick(evtRect, OnClick, OnContextClick);
+        }
+        
         protected virtual void OnClick(Rect rect)
         {
             if (windowState.Hotspot == this)
@@ -55,7 +88,7 @@ namespace PJR.Timeline.Editor
         {
             var menu = new GenericMenu();
             menu.AddDisabledItem(new GUIContent("右键默认选项"));
-            menu.AddSeparator($"{clip.GetDisplayName()}");
+            menu.AddSeparator($"{clip.GetClipName()}");
             return menu;
         }
 

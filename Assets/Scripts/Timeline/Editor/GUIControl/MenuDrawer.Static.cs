@@ -39,9 +39,9 @@ namespace PJR.Timeline.Editor
 
             rect.Debug();
 
-            var labelSize = Styles.CalcLabelSize(clip.GetDisplayName());
+            var labelSize = Styles.CalcLabelSize(clip.GetClipName());
 
-            GUILayout.Label(new GUIContent(clip.GetDisplayName(), clip.GetDisplayName()), GUILayout.Width(labelSize.x),
+            GUILayout.Label(new GUIContent(clip.GetClipName(), clip.GetClipName()), GUILayout.Width(labelSize.x),
                 GUILayout.ExpandHeight(true));
 
             GUILayout.FlexibleSpace();

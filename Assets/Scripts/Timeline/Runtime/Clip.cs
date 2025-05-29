@@ -11,13 +11,15 @@ namespace PJR.Timeline
     {
         EFrameRate FrameRateType { get; set; }
         bool Mute { get; set; }
-        string ClipName { get; set; }
+        string Description { get; set; }
         double start { get; set; }
         double end { get; set; }
         double length { get; }
         int StartFrame { get; set;}
         int EndFrame { get; set;}
-        string GetDisplayName();
+        string GetClipName();
+        string GetClipInfo();
+        public ClipRunner GetRunner();
     }
 
     [Serializable]
@@ -35,12 +37,11 @@ namespace PJR.Timeline
         bool _mute = false;
         public bool Mute { get => _mute; set => _mute = value; }
 
-        public const string DefaultName = "EmptyName";
-
-        public string clipName;
-        public string ClipName { get => clipName; set => clipName = value; }
+        private string _description;
+        public string Description { get => _description; set => _description = value; }
+        public virtual string GetClipName() => "[未命名Clip类型]";
+        public virtual string GetClipInfo() => string.Empty;
         
-
         [SerializeField, DisableIf("@true")]
         protected double _start;
         [SerializeField, DisableIf("@true")]
@@ -98,10 +99,8 @@ namespace PJR.Timeline
                 _end = FrameRateType.SPF() * _endFrame;
             }
         }
-        
-        public string GetDisplayName() => clipName;
-        public Clip() { this.clipName = DefaultName; }
-        public Clip(string clipName) { this.clipName = clipName; }
+        public Clip() { }
+        public Clip(string description) { this._description = description; }
 
         
         public double SceondPerFrame => FrameRateType.SPF();
@@ -116,6 +115,8 @@ namespace PJR.Timeline
                 return true;
             return false;
         }
+        
+        public abstract ClipRunner GetRunner();
     }
 
     /// <summary>
@@ -133,15 +134,20 @@ namespace PJR.Timeline
     }
 
     /// <summary>
-    /// 用来存这种IClip用哪个ClipGUI派生类
+    /// 用来存这种IClip用哪个TrackDrawer派生类
     /// </summary>
-    public class BindingClipGUIAttribute : Attribute
+    public class BindingTrackDrawerAttribute : Attribute
     {
-        private Type _clipType;
-        public Type ClipType => _clipType;
-        public BindingClipGUIAttribute(Type clipType)
-        {
-            _clipType = clipType;
-        }
+        private Type _type;
+        public Type Type => _type;
+        public BindingTrackDrawerAttribute(Type type) => _type = type;
+    }
+    
+    
+    public class BindingClipDrawerAttrubute : Attribute
+    {
+        private Type _type;
+        public Type Type => _type;
+        public BindingClipDrawerAttrubute(Type type) => _type = type;
     }
 }

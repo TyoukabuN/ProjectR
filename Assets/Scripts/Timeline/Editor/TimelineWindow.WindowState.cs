@@ -46,9 +46,8 @@ namespace PJR.Timeline.Editor
             public Action<TimelineGUIElement, TimelineGUIElement> OnHotspotChanged;
             public void SetHotspot(TimelineGUIElement timelineGUIElement)
             {
-                if (timelineGUIElement != null)
-                    if (timelineGUIElement == _hotspot)
-                        return;
+                if (timelineGUIElement != null && timelineGUIElement == _hotspot)
+                    return;
                 OnHotspotChanged?.Invoke(_hotspot,timelineGUIElement);
                 _hotspot = timelineGUIElement;
             }

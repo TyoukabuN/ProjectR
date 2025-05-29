@@ -82,7 +82,6 @@ namespace PJR.Timeline.Editor
 
             GUILayout.Space(10);
 
-            //using (new GUILayout.HorizontalScope(GUILayout.Width(250), GUILayout.Height(100), GUILayout.ExpandWidth(false)))
             using (new GUILayout.HorizontalScope(
                 GUILayout.Height(100),
                 GUILayout.Width(200)
@@ -90,24 +89,7 @@ namespace PJR.Timeline.Editor
             {
                 GUILayout.Space(50);
                 var rect = GUILayoutUtility.GetRect(200, 50);
-                //rect.width = 200 - 10;
-                //rect.height = 50;
                 EditorGUI.DrawRect(rect, Styles.Instance.customSkin.colorTrackHeaderBackground);
-                //rect.Debug(Color.red);
-
-
-                //GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
-                //buttonStyle.alignment = TextAnchor.MiddleLeft;
-                //buttonStyle.border.left = 10;
-                //GUILayout.FlexibleSpace();
-                //GUILayout.Button("123", buttonStyle, GUILayout.ExpandWidth(true));
-                //GUILayout.FlexibleSpace();
-                //GUILayoutUtility.GetLastRect().Debug();
-
-
-                //var r2 = GUILayoutUtility.GetRect(50, 50,GUILayout.ExpandWidth(false));// new Rect(0, 0, 250, 50);
-                //EditorGUI.DrawRect(r2, Color.green);
-                //r2.Debug(Color.red);
             }
 
             GUILayoutUtility.GetLastRect().Debug(Color.blue);
@@ -145,7 +127,6 @@ namespace PJR.Timeline.Editor
                 Draw_NewFrameButton();
                 Draw_GotoEndButton();
                 GUILayout.FlexibleSpace();
-                //headerRect.Debug();
             }
         }
 
@@ -221,7 +202,6 @@ namespace PJR.Timeline.Editor
                 }
                 GUILayoutUtility.GetLastRect().Debug();
             }
-
         }
 
         #region Control buttons

@@ -15,6 +15,7 @@ namespace PJR
         public float floatValue;
         public Transform transValue;
         public AnimationClip animationClip;
+        public override ClipRunner GetRunner() => null;
     }
 
     public class TestClipRunner : ClipRunner<TestClip>

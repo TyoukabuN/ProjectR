@@ -61,13 +61,13 @@ public class TimelineTest : MonoBehaviour
         };
 
         handle = SequenceRunner.Get();
-        handle.Init(trans.gameObject, seq);
+        handle.Reset(trans.gameObject, seq);
     }
 
     [Button, HorizontalGroup("OP")]
     void Clear()
     {
-         handle?.Pool();
+         handle?.Release();
          handle = null;
     }
     [Button, HorizontalGroup("OP")]

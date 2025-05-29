@@ -21,7 +21,8 @@ namespace PJR.Timeline
         }
         public override ClipRunner GetRunner() => Pool.ObjectPool<AnimancerClipRunner>.Get();
 
-    #region 例子用
+    #region 例子用,其实没有特殊需求不用写派生这些
+        //要配合这个用[BindingTrackDrawer(typeof(TrackDrawer))]
         public class TrackDrawer : TrackDrawer<AnimancerClip>
         {
             public TrackDrawer(AnimancerClip clip) : base(clip){}

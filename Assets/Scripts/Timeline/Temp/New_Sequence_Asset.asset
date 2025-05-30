@@ -34,6 +34,8 @@ MonoBehaviour:
       type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
       data:
         _frameRateType: 0
+        _mute: 0
+        _description: 
         _start: 0.000000002731879555906147
         _end: 0.7333334016303222
         _startFrame: 0
@@ -48,6 +50,8 @@ MonoBehaviour:
       type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
       data:
         _frameRateType: 0
+        _mute: 1
+        _description: 
         _start: 0.1666666693985462
         _end: 0.4833333934346835
         _startFrame: 10

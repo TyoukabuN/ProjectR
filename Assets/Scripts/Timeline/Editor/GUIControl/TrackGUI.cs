@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Styles = PJR.Timeline.Editor.Styles;
 using static PJR.Timeline.Editor.TimelineWindow;
@@ -31,66 +32,81 @@ namespace PJR.Timeline.Editor
         {
             if (tracks == null)
                 return;
-            using (new GUILayout.HorizontalScope(GUILayout.Width(instance.trackRect.width)))
+
+            using (var changeCheck = new EditorGUI.ChangeCheckScope())
             {
-                var trackMenuAreaWidth = windowState.trackMenuAreaWidth - 2;
-                //TrackMenu（左边）
-                using (new GUILayout.VerticalScope(GUILayout.Width(trackMenuAreaWidth)))
+                using (new GUILayout.HorizontalScope(GUILayout.Width(instance.trackRect.width)))
                 {
-                    GUILayout.Space(Constants.trackMenuAreaTop);
-                    for (int i = 0; i < tracks.Length; i++)
+                    var trackMenuAreaWidth = windowState.trackMenuAreaWidth - 2;
+                    //TrackMenu（左边）
+                    using (new GUILayout.VerticalScope(GUILayout.Width(trackMenuAreaWidth)))
                     {
-                        GUILayout.Space(Constants.trackMenuPadding);
-                        var clip = tracks[i]?.clips[0];
-                        if (clip == null)
-                            continue;
-
-                        var clipGUI = GetClipGUI(clip);
-                        if (clipGUI == null)
-                            continue;
-
-                        using (new GUILayout.HorizontalScope(GUILayout.Height(clipGUI.CalculateHeight())))
+                        GUILayout.Space(Constants.trackMenuAreaTop);
+                        for (int i = 0; i < tracks.Length; i++)
                         {
-                            GUILayout.Space(Constants.trackMenuLeftSpace);
-                            var menuRect = GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight(), GUILayout.ExpandWidth(false));
-                            menuRect.width = trackMenuAreaWidth - Constants.trackMenuLeftSpace;
-                            clipGUI.OnDrawMenu(menuRect);
+                            GUILayout.Space(Constants.trackMenuPadding);
+                            var clip = tracks[i]?.clips[0];
+                            if (clip == null)
+                                continue;
+
+                            var clipGUI = GetClipGUI(clip);
+                            if (clipGUI == null)
+                                continue;
+
+                            using (new GUILayout.HorizontalScope(GUILayout.Height(clipGUI.CalculateHeight())))
+                            {
+                                GUILayout.Space(Constants.trackMenuLeftSpace);
+                                var menuRect = GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight(),
+                                    GUILayout.ExpandWidth(false));
+                                menuRect.width = trackMenuAreaWidth - Constants.trackMenuLeftSpace;
+                                clipGUI.OnDrawMenu(menuRect);
+                            }
+                        }
+                    }
+
+                    GUILayoutUtility.GetLastRect().Debug(Color.red);
+
+                    //Menu和Track之间的空间
+                    //用于修改HeaderWidth
+                    GUILayout.Space(instance.headerSizeHandleRect.width);
+
+                    //TrackClip（右边）
+                    using (new GUILayout.VerticalScope(GUILayout.Width(position.width - windowState.trackMenuAreaWidth +
+                                                                       windowState.headerSizeHandleRect.width / 2)))
+                    {
+                        //GUILayoutUtility.GetRect(50, 50).Debug();
+                        GUILayout.Space(Constants.trackMenuAreaTop);
+
+                        for (int i = 0; i < tracks.Length; i++)
+                        {
+                            GUILayout.Space(Constants.trackMenuPadding);
+                            var clip = tracks[i]?.clips[0];
+                            if (clip == null)
+                                continue;
+
+                            var clipGUI = GetClipGUI(clip);
+                            if (clipGUI == null)
+                                continue;
+
+                            using (new GUILayout.HorizontalScope(GUILayout.Height(clipGUI.CalculateHeight())))
+                            {
+                                clipGUI.OnDrawTrack(GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight()));
+                            }
                         }
                     }
                 }
+
                 GUILayoutUtility.GetLastRect().Debug(Color.red);
 
-                //Menu和Track之间的空间
-                //用于修改HeaderWidth
-                GUILayout.Space(instance.headerSizeHandleRect.width);
-
-                //TrackClip（右边）
-                using (new GUILayout.VerticalScope(GUILayout.Width(position.width - windowState.trackMenuAreaWidth + windowState.headerSizeHandleRect.width / 2)))
-                {
-                    //GUILayoutUtility.GetRect(50, 50).Debug();
-                    GUILayout.Space(Constants.trackMenuAreaTop);
-
-                    for (int i = 0; i < tracks.Length; i++)
-                    {
-                        GUILayout.Space(Constants.trackMenuPadding);
-                        var clip = tracks[i]?.clips[0];
-                        if (clip == null)
-                            continue;
-
-                        var clipGUI = GetClipGUI(clip);
-                        if (clipGUI == null)
-                            continue;
-
-                        using (new GUILayout.HorizontalScope(GUILayout.Height(clipGUI.CalculateHeight())))
-                        {
-                            clipGUI.OnDrawTrack(GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight()));
-                        }
-                    }
-                }
+                if (changeCheck.changed)
+                    OnTrakcChanged();
             }
-            GUILayoutUtility.GetLastRect().Debug(Color.red);
         }
 
+        public void OnTrakcChanged()
+        {
+            windowState?.editingSequence.TrySetSequenceAssetDirty();
+        }
 
         private Dictionary<IClip, TrackDrawer> clip2clipGUI;
         public TrackDrawer GetClipGUI(IClip clip)

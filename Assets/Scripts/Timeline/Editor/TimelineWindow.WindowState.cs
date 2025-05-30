@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Policy;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -102,17 +103,27 @@ namespace PJR.Timeline.Editor
             public bool IsEmpty => _isEmpty;
             public Sequence Sequence;
             public SequenceAsset SequenceAsset;
+            public GameObject GameObject;
 
             public EditingSequare(SequenceAsset sequenceAsset)
             {
                 SequenceAsset = sequenceAsset;
                 Sequence = sequenceAsset.Sequence;
                 _isEmpty = false;
+                GameObject = null;
             }
 
             public bool Valid
             {
                 get=>  Sequence != null && SequenceAsset != null;
+            }
+
+            public bool TrySetSequenceAssetDirty()
+            {
+                if (SequenceAsset == null)
+                    return false;
+                EditorUtility.SetDirty(SequenceAsset);
+                return true;
             }
         }
 

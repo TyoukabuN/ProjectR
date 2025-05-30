@@ -10,7 +10,7 @@ namespace PJR.Timeline
     {
         public enum EState
         {
-            None = 0,
+            None = 0,       
             Running,
             Done,
             Failure,

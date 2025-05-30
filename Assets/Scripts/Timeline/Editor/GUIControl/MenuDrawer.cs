@@ -23,18 +23,6 @@ namespace PJR.Timeline.Editor
                 ? Styles.Instance.customSkin.colorSelection
                 : Styles.Instance.customSkin.colorTrackHeaderBackground;
         }
-
-        public DrawContext GetDrawContext(Rect rect)
-        {
-            return new()
-            {
-                rect = rect,
-                clip = Clip,
-                selected = IsSelect,
-                onLeftClick = OnClick,
-                onRightClick = OnContextClick
-            };
-        }
         public virtual void Draw(Rect rect) => DrawTrackMenu(rect);
         public void DrawTrackMenu(Rect rect)
         {

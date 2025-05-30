@@ -43,8 +43,10 @@ namespace PJR.Timeline.Editor
 
             //背景
             EditorGUI.DrawRect(clipRect, GetClipBgColor(IsSelect));
-            //背景
-            EditorGUI.DrawRect(clipRect, GetClipBgColor(IsSelect));
+            //下面的颜色横条
+            var underline = clipRect;
+            underline.yMin = underline.yMax - 3f; 
+            EditorGUI.DrawRect(underline, IClip.Mute? Color.gray : IClip.GetClipColor());
             //描边
             clipRect.DrawOutline(1 ,GetClipBorderColor(IsSelect));
             //描述(具体作用)

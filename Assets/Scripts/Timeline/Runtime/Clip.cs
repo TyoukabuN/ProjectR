@@ -14,12 +14,14 @@ namespace PJR.Timeline
         string Description { get; set; }
         double start { get; set; }
         double end { get; set; }
-        double length { get; }
+        double duration { get; }
+        int TotalFrame { get; }
         int StartFrame { get; set;}
         int EndFrame { get; set;}
         string GetClipName();
         string GetClipInfo();
         public ClipRunner GetRunner();
+        public Color GetClipColor();
     }
 
     [Serializable]
@@ -34,9 +36,11 @@ namespace PJR.Timeline
             set => _frameRateType = value;
     #endif
         }
-        bool _mute = false;
+        [LabelText("禁用"), SerializeField]
+        private bool _mute = false;
         public bool Mute { get => _mute; set => _mute = value; }
 
+        [LabelText("描述"), SerializeField]
         private string _description;
         public string Description { get => _description; set => _description = value; }
         public virtual string GetClipName() => "[未命名Clip类型]";
@@ -71,7 +75,8 @@ namespace PJR.Timeline
             }
         }
 
-        public double length => end - start;
+        public double duration => end - start;
+        public int TotalFrame => EndFrame - StartFrame;
 
         [SerializeField, HideInInspector]
         protected int _startFrame;
@@ -115,9 +120,7 @@ namespace PJR.Timeline
                 return true;
             return false;
         }
-        
         public abstract ClipRunner GetRunner();
-        
         public virtual Color GetClipColor() => Color.green;
     }
 

@@ -22,38 +22,38 @@ MonoBehaviour:
       data:
         frameRateType: 0
         tracks:
-        - rid: 928521673803563018
-        - rid: 928521673803563020
+        - rid: 928521765971296256
+        - rid: 928521765971296258
         runtimeInstance: 0
-    - rid: 928521673803563018
+    - rid: 928521765971296256
       type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
       data:
         clips:
-        - rid: 928521673803563019
-    - rid: 928521673803563019
-      type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
+        - rid: 928521765971296257
+    - rid: 928521765971296257
+      type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
       data:
         _frameRateType: 0
-        _mute: 0
+        _mute: 1
         _description: 
-        _start: 0.000000002731879555906147
-        _end: 0.7333334016303222
-        _startFrame: 0
-        _endFrame: 44
-        animationClip: {fileID: 7400000, guid: 8ba7e475db483b44db23ecc6a558ded2, type: 2}
-    - rid: 928521673803563020
-      type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
-      data:
-        clips:
-        - rid: 928521673803563021
-    - rid: 928521673803563021
-      type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR}
-      data:
-        _frameRateType: 0
-        _mute: 0
-        _description: 
-        _start: 0.1666666693985462
-        _end: 0.4833333934346835
-        _startFrame: 10
+        _start: 0.11666666666666667
+        _end: 0.4833333469927311
+        _startFrame: 7
         _endFrame: 29
+        animationClip: {fileID: 0}
+    - rid: 928521765971296258
+      type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
+      data:
+        clips:
+        - rid: 928521765971296259
+    - rid: 928521765971296259
+      type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
+      data:
+        _frameRateType: 0
+        _mute: 0
+        _description: 
+        _start: 0.23333333333333334
+        _end: 0.8166666803260645
+        _startFrame: 14
+        _endFrame: 49
         animationClip: {fileID: 0}

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using PJR.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -100,13 +101,24 @@ namespace PJR.Timeline.Editor
                 AssetProcessor.OnWillSaveAssetsCall += OnWillSaveAssetsCall;
             }
 
+            /// <summary>
+            /// 监听sequenceAsset有没有被保存
+            /// </summary>
+            /// <param name="paths"></param>
             private void OnWillSaveAssetsCall(string[] paths)
             {
                 Debug.Log("OnWillSaveAssetsCall");
-                foreach (var path in paths)
-                {
-                    Debug.Log(path);
-                }
+
+                if (editingSequence.SequenceAsset == null)
+                    return;
+                    
+                var seqPath = AssetDatabase.GetAssetPath(editingSequence.SequenceAsset);
+                if (string.IsNullOrEmpty(seqPath))
+                    return;
+                
+                if(!paths.Contains(seqPath))
+                    return;
+                instance.hasUnsavedChanges = false;
             }
 
             public bool TrySetSequenceAssetDirty(string undoName = null)

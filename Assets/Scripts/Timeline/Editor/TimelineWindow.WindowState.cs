@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Policy;
+using PJR.Editor;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace PJR.Timeline.Editor
 {
@@ -94,6 +91,34 @@ namespace PJR.Timeline.Editor
             public double CurrentSecondPerFrame => 1 / CurrentFrameRate;
             #endregion
 
+            
+            public static string Default_UndoName = "Sequence Asset Modify";
+
+            public WindowState()
+            {
+                AssetProcessor.OnWillSaveAssetsCall -= OnWillSaveAssetsCall;
+                AssetProcessor.OnWillSaveAssetsCall += OnWillSaveAssetsCall;
+            }
+
+            private void OnWillSaveAssetsCall(string[] paths)
+            {
+                Debug.Log("OnWillSaveAssetsCall");
+                foreach (var path in paths)
+                {
+                    Debug.Log(path);
+                }
+            }
+
+            public bool TrySetSequenceAssetDirty(string undoName = null)
+            {
+                if (editingSequence.SequenceAsset == null)
+                    return false;
+                undoName ??= Default_UndoName;
+                Undo.RecordObject(editingSequence.SequenceAsset, undoName);
+                EditorUtility.SetDirty(editingSequence.SequenceAsset);
+                instance.hasUnsavedChanges = true;
+                return true;
+            }
         }
 
         public struct EditingSequare
@@ -118,13 +143,8 @@ namespace PJR.Timeline.Editor
                 get=>  Sequence != null && SequenceAsset != null;
             }
 
-            public bool TrySetSequenceAssetDirty()
-            {
-                if (SequenceAsset == null)
-                    return false;
-                EditorUtility.SetDirty(SequenceAsset);
-                return true;
-            }
+
+           
         }
 
         public struct HotSpot

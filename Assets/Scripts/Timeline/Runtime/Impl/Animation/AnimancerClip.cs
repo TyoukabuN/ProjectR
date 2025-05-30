@@ -1,6 +1,5 @@
 using Animancer;
 using System;
-using PJR.Timeline.Editor;
 using UnityEngine;
 using static PJR.Timeline.Define;
 
@@ -8,7 +7,6 @@ namespace PJR.Timeline
 {
     [Serializable]
     [TrackCreateMenuItem(nameof(AnimancerClip))]
-    [BindingTrackDrawer(typeof(TrackDrawer))]
     public class AnimancerClip : Clip
     {
         public AnimationClip animationClip;
@@ -20,18 +18,6 @@ namespace PJR.Timeline
             return $"[播放动画] {animationClip?.name ?? string.Empty}";
         }
         public override ClipRunner GetRunner() => Pool.ObjectPool<AnimancerClipRunner>.Get();
-
-    #region 例子用,其实没有特殊需求不用写派生这些
-        //要配合这个用[BindingTrackDrawer(typeof(TrackDrawer))]
-        public class TrackDrawer : TrackDrawer<AnimancerClip>
-        {
-            public TrackDrawer(AnimancerClip clip) : base(clip){}
-        }
-        public class ClipDrawer : ClipDrawer<AnimancerClip>
-        {
-            public ClipDrawer(AnimancerClip clip) : base(clip){}
-        }
-    #endregion
     }
 
     public class AnimancerClipRunner : ClipRunner<AnimancerClip>

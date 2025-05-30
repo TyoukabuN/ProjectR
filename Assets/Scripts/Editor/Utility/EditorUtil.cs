@@ -66,6 +66,7 @@ namespace PJR.Editor
         public static event Action<string> OnWillCreateAssetCall;
         public static event Action<string, RemoveAssetOptions> OnWillDeleteAssetCall;
         public static event Action<string, string> OnWillMoveAssetCall;
+        public static event Action<string[]> OnWillSaveAssetsCall;
         static void OnWillCreateAsset(string assetPath)
         {
             try
@@ -103,6 +104,18 @@ namespace PJR.Editor
             AssetMoveResult assetMoveResult = AssetMoveResult.DidNotMove;
 
             return assetMoveResult;
+        }
+        static string[] OnWillSaveAssets(string[] paths)
+        {
+            try
+            {
+                OnWillSaveAssetsCall?.Invoke(paths);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+            return paths;
         }
     }
     public static class Styles

@@ -105,7 +105,7 @@ namespace PJR.Timeline.Editor
 
         public void OnTrakcChanged()
         {
-            windowState?.editingSequence.TrySetSequenceAssetDirty();
+            windowState?.TrySetSequenceAssetDirty();
         }
 
         private Dictionary<IClip, TrackDrawer> clip2clipGUI;

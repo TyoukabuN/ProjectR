@@ -44,7 +44,11 @@ namespace PJR.Timeline.Editor
         {
             RegisterEvent(false);
         }
-
+        public override void SaveChanges()
+        {
+            base.SaveChanges();
+            state?.TrySetSequenceAssetDirty();
+        }
         void OnGUI()
         {
             Styles.ReloadStylesIfNeeded();

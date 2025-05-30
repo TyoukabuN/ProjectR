@@ -44,6 +44,17 @@ namespace PJR.Timeline.Editor
             double durationOffset = frames / windowState.CurrentFrameRate;
             return ValidRangeChangeable(clip, durationOffset);
         }
+
+        //将改动帧数控制到合理范围
+        public static int ClampToValidFrameOffset(this IClip clip, int frameOffset)
+        {
+            var startFrame = clip.StartFrame + frameOffset;
+            var endFrame = clip.EndFrame + frameOffset;
+            if (startFrame < 0)
+                return frameOffset - startFrame;
+            return frameOffset;
+        }
+
         public static bool ValidRangeChangeableByPixel(this IClip clip, float pixel)
         {
             return ValidRangeChangeableByFrame(clip, windowState.PixelToFrame(pixel));

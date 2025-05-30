@@ -43,6 +43,8 @@ namespace PJR.Timeline.Editor
 
             //背景
             EditorGUI.DrawRect(clipRect, GetClipBgColor(IsSelect));
+            //背景
+            EditorGUI.DrawRect(clipRect, GetClipBgColor(IsSelect));
             //描边
             clipRect.DrawOutline(1 ,GetClipBorderColor(IsSelect));
             //描述(具体作用)
@@ -51,7 +53,7 @@ namespace PJR.Timeline.Editor
             DrawResizeHandle(clipRect);
             ClipRectEvent(clipRect);
         }
-
+        
         static readonly GUIContent s_TitleContent = new GUIContent();
         protected virtual void DrawLabel(Rect rect, string title)
         {
@@ -197,10 +199,6 @@ namespace PJR.Timeline.Editor
                 }
                 case EventType.MouseUp:
                 {
-                    // if (!clipDragging)
-                    // {
-                    //     return;
-                    // }
                     if (!IsSelect)
                         return;
                     
@@ -226,12 +224,14 @@ namespace PJR.Timeline.Editor
                     clipDragging = true;
                     float draggedPixelOffset = Event.current.mousePosition.x - clipDrag_startPosition.x;
                     int frames = TimeUtil.ToFrames(windowState.PixelToSecond(draggedPixelOffset), windowState.CurrentFrameRate);
-
-                    if (IClip.ValidRangeChangeableByFrame(frames))
-                    {
-                        clipDrag_draggedPixelOffsetClamped = windowState.FrameToPixel(frames);
-                        clipDrag_draggedFrameOffset = frames ;
-                    }
+                    
+                    Debug.Log($"[draggedPixelOffset:{draggedPixelOffset}] [frames:{frames}] [valid:{IClip.ValidRangeChangeableByFrame(frames)}]");
+                    
+                    //后面可能改成纯用帧判断，而不是时间
+                    int clampedFrames = IClip.ClampToValidFrameOffset(frames);
+                    clipDrag_draggedPixelOffsetClamped = windowState.FrameToPixel(clampedFrames);
+                    clipDrag_draggedFrameOffset = clampedFrames ;
+                        
                     clipDrag_draggedPixelOffset = draggedPixelOffset;
 
                     Repaint();

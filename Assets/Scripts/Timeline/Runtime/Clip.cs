@@ -117,6 +117,8 @@ namespace PJR.Timeline
         }
         
         public abstract ClipRunner GetRunner();
+        
+        public virtual Color GetClipColor() => Color.green;
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ namespace PJR.Timeline.Editor
 {
     public static class ClipEditorHelper
     {
-        static WindowState windowState => TimelineWindow.instance.state;
+        static WindowState windowState => TimelineWindow.instance.State;
 
         public static void TrySave(this IClip clip)
         {

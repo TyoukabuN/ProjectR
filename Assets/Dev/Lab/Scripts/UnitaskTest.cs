@@ -3,8 +3,9 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
 
 public class UnitaskTest : MonoBehaviour
 {
@@ -107,3 +108,4 @@ public class UnitaskTest : MonoBehaviour
         return (asset as TextAsset)?.text ?? throw new InvalidOperationException("Asset not found");
     }
 }
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

@@ -13,6 +13,7 @@ namespace PJR.Timeline.Editor
         protected TClip _clip;
         public override IClip IClip => _clip;
         public TClip Clip => _clip;
+        public override object PropertyObject => Clip;
         public ClipDrawer(TClip clip)
         {
             _clip = clip;
@@ -47,6 +48,11 @@ namespace PJR.Timeline.Editor
             var underline = clipRect;
             underline.yMin = underline.yMax - 3f; 
             EditorGUI.DrawRect(underline, IClip.Mute? Color.gray : IClip.GetClipColor());
+            //左上角
+            var tipLightRect = clipRect;
+            tipLightRect.width = 8;
+            tipLightRect.height = 8;
+            GUI.DrawTexture(tipLightRect,IClip.Mute? Styles.Icon_Corner_Off : Styles.Icon_Corner_On);
             //描边
             clipRect.DrawOutline(1 ,GetClipBorderColor(IsSelect));
             //描述(具体作用)
@@ -227,7 +233,7 @@ namespace PJR.Timeline.Editor
                     float draggedPixelOffset = Event.current.mousePosition.x - clipDrag_startPosition.x;
                     int frames = TimeUtil.ToFrames(windowState.PixelToSecond(draggedPixelOffset), windowState.CurrentFrameRate);
                     
-                    Debug.Log($"[draggedPixelOffset:{draggedPixelOffset}] [frames:{frames}] [valid:{IClip.ValidRangeChangeableByFrame(frames)}]");
+                    //Debug.Log($"[draggedPixelOffset:{draggedPixelOffset}] [frames:{frames}] [valid:{IClip.ValidRangeChangeableByFrame(frames)}]");
                     
                     //后面可能改成纯用帧判断，而不是时间
                     int clampedFrames = IClip.ClampToValidFrameOffset(frames);

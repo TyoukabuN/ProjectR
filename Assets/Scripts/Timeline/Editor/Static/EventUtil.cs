@@ -99,12 +99,18 @@ namespace PJR.Timeline.Editor
         {
             public static void LeftOrRightClick(Rect rect, Action<Rect> onLeftClick, Action<Rect> onRightClick)
                 => LeftOrRightClick(rect, onLeftClick, onRightClick, true);
-            public static void LeftOrRightClick(Rect rect, Action<Rect> onLeftClick, Action<Rect> onRightClick, bool useEvent)
+
+            public static void LeftOrRightClick(Rect rect, Action<Rect> onLeftClick, Action<Rect> onRightClick,
+                bool useEvent)
             {
-                if (EventUtil.EventCheck(rect, EventType.MouseDown,useEvent) && Event.current.button == 0)
-                    onLeftClick(rect);
-                if (EventUtil.EventCheck(rect, EventType.MouseDown,useEvent) && Event.current.button == 1)
-                    onRightClick(rect);
+                if (Event.current == null)
+                    return;
+                if (onLeftClick != null)
+                    if (Event.current.button == 0 && EventCheck(rect, EventType.MouseDown, useEvent))
+                        onLeftClick(rect);
+                if (onRightClick != null)
+                    if (Event.current.button == 1 && EventCheck(rect, EventType.MouseDown, useEvent))
+                        onRightClick(rect);
             }
         }
     }

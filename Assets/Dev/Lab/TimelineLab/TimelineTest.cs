@@ -1,4 +1,4 @@
-using PJR;
+using System.Collections.Generic;
 using PJR.ClassExtension;
 using PJR.Timeline;
 using Sirenix.OdinInspector;
@@ -48,11 +48,11 @@ public class TimelineTest : MonoBehaviour
         seq.FrameRateType = Define.EFrameRate.Game;
 
         seq.Tracks = new Track[] {
-            new Track()
+            ScriptableObject.CreateInstance<Track>()
         };
 
         trans.ResetValue();
-        seq.Tracks[0].clips = new Clip[] {
+        seq.Tracks[0].clips = new List<Clip> {
             new AnimancerClip() {
                 start = 0,
                 end = 2,

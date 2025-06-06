@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using static PJR.Timeline.Define;
 #if UNITY_EDITOR
+using UnityEditor;
 #endif
 
 namespace PJR.Timeline
@@ -22,10 +23,12 @@ namespace PJR.Timeline
         string GetClipInfo();
         public ClipRunner GetRunner();
         public Color GetClipColor();
+#if UNITY_EDITOR
+        public void GetContextMenu(GenericMenu menu){}
+#endif
     }
 
-    [Serializable]
-    public abstract class Clip : IClip
+    public abstract class Clip : SequenceScriptableObject ,IClip
     {
         [SerializeField,DisableIf("@true")]
         protected EFrameRate _frameRateType = 0;
@@ -122,6 +125,10 @@ namespace PJR.Timeline
         }
         public abstract ClipRunner GetRunner();
         public virtual Color GetClipColor() => Color.green;
+
+#if UNITY_EDITOR
+        public virtual void GetContextMenu(GenericMenu menu){}
+#endif
     }
 
     /// <summary>

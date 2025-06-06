@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5697384937513170884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a963fb878a998c84cb6b4e7517bdbfff, type: 3}
+  m_Name: AnimancerClip
+  m_EditorClassIdentifier: 
+  _frameRateType: 0
+  _mute: 1
+  _description: 
+  _start: 0.31666666666666665
+  _end: 0.7500000136593976
+  _startFrame: 19
+  _endFrame: 45
+  animationClip: {fileID: 7400000, guid: 337aeda223844c24ebcfcdd4a0d6c513, type: 2}
+--- !u!114 &-4162633511868163718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adf808bbadaf913459b971daa0838d9d, type: 3}
+  m_Name: Track
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: 3682668047688397509}
+--- !u!114 &-2484407261293561826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0fce07a0f8115c4d9f395ee6aeff3ac, type: 3}
+  m_Name: Sequence
+  m_EditorClassIdentifier: 
+  frameRateType: 0
+  tracks:
+  - {fileID: 6861828503087280329}
+  - {fileID: -4162633511868163718}
+  - {fileID: 3460140302391819128}
+  runtimeInstance: 0
+--- !u!114 &-1205027490415359270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a963fb878a998c84cb6b4e7517bdbfff, type: 3}
+  m_Name: AnimancerClip
+  m_EditorClassIdentifier: 
+  _frameRateType: 0
+  _mute: 0
+  _description: 
+  _start: 0.13333333333333336
+  _end: 0.650000013659398
+  _startFrame: 8
+  _endFrame: 39
+  animationClip: {fileID: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e41c4cf7ddef7764e94a89ce1ec0dd14, type: 3}
+  m_Name: New_Sequence_Asset
+  m_EditorClassIdentifier: 
+  Sequence: {fileID: -2484407261293561826}
+--- !u!114 &3460140302391819128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adf808bbadaf913459b971daa0838d9d, type: 3}
+  m_Name: Track
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: -1205027490415359270}
+--- !u!114 &3682668047688397509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a963fb878a998c84cb6b4e7517bdbfff, type: 3}
+  m_Name: AnimancerClip
+  m_EditorClassIdentifier: 
+  _frameRateType: 0
+  _mute: 0
+  _description: 
+  _start: 0.2
+  _end: 0.5166666803260644
+  _startFrame: 12
+  _endFrame: 31
+  animationClip: {fileID: 0}
+--- !u!114 &6861828503087280329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adf808bbadaf913459b971daa0838d9d, type: 3}
+  m_Name: Track
+  m_EditorClassIdentifier: 
+  _clips:
+  - {fileID: -5697384937513170884}

@@ -121,6 +121,8 @@ namespace PJR.Timeline.Editor
         {
             alignment = TextAnchor.MiddleCenter,
         };
+        public static Texture Icon_Corner_On { get; } = EditorGUIUtility.IconContent("d_winbtn_mac_max").image;
+        public static Texture Icon_Corner_Off { get; } = EditorGUIUtility.IconContent("d_winbtn_mac_close").image;
         #endregion
 
         public Styles2 timeAreaStyles;

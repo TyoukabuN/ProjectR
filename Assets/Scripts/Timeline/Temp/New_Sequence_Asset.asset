@@ -34,12 +34,12 @@ MonoBehaviour:
       type: {class: AnimancerClip, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
       data:
         _frameRateType: 0
-        _mute: 1
+        _mute: 0
         _description: 
-        _start: 0.11666666666666667
-        _end: 0.4833333469927311
-        _startFrame: 7
-        _endFrame: 29
+        _start: 0.43333333333333335
+        _end: 0.8000000136593978
+        _startFrame: 26
+        _endFrame: 48
         animationClip: {fileID: 0}
     - rid: 928521765971296258
       type: {class: Track, ns: PJR.Timeline, asm: PJR.Timeline.Runtime}
@@ -52,8 +52,8 @@ MonoBehaviour:
         _frameRateType: 0
         _mute: 0
         _description: 
-        _start: 0.23333333333333334
-        _end: 0.8166666803260645
-        _startFrame: 14
-        _endFrame: 49
+        _start: 0.2833333333333333
+        _end: 0.9333333469927311
+        _startFrame: 17
+        _endFrame: 56
         animationClip: {fileID: 0}

@@ -2,6 +2,9 @@ using Animancer;
 using System;
 using UnityEngine;
 using static PJR.Timeline.Define;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace PJR.Timeline
 {
@@ -18,6 +21,13 @@ namespace PJR.Timeline
             return $"[播放动画] {animationClip?.name ?? string.Empty}";
         }
         public override ClipRunner GetRunner() => Pool.ObjectPool<AnimancerClipRunner>.Get();
+        
+#if UNITY_EDITOR
+        public override void GetContextMenu(GenericMenu menu)
+        {
+            menu.AddDisabledItem(new GUIContent("播放动画"));
+        }
+#endif
     }
 
     public class AnimancerClipRunner : ClipRunner<AnimancerClip>

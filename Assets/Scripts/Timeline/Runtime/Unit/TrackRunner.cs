@@ -79,7 +79,7 @@ namespace PJR.Timeline
             }
 
             _clipRunners = UnityEngine.Pool.CollectionPool<List<ClipRunner>, ClipRunner>.Get();
-            for (int i = 0; i < _track.clips.Length; i++)
+            for (int i = 0; i < _track.clips.Count; i++)
             {
                 var clip = _track.clips[i];
                 if (clip == null)

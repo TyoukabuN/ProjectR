@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using static UnityEditor.EditorGUI;
@@ -9,13 +10,14 @@ namespace PJR.Timeline.Editor
     {
         public static TimelineWindow instance { get; private set; }
 
-        private WindowState m_State;
-        public WindowState state => m_State ??= new WindowState();
+        private WindowState _state;
+        public WindowState State => _state ??= new WindowState();
 
         [MenuItem("PJR/Timeline", false, 1)]
         public static TimelineWindow ShowWindow()
         {
             instance = GetWindow<TimelineWindow>();
+            instance.titleContent = new GUIContent("TimelineWindow");
             instance.Focus();
             return instance;
         }
@@ -43,27 +45,28 @@ namespace PJR.Timeline.Editor
         public void Clear()
         {
             RegisterEvent(false);
+            TimelineGUIElement.DisposeAll();
         }
         public override void SaveChanges()
         {
             base.SaveChanges();
-            state?.TrySetSequenceAssetDirty();
+            State?.SaveSequenceAsset();
         }
         void OnGUI()
         {
             Styles.ReloadStylesIfNeeded();
-            
+
             if (CheckRepaintRequired())
                 return;
 
-            if (!state.editingSequence.IsEmpty && !state.editingSequence.Valid)
+            if (!State.editingSequence.IsEmpty && !State.editingSequence.Valid)
             {
-                state.editingSequence = EditingSequare.Empty;
+                State.editingSequence = EditingSequare.Empty;
                 return;
             }
 
-            Draw_Headers();
-            TrackViewsGUI();
+            Draw_Headers(); 
+            TrackViewsGUI(); 
         }
 
         /// <summary>
@@ -73,40 +76,20 @@ namespace PJR.Timeline.Editor
         {
             if (Event.current.type != EventType.Repaint)
                 return false;
-            if (!state.requireRepaint)
+            if (!State.requireRepaint)
                 return false;
-            state.requireRepaint = false;
+            State.requireRepaint = false;
+            //GUIUtility.ExitGUI();
             Repaint();
             return true;
         }
-        void GUILayoutLab()
-        {
-            var r1 = new Rect(0, 0, 500, 200);
-            r1.Debug();
-
-            GUILayout.Space(10);
-
-            using (new GUILayout.HorizontalScope(
-                GUILayout.Height(100),
-                GUILayout.Width(200)
-                ))
-            {
-                GUILayout.Space(50);
-                var rect = GUILayoutUtility.GetRect(200, 50);
-                EditorGUI.DrawRect(rect, Styles.Instance.customSkin.colorTrackHeaderBackground);
-            }
-
-            GUILayoutUtility.GetLastRect().Debug(Color.blue);
-        }
-
+      
         void Draw_Headers()
         {
-            using (new GUILayout.VerticalScope())
+            using(new GUILayout.VerticalScope())
             {
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
-                {
                     Draw_ControlBar();
-                }
 
                 using (new GUILayout.HorizontalScope())
                 {
@@ -119,12 +102,10 @@ namespace PJR.Timeline.Editor
         void Draw_ControlBar()
         {
             Draw_DebugButton();
-            using (new DisabledScope(instance.state.DisableControlBar()))
+            using (new DisabledScope(instance.State.IsControlBarDisabled()))
             { 
-                if (state.debugging)
-                {
-                    Draw_RepaintButton();
-                }
+                if (State.debugging)
+                    Draw_DebugButtons();
                 Draw_GotoBeginingButton();
                 Draw_PreviousFrameButton();
                 Draw_PlayerButton();
@@ -132,6 +113,11 @@ namespace PJR.Timeline.Editor
                 Draw_GotoEndButton();
                 GUILayout.FlexibleSpace();
             }
+        }
+
+        void Draw_DebugButtons()
+        { 
+            Draw_RepaintButton();
         }
 
         public void TrackViewsGUI()
@@ -144,7 +130,7 @@ namespace PJR.Timeline.Editor
             //分割TrackMenu和View边界部分
             DrawSpliterAboutTrackMenuAndView();
             
-            if (state.NonEditingSequence())
+            if (State.NonEditingSequence())
             {
                 Draw_NonEditingSequenceTrackView();
                 return;
@@ -155,14 +141,14 @@ namespace PJR.Timeline.Editor
             
             using (new GUIViewportScope(localTrackRect))
             {
-                state.TrackGUI.OnGUI(localTrackRect);
+                State.TrackGUI.OnGUI(localTrackRect);
             }
             GUILayout.EndArea();
             
             //点击下方空白区域后,取消Hotspot
             if (EventUtil.EventCheck(trackRect, EventType.MouseDown, false))
             {
-                state.ClearHotspot();
+                State.ClearHotspot();
                 Repaint();
                 return;
             }
@@ -173,14 +159,14 @@ namespace PJR.Timeline.Editor
         /// </summary>
         void DrawSpliterAboutTrackMenuAndView()
         {
-            if(state.debugging)
+            if(State.debugging)
                 GUIUtil.DebugRect(headerSizeHandleRect, Color.cyan, false, true);
 
             EditorGUIUtility.AddCursorRect(headerSizeHandleRect, MouseCursor.SplitResizeLeftRight);
             headerSizeHandleRect.DragEventCheck((rect) =>
             {
                 float relativeX = Event.current.mousePosition.x - rect.x;
-                state.trackMenuAreaWidth = Mathf.Clamp(state.trackMenuAreaWidth + relativeX, Constants.trackMenuMinAreaWidth, Constants.trackMenuMaxAreaWidth);
+                State.trackMenuAreaWidth = Mathf.Clamp(State.trackMenuAreaWidth + relativeX, Constants.trackMenuMinAreaWidth, Constants.trackMenuMaxAreaWidth);
             });
         }
 
@@ -212,8 +198,8 @@ namespace PJR.Timeline.Editor
         void Draw_DebugButton()
         {
             EditorGUI.BeginChangeCheck();
-            var enabled = state.debugging;
-            state.debugging = GUILayout.Toggle(enabled, Styles.debugContent, EditorStyles.toolbarButton);
+            var enabled = State.debugging;
+            State.debugging = GUILayout.Toggle(enabled, Styles.debugContent, EditorStyles.toolbarButton);
         }
         void Draw_RepaintButton()
         {
@@ -259,9 +245,9 @@ namespace PJR.Timeline.Editor
 
         void Draw_HeaderEditBar()
         {
-            using (new EditorGUI.DisabledScope(state.NonEditingSequence()))
+            using (new EditorGUI.DisabledScope(State.NonEditingSequence()))
             { 
-                using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(state.trackMenuAreaWidth)))
+                using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(State.trackMenuAreaWidth)))
                 {
                     GUILayout.Space(15f);
                     Draw_AddTrackButton();
@@ -280,46 +266,54 @@ namespace PJR.Timeline.Editor
         }
         void OnCreateTrack(Type type)
         {
-            if (state.NonEditingSequence())
+            if (State.NonEditingSequence())
                 return;
-            var tracks = state.editingSequence.Sequence.Tracks;
-
-            var clip = Activator.CreateInstance(type) as IClip;
+            var tracks = State.editingSequence.Sequence.Tracks;
+            
+            var clipScriptableObject = ScriptableObject.CreateInstance(type);
+            clipScriptableObject.name = type.Name;
+            
+            var clip = clipScriptableObject as Clip;
+            //var clip = Activator.CreateInstance(type) as IClip;
+            
             if (clip == null)
             {
                 Debug.Log($"创建[类型:{type.Name}]失败");
                 return;
             }
 
-            clip.FrameRateType = state.editingSequence.Sequence.FrameRateType;
+            clip.FrameRateType = State.editingSequence.Sequence.FrameRateType;
             clip.StartFrame = 0;
             clip.EndFrame = 5;
-            
-            var track = new Track{
-                clips = new[]{clip},
-            };
+
+            var track = ScriptableObject.CreateInstance<Track>();
+            track.name = "Track";
+            track.clips = new List<Clip>{ clip }; 
+            AssetDatabase.AddObjectToAsset(track, State.editingSequence.SequenceAsset);
+            AssetDatabase.AddObjectToAsset(clipScriptableObject, State.editingSequence.SequenceAsset);
 
             ArrayUtility.Add(ref tracks, track);
-            state.editingSequence.Sequence.Tracks = tracks;
-            if(state.editingSequence.SequenceAsset != null)
-                EditorUtility.SetDirty(state.editingSequence.SequenceAsset);
-            state.requireRepaint = true;
+            State.editingSequence.Sequence.Tracks = tracks;
+            if(State.editingSequence.SequenceAsset != null)
+                EditorUtility.SetDirty(State.editingSequence.SequenceAsset);
+            AssetDatabase.SaveAssets();
+            State.requireRepaint = true;
         }
 
         void Draw_TimelineRuler()
         {
-            if (state.NonEditingSequence())
+            if (State.NonEditingSequence())
                 return;
 
             EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
             GUIUtil.CheckWheelEvent(timelineRulerRect, evt =>
             {
-                state.currentPixelPerFrame -= (int)evt.delta.y;
-                state.currentPixelPerFrame = Mathf.Clamp(state.currentPixelPerFrame, Constants.pixelPerFrame, Constants.maxPixelPerFrame);
+                State.currentPixelPerFrame -= (int)evt.delta.y;
+                State.currentPixelPerFrame = Mathf.Clamp(State.currentPixelPerFrame, Constants.pixelPerFrame, Constants.maxPixelPerFrame);
                 Repaint();
             });
 
-            int tickStep = Constants.pixelPerFrame + 1 - (state.currentPixelPerFrame / Constants.pixelPerFrame);
+            int tickStep = Constants.pixelPerFrame + 1 - (State.currentPixelPerFrame / Constants.pixelPerFrame);
             tickStep /= 2;
             tickStep = Mathf.Max(tickStep, 1);
 
@@ -338,7 +332,7 @@ namespace PJR.Timeline.Editor
             float shortTickStartY = rect.height - 6f;
 
 
-            for (int i = 0; i < rect.width; i += state.currentPixelPerFrame, frameIndex++)
+            for (int i = 0; i < rect.width; i += State.currentPixelPerFrame, frameIndex++)
             {
                 if (frameIndex % tickStep == 0)
                 {
@@ -362,9 +356,9 @@ namespace PJR.Timeline.Editor
 
             //TrackView下的刻度
             var rulerInTrackView = new Rect(
-                state.trackMenuAreaWidth, 
+                State.trackMenuAreaWidth, 
                 Constants.clipStartPositionY, 
-                position.width - state.trackMenuAreaWidth, 
+                position.width - State.trackMenuAreaWidth, 
                 position.height - Constants.clipStartPositionY);
             
             //新开一个坐标系
@@ -376,7 +370,7 @@ namespace PJR.Timeline.Editor
             longTickStartY = 0f;
             shortTickStartY = 0f;
 
-            for (int i = 0; i < rect.width; i += state.currentPixelPerFrame, frameIndex++)
+            for (int i = 0; i < rect.width; i += State.currentPixelPerFrame, frameIndex++)
             {
                 if (frameIndex % tickStep == 0)
                 {
@@ -400,19 +394,19 @@ namespace PJR.Timeline.Editor
 
         void Draw_TimelineRuler_TrackView()
         {
-            if (state.NonEditingSequence())
+            if (State.NonEditingSequence())
                 return;
             
             //TrackView下的刻度
             var rect = new Rect(
-                state.trackMenuAreaWidth, 
+                State.trackMenuAreaWidth, 
                 Constants.clipStartPositionY, 
-                position.width - state.trackMenuAreaWidth, 
+                position.width - State.trackMenuAreaWidth, 
                 position.height - Constants.clipStartPositionY);
 
             DrawRect(rect, Styles.Instance.customSkin.colorSubSequenceBackground);
 
-            int tickStep = Constants.pixelPerFrame + 1 - (state.currentPixelPerFrame / Constants.pixelPerFrame);
+            int tickStep = Constants.pixelPerFrame + 1 - (State.currentPixelPerFrame / Constants.pixelPerFrame);
             tickStep /= 2;
             tickStep = Mathf.Max(tickStep, 1);
 
@@ -426,34 +420,22 @@ namespace PJR.Timeline.Editor
             Handles.BeginGUI();
             int frameIndex = 0;
             float longTickStartY = 0f;
-            float shortTickStartY = 0f;
 
             var color = Color.white * 0.533f;
 
-            for (int i = 0; i < rect.width; i += state.currentPixelPerFrame, frameIndex++)
+            for (int i = 0; i < rect.width; i += State.currentPixelPerFrame, frameIndex++)
             {
                 if (frameIndex % tickStep == 0)
                 {
                     using (new Handles.DrawingScope(color))
-                    {
                         Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
-                        // 可能后面还会用到标题
-                        // GUI.Label(new Rect(i + 1f, -3f, 40f, 20f), frameIndex.ToString(),
-                        //     Styles.Instance.timeAreaStyles.timelineTick);
-                    }
                 }
-                //TrackView可能不需要画短的
-                // else
-                // {
-                //     using (new Handles.DrawingScope(color))
-                //         Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
-                // }
             }
             Handles.EndGUI();
             GUILayout.EndArea();
         }
 
-        private float sliderValue = 0f;
+        //private float sliderValue = 0f;
 
         public void Draw_MenuTrackBoundary()
         { 

@@ -1,4 +1,3 @@
-using NPOI.SS.Formula.Functions;
 using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
@@ -6,7 +5,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using static PJR.Timeline.Define;
-using static PJR.Timeline.Utility;
 
 namespace PJR.Timeline
 {

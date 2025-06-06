@@ -6,15 +6,19 @@ namespace PJR.Timeline.Editor
 {
     public class DefaultMenuDrawer : MenuDrawer
     {
-        public DefaultMenuDrawer(IClip clip) : base(clip){}
+        public DefaultMenuDrawer(Track track,IClip clip) : base(track,clip){}
     }
     public partial class MenuDrawer : TimelineGUIElement
     {
-        public IClip Clip;
-        public MenuDrawer(IClip clip) => Reset(clip);
-        public void Reset(IClip clip)
+        public Track Track;
+        public IClip IClip;
+        public MenuDrawer(Track track, IClip clip) => Reset(track, clip);
+        public override object PropertyObject => Track;
+
+        public void Reset(Track track,IClip clip)
         {
-            Clip = clip;
+            Track = track;
+            IClip = clip;
         }
 
         public Color GetMenuBgColor()
@@ -30,19 +34,19 @@ namespace PJR.Timeline.Editor
 
             rect.Debug();
 
-            var labelSize = Styles.CalcLabelSize(Clip.GetClipName());
+            var labelSize = Styles.CalcLabelSize(IClip.GetClipName());
 
-            GUILayout.Label(new GUIContent(Clip.GetClipName(), Clip.GetClipName()), GUILayout.Width(labelSize.x),
+            GUILayout.Label(new GUIContent(IClip.GetClipName(), IClip.GetClipName()), GUILayout.Width(labelSize.x),
                 GUILayout.ExpandHeight(true));
 
             GUILayout.FlexibleSpace();
 
             using (new MidAlignmentScope.Horizontal())
             {
-                if (GUILayout.Button(Clip.Mute ? Styles.trackMuteEnabledIcon : Styles.trackMuteDisabledIcon,
+                if (GUILayout.Button(IClip.Mute ? Styles.trackMuteEnabledIcon : Styles.trackMuteDisabledIcon,
                         EditorStyles.iconButton))
                 {
-                    Clip.Mute = !Clip.Mute;
+                    IClip.Mute = !IClip.Mute;
                 }
             }
 
@@ -53,7 +57,7 @@ namespace PJR.Timeline.Editor
             EventUtil.MouseEvent.LeftOrRightClick(evtRect, OnClick, OnContextClick);
         }
         
-        protected virtual void OnClick(Rect rect)
+        public virtual void OnClick(Rect rect)
         {
             if (windowState.Hotspot == this)
                 return;
@@ -62,27 +66,29 @@ namespace PJR.Timeline.Editor
             Repaint();
         }
 
-        protected virtual void OnContextClick(Rect rect)
+        public virtual void OnContextClick(Rect rect)
         {
             DisplayRightClickMenu(rect);
             EventType.MouseDown.Use();
         }
-
         /// <summary>
         /// 右键默认选项
         /// </summary>
         /// <returns></returns>
-        protected virtual GenericMenu GetGenericMenu(IClip clip)
+        protected GenericMenu GetDefaultGenericMenu()
         {
             var menu = new GenericMenu();
-            menu.AddDisabledItem(new GUIContent("右键默认选项"));
-            menu.AddSeparator($"{clip.GetClipName()}");
+            menu.AddDisabledItem(new GUIContent("右键选项"));
+            menu.AddSeparator("");
+            menu.AddItem(new GUIContent("删除"),false,()=>{ });
+            menu.AddSeparator("");
+            IClip?.GetContextMenu(menu);
             return menu;
         }
-
-        public virtual void DisplayRightClickMenu(Rect rect)
+        protected virtual void OnCreateContextMenu(GenericMenu menu){}
+        public void DisplayRightClickMenu(Rect rect)
         {
-            var menu = GetGenericMenu(Clip);
+            var menu = GetDefaultGenericMenu();
             menu.ShowAsContext();
         }
     }

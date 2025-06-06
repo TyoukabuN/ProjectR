@@ -38,13 +38,31 @@ namespace PJR
             }
         }
 
-        [MenuItem("GameObject/PJR/Copy Path", false)]
+        [MenuItem("GameObject/PJR/复制Hierarchy路径", false)]
         public static void CopyPath()
         {
             var path = TransformExtension.CopyHierarchyPath(Selection.activeGameObject?.transform);
             Debug.Log(path);
             var textEditor = new TextEditor();
             textEditor.text = path;
+            textEditor.OnFocus();
+            textEditor.Copy();
+        }
+
+        [MenuItem("Assets/PJR/复制GUID", false)]
+        public static void GetAssetGUID()
+        {
+            if (Selection.activeObject == null)
+                return;
+            string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
+            if (string.IsNullOrEmpty(assetPath))
+                return;
+            string guid = AssetDatabase.AssetPathToGUID(assetPath);
+            if (string.IsNullOrEmpty(guid))
+                return;
+            Debug.Log($"{guid}\n{assetPath}");
+            var textEditor = new TextEditor();
+            textEditor.text = guid;
             textEditor.OnFocus();
             textEditor.Copy();
         }

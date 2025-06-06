@@ -4,17 +4,18 @@ using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    [Serializable]
-    public class Sequence : ISequence
+    public class Sequence : SequenceScriptableObject, ISequence
     {
         public EFrameRate frameRateType;
-        [SerializeReference]
-        public Track[] tracks;
-
+        [SerializeField]
+        private Track[] tracks = Array.Empty<Track>(); 
         public bool runtimeInstance;
-
         public EFrameRate FrameRateType { get => frameRateType; set => frameRateType = value; }
-        public Track[] Tracks { get => tracks; set => tracks = value; }
+        public Track[] Tracks
+        {
+            get => tracks??=Array.Empty<Track>(); 
+            set => tracks = value;
+        }
     }
     public interface ISequence
     {

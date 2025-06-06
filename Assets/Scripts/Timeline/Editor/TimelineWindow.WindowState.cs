@@ -11,7 +11,7 @@ namespace PJR.Timeline.Editor
         public class WindowState
         {
             public EditingSequare editingSequence;
-            public bool DisableControlBar() => !AnyEditingSequence();
+            public bool IsControlBarDisabled() => !AnyEditingSequence();
             public bool AnyEditingSequence() => editingSequence.Sequence != null;
             public bool NonEditingSequence() => !AnyEditingSequence();
 
@@ -22,7 +22,7 @@ namespace PJR.Timeline.Editor
             /// <summary>
             /// debugging=true会绘制一些额外的GUI
             /// </summary>
-            public bool debugging = true;
+            public bool debugging = false;
 
             public bool requireRepaint = false;
 
@@ -47,6 +47,7 @@ namespace PJR.Timeline.Editor
             {
                 if (timelineGUIElement != null && timelineGUIElement == _hotspot)
                     return;
+                Selection.activeObject = instance;
                 OnHotspotChanged?.Invoke(_hotspot,timelineGUIElement);
                 _hotspot = timelineGUIElement;
             }
@@ -107,8 +108,6 @@ namespace PJR.Timeline.Editor
             /// <param name="paths"></param>
             private void OnWillSaveAssetsCall(string[] paths)
             {
-                Debug.Log("OnWillSaveAssetsCall");
-
                 if (editingSequence.SequenceAsset == null)
                     return;
                     
@@ -129,6 +128,14 @@ namespace PJR.Timeline.Editor
                 Undo.RecordObject(editingSequence.SequenceAsset, undoName);
                 EditorUtility.SetDirty(editingSequence.SequenceAsset);
                 instance.hasUnsavedChanges = true;
+                return true;
+            }
+            public bool SaveSequenceAsset(string undoName = null)
+            {
+                if (!TrySetSequenceAssetDirty(undoName))
+                    return false;
+                instance.hasUnsavedChanges = false;
+                AssetDatabase.SaveAssetIfDirty(editingSequence.SequenceAsset);
                 return true;
             }
         }
@@ -154,9 +161,6 @@ namespace PJR.Timeline.Editor
             {
                 get=>  Sequence != null && SequenceAsset != null;
             }
-
-
-           
         }
 
         public struct HotSpot
@@ -164,7 +168,6 @@ namespace PJR.Timeline.Editor
             public static HotSpot Empty => new(){};
             private bool _IsEmpty;
             public bool IsEmpty => _IsEmpty;
-
         }
     }
 }

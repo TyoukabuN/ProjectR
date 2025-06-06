@@ -12,7 +12,7 @@ namespace PJR.Timeline.Editor
     /// </summary>
     public static class GUIUtil
     {
-        public static TimelineWindow.WindowState windowState => TimelineWindow.instance?.state;
+        public static TimelineWindow.WindowState windowState => TimelineWindow.instance?.State;
 
         public static void DrawOutline(this Rect rect, float size, Color color)
         {
@@ -49,14 +49,19 @@ namespace PJR.Timeline.Editor
             Handles.DrawLine(topRight, bottomRight);
             Handles.DrawLine(bottomRight, bottomLeft);
             Handles.DrawLine(bottomLeft, topLeft);
-
+            
+            //在中显示大小
+            if (displaySize)
+            {
+                var temp = topLeft;
+                temp.x += 1f;
+                temp.y += 1f;
+                Handles.Label(topLeft, new GUIContent(rect.ToString()), EditorStyles.miniLabel);
+            }
+            
             //对角线
             if (rect.width > 50)
                 Handles.DrawLine(topLeft, bottomRight);
-
-            //在中显示大小
-            if(displaySize)
-                Handles.Label(center, new GUIContent(rect.ToString()), EditorStyles.centeredGreyMiniLabel);
 
             Handles.EndGUI();
         }

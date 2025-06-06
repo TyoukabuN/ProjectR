@@ -167,10 +167,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b9161b88b27a894981ab50e85bcaed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trans: {fileID: 1103173521}
-  speed: 10
+  trans: {fileID: 0}
+  speed: 0
   color: {r: 0, g: 0, b: 0, a: 0}
-  animationClip: {fileID: 7400000, guid: 337aeda223844c24ebcfcdd4a0d6c513, type: 2}
+  animationClip: {fileID: 0}
 --- !u!1 &429742402
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,6 +293,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1103173521}
+  - component: {fileID: 1103173524}
   - component: {fileID: 1103173520}
   - component: {fileID: 1103173519}
   - component: {fileID: 1103173518}
@@ -417,6 +418,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Animator: {fileID: 1103173522}
   _ActionOnDisable: 0
+--- !u!114 &1103173524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1103173517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf8bb71f6960ed44b824c54696fafb34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sequenceAsset: {fileID: 11400000, guid: 3c212882b45f7594fbe1ad9231b8cc2c, type: 2}
 --- !u!1 &2128812853
 GameObject:
   m_ObjectHideFlags: 0

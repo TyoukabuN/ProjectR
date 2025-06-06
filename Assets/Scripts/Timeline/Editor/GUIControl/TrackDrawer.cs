@@ -1,4 +1,5 @@
 using System;
+using PJR.Editor;
 using UnityEditor;
 using UnityEngine;
 using static PJR.Timeline.Editor.TimelineWindow;
@@ -12,8 +13,6 @@ namespace PJR.Timeline.Editor
 
         float _draggedMenuSpace = 0f;
         public float DraggedMenuSpace => _draggedMenuSpace;
-        protected WindowState windowState => instance.state;
-        
         
         protected MenuDrawer _menuDrawer;
         public virtual Type MenuDrawerType => typeof(DefaultMenuDrawer);
@@ -45,7 +44,7 @@ namespace PJR.Timeline.Editor
         /// <param name="rect"></param>
         public virtual void OnDrawMenu(Rect rect) 
         {
-            MenuDrawer.Draw(rect);
+            MenuDrawer?.Draw(rect);
         }
 
         /// <summary>
@@ -57,7 +56,7 @@ namespace PJR.Timeline.Editor
             EditorGUI.DrawRect(rect, GetTrackBgColor(IsSelect));
 
             OnDrawClip(rect);
-            EventUtil.MouseEvent.LeftOrRightClick(rect,OnClick,OnContextClick);
+            EventUtil.MouseEvent.LeftOrRightClick(rect,OnClick, OnContextClick);
         }
         
         /// <summary>
@@ -97,38 +96,40 @@ namespace PJR.Timeline.Editor
         protected GenericMenu GetDefaultGenericMenu()
         {
             var menu = new GenericMenu();
-            menu.AddDisabledItem(new GUIContent("右键默认选项"));
-            menu.AddSeparator($"{IClip.GetClipName()}");
+            menu.AddDisabledItem(new GUIContent("右键选项"));
+            menu.AddSeparator("");
+            menu.AddItem(new GUIContent("删除"),false,()=>{ });
+            menu.AddSeparator("");
+            IClip?.GetContextMenu(menu);
             return menu;
         }
-        public virtual void DisplayRightClickMenu(Rect rect)
+        protected virtual void OnCreateContextMenu(GenericMenu menu){}
+        public void DisplayRightClickMenu(Rect rect)
         {
             var menu = GetDefaultGenericMenu();
             menu.ShowAsContext();
-        }
-
-        public virtual void Repaint()
-        { 
-            TimelineWindow.instance?.Repaint();
         }
     }
     
     public abstract class TrackDrawer<TClip> : TrackDrawer where TClip : IClip
     {
+        protected Track _track;
+        
         protected TClip _clip;
         public override IClip IClip => _clip;
         public TClip Clip => _clip;
-        public override MenuDrawer MenuDrawer=> _menuDrawer ??= new DefaultMenuDrawer(IClip);
+        public override MenuDrawer MenuDrawer=> _menuDrawer ??= new DefaultMenuDrawer(_track, IClip);
         public override ClipDrawer ClipDrawer=> _clipDrawer ??= new DefaultClipDrawer(IClip);
 
-        public TrackDrawer(TClip clip)
+        public TrackDrawer(Track track,TClip clip)
         {
+            _track = track;
             _clip = clip;
         }
     }
     public class DefaultTrackDrawer : TrackDrawer<IClip>
     {
-        public DefaultTrackDrawer(IClip clip):base(clip) { 
+        public DefaultTrackDrawer(Track track, IClip clip):base(track,clip) { 
         }
         public override void OnDrawMenu(Rect rect)
         {

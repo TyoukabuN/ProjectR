@@ -9,15 +9,18 @@ namespace PJR.Timeline.Editor
 {
     public static class TimelineAssetMenus
     {
-        [MenuItem("Assets/PJR/Timeline/Create/Sequence Asset")]
+        [MenuItem("Assets/PJR/Timeline/Create Sequence Asset")]
         public static void CreateSequenceAsset()
         {
             string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
             assetPath = $"{assetPath}/New_Sequence_Asset.asset";
             assetPath = AssetDatabase.GenerateUniqueAssetPath(assetPath);
             var asset = ScriptableObject.CreateInstance<SequenceAsset>();
-            asset.Sequence = new Sequence();
+            asset.Sequence = ScriptableObject.CreateInstance<Sequence>();
+            asset.Sequence.name = "Sequence";
             AssetDatabase.CreateAsset(asset, assetPath);
+            AssetDatabase.AddObjectToAsset(asset.Sequence, asset);
+            AssetDatabase.SaveAssets();
         }
     }
 }

@@ -19,6 +19,10 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: NonGCBlackBoard
+    path: Assets/Dev/Lab/NonCGBlackBoard/NonGCBlackBoard.unity
+  - name: NonCGBlackBoard
+    path: Assets/Dev/Lab/NonCGBlackBoard/NonCGBlackBoard.unity
   - name: TimelineTest
     path: Assets/Dev/Lab/TimelineLab/TimelineTest.unity
   - name: TimelineTest
@@ -53,8 +57,4 @@ MonoBehaviour:
     path: Assets/Scenes/Empty.unity
   - name: BuildScene_LaunchScreen
     path: Assets/__LS/Resources/DevScene/BuildScene_LaunchScreen.unity
-  - name: TestScene_DemoP5_JW
-    path: Assets/__LS_Test/Test_JW/TestScene_DemoP5_JW.unity
-  - name: AnimationTest
-    path: Assets/__LS_Test/Test_JW/AnimationTest.unity
   _notes: []

@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1213707319}
   - component: {fileID: 1213707320}
+  - component: {fileID: 1213707321}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -170,7 +171,8 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 1213707321}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -178,11 +180,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: CachedValueBoard
       Entry: 7
-      Data: 0|PJR.BlackBoard.CachedValueBoard.CachedValueBoard, PJR.Lab.Editor
+      Data: 0|PJR.BlackBoard.CachedValueBoard.CachedValueBoard, PJR
     - Name: _key2Value
       Entry: 7
       Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.BlackBoard.CachedValueBoard.ICachedValue,
-        PJR.Lab.Editor]], mscorlib
+        PJR]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 2|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
@@ -198,13 +200,14 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: "Integer\u503C"
+      Data: "\u6D4B\u8BD5Key"
     - Name: $v
       Entry: 7
-      Data: 3|PJR.BlackBoard.CachedValueBoard.CachedInteger, PJR.Lab.Editor
+      Data: 3|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Single, mscorlib]],
+        PJR
     - Name: _value
-      Entry: 3
-      Data: 87387
+      Entry: 4
+      Data: 11
     - Name: 
       Entry: 8
       Data: 
@@ -216,14 +219,14 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: "\u6D4B\u8BD5Key"
+      Data: a
     - Name: $v
       Entry: 7
-      Data: 4|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Single, mscorlib]],
-        PJR.Lab.Editor
+      Data: 4|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Int32, mscorlib]],
+        PJR
     - Name: _value
-      Entry: 4
-      Data: 11
+      Entry: 3
+      Data: 233
     - Name: 
       Entry: 8
       Data: 
@@ -238,4 +241,76 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 8
+      Data: 
+    - Name: TargetBoard
+      Entry: 10
+      Data: 0
+--- !u!114 &1213707321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213707318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de775cfb7609ce0499243fb15be5461f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: CachedValueBoard
+      Entry: 7
+      Data: 0|PJR.BlackBoard.CachedValueBoard.CachedValueBoard, PJR
+    - Name: _key2Value
+      Entry: 7
+      Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.BlackBoard.CachedValueBoard.ICachedValue,
+        PJR]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 2|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: a
+    - Name: $v
+      Entry: 7
+      Data: 3|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Int32, mscorlib]],
+        PJR
+    - Name: _value
+      Entry: 3
+      Data: 233
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: TargetBoard
+      Entry: 6
       Data: 

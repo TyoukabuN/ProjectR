@@ -1,16 +1,10 @@
 using System;
 using UnityEngine;
 
-public class ProfileScope : System.IDisposable
+public struct ProfileScope : System.IDisposable
 {
-    public string name = String.Empty;
-    private DateTime beginStamp;
-
-    private ProfileScope()
-    {
-        beginStamp = System.DateTime.Now;
-    }
-    public ProfileScope(string name) : this()
+    public string name;
+    public ProfileScope(string name) 
     {
         this.name = name;
         UnityEngine.Profiling.Profiler.BeginSample(name);
@@ -22,9 +16,9 @@ public class ProfileScope : System.IDisposable
     }
 }
 
-public class MemoryCostScope : IDisposable
+public struct MemoryCostScope : IDisposable
 {
-    public string name = String.Empty;
+    public string name;
     public long beginStamp;
     public MemoryCostScope(string name)
     {

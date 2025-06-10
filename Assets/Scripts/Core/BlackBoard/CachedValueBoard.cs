@@ -19,38 +19,73 @@ namespace PJR.BlackBoard.CachedValueBoard
         private Dictionary<string, ICachedValue> _key2Value = new();
         public Dictionary<string, ICachedValue> Key2Value => _key2Value;
      
-        public bool TryGetCacheValue(out IndexMap indexMap)
+        public bool TryGetIndexMap(out IndexMap indexMap)
         {
             indexMap = IndexMap.Empty;
             if (_key2Value == null)
-                return false;
+                return false;            
+            
             foreach (var pair in _key2Value)
             {
-                if (!pair.Value.ToBuffer(out int index))
+                if (pair.Value == null)
                 {
-                    Debug.LogError($"failure to cache value to buffer [key: {pair.Key}]");
+                    Debug.LogWarning($"Exist Null Value! [key: {pair.Key}]");
+                    continue;
+                }
+
+                // ICachedValue.IToBufferToken token;
+                // if (!pair.Value.ToBuffer(out token))
+                // {
+                //     Debug.LogError($"Failure to cache value to buffer! [key: {pair.Key}]");
+                //     return false;
+                // }
+                // indexMap.Add(pair.Key, token);
+                
+                ICachedValue.IToBufferToken token;
+                if (!pair.Value.ToBuffer(out var index, out var guid))
+                {
+                    Debug.LogError($"Failure to cache value to buffer! [key: {pair.Key}]");
                     return false;
                 }
-     
-                indexMap.Add(pair.Key, index);
+                indexMap.Add(pair.Key, index, guid);
             }
             return true;
         }
-     
-        public bool ApplyIndexMap(IndexMap indexMap)
+
+        public bool ApplyIndexMap(IndexMap indexMap, bool clearBuffer = false)
         {
             if (indexMap.Length <= 0)
                 return false;
             if (_key2Value == null || _key2Value.Count <= 0)
                 return false;
-            foreach (var pair in indexMap.Indexes())
+            for (int i = 0; i < indexMap.Length; i++)
             {
-                if(!_key2Value.TryGetValue(pair.key, out ICachedValue cachedValue))
+                var pair = indexMap[i];
+
+                if (!_key2Value.TryGetValue(pair.key, out ICachedValue cachedValue))
                     continue;
-                cachedValue.FromBuffer(pair.index);
+                //cachedValue.FromBuffer(pair.token);
+                cachedValue.FromBuffer(pair.index, pair.guid, clearBuffer);
             }
-     
+
             return true;
+        }
+
+        public bool OverrideTo(CachedValueBoard targetBoard)
+        {
+            if (targetBoard == null)
+                return false;
+            IndexMap indexMap;
+
+            if (!TryGetIndexMap(out indexMap) || indexMap.Invalid)
+                return false;
+
+            bool res = false;
+
+            res = targetBoard.ApplyIndexMap(indexMap, true);
+            // using (new ProfileScope("6"))
+            //     indexMap.Release();
+            return res;
         }
 #if UNITY_EDITOR
 

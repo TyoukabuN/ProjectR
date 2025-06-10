@@ -18,12 +18,13 @@ namespace PJR.BlackBoard.CachedValueBoard
             _freeBufferIndex = new Stack<int>(BufferLength);
         }
      
-        public static uint _guid = 0;
-     
-        public static int BufferLength = 1024;
+        private static uint s_guid = 0;
+        public static uint NewGUID => ++s_guid;
+        public static uint GetGUID => s_guid;
+
+        public const int BufferLength = 1024;
         private static BufferUnit<T>[] _buffer;
         private static Stack<int> _freeBufferIndex;
-             
         public static Stack<int> freeBufferIndex => _freeBufferIndex;
         public static BufferUnit<T>[] buffer => _buffer;
      
@@ -67,26 +68,84 @@ namespace PJR.BlackBoard.CachedValueBoard
         private T _value;
         public T Value => _value;
      
-        public bool FromBuffer(int index)
+        public bool FromBuffer(ICachedValue.IToBufferToken token, bool clearBuffer)
         {
-            if (index >= buffer.Length)
+            if (!token.Valid())
                 return false;
-            if (buffer[index].IsEmpty)
-                return false;
-            _value = buffer[index].Value;
+            _value = buffer[token.index].Value;
+            if(clearBuffer)
+                ClearBuffer(token.index);
             return true;
         }
-     
-        public bool ToBuffer(out int index)
+
+        public bool FromBuffer(int index, uint guid, bool clearBuffer)
+        {
+            _value = buffer[index].Value; 
+            if(clearBuffer)
+                ClearBuffer(index);
+            return true;
+        }
+
+        public bool ToBuffer(out int index, out uint guid)
         {
             index = GetEmptyBufferIndex();
+            guid = 0;
             if (index < 0)
                 return false;
-            buffer[index] = new(_value)
-            {
-                Stamp = ++_guid,
+            buffer[index] = new(_value){
+                guid = NewGUID,
             };
+            guid = GetGUID;
             return true;
+        }
+        public bool ToBuffer(out ICachedValue.IToBufferToken token)
+        {
+            if (!ToBuffer(out int index, out uint guid))
+            {
+                token = ToBufferToken.Invalid;
+                return false;
+            }
+            //
+            token = new ToBufferToken(index, guid);
+            return true;
+        }
+        
+        public struct ToBufferToken : ICachedValue.IToBufferToken
+        {
+            public static ToBufferToken Invalid => new() { _invalid = true };
+
+            private bool _invalid;
+            private int _index;
+            private uint _guid;
+            public int index => _index;
+            public uint guid => _guid;
+            
+            public ToBufferToken(int index, uint guid)
+            {
+                _invalid = false;
+                _index = index;
+                _guid = guid;
+            }
+
+            public bool Valid()
+            {
+                if (_invalid)
+                    return false; 
+                if (_guid <= 0)
+                    return false;
+                if (_index <0 || _index >= buffer.Length)
+                    return false;
+                if (buffer[_index].IsEmpty)
+                    return false;
+                return true;
+            }
+
+            public void Release()
+            {
+                if (!Valid())
+                    return;
+                ClearBuffer(_index);
+            }
         }
     }
 }

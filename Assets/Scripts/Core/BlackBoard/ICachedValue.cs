@@ -10,13 +10,22 @@ namespace PJR.BlackBoard.CachedValueBoard
         /// </summary>
         /// <param name="index">buffer索引</param>
         /// <returns></returns>
-        public bool FromBuffer(int index);
-     
+        public bool FromBuffer(IToBufferToken index, bool clearBuffer);
+        public bool FromBuffer(int index, uint guid, bool clearBuffer);
         /// <summary>
         /// 将value传到buffer
         /// </summary>
-        /// <param name="index">如果传到buffer成功的话会反一个索引</param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        public bool ToBuffer(out int index);
+        public bool ToBuffer(out IToBufferToken token);
+        public bool ToBuffer(out int index, out uint guid);
+
+        public interface IToBufferToken
+        {
+            public uint guid { get; }
+            public int index { get; }
+            public bool Valid();
+            public void Release();
+        }
     }
 }

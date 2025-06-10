@@ -5,7 +5,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         public static BufferUnit<T> Empty => new() { _isEmpty = true };
      
         private bool _isEmpty;
-        public uint Stamp;
+        public uint guid;
         private T _value;
      
         public bool IsEmpty => _isEmpty;
@@ -14,7 +14,7 @@ namespace PJR.BlackBoard.CachedValueBoard
      
         public BufferUnit(T value)
         {
-            Stamp = 0;
+            guid = 0;
             _isEmpty = false;
             _value = value;
         }

@@ -5,7 +5,7 @@ namespace PJR.BlackBoard.CachedValueBoard
 {
     public struct IndexMap
     {
-        public static IndexMap Empty => new() { length = 0 };
+        public static IndexMap Empty => new() { _length = 0 };
         public Pair index0; 
         public Pair index1; 
         public Pair index2; 
@@ -18,12 +18,16 @@ namespace PJR.BlackBoard.CachedValueBoard
         public struct Pair
         {
             public string key;
+            public ICachedValue.IToBufferToken token;
+            public uint guid;
             public int index;
         }
              
         public int MaxLength => 8;
-        private int length;
-        public int Length => length;
+        private bool _invalid;
+        public bool Invalid => _length <= 0 || _invalid;
+        private int _length;
+        public int Length => _length;
              
         public Pair this[int i]
         {
@@ -58,32 +62,43 @@ namespace PJR.BlackBoard.CachedValueBoard
                 }
             }
         }
-     
-        public IEnumerable<Pair> Indexes()
+        public bool Add(string key, int index, uint guid)
         {
-            if (length <= 0)
-                yield break;
-            int i = 0;
-            if(i++ < Length) yield return index0;
-            if(i++ < Length) yield return index1;
-            if(i++ < Length) yield return index2;
-            if(i++ < Length) yield return index3;
-            if(i++ < Length) yield return index4;
-            if(i++ < Length) yield return index5;
-            if(i++ < Length) yield return index6;
-            if(i++ < Length) yield return index7;
-        }
-     
-        public bool Add(string key, int index)
-        {
-            if (length >= MaxLength)
+            if (_length >= MaxLength)
                 return false;
-            this[length++] = new()
+            
+            this[_length++] = new()
             {
                 key = key,
-                index = index
+                token = null,
+                index = index,
+                guid = guid,
             };
             return true;
+        }
+
+        public bool Add(string key, ICachedValue.IToBufferToken token)
+        {
+            if (_length >= MaxLength)
+                return false;
+            
+            this[_length++] = new()
+            {
+                key = key,
+                token = token
+            };
+            return true;
+        }
+
+        public void Release()
+        {
+            _invalid = true;
+            for (int i = 0; i < Length; i++)
+            {
+                var index = this[i];
+                if(index.token != null)
+                    index.token.Release();
+            }
         }
     }
 }

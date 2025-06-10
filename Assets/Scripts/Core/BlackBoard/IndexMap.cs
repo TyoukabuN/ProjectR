@@ -19,11 +19,31 @@ namespace PJR.BlackBoard.CachedValueBoard
         {
             public string key;
             public ICachedValue.IToBufferToken token;
-            public uint guid;
-            public int index;
+            private int _index;
+            private uint _guid;
+            private Type _valueType;
+            public uint GUID => token?.guid ?? _guid;
+            public int Index=> token?.index ?? _index;
+            public Type ValueType=> token?.ValueType ?? _valueType;
+            public Pair(string key, ICachedValue.IToBufferToken token)
+            {
+                this.key = key;
+                this.token = token;
+                _guid = 0;
+                _index = 0;
+                _valueType = null;
+            }
+            public Pair(string key,Type valueType,int index , uint guid)
+            {
+                this.key = key;
+                this.token = null;
+                _index = index;
+                _guid = guid;
+                _valueType = valueType;
+            }
         }
              
-        public int MaxLength => 8;
+        public int MaxLength => 8; 
         private bool _invalid;
         public bool Invalid => _length <= 0 || _invalid;
         private int _length;
@@ -62,18 +82,12 @@ namespace PJR.BlackBoard.CachedValueBoard
                 }
             }
         }
-        public bool Add(string key, int index, uint guid)
+        public bool Add(string key,Type valueType, int index, uint guid)
         {
             if (_length >= MaxLength)
                 return false;
-            
-            this[_length++] = new()
-            {
-                key = key,
-                token = null,
-                index = index,
-                guid = guid,
-            };
+
+            this[_length++] = new(key,valueType, index, guid);
             return true;
         }
 
@@ -81,12 +95,8 @@ namespace PJR.BlackBoard.CachedValueBoard
         {
             if (_length >= MaxLength)
                 return false;
-            
-            this[_length++] = new()
-            {
-                key = key,
-                token = token
-            };
+
+            this[_length++] = new(key, token);
             return true;
         }
 
@@ -94,11 +104,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         {
             _invalid = true;
             for (int i = 0; i < Length; i++)
-            {
-                var index = this[i];
-                if(index.token != null)
-                    index.token.Release();
-            }
+                this[i].token?.Release();
         }
     }
 }

@@ -18,10 +18,11 @@ namespace PJR.BlackBoard.CachedValueBoard
         /// <param name="token"></param>
         /// <returns></returns>
         public bool ToBuffer(out IToBufferToken token);
-        public bool ToBuffer(out int index, out uint guid);
+        public bool ToBuffer(out Type type,out int index, out uint guid);
 
         public interface IToBufferToken
         {
+            public Type ValueType { get; }
             public uint guid { get; }
             public int index { get; }
             public bool Valid();

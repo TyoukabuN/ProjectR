@@ -86,8 +86,9 @@ namespace PJR.BlackBoard.CachedValueBoard
             return true;
         }
 
-        public bool ToBuffer(out int index, out uint guid)
+        public bool ToBuffer(out Type type, out int index, out uint guid)
         {
+            type = typeof(T);
             index = GetEmptyBufferIndex();
             guid = 0;
             if (index < 0)
@@ -100,13 +101,14 @@ namespace PJR.BlackBoard.CachedValueBoard
         }
         public bool ToBuffer(out ICachedValue.IToBufferToken token)
         {
-            if (!ToBuffer(out int index, out uint guid))
+            if (!ToBuffer(out Type type,out var index, out var guid))
             {
                 token = ToBufferToken.Invalid;
                 return false;
             }
             //
-            token = new ToBufferToken(index, guid);
+            using(new ProfileScope("3"))
+                token = new ToBufferToken(index, guid);
             return true;
         }
         
@@ -118,6 +120,7 @@ namespace PJR.BlackBoard.CachedValueBoard
             private int _index;
             private uint _guid;
             public int index => _index;
+            public Type ValueType => typeof(T); 
             public uint guid => _guid;
             
             public ToBufferToken(int index, uint guid)

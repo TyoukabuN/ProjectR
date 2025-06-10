@@ -3,20 +3,17 @@ using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
-public class NonGCBlackBoard : SerializedMonoBehaviour, CachedValueBoardHolder
+public class NonGCBlackBoard : SerializedMonoBehaviour, ICachedValueBoardHolder
 {
     public CachedValueBoard CachedValueBoard;
-    CachedValueBoard CachedValueBoardHolder.GetCachedValueBoard() => CachedValueBoard;
+    CachedValueBoard ICachedValueBoardHolder.GetCachedValueBoard() => CachedValueBoard;
     
-    public CachedValueBoardHolder TargetBoard;
+    public ICachedValueBoardHolder TargetBoard;
         
     [Button]
     public void Test()
     {
-        var board = TargetBoard.GetCachedValueBoard();
-        if (board == null)
-            return;
-        Debug.Log(CachedValueBoard?.OverrideTo(board));
+        Debug.Log(CachedValueBoard?.OverrideTo(TargetBoard));
     }
 
 
@@ -33,17 +30,8 @@ public class NonGCBlackBoard : SerializedMonoBehaviour, CachedValueBoardHolder
         {
             using (new ProfileScope("BoardGCTest"))
             {
-                CachedValueBoard _board;
-                using (new ProfileScope("1"))
-                    _board = TargetBoard.GetCachedValueBoard();
-                using (new ProfileScope("2"))
-                    CachedValueBoard.OverrideTo(_board);
+                CachedValueBoard?.OverrideTo(TargetBoard);
             }
         }
     }
-}
-
-public interface CachedValueBoardHolder
-{
-    public CachedValueBoard GetCachedValueBoard();
 }

@@ -194,20 +194,20 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 7
       Data: 
     - Name: $k
       Entry: 1
-      Data: "\u6D4B\u8BD5Key"
+      Data: b
     - Name: $v
       Entry: 7
       Data: 3|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Single, mscorlib]],
         PJR
     - Name: _value
       Entry: 4
-      Data: 11
+      Data: 11.11
     - Name: 
       Entry: 8
       Data: 
@@ -227,6 +227,25 @@ MonoBehaviour:
     - Name: _value
       Entry: 3
       Data: 233
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: c
+    - Name: $v
+      Entry: 7
+      Data: 5|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.String, mscorlib]],
+        PJR
+    - Name: _value
+      Entry: 1
+      Data: hello
     - Name: 
       Entry: 8
       Data: 
@@ -282,7 +301,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
       Data: 
@@ -295,7 +314,26 @@ MonoBehaviour:
         PJR
     - Name: _value
       Entry: 3
-      Data: 233
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: b
+    - Name: $v
+      Entry: 7
+      Data: 4|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Single, mscorlib]],
+        PJR
+    - Name: _value
+      Entry: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 

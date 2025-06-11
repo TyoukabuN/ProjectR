@@ -104,7 +104,12 @@ namespace PJR.BlackBoard.CachedValueBoard
         {
             _invalid = true;
             for (int i = 0; i < Length; i++)
-                this[i].token?.Release();
+            {
+                if(this[i].token != null)
+                    this[i].token.Release();
+                else
+                    VariableBufferCenter.TryClearBuffer(this[i].ValueType, this[i].Index, this[i].GUID);
+            }
         }
     }
 }

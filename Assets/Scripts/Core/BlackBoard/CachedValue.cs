@@ -1,104 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PJR.BlackBoard.CachedValueBoard
 {
     [Serializable][InlineProperty][HideReferenceObjectPicker]
     public class CachedValue<T> : ICachedValue
     {
-        #region Static
-     
-        static CachedValue()
-        {
-            _buffer = new BufferUnit<T>[BufferLength];
-            Array.Fill(_buffer, BufferUnit<T>.Empty);
-                 
-            _freeBufferIndex = new Stack<int>(BufferLength);
-        }
-     
-        private static uint s_guid = 0;
-        public static uint NewGUID => ++s_guid;
-        public static uint GetGUID => s_guid;
-
-        public const int BufferLength = 1024;
-        private static BufferUnit<T>[] _buffer;
-        private static Stack<int> _freeBufferIndex;
-        public static Stack<int> freeBufferIndex => _freeBufferIndex;
-        public static BufferUnit<T>[] buffer => _buffer;
-     
-        public static int GetEmptyBufferIndex()
-        {
-            int index = -1;
-            //这里可以弄个生死池来管理可用的id，可能会比遍历快点
-            for (var i = 0; i < buffer.Length; i++)
-            {
-                if (!buffer[i].IsEmpty)
-                    continue;
-                index = i;
-                break;
-            }
-            return index;
-        }
-     
-        public static bool ExtractBuffer(int index, out BufferUnit<T> unit)
-        {
-            unit = default;
-            if (index >= buffer.Length)
-                return false;
-            unit = buffer[index];
-            return !unit.IsEmpty;
-        }
-     
-        public static void ClearBuffer(int index)
-        {
-            buffer[index] = BufferUnit<T>.Empty;
-        }
-     
-        #endregion
-     
+        public static bool ExtractBuffer(int index, out BufferUnit<T> unit) => VariableBuffer<T>.instance.ExtractBuffer(index, out unit);
+        public static void ClearBuffer(int index, uint guid) => VariableBuffer<T>.instance.ClearBuffer(index,guid);
         public CachedValue()
         {
         }
-     
         public Type ValueType => typeof(T);
         
-        [VerticalGroup("值")][SerializeField][HideLabel]
-        private T _value;
-        public T Value => _value;
+        [FormerlySerializedAs("_value")] [VerticalGroup("值")][SerializeField][HideLabel]
+        private T _localValue;
+        public T localValue => _localValue;
      
         public bool FromBuffer(ICachedValue.IToBufferToken token, bool clearBuffer)
         {
             if (!token.Valid())
                 return false;
-            _value = buffer[token.index].Value;
+            if (!VariableBuffer<T>.instance.TryGetValue(token, out T bufferValue))
+                return false;
+            _localValue = bufferValue;
             if(clearBuffer)
-                ClearBuffer(token.index);
+                ClearBuffer(token.index, token.guid);
             return true;
         }
 
         public bool FromBuffer(int index, uint guid, bool clearBuffer)
         {
-            _value = buffer[index].Value; 
+            if (!VariableBuffer<T>.instance.TryGetValue(index, guid, out T bufferValue))
+                return false;
+            _localValue = bufferValue; 
             if(clearBuffer)
-                ClearBuffer(index);
+                ClearBuffer(index, guid);
             return true;
         }
 
         public bool ToBuffer(out Type type, out int index, out uint guid)
-        {
-            type = typeof(T);
-            index = GetEmptyBufferIndex();
-            guid = 0;
-            if (index < 0)
-                return false;
-            buffer[index] = new(_value){
-                guid = NewGUID,
-            };
-            guid = GetGUID;
-            return true;
-        }
+            => VariableBuffer<T>.instance.TryCacheValue(_localValue, out type, out index, out guid);
+        
         public bool ToBuffer(out ICachedValue.IToBufferToken token)
         {
             if (!ToBuffer(out Type type,out var index, out var guid))
@@ -106,9 +51,8 @@ namespace PJR.BlackBoard.CachedValueBoard
                 token = ToBufferToken.Invalid;
                 return false;
             }
-            //
-            using(new ProfileScope("3"))
-                token = new ToBufferToken(index, guid);
+            //exist GC.Alloc
+            token = new ToBufferToken(index, guid);
             return true;
         }
         
@@ -136,9 +80,7 @@ namespace PJR.BlackBoard.CachedValueBoard
                     return false; 
                 if (_guid <= 0)
                     return false;
-                if (_index <0 || _index >= buffer.Length)
-                    return false;
-                if (buffer[_index].IsEmpty)
+                if (_index <0 || _index >= VariableBuffer<T>.instance.BufferLength)
                     return false;
                 return true;
             }
@@ -147,7 +89,7 @@ namespace PJR.BlackBoard.CachedValueBoard
             {
                 if (!Valid())
                     return;
-                ClearBuffer(_index);
+                ClearBuffer(_index, _guid);
             }
         }
     }

@@ -205,7 +205,7 @@ MonoBehaviour:
       Entry: 7
       Data: 3|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Single, mscorlib]],
         PJR
-    - Name: _value
+    - Name: _localValue
       Entry: 4
       Data: 11.11
     - Name: 
@@ -224,7 +224,7 @@ MonoBehaviour:
       Entry: 7
       Data: 4|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Int32, mscorlib]],
         PJR
-    - Name: _value
+    - Name: _localValue
       Entry: 3
       Data: 233
     - Name: 
@@ -243,7 +243,7 @@ MonoBehaviour:
       Entry: 7
       Data: 5|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.String, mscorlib]],
         PJR
-    - Name: _value
+    - Name: _localValue
       Entry: 1
       Data: hello
     - Name: 
@@ -312,9 +312,9 @@ MonoBehaviour:
       Entry: 7
       Data: 3|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Int32, mscorlib]],
         PJR
-    - Name: _value
+    - Name: _localValue
       Entry: 3
-      Data: 0
+      Data: 233
     - Name: 
       Entry: 8
       Data: 
@@ -331,9 +331,9 @@ MonoBehaviour:
       Entry: 7
       Data: 4|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Single, mscorlib]],
         PJR
-    - Name: _value
+    - Name: _localValue
       Entry: 4
-      Data: 0
+      Data: 11.11
     - Name: 
       Entry: 8
       Data: 

@@ -2,20 +2,20 @@ namespace PJR.BlackBoard.CachedValueBoard
 {
     public struct BufferUnit<T>
     {
-        public static BufferUnit<T> Empty => new() { _isEmpty = true };
+        public static BufferUnit<T> Free => new() { _isFree = true };
      
-        private bool _isEmpty;
+        private bool _isFree;
         public uint guid;
         private T _value;
      
-        public bool IsEmpty => _isEmpty;
-        public bool Valid => !IsEmpty;
+        public bool IsFree => _isFree;
+        public bool Valid => !IsFree;
         public T Value => _value;
      
         public BufferUnit(T value)
         {
             guid = 0;
-            _isEmpty = false;
+            _isFree = false;
             _value = value;
         }
     }

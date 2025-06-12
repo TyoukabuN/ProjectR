@@ -6,20 +6,17 @@ using UnityEngine.Serialization;
 namespace PJR.BlackBoard.CachedValueBoard
 {
     [Serializable][InlineProperty][HideReferenceObjectPicker]
-    public class CachedValue<T> : ICachedValue
+    public class CacheableValue<T> : ICacheableValue
     {
         public static bool ExtractBuffer(int index, out BufferUnit<T> unit) => VariableBuffer<T>.instance.ExtractBuffer(index, out unit);
         public static void ClearBuffer(int index, uint guid) => VariableBuffer<T>.instance.ClearBuffer(index,guid);
-        public CachedValue()
-        {
-        }
         public Type ValueType => typeof(T);
         
-        [FormerlySerializedAs("_value")] [VerticalGroup("值")][SerializeField][HideLabel]
+        [VerticalGroup("值")][SerializeField][HideLabel]
         private T _localValue;
         public T localValue => _localValue;
-     
-        public bool FromBuffer(ICachedValue.IToBufferToken token, bool clearBuffer)
+        public CacheableValue(){}
+        public bool WriteFromBuffer(ICacheableValue.IToBufferToken token, bool clearBuffer)
         {
             if (!token.Valid())
                 return false;
@@ -31,7 +28,7 @@ namespace PJR.BlackBoard.CachedValueBoard
             return true;
         }
 
-        public bool FromBuffer(int index, uint guid, bool clearBuffer)
+        public bool WriteFromBuffer(int index, uint guid, bool clearBuffer)
         {
             if (!VariableBuffer<T>.instance.TryGetValue(index, guid, out T bufferValue))
                 return false;
@@ -41,12 +38,12 @@ namespace PJR.BlackBoard.CachedValueBoard
             return true;
         }
 
-        public bool ToBuffer(out Type type, out int index, out uint guid)
+        public bool CacheToBuffer(out Type type, out int index, out uint guid)
             => VariableBuffer<T>.instance.TryCacheValue(_localValue, out type, out index, out guid);
         
-        public bool ToBuffer(out ICachedValue.IToBufferToken token)
+        public bool CacheToBuffer(out ICacheableValue.IToBufferToken token)
         {
-            if (!ToBuffer(out Type type,out var index, out var guid))
+            if (!CacheToBuffer(out Type type,out var index, out var guid))
             {
                 token = ToBufferToken.Invalid;
                 return false;
@@ -56,7 +53,7 @@ namespace PJR.BlackBoard.CachedValueBoard
             return true;
         }
         
-        public struct ToBufferToken : ICachedValue.IToBufferToken
+        public struct ToBufferToken : ICacheableValue.IToBufferToken
         {
             public static ToBufferToken Invalid => new() { _invalid = true };
 

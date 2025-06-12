@@ -2,7 +2,7 @@ using System;
 
 namespace PJR.BlackBoard.CachedValueBoard
 {
-    public interface ICachedValue
+    public interface ICacheableValue
     {
         public Type ValueType { get; }
         /// <summary>
@@ -10,16 +10,21 @@ namespace PJR.BlackBoard.CachedValueBoard
         /// </summary>
         /// <param name="index">buffer索引</param>
         /// <returns></returns>
-        public bool FromBuffer(IToBufferToken index, bool clearBuffer);
-        public bool FromBuffer(int index, uint guid, bool clearBuffer);
+        public bool WriteFromBuffer(IToBufferToken index, bool clearBuffer);
+        public bool WriteFromBuffer(int index, uint guid, bool clearBuffer);
         /// <summary>
         /// 将value传到buffer
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public bool ToBuffer(out IToBufferToken token);
-        public bool ToBuffer(out Type type,out int index, out uint guid);
+        public bool CacheToBuffer(out IToBufferToken token);
+        public bool CacheToBuffer(out Type type,out int index, out uint guid);
 
+        /// <summary>
+        /// R/W值只需要知道type:Type ,index:int, guid:uint
+        /// 如果需要包含更多的值,需要定义自己的IToBufferToken
+        /// 但是有GC.Alloc
+        /// </summary>
         public interface IToBufferToken
         {
             public Type ValueType { get; }

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using Sirenix.Serialization;
 using UnityEngine;
 
@@ -13,11 +10,11 @@ using UnityEditor;
 
 namespace PJR.BlackBoard.CachedValueBoard
 {
-    public class CachedValueBoard
+    public class CacheableValueBoard
     {
         [OdinSerialize,LabelText("黑板值")]
-        private Dictionary<string, ICachedValue> _key2Value = new();
-        public Dictionary<string, ICachedValue> Key2Value => _key2Value;
+        private Dictionary<string, ICacheableValue> _key2Value = new();
+        public Dictionary<string, ICacheableValue> Key2Value => _key2Value;
      
         public bool TryGetIndexMap(out IndexMap indexMap)
         {
@@ -33,7 +30,7 @@ namespace PJR.BlackBoard.CachedValueBoard
                     continue;
                 }
 
-                if (!pair.Value.ToBuffer(out Type valueType,out var index, out var guid))
+                if (!pair.Value.CacheToBuffer(out Type valueType,out var index, out var guid))
                 {
                     Debug.LogError($"Failure to cache value to buffer! [key: {pair.Key}]");
                     return false;
@@ -47,7 +44,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         /// 1）这个版本用了IToBufferToken:interface来wrap住所有需要的数据<br/>
         /// 2）用一个structure wrap住是为了减少<see cref="IndexMap.Pair"/>的Construct方法的修改 <br/>
         /// 3）但是返回值是一个接口所以会触发boxing，发生Alloc <br/>
-        /// 4）没什么特殊需求的话还是建议使用<see cref="CachedValueBoard.TryGetIndexMap"/>
+        /// 4）没什么特殊需求的话还是建议使用<see cref="CacheableValueBoard.TryGetIndexMap"/>
         /// </summary>
         /// <param name="indexMap"></param>
         /// <returns></returns>
@@ -65,7 +62,7 @@ namespace PJR.BlackBoard.CachedValueBoard
                     continue;
                 }
 
-                if (!pair.Value.ToBuffer(out var token))
+                if (!pair.Value.CacheToBuffer(out var token))
                 {
                     Debug.LogError($"Failure to cache value to buffer! [key: {pair.Key}]");
                     return false;
@@ -88,7 +85,7 @@ namespace PJR.BlackBoard.CachedValueBoard
                 if (!_key2Value.TryGetValue(pair.key, out var cachedValue))
                     if(!TryAddValue(pair.ValueType, pair.key,out cachedValue))
                         continue;
-                cachedValue.FromBuffer(pair.Index, pair.GUID, clearBuffer);
+                cachedValue.WriteFromBuffer(pair.Index, pair.GUID, clearBuffer);
             }
             return true;
         }
@@ -100,7 +97,7 @@ namespace PJR.BlackBoard.CachedValueBoard
             return OverrideTo(destBoard);
         }
 
-        public bool OverrideTo(CachedValueBoard targetBoard)
+        public bool OverrideTo(CacheableValueBoard targetBoard)
         {
             if (targetBoard == null)
                 return false;
@@ -109,16 +106,16 @@ namespace PJR.BlackBoard.CachedValueBoard
             return targetBoard.ApplyIndexMap(indexMap, true);
         }
         public bool TryAddValue(Type type, string key) => TryAddValue(type, key, out _);
-        public bool TryAddValue(Type type, string key, out ICachedValue cachedValue)
+        public bool TryAddValue(Type type, string key, out ICacheableValue cacheableValue)
         {
-            cachedValue = null;
+            cacheableValue = null;
             if (_key2Value.ContainsKey(key))
                 return false;
-            Type genericType = typeof(CachedValue<>).MakeGenericType(type);
-            cachedValue = Activator.CreateInstance(genericType) as ICachedValue;
-            if (cachedValue == null)
+            Type genericType = typeof(CacheableValue<>).MakeGenericType(type);
+            cacheableValue = Activator.CreateInstance(genericType) as ICacheableValue;
+            if (cacheableValue == null)
                 return false;
-            _key2Value.Add(key,cachedValue);
+            _key2Value.Add(key,cacheableValue);
             return true;
         }
         
@@ -134,7 +131,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         
         private string editor_error;
         private bool Editor_AnyError()=>  !string.IsNullOrEmpty(editor_error);
-        
+
         [Button("添加"),HorizontalGroup("新黑板值/btns")]
         private void Editor_AddBoardValueButton()
         {
@@ -144,7 +141,14 @@ namespace PJR.BlackBoard.CachedValueBoard
                 editor_error = "key为空";
                 return;
             }
-            _key2Value ??= new Dictionary<string, ICachedValue>();
+
+            Type type = editor_newValueType;
+            if (type == null)
+            {
+                editor_error = "类型为空";
+                return;
+            }
+            _key2Value ??= new Dictionary<string, ICacheableValue>();
             if (_key2Value.ContainsKey(key))
             {
                 editor_error = $"已包含{key}";

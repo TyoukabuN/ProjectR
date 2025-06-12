@@ -3,10 +3,11 @@ using PJR.BlackBoard.CachedValueBoard;
 using PJR.Editor;
 using Sirenix.OdinInspector;
 using UnityEditor;
+using UnityEngine.Serialization;
 
 public class BlackBoardWrapper : SerializedScriptableObject
 {
-    public CachedValueBoard CachedValueBoard;
+    [FormerlySerializedAs("CachedValueBoard")] public CacheableValueBoard cacheableValueBoard = new();
 
 #if UNITY_EDITOR
     [MenuItem("Assets/PJR/BlackBoard/Wrapper")]

@@ -178,12 +178,12 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: CachedValueBoard
+    - Name: cacheableValueBoard
       Entry: 7
-      Data: 0|PJR.BlackBoard.CachedValueBoard.CachedValueBoard, PJR
+      Data: 0|PJR.BlackBoard.CachedValueBoard.CacheableValueBoard, PJR
     - Name: _key2Value
       Entry: 7
-      Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.BlackBoard.CachedValueBoard.ICachedValue,
+      Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.BlackBoard.CachedValueBoard.ICacheableValue,
         PJR]], mscorlib
     - Name: comparer
       Entry: 7
@@ -200,14 +200,14 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: b
+      Data: a
     - Name: $v
       Entry: 7
-      Data: 3|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Single, mscorlib]],
+      Data: 3|PJR.BlackBoard.CachedValueBoard.CacheableValue`1[[System.Int32, mscorlib]],
         PJR
     - Name: _localValue
-      Entry: 4
-      Data: 11.11
+      Entry: 3
+      Data: 123
     - Name: 
       Entry: 8
       Data: 
@@ -219,14 +219,14 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: a
+      Data: b
     - Name: $v
       Entry: 7
-      Data: 4|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Int32, mscorlib]],
+      Data: 4|PJR.BlackBoard.CachedValueBoard.CacheableValue`1[[System.Int32, mscorlib]],
         PJR
     - Name: _localValue
       Entry: 3
-      Data: 233
+      Data: 321
     - Name: 
       Entry: 8
       Data: 
@@ -241,11 +241,11 @@ MonoBehaviour:
       Data: c
     - Name: $v
       Entry: 7
-      Data: 5|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.String, mscorlib]],
+      Data: 5|PJR.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String, mscorlib]],
         PJR
     - Name: _localValue
       Entry: 1
-      Data: hello
+      Data: hi
     - Name: 
       Entry: 8
       Data: 
@@ -285,12 +285,12 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: CachedValueBoard
+    - Name: cacheableValueBoard
       Entry: 7
-      Data: 0|PJR.BlackBoard.CachedValueBoard.CachedValueBoard, PJR
+      Data: 0|PJR.BlackBoard.CachedValueBoard.CacheableValueBoard, PJR
     - Name: _key2Value
       Entry: 7
-      Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.BlackBoard.CachedValueBoard.ICachedValue,
+      Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.BlackBoard.CachedValueBoard.ICacheableValue,
         PJR]], mscorlib
     - Name: comparer
       Entry: 7
@@ -301,45 +301,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: a
-    - Name: $v
-      Entry: 7
-      Data: 3|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Int32, mscorlib]],
-        PJR
-    - Name: _localValue
-      Entry: 3
-      Data: 233
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: b
-    - Name: $v
-      Entry: 7
-      Data: 4|PJR.BlackBoard.CachedValueBoard.CachedValue`1[[System.Single, mscorlib]],
-        PJR
-    - Name: _localValue
-      Entry: 4
-      Data: 11.11
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+      Data: 0
     - Name: 
       Entry: 13
       Data: 

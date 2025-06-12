@@ -88,7 +88,7 @@ namespace PJR.BlackBoard.CachedValueBoard
             value = unit.Value;
             return true;
         }
-        public bool TryGetValue(ICachedValue.IToBufferToken token, out T value)
+        public bool TryGetValue(ICacheableValue.IToBufferToken token, out T value)
         {
             value = default;
             if (token.ValueType != VariableType)

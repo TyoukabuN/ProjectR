@@ -20,6 +20,8 @@ MonoBehaviour:
   _projectFolderIcons: []
   _sceneHistory:
   - name: NonGCBlackBoard
+    path: Assets/Dev/Lab/NonCGBlackBoard/Src/NonGCBlackBoard.unity
+  - name: NonGCBlackBoard
     path: Assets/Dev/Lab/NonCGBlackBoard/NonGCBlackBoard.unity
   - name: NonCGBlackBoard
     path: Assets/Dev/Lab/NonCGBlackBoard/NonCGBlackBoard.unity
@@ -55,6 +57,4 @@ MonoBehaviour:
     path: Assets/Dev/Lab/Scenes/Beizer.unity
   - name: Empty
     path: Assets/Scenes/Empty.unity
-  - name: BuildScene_LaunchScreen
-    path: Assets/__LS/Resources/DevScene/BuildScene_LaunchScreen.unity
   _notes: []

@@ -42,7 +42,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         
         /// <summary>
         /// 1）这个版本用了IToBufferToken:interface来wrap住所有需要的数据<br/>
-        /// 2）用一个structure wrap住是为了减少<see cref="IndexMap.Pair"/>的Construct方法的修改 <br/>
+        /// 2）用一个structure wrap住是为了减少<see cref="IndexMap.KeyIndexPair"/>的Construct方法的修改 <br/>
         /// 3）但是返回值是一个接口所以会触发boxing，发生Alloc <br/>
         /// 4）没什么特殊需求的话还是建议使用<see cref="CacheableValueBoard.TryGetIndexMap"/>
         /// </summary>

@@ -6,26 +6,26 @@ namespace PJR.BlackBoard.CachedValueBoard
     public struct IndexMap
     {
         public static IndexMap Empty => new() { _length = 0 };
-        public Pair index0; 
-        public Pair index1; 
-        public Pair index2; 
-        public Pair index3; 
-        public Pair index4; 
-        public Pair index5; 
-        public Pair index6; 
-        public Pair index7;
+        public KeyIndexPair index0; 
+        public KeyIndexPair index1; 
+        public KeyIndexPair index2; 
+        public KeyIndexPair index3; 
+        public KeyIndexPair index4; 
+        public KeyIndexPair index5; 
+        public KeyIndexPair index6; 
+        public KeyIndexPair index7;
              
-        public struct Pair
+        public struct KeyIndexPair
         {
             public string key;
-            public ICachedValue.IToBufferToken token;
+            public ICacheableValue.IToBufferToken token;
             private int _index;
             private uint _guid;
             private Type _valueType;
             public uint GUID => token?.guid ?? _guid;
             public int Index=> token?.index ?? _index;
             public Type ValueType=> token?.ValueType ?? _valueType;
-            public Pair(string key, ICachedValue.IToBufferToken token)
+            public KeyIndexPair(string key, ICacheableValue.IToBufferToken token)
             {
                 this.key = key;
                 this.token = token;
@@ -33,7 +33,7 @@ namespace PJR.BlackBoard.CachedValueBoard
                 _index = 0;
                 _valueType = null;
             }
-            public Pair(string key,Type valueType,int index , uint guid)
+            public KeyIndexPair(string key,Type valueType,int index , uint guid)
             {
                 this.key = key;
                 this.token = null;
@@ -49,7 +49,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         private int _length;
         public int Length => _length;
              
-        public Pair this[int i]
+        public KeyIndexPair this[int i]
         {
             get
             {
@@ -91,7 +91,7 @@ namespace PJR.BlackBoard.CachedValueBoard
             return true;
         }
 
-        public bool Add(string key, ICachedValue.IToBufferToken token)
+        public bool Add(string key, ICacheableValue.IToBufferToken token)
         {
             if (_length >= MaxLength)
                 return false;

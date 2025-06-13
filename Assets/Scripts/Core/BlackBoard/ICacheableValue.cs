@@ -20,6 +20,8 @@ namespace PJR.BlackBoard.CachedValueBoard
         public bool CacheToBuffer(out IToBufferToken token);
         public bool CacheToBuffer(out Type type,out int index, out uint guid);
 
+        public object GetValue();
+        
         /// <summary>
         /// R/W值只需要知道type:Type ,index:int, guid:uint
         /// 如果需要包含更多的值,需要定义自己的IToBufferToken

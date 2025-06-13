@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 namespace PJR.BlackBoard.CachedValueBoard
 {
-    [Serializable][InlineProperty][HideReferenceObjectPicker]
+    [InlineProperty][HideReferenceObjectPicker]
     public class CacheableValue<T> : ICacheableValue
     {
         public static bool ExtractBuffer(int index, out BufferUnit<T> unit) => VariableBuffer<T>.instance.ExtractBuffer(index, out unit);
@@ -15,6 +15,8 @@ namespace PJR.BlackBoard.CachedValueBoard
         [VerticalGroup("值")][SerializeField][HideLabel]
         private T _localValue;
         public T localValue => _localValue;
+        public object GetValue() => _localValue;
+
         public CacheableValue(){}
         public bool WriteFromBuffer(ICacheableValue.IToBufferToken token, bool clearBuffer)
         {
@@ -40,7 +42,7 @@ namespace PJR.BlackBoard.CachedValueBoard
 
         public bool CacheToBuffer(out Type type, out int index, out uint guid)
             => VariableBuffer<T>.instance.TryCacheValue(_localValue, out type, out index, out guid);
-        
+
         public bool CacheToBuffer(out ICacheableValue.IToBufferToken token)
         {
             if (!CacheToBuffer(out Type type,out var index, out var guid))

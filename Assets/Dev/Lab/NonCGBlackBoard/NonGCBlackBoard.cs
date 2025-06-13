@@ -1,25 +1,39 @@
+using System;
 using PJR.BlackBoard.CachedValueBoard;
+using PJR.BlackBoard.Inspector;
 using Sirenix.OdinInspector;
-using UnityEditor;
+using Sirenix.Serialization;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class NonGCBlackBoard : SerializedMonoBehaviour, ICachedValueBoardHolder
 {
-    public CacheableValueBoard cacheableValueBoard;
-    CacheableValueBoard ICachedValueBoardHolder.GetCachedValueBoard() => cacheableValueBoard;
+    [TitleGroup("黑板1"),OdinSerialize]
+    [HideReferenceObjectPicker]
+    private CacheableValueBoard cacheableValueBoard;
     
-    public ICachedValueBoardHolder TargetBoard;
+    [TitleGroup("黑板2"),OdinSerialize]
+    [HideReferenceObjectPicker]
+    private CacheableValueBoard cacheableValueBoard2;
+    
+    [TitleGroup("黑板Field测试")]
+    [NonSerialized,OdinSerialize,GenericTypeFilter]
+    [HideReferenceObjectPicker]
+    public CacheableField<string> StringValue;
         
-    [Button]
-    public void Test()
-    {
-        Debug.Log(cacheableValueBoard?.OverrideTo(TargetBoard));
-    }
+    CacheableValueBoard ICachedValueBoardHolder.GetCachedValueBoard() => cacheableValueBoard;
+
+    //public ICachedValueBoardHolder TargetBoard;
+    //
+    // [Button,TitleGroup("黑板测试")]
+    // public void Test()
+    // {
+    //     CacheableField<int>.GetFiTypeFilter();
+    //     Debug.Log(cacheableValueBoard?.OverrideTo(TargetBoard));
+    // }
 
 
     private bool _doRuntimeGCTest;
-    [Button, ShowIf("@EditorApplication.isPlaying")]
+    [Button, ShowIf("@EditorApplication.isPlaying"),TitleGroup("黑板测试")]
     public void RuntimeTest()
     {
         _doRuntimeGCTest = true;
@@ -31,7 +45,7 @@ public class NonGCBlackBoard : SerializedMonoBehaviour, ICachedValueBoardHolder
         {
             using (new ProfileScope("BoardGCTest"))
             {
-                cacheableValueBoard?.OverrideTo(TargetBoard);
+                //cacheableValueBoard?.OverrideTo(TargetBoard);
             }
         }
     }

@@ -19,6 +19,8 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: Empty
+    path: Assets/Dev/Lab/NonCGBlackBoard/Src/Empty.unity
   - name: NonGCBlackBoard
     path: Assets/Dev/Lab/NonCGBlackBoard/Src/NonGCBlackBoard.unity
   - name: NonGCBlackBoard
@@ -55,6 +57,4 @@ MonoBehaviour:
     path: Assets/Dev/Lab/Scenes/ABTest.unity
   - name: Beizer
     path: Assets/Dev/Lab/Scenes/Beizer.unity
-  - name: Empty
-    path: Assets/Scenes/Empty.unity
   _notes: []

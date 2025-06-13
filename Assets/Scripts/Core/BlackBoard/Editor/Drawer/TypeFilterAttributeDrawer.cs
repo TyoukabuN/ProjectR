@@ -19,7 +19,7 @@ using UnityEngine;
 namespace PJR.BlackBoard.Editor.Drawers
 {
     [DrawerPriority(0.0, 0.0, 2002.0)]
-    public sealed class TypeFilterAttributeDrawer : OdinAttributeDrawer<AutoTypeFilterAttribute>
+    public sealed class TypeFilterAttributeDrawer : OdinAttributeDrawer<GenericTypeFilterAttribute>
     {
         private string error;
         private bool useSpecialListBehaviour;

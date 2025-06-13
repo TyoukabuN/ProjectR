@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Pool;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -118,7 +119,50 @@ namespace PJR.BlackBoard.CachedValueBoard
             _key2Value.Add(key,cacheableValue);
             return true;
         }
+
+        public ICacheableValue[] FindValuesOfType(Type type)
+        {
+            if (_key2Value == null || _key2Value.Count == 0)
+                return Array.Empty<ICacheableValue>();
+
+            var temp = ListPool<ICacheableValue>.Get();
+            foreach (var pair in _key2Value)
+            {
+                if (pair.Value != null && pair.Value.ValueType == type)
+                    temp.Add(pair.Value);
+            }
+            var res = temp.ToArray();
+            ListPool<ICacheableValue>.Release(temp);
+            return res;
+        }
         
+        public KeyValuePair<string,ICacheableValue>[] FindKeyValuesOfType(Type type)
+        {
+            if (_key2Value == null || _key2Value.Count == 0)
+                return Array.Empty<KeyValuePair<string,ICacheableValue>>();
+
+            var temp = ListPool<KeyValuePair<string,ICacheableValue>>.Get();
+            foreach (var pair in _key2Value)
+            {
+                if (pair.Value != null && pair.Value.ValueType == type)
+                    temp.Add(pair);
+            }
+            var res = temp.ToArray();
+            ListPool<KeyValuePair<string,ICacheableValue>>.Release(temp);
+            return res;
+        }
+        
+        public bool TryGetValue<T>(string key, out T value)
+        {
+            value = default;
+            if (string.IsNullOrEmpty(key))
+                return false;
+            if (!_key2Value.TryGetValue(key, out var cacheableValue))
+                return false;
+            value = (T)cacheableValue.GetValue();
+            return true;
+        }
+
 #if UNITY_EDITOR
 
         private bool editor_showNewValueRect = false;

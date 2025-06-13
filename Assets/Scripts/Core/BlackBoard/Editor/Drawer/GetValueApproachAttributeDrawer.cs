@@ -1,5 +1,4 @@
-﻿using PJR.BlackBoard.Editor;
-using PJR.BlackBoard.Inspector;
+﻿using PJR.BlackBoard.Inspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 

@@ -5,7 +5,7 @@ namespace PJR.BlackBoard.Inspector
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     [Conditional("UNITY_EDITOR")]
-    public class AutoTypeFilterAttribute : Attribute
+    public class GenericTypeFilterAttribute : Attribute
     {
         /// <summary>
         /// Gets or sets the title for the dropdown. Null by default.
@@ -19,7 +19,7 @@ namespace PJR.BlackBoard.Inspector
 
         /// <summary>Creates a dropdown menu for a property.</summary>
         /// <param name="filterGetter">A resolved string that should evaluate to a value that is assignable to IList; e.g, arrays and lists are compatible.</param>
-        public AutoTypeFilterAttribute()
+        public GenericTypeFilterAttribute()
         {
         }
     }

@@ -19,23 +19,23 @@ namespace PJR.BlackBoard.CachedValueBoard
     /// 而是用index => A:Type,即通过过A内部的泛型和buffer中index,从buffer中直接获取值
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class VariableBuffer<T> : IVariableBuffer
+    public class GenericBuffer<T> : IVariableBuffer
     {
-        private static VariableBuffer<T> _inst;
-        public static VariableBuffer<T> instance => CheckInstance();
-        static VariableBuffer()
+        private static GenericBuffer<T> _inst;
+        public static GenericBuffer<T> instance => CheckInstance();
+        static GenericBuffer()
         {
             CheckInstance();
         }
 
-        private static VariableBuffer<T> CheckInstance()
+        private static GenericBuffer<T> CheckInstance()
         {
-            _inst ??= new VariableBuffer<T>();
-            VariableBufferCenter.Register(_inst);
+            _inst ??= new GenericBuffer<T>();
+            GenericBufferCenter.Register(_inst);
             return _inst;
         }
 
-        private VariableBuffer()
+        private GenericBuffer()
         {
             _buffer = new BufferUnit<T>[BufferLength];
             Array.Fill(_buffer, BufferUnit<T>.Free);

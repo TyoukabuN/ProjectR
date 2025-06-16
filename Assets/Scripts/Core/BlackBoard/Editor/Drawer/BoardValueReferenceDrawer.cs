@@ -60,8 +60,6 @@ namespace PJR.BlackBoard.Editor.Drawers
         {
             if (this.Property.FindObjectInChilds<CacheableValueBoard>(out var references))
             {
-                Debug.Log($"找到黑板引用 [Count:{references.Count}]");
-
                 var menu = new GenericMenu();
                 for (var i =0; i <references.Count; i++)
                 {

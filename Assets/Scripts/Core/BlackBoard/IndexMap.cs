@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace PJR.BlackBoard.CachedValueBoard
 {
+    /// <summary>
+    /// 记录在GenericBuffer中CacheValue时返回的引用的信息
+    /// 用于后面的取值
+    /// </summary>
     public struct IndexMap
     {
         public static IndexMap Empty => new() { _length = 0 };
@@ -105,10 +109,12 @@ namespace PJR.BlackBoard.CachedValueBoard
             _invalid = true;
             for (int i = 0; i < Length; i++)
             {
+                //有token时
                 if(this[i].token != null)
                     this[i].token.Release();
+                //无token时
                 else
-                    VariableBufferCenter.TryClearBuffer(this[i].ValueType, this[i].Index, this[i].GUID);
+                    GenericBufferCenter.TryClearBuffer(this[i].ValueType, this[i].Index, this[i].GUID);
             }
         }
     }

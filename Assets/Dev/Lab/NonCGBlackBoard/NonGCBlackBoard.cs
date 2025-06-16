@@ -17,7 +17,7 @@ public class NonGCBlackBoard : SerializedMonoBehaviour, ICachedValueBoardHolder
     
     [TitleGroup("黑板Field测试")]
     [NonSerialized,OdinSerialize,GenericTypeFilter]
-    [HideReferenceObjectPicker]
+    [HideReferenceObjectPicker,Button]
     public CacheableField<string> StringValue;
         
     CacheableValueBoard ICachedValueBoardHolder.GetCachedValueBoard() => cacheableValueBoard;

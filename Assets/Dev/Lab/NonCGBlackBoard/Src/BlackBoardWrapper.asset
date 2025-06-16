@@ -157,8 +157,8 @@ MonoBehaviour:
       Entry: 3
       Data: 1
     - Name: _localValue
-      Entry: 6
-      Data: 
+      Entry: 1
+      Data: LocalValue
     - Name: _boardValueReference
       Entry: 7
       Data: 11|PJR.BlackBoard.CachedValueBoard.BoardValueReference`1[[System.String,

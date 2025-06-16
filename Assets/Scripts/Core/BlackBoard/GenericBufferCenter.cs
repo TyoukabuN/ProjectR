@@ -7,7 +7,7 @@ namespace PJR.BlackBoard.CachedValueBoard
     /// <summary>
     /// 提供诸如类型转VariableBuffer<T>,间接释放VariableBuffer的等服务, 
     /// </summary>
-    public static class VariableBufferCenter
+    public static class GenericBufferCenter
     {
         private static Dictionary<Type, IVariableBuffer> type2VariableBuffer;
         public static Dictionary<Type, IVariableBuffer> Type2VariableBuffer => type2VariableBuffer??= new Dictionary<Type, IVariableBuffer>(64);
@@ -34,12 +34,12 @@ namespace PJR.BlackBoard.CachedValueBoard
             return true;
         }
 
-        public static bool TryGetBuffer<T>(Type bufferVariableTypef, out VariableBuffer<T> variableBuffer)
+        public static bool TryGetBuffer<T>(Type bufferVariableTypef, out GenericBuffer<T> genericBuffer)
         {
-            variableBuffer = null;
+            genericBuffer = null;
             if (!Type2VariableBuffer.TryGetValue(bufferVariableTypef, out var temp))
                 return false;
-            variableBuffer = temp as VariableBuffer<T>;
+            genericBuffer = temp as GenericBuffer<T>;
             return true;
         }
         

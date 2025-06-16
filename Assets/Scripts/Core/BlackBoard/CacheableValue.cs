@@ -8,8 +8,8 @@ namespace PJR.BlackBoard.CachedValueBoard
     [InlineProperty][HideReferenceObjectPicker]
     public class CacheableValue<T> : ICacheableValue
     {
-        public static bool ExtractBuffer(int index, out BufferUnit<T> unit) => VariableBuffer<T>.instance.ExtractBuffer(index, out unit);
-        public static void ClearBuffer(int index, uint guid) => VariableBuffer<T>.instance.ClearBuffer(index,guid);
+        public static bool ExtractBuffer(int index, out BufferUnit<T> unit) => GenericBuffer<T>.instance.ExtractBuffer(index, out unit);
+        public static void ClearBuffer(int index, uint guid) => GenericBuffer<T>.instance.ClearBuffer(index,guid);
         public Type ValueType => typeof(T);
         
         [VerticalGroup("值")][SerializeField][HideLabel]
@@ -22,7 +22,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         {
             if (!token.Valid())
                 return false;
-            if (!VariableBuffer<T>.instance.TryGetValue(token, out T bufferValue))
+            if (!GenericBuffer<T>.instance.TryGetValue(token, out T bufferValue))
                 return false;
             _localValue = bufferValue;
             if(clearBuffer)
@@ -32,7 +32,7 @@ namespace PJR.BlackBoard.CachedValueBoard
 
         public bool WriteFromBuffer(int index, uint guid, bool clearBuffer)
         {
-            if (!VariableBuffer<T>.instance.TryGetValue(index, guid, out T bufferValue))
+            if (!GenericBuffer<T>.instance.TryGetValue(index, guid, out T bufferValue))
                 return false;
             _localValue = bufferValue; 
             if(clearBuffer)
@@ -41,7 +41,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         }
 
         public bool CacheToBuffer(out Type type, out int index, out uint guid)
-            => VariableBuffer<T>.instance.TryCacheValue(_localValue, out type, out index, out guid);
+            => GenericBuffer<T>.instance.TryCacheValue(_localValue, out type, out index, out guid);
 
         public bool CacheToBuffer(out ICacheableValue.IToBufferToken token)
         {
@@ -79,7 +79,7 @@ namespace PJR.BlackBoard.CachedValueBoard
                     return false; 
                 if (_guid <= 0)
                     return false;
-                if (_index <0 || _index >= VariableBuffer<T>.instance.BufferLength)
+                if (_index <0 || _index >= GenericBuffer<T>.instance.BufferLength)
                     return false;
                 return true;
             }

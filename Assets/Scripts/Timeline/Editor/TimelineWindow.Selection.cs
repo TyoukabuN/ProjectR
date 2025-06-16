@@ -37,15 +37,15 @@ namespace PJR.Timeline.Editor
                 //可能有没选中时候的处理
                 return;
             }
-            Selection_OnSelectedSequenceAsset(handle.SequenceAsset);
+            Selection_OnSelectedSequenceAsset(handle.Sequence);
         }
 
         static bool IsSequenceAssetSelected(Object activeObject,out ISequenceHandle handle)
         {
             handle = null;
-            if (activeObject is not SequenceAsset)
+            if (activeObject is not Sequence)
                 return false;
-            SequenceAsset sequenceAsset = Selection.activeObject as SequenceAsset;
+            var sequenceAsset = Selection.activeObject as Sequence;
             if (sequenceAsset == null)
                 return false;
             handle = new SequenceHandle(sequenceAsset);
@@ -65,8 +65,8 @@ namespace PJR.Timeline.Editor
             return true;
         }
 
-        public static void Selection_OnSelectedSequenceAsset(SequenceHandle sequenceHandle)=>  Selection_OnSelectedSequenceAsset(sequenceHandle.SequenceAsset);
-        public static void Selection_OnSelectedSequenceAsset(SequenceAsset sequenceAsset)
+        public static void Selection_OnSelectedSequenceAsset(SequenceHandle sequenceHandle)=>  Selection_OnSelectedSequenceAsset(sequenceHandle.Sequence);
+        public static void Selection_OnSelectedSequenceAsset(Sequence sequenceAsset)
         {
             if (sequenceAsset == null)
                 return;

@@ -1,5 +1,6 @@
 using System;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using static PJR.Timeline.Define;
 #if UNITY_EDITOR
@@ -27,8 +28,12 @@ namespace PJR.Timeline
         public void GetContextMenu(GenericMenu menu){}
 #endif
     }
-
-    public abstract class Clip : SequenceScriptableObject ,IClip
+    public interface ISequenceUnit
+    {
+       public Sequence Sequence { get; set; }
+       public Track Track { get; set; }
+    }
+    public abstract class Clip : SerializedScriptableObject,ISequenceUnit, IClip
     {
         [SerializeField,DisableIf("@true")]
         protected EFrameRate _frameRateType = 0;
@@ -129,6 +134,34 @@ namespace PJR.Timeline
 #if UNITY_EDITOR
         public virtual void GetContextMenu(GenericMenu menu){}
 #endif
+
+        #region ISequenceUnit Impl
+
+        [OdinSerialize, HideInInspector]
+        private Sequence _sequence;
+        [OdinSerialize, HideInInspector]
+        private Track _track;
+
+        public Sequence Sequence
+        {
+            get => _sequence;
+        #if UNITY_EDITOR
+            set => _sequence = value;
+        #endif
+        }
+        public Track Track
+        {
+            get => _track;
+#if UNITY_EDITOR
+            set => _track = value;
+#endif
+        }
+        #endregion
+        
+        public void MarkDirty()
+        {
+            EditorUtility.SetDirty(this);
+        }
     }
 
     /// <summary>

@@ -8,11 +8,23 @@ namespace PJR.Timeline.Editor
 {
     public partial class TimelineWindow
     {
+        /// <summary>
+        /// Undo,Selection,Save之类的Sequence的管理都在这
+        /// </summary>
         public class WindowState
         {
             public EditingSequare editingSequence;
+            public WindowState()
+            {
+                AssetProcessor.OnWillSaveAssetsCall -= OnWillSaveAssetsCall;
+                AssetProcessor.OnWillSaveAssetsCall += OnWillSaveAssetsCall;
+                Undo.undoRedoPerformed -= OnUndoRedoPerformed;
+                Undo.undoRedoPerformed += OnUndoRedoPerformed;
+            }
+            private void OnUndoRedoPerformed() => RefreshWindow(true);
+
             public bool IsControlBarDisabled() => !AnyEditingSequence();
-            public bool AnyEditingSequence() => editingSequence.Sequence != null;
+            public bool AnyEditingSequence() => editingSequence.SequenceAsset != null;
             public bool NonEditingSequence() => !AnyEditingSequence();
 
             /// <summary>
@@ -96,11 +108,6 @@ namespace PJR.Timeline.Editor
             
             public static string Default_UndoName = "Sequence Asset Modify";
 
-            public WindowState()
-            {
-                AssetProcessor.OnWillSaveAssetsCall -= OnWillSaveAssetsCall;
-                AssetProcessor.OnWillSaveAssetsCall += OnWillSaveAssetsCall;
-            }
 
             /// <summary>
             /// 监听sequenceAsset有没有被保存
@@ -138,6 +145,16 @@ namespace PJR.Timeline.Editor
                 AssetDatabase.SaveAssetIfDirty(editingSequence.SequenceAsset);
                 return true;
             }
+            
+            public void RefreshWindow(bool rightNow = false)
+            {
+                if (rightNow)
+                {
+                    instance.Repaint();
+                    return;
+                }
+                requireRepaint = true;
+            }
         }
 
         public struct EditingSequare
@@ -145,21 +162,19 @@ namespace PJR.Timeline.Editor
             public static EditingSequare Empty = new() { _isEmpty = true };
             private bool _isEmpty;
             public bool IsEmpty => _isEmpty;
-            public Sequence Sequence;
-            public SequenceAsset SequenceAsset;
+            public Sequence SequenceAsset;
             public GameObject GameObject;
 
-            public EditingSequare(SequenceAsset sequenceAsset)
+            public EditingSequare(Sequence sequenceAsset)
             {
                 SequenceAsset = sequenceAsset;
-                Sequence = sequenceAsset.Sequence;
                 _isEmpty = false;
                 GameObject = null;
             }
 
             public bool Valid
             {
-                get=>  Sequence != null && SequenceAsset != null;
+                get=>  SequenceAsset != null && SequenceAsset != null;
             }
         }
 

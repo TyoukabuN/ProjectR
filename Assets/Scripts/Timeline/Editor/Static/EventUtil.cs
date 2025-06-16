@@ -44,8 +44,7 @@ namespace PJR.Timeline.Editor
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
             if (OnMouseDrag == null)
             {
-                if (GUIUtility.hotControl == controlID)
-                    GUIUtility.hotControl = 0;
+                controlID.CleaHotControl();
                 return;
             }
 
@@ -59,8 +58,7 @@ namespace PJR.Timeline.Editor
                 }
                 case EventType.MouseUp:
                 {
-                    if (GUIUtility.hotControl == controlID)
-                        GUIUtility.hotControl = 0;
+                    controlID.CleaHotControl();
                     break;
                 }
                 case EventType.MouseDrag:
@@ -91,8 +89,16 @@ namespace PJR.Timeline.Editor
             //走通用的GUIUtility.hotControl赋值
             //这里可以加个log,
             //获知你直接在这里断点,看哪次赋值覆盖了
-            //UnityEngine.Debug.Log($"[Event Using] {eventType}");
             GUIUtility.hotControl = controlID;
+        }
+        public static void CleaHotControl(this int controlID)
+        {
+            //走通用的GUIUtility.hotControl赋值
+            //这里可以加个log,
+            //获知你直接在这里断点,看哪次赋值覆盖了
+            if (controlID != GUIUtility.hotControl)
+                return;
+            controlID.CleaHotControl();
         }
         
         public static class MouseEvent

@@ -93,16 +93,7 @@ namespace PJR.Timeline.Editor
         /// 右键默认选项
         /// </summary>
         /// <returns></returns>
-        protected GenericMenu GetDefaultGenericMenu()
-        {
-            var menu = new GenericMenu();
-            menu.AddDisabledItem(new GUIContent("右键选项"));
-            menu.AddSeparator("");
-            menu.AddItem(new GUIContent("删除"),false,()=>{ });
-            menu.AddSeparator("");
-            IClip?.GetContextMenu(menu);
-            return menu;
-        }
+        public abstract GenericMenu GetDefaultGenericMenu();
         protected virtual void OnCreateContextMenu(GenericMenu menu){}
         public void DisplayRightClickMenu(Rect rect)
         {
@@ -111,25 +102,45 @@ namespace PJR.Timeline.Editor
         }
     }
     
-    public abstract class TrackDrawer<TClip> : TrackDrawer where TClip : IClip
+    public abstract class TrackDrawer<TClip> : TrackDrawer where TClip : Clip
     {
-        protected Track _track;
-        
         protected TClip _clip;
         public override IClip IClip => _clip;
         public TClip Clip => _clip;
-        public override MenuDrawer MenuDrawer=> _menuDrawer ??= new DefaultMenuDrawer(_track, IClip);
-        public override ClipDrawer ClipDrawer=> _clipDrawer ??= new DefaultClipDrawer(IClip);
 
-        public TrackDrawer(Track track,TClip clip)
+        public override MenuDrawer MenuDrawer
         {
-            _track = track;
+            get
+            {
+                _menuDrawer ??= new DefaultMenuDrawer(Clip);
+                _menuDrawer.CreateContextMenuMethod = GetDefaultGenericMenu;
+                return _menuDrawer;
+            }
+        }
+        public override ClipDrawer ClipDrawer=> _clipDrawer ??= new DefaultClipDrawer(Clip);
+
+        public TrackDrawer(TClip clip)
+        {
             _clip = clip;
         }
+        
+        public override GenericMenu GetDefaultGenericMenu()
+        {
+            var menu = new GenericMenu();
+            menu.AddDisabledItem(new GUIContent("右键选项"));
+            menu.AddSeparator("");
+            menu.AddItem(new GUIContent("删除"),false, () =>
+            {
+                SequenceUnitCreateHelper.DeleteTrack(Clip?.Track);
+            });
+            menu.AddSeparator("");
+            IClip?.GetContextMenu(menu);
+            return menu;
+        }
     }
-    public class DefaultTrackDrawer : TrackDrawer<IClip>
+    public class DefaultTrackDrawer : TrackDrawer<Clip>
     {
-        public DefaultTrackDrawer(Track track, IClip clip):base(track,clip) { 
+        public DefaultTrackDrawer(Clip clip):base(clip) { 
         }
         public override void OnDrawMenu(Rect rect)
         {

@@ -92,11 +92,12 @@ namespace PJR.Timeline.Editor
             rectRight.x = rect.xMax - handleWidth;
             rectRight.Debug(false);
 
+            int controlID = GUIUtility.GetControlID(FocusType.Passive);
             EditorGUIUtility.AddCursorRect(rectLeft, MouseCursor.SplitResizeLeftRight);
-            SplitResizeHandleEvent(rectLeft, ResizePurpose.Left);
+            SplitResizeHandleEvent(controlID, rectLeft, ResizePurpose.Left);
 
             EditorGUIUtility.AddCursorRect(rectRight, MouseCursor.SplitResizeLeftRight);
-            SplitResizeHandleEvent(rectRight, ResizePurpose.Right);
+            SplitResizeHandleEvent(controlID, rectRight, ResizePurpose.Right);
         }
 
         #region Clip Resize
@@ -114,7 +115,10 @@ namespace PJR.Timeline.Editor
         public virtual void SplitResizeHandleEvent(Rect position, ResizePurpose resizePurpose)
         {
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
-
+            SplitResizeHandleEvent(controlID, position, resizePurpose);
+        }
+        public virtual void SplitResizeHandleEvent(int controlID, Rect position, ResizePurpose resizePurpose)
+        {
             var eventType = Event.current.GetTypeForControl(controlID);
             switch (eventType)
             {
@@ -137,10 +141,8 @@ namespace PJR.Timeline.Editor
                             return;
                         if (!clipResizing)
                             return;
-                        DeSelect();
 
-                        if (GUIUtility.hotControl == controlID)
-                            GUIUtility.hotControl = 0;
+                        controlID.CleaHotControl();
 
                         if (clipResizing)
                         {
@@ -171,7 +173,7 @@ namespace PJR.Timeline.Editor
                             clipResize_draggedFrameOffset = IClip.ClampClipStartChange_Frame(IClip.StartFrame + windowState.PixelToFrame(pixel)) - IClip.StartFrame;
                         if (clipResie_purpose == ResizePurpose.Right)
                             clipResize_draggedFrameOffset = IClip.ClampClipEndChange_Frame(IClip.EndFrame + windowState.PixelToFrame(pixel)) - IClip.EndFrame;
-
+                        SequenceUndo.PushUndo((Object)IClip, "Resize Clip");
                         Repaint();
                         EventType.MouseDrag.Use();
                         break;
@@ -210,8 +212,7 @@ namespace PJR.Timeline.Editor
                     if (!IsSelect)
                         return;
                     
-                    if (GUIUtility.hotControl == controlID)
-                        GUIUtility.hotControl = 0;
+                    controlID.CleaHotControl();
 
                     if (clipDragging)
                     {
@@ -242,6 +243,7 @@ namespace PJR.Timeline.Editor
                         
                     clipDrag_draggedPixelOffset = draggedPixelOffset;
 
+                    SequenceUndo.PushUndo((Object)IClip, "Drag Clip");
                     Repaint();
                     EventType.MouseDrag.Use();
                     break;

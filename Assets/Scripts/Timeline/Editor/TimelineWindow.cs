@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using static UnityEditor.EditorGUI;
 
@@ -21,13 +22,29 @@ namespace PJR.Timeline.Editor
             instance.Focus();
             return instance;
         }
+        
+        [OnOpenAsset(1)]
+        public static bool OnDoubleClick(int instanceID, int line)
+        {
+            var asset = AssetDatabase.GetMainAssetTypeAtPath(AssetDatabase.GetAssetPath(instanceID));
+            if (asset == typeof(Sequence))
+            {
+                ShowWindow()?.Selection_CheckSelectionChange();
+                return true;
+            }
+            return false;
+        }
         private void OnEnable()
         {
             instance = this;
             Selection_CheckSelectionChange();
             RegisterEvent(true);
         }
-
+        
+        void OnLostFocus()
+        {
+            Repaint();
+        }
         void RegisterEvent(bool enable)
         {
             Selection.selectionChanged -= OnSelectionChanged;
@@ -268,35 +285,8 @@ namespace PJR.Timeline.Editor
         {
             if (State.NonEditingSequence())
                 return;
-            var tracks = State.editingSequence.Sequence.Tracks;
-            
-            var clipScriptableObject = ScriptableObject.CreateInstance(type);
-            clipScriptableObject.name = type.Name;
-            
-            var clip = clipScriptableObject as Clip;
-            //var clip = Activator.CreateInstance(type) as IClip;
-            
-            if (clip == null)
-            {
-                Debug.Log($"创建[类型:{type.Name}]失败");
+            if (!SequenceUnitCreateHelper.CreateTrack(State.editingSequence.SequenceAsset, type))
                 return;
-            }
-
-            clip.FrameRateType = State.editingSequence.Sequence.FrameRateType;
-            clip.StartFrame = 0;
-            clip.EndFrame = 5;
-
-            var track = ScriptableObject.CreateInstance<Track>();
-            track.name = "Track";
-            track.clips = new List<Clip>{ clip }; 
-            AssetDatabase.AddObjectToAsset(track, State.editingSequence.SequenceAsset);
-            AssetDatabase.AddObjectToAsset(clipScriptableObject, State.editingSequence.SequenceAsset);
-
-            ArrayUtility.Add(ref tracks, track);
-            State.editingSequence.Sequence.Tracks = tracks;
-            if(State.editingSequence.SequenceAsset != null)
-                EditorUtility.SetDirty(State.editingSequence.SequenceAsset);
-            AssetDatabase.SaveAssets();
             State.requireRepaint = true;
         }
 
@@ -479,8 +469,7 @@ namespace PJR.Timeline.Editor
                 case EventType.MouseUp:
                     {
                         changeValue();
-                        if (GUIUtility.hotControl == controlID)
-                            GUIUtility.hotControl = 0;
+                        controlID.CleaHotControl();
                         break;
                     }
                 default:

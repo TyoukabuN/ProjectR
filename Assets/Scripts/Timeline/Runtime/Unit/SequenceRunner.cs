@@ -58,7 +58,7 @@ namespace PJR.Timeline
             }
 
             _trackRunners = UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Get();
-            for (int i = 0; i < _sequence.Tracks.Length; i++)
+            for (int i = 0; i < _sequence.Tracks.Count; i++)
             { 
                 var track = _sequence.Tracks[i];
                 if (!track.IsValid())

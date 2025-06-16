@@ -2,18 +2,18 @@ namespace PJR.Timeline
 {
     public interface ISequenceHandle
     {
-        public SequenceAsset SequenceAsset { get; }
+        public Sequence Sequence { get; }
     }
     
     public class SequenceHandle : ISequenceHandle
     {
-        private SequenceAsset _sequenceAsset;
-        public SequenceAsset SequenceAsset => _sequenceAsset;
-        public SequenceHandle(SequenceAsset sequenceAsset) => _sequenceAsset = sequenceAsset;
+        private Sequence _sequence;
+        public Sequence Sequence => _sequence;
+        public SequenceHandle(Sequence sequence) => _sequence = sequence;
 
-        public static implicit operator SequenceAsset(SequenceHandle handle)
+        public static implicit operator Sequence(SequenceHandle handle)
         {
-            return handle.SequenceAsset;
+            return handle.Sequence;
         }
     }
 }

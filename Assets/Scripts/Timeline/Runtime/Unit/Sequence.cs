@@ -1,25 +1,29 @@
 using System;
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public class Sequence : SequenceScriptableObject, ISequence
+    public class Sequence : SerializedScriptableObject, ISequence
     {
         public EFrameRate frameRateType;
-        [SerializeField]
-        private Track[] tracks = Array.Empty<Track>(); 
+        [OdinSerialize]
+        private List<Track> _tracks;
+        [DisableIf("@true")]
         public bool runtimeInstance;
         public EFrameRate FrameRateType { get => frameRateType; set => frameRateType = value; }
-        public Track[] Tracks
+        public List<Track> Tracks
         {
-            get => tracks??=Array.Empty<Track>(); 
-            set => tracks = value;
+            get => _tracks??=new List<Track>(); 
+            set => _tracks = value;
         }
     }
     public interface ISequence
     {
         public EFrameRate FrameRateType { get; set; }
-        public Track[] Tracks { get; set; }
+        public List<Track> Tracks { get; set; }
     }
 }

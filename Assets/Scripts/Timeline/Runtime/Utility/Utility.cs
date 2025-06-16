@@ -24,7 +24,7 @@ namespace PJR.Timeline
             if(sequence == null)
                 return false;
             var tracks = sequence.Tracks;
-            if (tracks == null || tracks.Length <= 0)
+            if (tracks == null || tracks.Count <= 0)
                 return false;
             return true;
         }

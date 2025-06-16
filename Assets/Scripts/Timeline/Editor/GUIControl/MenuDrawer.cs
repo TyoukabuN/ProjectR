@@ -6,19 +6,18 @@ namespace PJR.Timeline.Editor
 {
     public class DefaultMenuDrawer : MenuDrawer
     {
-        public DefaultMenuDrawer(Track track,IClip clip) : base(track,clip){}
+        public DefaultMenuDrawer(Clip clip) : base(clip){}
     }
     public partial class MenuDrawer : TimelineGUIElement
     {
-        public Track Track;
-        public IClip IClip;
-        public MenuDrawer(Track track, IClip clip) => Reset(track, clip);
-        public override object PropertyObject => Track;
+        public Clip Clip;
+        public MenuDrawer(Clip clip) => Reset(clip);
+        public override object PropertyObject => Clip.Track;
 
-        public void Reset(Track track,IClip clip)
+        public void Reset(Clip clip)
         {
-            Track = track;
-            IClip = clip;
+            Clip = clip;
+            CreateContextMenuMethod = null;
         }
 
         public Color GetMenuBgColor()
@@ -34,19 +33,19 @@ namespace PJR.Timeline.Editor
 
             rect.Debug();
 
-            var labelSize = Styles.CalcLabelSize(IClip.GetClipName());
+            var labelSize = Styles.CalcLabelSize(Clip.GetClipName());
 
-            GUILayout.Label(new GUIContent(IClip.GetClipName(), IClip.GetClipName()), GUILayout.Width(labelSize.x),
+            GUILayout.Label(new GUIContent(Clip.GetClipName(), Clip.GetClipName()), GUILayout.Width(labelSize.x),
                 GUILayout.ExpandHeight(true));
 
             GUILayout.FlexibleSpace();
 
             using (new MidAlignmentScope.Horizontal())
             {
-                if (GUILayout.Button(IClip.Mute ? Styles.trackMuteEnabledIcon : Styles.trackMuteDisabledIcon,
+                if (GUILayout.Button(Clip.Mute ? Styles.trackMuteEnabledIcon : Styles.trackMuteDisabledIcon,
                         EditorStyles.iconButton))
                 {
-                    IClip.Mute = !IClip.Mute;
+                    Clip.Mute = !Clip.Mute;
                 }
             }
 
@@ -71,25 +70,14 @@ namespace PJR.Timeline.Editor
             DisplayRightClickMenu(rect);
             EventType.MouseDown.Use();
         }
-        /// <summary>
-        /// 右键默认选项
-        /// </summary>
-        /// <returns></returns>
-        protected GenericMenu GetDefaultGenericMenu()
-        {
-            var menu = new GenericMenu();
-            menu.AddDisabledItem(new GUIContent("右键选项"));
-            menu.AddSeparator("");
-            menu.AddItem(new GUIContent("删除"),false,()=>{ });
-            menu.AddSeparator("");
-            IClip?.GetContextMenu(menu);
-            return menu;
-        }
-        protected virtual void OnCreateContextMenu(GenericMenu menu){}
+
+        public Func<GenericMenu> CreateContextMenuMethod;
         public void DisplayRightClickMenu(Rect rect)
         {
-            var menu = GetDefaultGenericMenu();
-            menu.ShowAsContext();
+            if (CreateContextMenuMethod == null)
+                return;
+            var menu = CreateContextMenuMethod.Invoke();
+            menu?.ShowAsContext();
         }
     }
 }

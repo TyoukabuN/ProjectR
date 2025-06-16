@@ -10,7 +10,7 @@ namespace PJR.Timeline
     public class MonoSequenceHandle : MonoBehaviour, ISequenceHandle
     {
         [SerializeField]
-        private SequenceAsset _sequenceAsset;
-        public SequenceAsset SequenceAsset => _sequenceAsset;
+        private Sequence sequence;
+        public Sequence Sequence => sequence;
     }
 }

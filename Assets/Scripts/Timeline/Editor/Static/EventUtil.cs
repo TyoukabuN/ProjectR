@@ -98,7 +98,7 @@ namespace PJR.Timeline.Editor
             //获知你直接在这里断点,看哪次赋值覆盖了
             if (controlID != GUIUtility.hotControl)
                 return;
-            controlID.CleaHotControl();
+            GUIUtility.hotControl = 0;
         }
         
         public static class MouseEvent

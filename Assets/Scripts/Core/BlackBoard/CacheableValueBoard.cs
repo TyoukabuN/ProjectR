@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Pool;
 
 #if UNITY_EDITOR
+using Sirenix.Utilities;
 using UnityEditor;
 #endif
 
@@ -171,6 +173,8 @@ namespace PJR.BlackBoard.CachedValueBoard
         [InfoBox("$editor_error", InfoMessageType.Error, "Editor_AnyError")]
         private string editor_newKeyAddBoardValue;
         [LabelText("ValueType"),BoxGroup("新黑板值"), ShowInInspector]
+        [TypeFilter("Editor_GetFilteredTypeList", DrawValueNormally = true)]
+        [InlineButton("Editor_ChangeTypeFilterMode","@Editor_GetTypeFilterLabel()")]
         private Type editor_newValueType;
         
         private string editor_error;
@@ -213,6 +217,74 @@ namespace PJR.BlackBoard.CachedValueBoard
         private void Editor_ShowAddBoardValueGroup()
         {
             editor_showNewValueRect = true;
+        }
+
+        private static TypeFilterTypeMode editor_typeFilterAttribute = 0;
+        [Flags]
+        public enum TypeFilterTypeMode
+        {
+            Preference = 0,
+            Scripts = 1,
+            ImportedAssemblies = 2,
+            UnityEngine = 3,
+            DotNetRuntime = 4,
+            DynamicAssemblies = 5,
+            Unknown = 6,
+            ProjectSpecific = 7,
+            All,
+        }
+        
+        private static Dictionary<TypeFilterTypeMode, AssemblyCategory> TypeFilterTypeMode2AssemblyCategory = new()
+        {
+            {TypeFilterTypeMode.Scripts, AssemblyCategory.Scripts},
+            {TypeFilterTypeMode.ImportedAssemblies, AssemblyCategory.ImportedAssemblies},
+            {TypeFilterTypeMode.UnityEngine, AssemblyCategory.UnityEngine},
+            {TypeFilterTypeMode.DotNetRuntime, AssemblyCategory.DotNetRuntime},
+            {TypeFilterTypeMode.DynamicAssemblies, AssemblyCategory.DynamicAssemblies},
+            {TypeFilterTypeMode.Unknown, AssemblyCategory.Unknown},
+            {TypeFilterTypeMode.ProjectSpecific, AssemblyCategory.ProjectSpecific},
+            {TypeFilterTypeMode.All, AssemblyCategory.All},
+        };
+            
+        public static List<Type> PreferenceType = new List<Type>()
+        {
+            typeof(int),
+            typeof(float),
+            typeof(double),
+            typeof(string),
+            typeof(GameObject),
+            typeof(Transform),
+        };
+
+        private static List<Type> _allTypeIEnumerableCache;
+        public IEnumerable<Type> Editor_GetFilteredTypeList()
+        {
+            if (editor_typeFilterAttribute == TypeFilterTypeMode.Preference)
+            {
+                return PreferenceType;
+            }
+
+            if (!TypeFilterTypeMode2AssemblyCategory.TryGetValue(editor_typeFilterAttribute, out var assemblyCategory))
+                return null;
+
+            return AssemblyUtilities.GetTypes(assemblyCategory);
+        }
+
+        public void Editor_ChangeTypeFilterMode()
+        {
+            int temp = (int)editor_typeFilterAttribute;
+            temp++;
+            temp = temp % ((int)TypeFilterTypeMode.All + 1);
+            editor_typeFilterAttribute = (TypeFilterTypeMode)temp;
+        }
+
+        public string Editor_GetTypeFilterLabel()
+        {
+            return editor_typeFilterAttribute switch {
+                TypeFilterTypeMode.Preference => "Pref",
+                TypeFilterTypeMode.All => "All",
+                _ => editor_typeFilterAttribute.ToString(),
+            };
         }
 #endif
     }

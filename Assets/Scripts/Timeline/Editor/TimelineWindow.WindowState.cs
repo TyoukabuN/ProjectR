@@ -24,7 +24,7 @@ namespace PJR.Timeline.Editor
             private void OnUndoRedoPerformed() => RefreshWindow(true);
 
             public bool IsControlBarDisabled() => !AnyEditingSequence();
-            public bool AnyEditingSequence() => editingSequence.SequenceAsset != null;
+            public bool AnyEditingSequence() => editingSequence.Sequence != null;
             public bool NonEditingSequence() => !AnyEditingSequence();
 
             /// <summary>
@@ -115,10 +115,10 @@ namespace PJR.Timeline.Editor
             /// <param name="paths"></param>
             private void OnWillSaveAssetsCall(string[] paths)
             {
-                if (editingSequence.SequenceAsset == null)
+                if (editingSequence.Sequence == null)
                     return;
                     
-                var seqPath = AssetDatabase.GetAssetPath(editingSequence.SequenceAsset);
+                var seqPath = AssetDatabase.GetAssetPath(editingSequence.Sequence);
                 if (string.IsNullOrEmpty(seqPath))
                     return;
                 
@@ -127,13 +127,19 @@ namespace PJR.Timeline.Editor
                 instance.hasUnsavedChanges = false;
             }
 
+            public void SetHasUnsavedChanges(bool boolean)
+            {
+                instance.hasUnsavedChanges = boolean;
+                instance.Repaint();
+            }
+
             public bool TrySetSequenceAssetDirty(string undoName = null)
             {
-                if (editingSequence.SequenceAsset == null)
+                if (editingSequence.Sequence == null)
                     return false;
                 undoName ??= Default_UndoName;
-                Undo.RecordObject(editingSequence.SequenceAsset, undoName);
-                EditorUtility.SetDirty(editingSequence.SequenceAsset);
+                Undo.RecordObject(editingSequence.Sequence, undoName);
+                EditorUtility.SetDirty(editingSequence.Sequence);
                 instance.hasUnsavedChanges = true;
                 return true;
             }
@@ -142,7 +148,7 @@ namespace PJR.Timeline.Editor
                 if (!TrySetSequenceAssetDirty(undoName))
                     return false;
                 instance.hasUnsavedChanges = false;
-                AssetDatabase.SaveAssetIfDirty(editingSequence.SequenceAsset);
+                AssetDatabase.SaveAssetIfDirty(editingSequence.Sequence);
                 return true;
             }
             
@@ -162,19 +168,19 @@ namespace PJR.Timeline.Editor
             public static EditingSequare Empty = new() { _isEmpty = true };
             private bool _isEmpty;
             public bool IsEmpty => _isEmpty;
-            public Sequence SequenceAsset;
+            public Sequence Sequence;
             public GameObject GameObject;
 
-            public EditingSequare(Sequence sequenceAsset)
+            public EditingSequare(Sequence sequence)
             {
-                SequenceAsset = sequenceAsset;
+                Sequence = sequence;
                 _isEmpty = false;
                 GameObject = null;
             }
 
             public bool Valid
             {
-                get=>  SequenceAsset != null && SequenceAsset != null;
+                get=>  Sequence != null && Sequence != null;
             }
         }
 

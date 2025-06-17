@@ -285,7 +285,7 @@ namespace PJR.Timeline.Editor
         {
             if (State.NonEditingSequence())
                 return;
-            if (!SequenceUnitCreateHelper.CreateTrack(State.editingSequence.SequenceAsset, type))
+            if (!SequenceUnitCreateHelper.CreateTrack(State.editingSequence.Sequence, type))
                 return;
             State.requireRepaint = true;
         }

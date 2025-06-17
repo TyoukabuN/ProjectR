@@ -29,7 +29,7 @@ namespace PJR.Timeline
                     if (clipType == null || clipType2HandleType.ContainsKey(clipType))
                         continue;
                     clipType2HandleType.Add(clipType, _handleType);
-                    Debug.Log($"{clipType.Name}  {_handleType.Name}");
+                    //Debug.Log($"{clipType.Name}  {_handleType.Name}");
                 }
             }
 

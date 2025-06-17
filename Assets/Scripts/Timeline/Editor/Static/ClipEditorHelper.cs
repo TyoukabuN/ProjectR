@@ -12,7 +12,7 @@ namespace PJR.Timeline.Editor
 
         public static void TrySave(this IClip clip)
         {
-            var sequenceAsset = windowState.editingSequence.SequenceAsset;
+            var sequenceAsset = windowState.editingSequence.Sequence;
             if (sequenceAsset == null)
                 return;
             EditorUtility.SetDirty(sequenceAsset);

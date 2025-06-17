@@ -17,7 +17,22 @@ namespace PJR.Timeline
             Diposed,
         }
         EState _state;
-        public EState state => _state;
+
+        public EState State
+        {
+            get => _state;
+            private set
+            {
+                if (_state == value)
+                    return;
+                Internal_OnStateChanged(_state, value);
+                _state = value;
+                if(_state == EState.Done)
+                    Internal_OnDone();
+            }
+        }
+        public bool IsRunning => State == EState.Running;
+
         public List<TrackRunner> trackRunner => _trackRunners;
         public double FrameUpdateFrequency => _secondPerFrame;
 
@@ -48,12 +63,12 @@ namespace PJR.Timeline
 
             if (_sequence == null)
             { 
-                _state = EState.Failure;
+                State = EState.Failure;
                 return;
             }
             if (!_sequence.IsValid())
             { 
-                _state = EState.Done;
+                State = EState.Done;
                 return;
             }
 
@@ -75,13 +90,13 @@ namespace PJR.Timeline
             }
 
             _secondPerFrame = GetSecondPerFrame();
-            _state = EState.None;
+            State = EState.None;
         }
         public virtual void OnStart()
         {
-            if (_state >= EState.Done)
+            if (State >= EState.Done)
                 return;
-            _state = EState.Running;
+            State = EState.Running;
 
             ForEachTrackRunner(StartTrackRunner);
 
@@ -94,11 +109,11 @@ namespace PJR.Timeline
 
         void OnUpdate(UpdateContext context)
         {
-            if (_state != EState.Running)
+            if (State != EState.Running)
                 return;
             if (_trackRunners == null)
             {
-                _state = EState.Done;
+                State = EState.Done;
                 return;
             }
 
@@ -108,21 +123,21 @@ namespace PJR.Timeline
                 var trackRunner = _trackRunners[i];
                 trackRunner.OnUpdate(context);
 
-                if (trackRunner.state == TrackRunner.EState.Running)
+                if (trackRunner.State < TrackRunner.EState.Done)
                     allDone = false;
             }
 
-            _state = allDone ? EState.Done : _state;
+            State = allDone ? EState.Done : _state;
         }
 
         public float _remainDeltaTime;
         public void OnUpdate(float deltaTime)
         {
-            if (_state != EState.Running)
+            if (State != EState.Running)
                 return;
             if (_trackRunners == null)
             {
-                _state = EState.Done;
+                State = EState.Done;
                 return;
             }
 
@@ -133,7 +148,9 @@ namespace PJR.Timeline
             var context = UpdateContext(scaledDeltaTime, deltaTime);
             context.updateIntervalType = IntervalType.Second;
             OnUpdate(context);
-
+            if (!IsRunning)
+                return;
+            
             int frameUpdateRound = 0;
             //以帧间隔更新
             while (_remainDeltaTime >= FrameUpdateFrequency)
@@ -141,6 +158,8 @@ namespace PJR.Timeline
                 _remainDeltaTime -= (float)FrameUpdateFrequency;
                 context = UpdateContext(1);
                 OnUpdate(context);
+                if(!IsRunning)
+                    break;
                 frameUpdateRound++;
             }
         }
@@ -169,6 +188,17 @@ namespace PJR.Timeline
             return _updateContext;
         }
 
+        public Action<EState, EState> OnStateChanged;
+        private void Internal_OnStateChanged(EState oldState, EState newState)
+        {
+            OnStateChanged?.Invoke(oldState, newState);
+        }
+
+        private void Internal_OnDone()
+        {
+            Dispose();
+        }
+
         public double GetTimeScale() => Time.timeScale;
         double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.FrameRateType ?? EFrameRate.Game);
 
@@ -189,6 +219,8 @@ namespace PJR.Timeline
         }
         public void Dispose()
         {
+            if (_state == EState.Diposed)
+                return;
             ForEachTrackRunner(DisposeTrackRunner);
 
             if (_trackRunners != null)
@@ -197,7 +229,7 @@ namespace PJR.Timeline
                 _trackRunners = null;
             }
 
-            _state = EState.Diposed;
+            State = EState.Diposed;
             _sequence = null;
 
             _totalTime = 0f;

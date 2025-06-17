@@ -33,7 +33,15 @@ namespace PJR.Timeline.Editor
                     DrawNonSelected();
                     return;
                 }
-                propertyTree.Draw(true);
+                
+                propertyTree.BeginDraw(true);
+                EditorGUI.BeginChangeCheck();
+                propertyTree.DrawProperties();
+                if (EditorGUI.EndChangeCheck())
+                {
+                    instance.State.SetHasUnsavedChanges(true);
+                }
+                propertyTree.EndDraw();
             }
 
             private void DrawNonSelected()

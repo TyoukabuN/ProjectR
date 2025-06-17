@@ -72,7 +72,7 @@ namespace PJR.Timeline.Editor
                 return;
             if (instance == null)
                 return;
-            if (!instance.State.editingSequence.IsEmpty && instance.State.editingSequence.SequenceAsset == sequenceAsset)
+            if (!instance.State.editingSequence.IsEmpty && instance.State.editingSequence.Sequence == sequenceAsset)
                 return;
             instance.State.editingSequence = new EditingSequare(sequenceAsset);
             instance.Repaint();

@@ -18,7 +18,18 @@ namespace PJR.Timeline
             Diposed,
         }
         EState _state = 0;
-        public EState state => _state;
+        public EState State
+        {
+            get => _state;
+            private set
+            {
+                if (_state == value)
+                    return;
+                Internal_OnStateChanged(_state, value);
+                _state = value;
+            }
+        }
+        
         public List<ClipRunner> clipRunners => _clipRunners;
 
         List<ClipRunner> _clipRunners;
@@ -33,7 +44,7 @@ namespace PJR.Timeline
         public TrackRunner() 
         {
             Dispose();
-            _state = EState.None;
+            State = EState.None;
         }
         public TrackRunner(Sequence sequence, Track track):this(sequence, track, Global.Clip2ClipHandleFunc) { }
         public TrackRunner(Sequence sequence, Track track, Clip2ClipHandleFunc clip2ClipHandle) 
@@ -55,7 +66,7 @@ namespace PJR.Timeline
 
             totalTime = 0f;
             _timeCounter = 0f;
-            _state = EState.Diposed;
+            State = EState.Diposed;
         }
 
         public virtual bool Reset(Sequence sequence, Track track) => Reset(sequence, track, Global.Clip2ClipHandleFunc);
@@ -67,13 +78,13 @@ namespace PJR.Timeline
 
             if (_track == null)
             {
-                _state = EState.Failure;
+                State = EState.Failure;
                 _error = Define.ErrCode_TrackRuner_TrackIsNull;
                 return false;
             }
             if (_clip2ClipHandle == null)
             {
-                _state = EState.Failure;
+                State = EState.Failure;
                 _error = Define.ErrCode_TrackRuner_Clip2ClipHandle;
                 return false;
             }
@@ -84,24 +95,24 @@ namespace PJR.Timeline
                 var clip = _track.clips[i];
                 if (clip == null)
                     continue;
-                var clipHandle = _clip2ClipHandle.Invoke(clip);
-                if (clipHandle == null)
+                var clipRunner = clip.GetRunner();
+                if (clipRunner == null)
                     continue;
-
-                _clipRunners.Add(clipHandle);
+                _clipRunners.Add(clipRunner);
             }
 
             ForEachClipRunner(InitClipRunner);
 
-            _state = EState.None;
+            State = EState.None;
             return true;
         }
         public virtual void OnInit()
         {
+            State = EState.None;
         }
         public virtual void OnStart()
         {
-            _state = EState.Running;
+            State = EState.Running;
         }
 
         public virtual void OnUpdate(UpdateContext context)
@@ -110,35 +121,49 @@ namespace PJR.Timeline
                 return;
             if (clipRunners == null)
             {
-                _state = EState.Done;
+                State = EState.Done;
                 return;
             }
 
             bool allDone = true;
             for (int i = 0; i < clipRunners.Count; i++)
             {
-                var clipHandle = clipRunners[i];
-                if (!IsClipRunnerUpdatable(clipHandle))
+                var clipRunner = clipRunners[i];
+                if (!IsClipRunnerUpdatable(clipRunner))
                     continue;
 
-                if (clipHandle.Clip.OutOfRange(context.totalTime, _sequence.FrameRateType.SPF()))
+                clipRunner.SetUpdateContext(context);
+                
+                if (clipRunner.Clip.OutOfRange(context.totalTime, _sequence.FrameRateType.SPF()))
                 {
-                    if (clipHandle.Running)
-                        clipHandle.OnEnd();
+                    if (clipRunner.Running)
+                        clipRunner.OnEnd();
                 }
                 else
                 { 
-                    if (clipHandle.WaitingForStart)
-                        clipHandle.OnStart(context);
-                    if (clipHandle.Running)
-                        clipHandle.OnUpdate(context);
+                    if (clipRunner.WaitingForStart)
+                        clipRunner.OnStart(context);
+                    if (clipRunner.Running)
+                        clipRunner.OnUpdate(context);
                 }
 
-                if(clipHandle.state == ClipRunner.EState.Running)
+                if(clipRunner.State < ClipRunner.EState.Done)
                     allDone = false;
             }
 
-            _state = allDone ? EState.Done : _state;
+            State = allDone ? EState.Done : _state;
+        }
+        
+        public Action<EState, EState> OnStateChanged;
+        private void Internal_OnStateChanged(EState oldState, EState newState)
+        {
+            OnStateChanged?.Invoke(oldState, newState);
+            if (newState == EState.Done)
+                Internal_OnDone();
+        }
+        private void Internal_OnDone()
+        {
+            Debug.Log("Sequence Done");
         }
 
         void DisposeClipRunner(ClipRunner clipHandle) => clipHandle?.Dispose();
@@ -160,7 +185,7 @@ namespace PJR.Timeline
         {
             if (clipHandle == null)
                 return false;
-            if (clipHandle.state >= ClipRunner.EState.Done)
+            if (clipHandle.State >= ClipRunner.EState.Done)
                 return false;
             return true;
         }

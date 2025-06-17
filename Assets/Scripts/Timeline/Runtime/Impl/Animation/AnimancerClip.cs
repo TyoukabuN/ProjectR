@@ -20,8 +20,8 @@ namespace PJR.Timeline
                 return "[播放动画] null";
             return $"[播放动画] {animationClip?.name ?? string.Empty}";
         }
-        public override ClipRunner GetRunner() => Pool.ObjectPool<AnimancerClipRunner>.Get();
-        
+        public override ClipRunner GetRunner()=> AnimancerClipRunner.Get(this);
+
 #if UNITY_EDITOR
         public override void GetContextMenu(GenericMenu menu)
         {
@@ -42,31 +42,45 @@ namespace PJR.Timeline
         public override void OnStart(UpdateContext context)
         {
             base.OnStart(context);
+            Debug.Log("Clip Start!");
             animancer = context.gameObject?.GetComponent<AnimancerComponent>();
             if (animancer == null)
                 AsFailure();
             else if (clip.animationClip == null)
                 AsFailure("clip.animationClip == null");
+            animancerState = animancer.Layers[0].GetOrCreateState(clip.animationClip);
+            if(animancerState != null)
+                animancerState.IsPlaying = true;
         }
         public override void OnUpdate(UpdateContext context)
         {
-            animancerState ??= animancer.Layers[0].GetOrCreateState(clip.animationClip);
+            if (animancerState == null)
+                return;
             animancer.Layers[0].Play(animancerState);
-            animancerState.Time = (float)context.totalTime;
+            //Debug.Log(GetLocalSecond());
+            animancerState.Time = GetLocalSecond();
         }
         public override void OnEnd()
         {
             base.OnEnd();
-            animancerState.IsPlaying = false;
+            Clear();
         }
         public override void Dispose()
         {
             base.Dispose();
-            animancerState.IsPlaying = false;
+            Clear();
         }
+        void Clear()
+        {
+            if (animancerState != null)
+                animancerState.IsPlaying = false;
+        }
+
         public override void Release()
         {
             Pool.ObjectPool<AnimancerClipRunner>.Release(this);
         }
+        
+        public static ClipRunner Get(AnimancerClip clip)=> Pool.ObjectPool<AnimancerClipRunner>.Get()?.Reset(clip);
     }
 }

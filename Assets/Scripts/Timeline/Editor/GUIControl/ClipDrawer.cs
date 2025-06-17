@@ -92,12 +92,11 @@ namespace PJR.Timeline.Editor
             rectRight.x = rect.xMax - handleWidth;
             rectRight.Debug(false);
 
-            int controlID = GUIUtility.GetControlID(FocusType.Passive);
             EditorGUIUtility.AddCursorRect(rectLeft, MouseCursor.SplitResizeLeftRight);
-            SplitResizeHandleEvent(controlID, rectLeft, ResizePurpose.Left);
+            SplitResizeHandleEvent(rectLeft, ResizePurpose.Left);
 
             EditorGUIUtility.AddCursorRect(rectRight, MouseCursor.SplitResizeLeftRight);
-            SplitResizeHandleEvent(controlID, rectRight, ResizePurpose.Right);
+            SplitResizeHandleEvent(rectRight, ResizePurpose.Right);
         }
 
         #region Clip Resize
@@ -112,12 +111,13 @@ namespace PJR.Timeline.Editor
         protected int clipResize_draggedFrameOffset = 0;
         protected Vector2 clipResie_startPosition = Vector2.zero;
 
-        public virtual void SplitResizeHandleEvent(Rect position, ResizePurpose resizePurpose)
+
+        public void SplitResizeHandleEvent(Rect position, ResizePurpose resizePurpose)
         {
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
             SplitResizeHandleEvent(controlID, position, resizePurpose);
         }
-        public virtual void SplitResizeHandleEvent(int controlID, Rect position, ResizePurpose resizePurpose)
+        public void SplitResizeHandleEvent(int controlID, Rect position, ResizePurpose resizePurpose)
         {
             var eventType = Event.current.GetTypeForControl(controlID);
             switch (eventType)
@@ -140,6 +140,8 @@ namespace PJR.Timeline.Editor
                         if (!IsSelect)
                             return;
                         if (!clipResizing)
+                            return;
+                        if (clipResie_purpose != resizePurpose)
                             return;
 
                         controlID.CleaHotControl();

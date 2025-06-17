@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEditor;
 using UnityEngine;
 using static PJR.Timeline.Define;
 
@@ -19,6 +20,17 @@ namespace PJR.Timeline
         {
             get => _tracks??=new List<Track>(); 
             set => _tracks = value;
+        }
+        public void MarkDirty()
+        {
+            EditorUtility.SetDirty(this);
+            if (_tracks == null)
+                return;
+            for (var i = 0; i < _tracks.Count; i++)
+            {
+                var track = _tracks[i];
+                track.MarkDirty();
+            }
         }
     }
     public interface ISequence

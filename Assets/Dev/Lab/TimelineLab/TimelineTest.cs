@@ -1,50 +1,66 @@
-using System.Collections.Generic;
-using PJR.ClassExtension;
 using PJR.Timeline;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
 public class TimelineTest : MonoBehaviour
 {
-    public Transform trans;
-    public float speed;
-    public Color color;
-    public AnimationClip animationClip;
+    public SequenceDirector Director;
+
+    [OnInspectorGUI]
+    void OnInspectorGUI()
+    {
+        SirenixEditorGUI.BeginBox("Runner State");
+        if (runner != null)
+        {
+            GUILayout.Label($"State: {runner.State}");
+        }
+        else
+            GUILayout.Label("No Runner");
+        SirenixEditorGUI.EndBox();
+    }
 
     [Button, HorizontalGroup("OP")]
     void Clear()
     {
-         handle?.Release();
-         handle = null;
+         runner?.Release();
+         runner = null;
     }
+    // [Button, HorizontalGroup("OP")]
+    // void Pause()
+    // { 
+    // }
+    //
     [Button, HorizontalGroup("OP")]
-    void Pause()
-    { 
-    }
-
-    [Button]
-    void LogClipType()
+    void Play()
     {
-        Global.GetAllClipType();
+        if (!EditorApplication.isPlaying)
+        {
+            EditorApplication.isPlaying = true;
+            return;
+        }
+        Clear();
+        runner = SequenceRunner.Get();
+        runner.Reset(Director.gameObject, Director.Sequence);
     }
 
-    SequenceRunner handle;
+    SequenceRunner runner;
     private void Update()
     {
-        if (handle != null)
+        if (runner != null)
         {
-            if (handle.state == SequenceRunner.EState.None)
+            if (runner.State == SequenceRunner.EState.None)
             {
                 Profiler.BeginSample("SequenceStart");
-                handle.OnStart();
-                handle.OnUpdate(Time.unscaledDeltaTime);
+                runner.OnStart();
+                runner.OnUpdate(Time.unscaledDeltaTime);
                 Profiler.EndSample();
             }
             else
             {
-                handle.OnUpdate(Time.unscaledDeltaTime);
+                runner.OnUpdate(Time.unscaledDeltaTime);
             }
         }
     }

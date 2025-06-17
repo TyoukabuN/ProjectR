@@ -167,10 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b9161b88b27a894981ab50e85bcaed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trans: {fileID: 0}
-  speed: 0
-  color: {r: 0, g: 0, b: 0, a: 0}
-  animationClip: {fileID: 0}
+  Director: {fileID: 1103173524}
 --- !u!1 &429742402
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,6 +296,7 @@ GameObject:
   - component: {fileID: 1103173518}
   - component: {fileID: 1103173522}
   - component: {fileID: 1103173523}
+  - component: {fileID: 1103173525}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -430,7 +428,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf8bb71f6960ed44b824c54696fafb34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sequenceAsset: {fileID: 11400000, guid: 3c212882b45f7594fbe1ad9231b8cc2c, type: 2}
+  sequence: {fileID: 11400000, guid: 815aa537212073043bf3f52e9114b573, type: 2}
+  PlayOnAwake: 0
+--- !u!320 &1103173525
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1103173517}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 0}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings: []
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &2128812853
 GameObject:
   m_ObjectHideFlags: 0

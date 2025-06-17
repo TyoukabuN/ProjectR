@@ -10,7 +10,7 @@ namespace PJR.Timeline.Editor
 {
     public class TrackGUI
     {
-        public List<Track> tracks => windowState.editingSequence.SequenceAsset?.Tracks;
+        public List<Track> tracks => windowState.editingSequence.Sequence?.Tracks;
         public WindowState windowState => TimelineWindow.instance.State;
         public Rect position => TimelineWindow.instance.position;
         public TrackGUI()

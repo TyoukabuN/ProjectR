@@ -5,12 +5,12 @@ namespace PJR
     /// <summary>
     /// 提供类似Shader.PropertyToID的服务
     /// </summary>
-    public class StringUid
+    public class StringUID
     {
-        private Dictionary<string, int> _propertyToIDMap = new();
-        private int _uid = 0;
+        private static Dictionary<string, int> _propertyToIDMap = new();
+        private static int _uid = 0;
 
-        public int PropertyToID(string propertyName) {
+        public static int PropertyToID(string propertyName) {
             if (string.IsNullOrEmpty(propertyName)) 
                 return 0;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using PJR.BlackBoard.CachedValueBoard;
+using PJR.Core.BlackBoard.CachedValueBoard;
 using UnityEngine;
 
 namespace PJR.Core

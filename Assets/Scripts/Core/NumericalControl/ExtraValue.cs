@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using PJR.Systems;
 
 namespace PJR
 {
@@ -157,7 +156,7 @@ namespace PJR
                 return false;
             if (!(extraValue.valueRef is T))
             {
-                LogSystem.LogError($"类型对不上 T:{typeof(T)}  valueRef:{extraValue.GetType()}");
+                Debug.LogError($"类型对不上 T:{typeof(T)}  valueRef:{extraValue.GetType()}");
                 return false;
             }
             value = (T)extraValue.valueRef;

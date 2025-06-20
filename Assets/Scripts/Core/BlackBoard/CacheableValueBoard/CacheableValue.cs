@@ -3,7 +3,7 @@ using PJR.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace PJR.BlackBoard.CachedValueBoard
+namespace PJR.Core.BlackBoard.CachedValueBoard
 {
     [InlineProperty][HideReferenceObjectPicker]
     public class CacheableValue<T> : ICacheableValue

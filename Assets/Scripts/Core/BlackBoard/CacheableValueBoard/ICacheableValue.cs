@@ -1,6 +1,6 @@
 using System;
 
-namespace PJR.BlackBoard.CachedValueBoard
+namespace PJR.Core.BlackBoard.CachedValueBoard
 {
     public interface ICacheableValue
     {

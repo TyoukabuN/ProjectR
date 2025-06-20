@@ -10,7 +10,7 @@ using Sirenix.Utilities;
 using UnityEditor;
 #endif
 
-namespace PJR.BlackBoard.CachedValueBoard
+namespace PJR.Core.BlackBoard.CachedValueBoard
 {
     public class CacheableValueBoard
     {

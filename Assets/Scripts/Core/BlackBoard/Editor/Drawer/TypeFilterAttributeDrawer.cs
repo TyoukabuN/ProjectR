@@ -1,4 +1,4 @@
-using PJR.BlackBoard.CachedValueBoard;
+using PJR.Core.BlackBoard.CachedValueBoard;
 using PJR.BlackBoard.Inspector;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;

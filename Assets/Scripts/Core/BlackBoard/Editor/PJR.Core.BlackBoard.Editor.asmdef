@@ -1,4 +1,16 @@
 {
-	"name": "PJR.Core.BlackBoard",
-	"references":[ "GUID:64e2451789ce69c419ae39ad085de427" ]
+    "name": "PJR.Core.BlackBoard",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f7e926b04c0297e4baf40bf19adf91a9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

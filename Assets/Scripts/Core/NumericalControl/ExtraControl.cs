@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
-using PJR.Systems;
 
 namespace PJR
 {
@@ -68,7 +65,7 @@ namespace PJR
             }
             catch (Exception e)
             {
-                LogSystem.LogError(e.ToString());
+                Debug.LogError(e.ToString());
             }
         }
 
@@ -83,7 +80,7 @@ namespace PJR
             }
             catch (Exception e)
             {
-                LogSystem.LogError(e.ToString());
+                Debug.LogError(e.ToString());
             }
         }
         public virtual void OnComplete()
@@ -97,7 +94,7 @@ namespace PJR
             }
             catch (Exception e)
             {
-                LogSystem.LogError(e.ToString());
+                Debug.LogError(e.ToString());
             }
         }
     }

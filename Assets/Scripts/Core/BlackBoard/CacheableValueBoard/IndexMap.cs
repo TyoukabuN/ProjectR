@@ -1,7 +1,7 @@
 using System;
 using PJR.Core;
 
-namespace PJR.BlackBoard.CachedValueBoard
+namespace PJR.Core.BlackBoard.CachedValueBoard
 {
     /// <summary>
     /// 记录在GenericBuffer中CacheValue时返回的引用的信息

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PJR.BlackBoard;
 using PJR.BlackBoard.Inspector;
 using PJR.Core;
 using Sirenix.OdinInspector;
@@ -8,7 +9,7 @@ using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace PJR.BlackBoard.CachedValueBoard
+namespace PJR.Core.BlackBoard.CachedValueBoard
 {
     [InlineProperty]
     public class CacheableField<T> : ICacheableValue

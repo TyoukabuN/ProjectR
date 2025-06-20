@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
-using PJR.Systems;
 
 namespace PJR
 {
@@ -16,7 +14,6 @@ namespace PJR
     {
         public int actionType;
         public IActionControl target;
-        public EActionEvent tActionEvent;
         public ExtraAction(int actionType, float duration) : base(duration)
         {
             Init(actionType, duration);
@@ -56,7 +53,7 @@ namespace PJR
                 }
                 catch (Exception e)
                 {
-                    LogSystem.LogError(e.ToString());
+                    Debug.LogError(e.ToString());
                 }
             }
             if (target == null)
@@ -116,11 +113,6 @@ namespace PJR
             return value;
         }
 
-        public static ExtraAction ExtraActionMapAdd(this IActionControl target, EActionType actionType, float duration)
-        {
-            return ExtraActionMapAdd(target, (int)actionType, duration);
-        }
-
         public static void UpdateExtraAction(this IActionControl target, float deltaTime)
         {
             var map = RegisterExtraActionMap(target);
@@ -164,10 +156,6 @@ namespace PJR
             if(isComplete)
                 target.OnActionControlRemove(value);
         }
-        public static void ExtraActionMapRemove(this IActionControl target, EActionType actionType, bool isComplete = true)
-        {
-            ExtraActionMapRemove(target, (int)actionType, isComplete);
-        }
         public static bool ExtraActionMapExist(this IActionControl target, int key)
         {
             var repo = RegisterExtraActionMap(target);
@@ -176,10 +164,6 @@ namespace PJR
             return repo.ContainsKey(key);
         }
 
-        public static ExtraAction GetExtraActionMap(this IActionControl target, EActionType actionType)
-        {
-            return GetExtraActionMap(target, (int)actionType);
-        }
         public static ExtraAction GetExtraActionMap(this IActionControl target, int key)
         {
             var repo = RegisterExtraActionMap(target);
@@ -188,10 +172,6 @@ namespace PJR
             ExtraAction taction = null;
             repo.TryGetValue(key, out taction);
             return taction;
-        }
-        public static bool ExtraActionMapExist(this IActionControl target, EActionType actionType)
-        {
-            return ExtraActionMapExist(target,(int)actionType);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace PJR.BlackBoard
     }
 }
 
-namespace PJR.BlackBoard.CachedValueBoard
+namespace PJR.Core.BlackBoard.CachedValueBoard
 {
     public abstract class BoardValueReference
     {

@@ -7,17 +7,17 @@ namespace PJR
     /// </summary>
     public class StringUID
     {
+        private static readonly object _mapLock = new object(); // buffer锁对象
         private static Dictionary<string, int> _propertyToIDMap = new();
         private static int _uid = 0;
 
-        public static int PropertyToID(string propertyName) {
+        public static int PropertyToID(string propertyName)
+        {
+            int id = 0;
             if (string.IsNullOrEmpty(propertyName)) 
-                return 0;
-
-            if (_propertyToIDMap.TryGetValue(propertyName, out int id))
                 return id;
-    
-            lock (_propertyToIDMap) {
+
+            lock (_mapLock) {
                 if (!_propertyToIDMap.TryGetValue(propertyName, out id)) 
                 {
                     id = ++_uid;

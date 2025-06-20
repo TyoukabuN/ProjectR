@@ -290,6 +290,33 @@ namespace PJR.Timeline.Editor
             State.requireRepaint = true;
         }
 
+        public struct RuleScopeDescription
+        {
+            public int IncludeFrames;
+        }
+
+        public static int[] RulerScalingPattern = { 5, 2, 3 };
+        public static float MaxPixelPerFrame = 50 * 3.6f;
+        public static RuleScopeDescription GetRulerScopeDesc(float ruleScale)
+        {
+            int i = -1;
+            var ruleScope = new RuleScopeDescription { IncludeFrames = 0 };
+            while (true)
+            {
+                if (i < 0)
+                    ruleScope.IncludeFrames = 1;
+                else
+                    ruleScope.IncludeFrames = RulerScalingPattern[i % RulerScalingPattern.Length];
+
+                float scopeUnitPixelCount = ruleScope.IncludeFrames * MaxPixelPerFrame * ruleScale;
+                if(scopeUnitPixelCount >= 50)
+                    break;
+                
+                i++;
+            }
+            return ruleScope;
+        }
+
         void Draw_TimelineRuler()
         {
             if (State.NonEditingSequence())
@@ -298,7 +325,9 @@ namespace PJR.Timeline.Editor
             EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
             GUIUtil.CheckWheelEvent(trackRect, evt =>
             {
-                State.currentPixelPerFrame -= (int)evt.delta.y;
+                UnityEngine.Debug.Log($"[evt.delta.y: {evt.delta.y}]");
+                //滑轮上滑是ZoomIn
+                State.currentPixelPerFrame -= (int)(evt.delta.y * 0.433f);
                 State.currentPixelPerFrame = Mathf.Clamp(State.currentPixelPerFrame, Constants.pixelPerFrame, Constants.maxPixelPerFrame);
                 Repaint();
             });

@@ -1,8 +1,6 @@
 using System;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
-using Debug = System.Diagnostics.Debug;
 
 namespace PJR.BlackBoard
 {

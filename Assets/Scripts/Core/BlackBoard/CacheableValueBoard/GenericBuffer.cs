@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using PJR.BlackBoard.CachedValueBoard;
 using UnityEngine;
 
 namespace PJR.BlackBoard.CachedValueBoard

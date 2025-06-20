@@ -1,5 +1,5 @@
 {
-  "FolderDescription": "配置相关",
+  "FolderDescription": "配置",
   "LeftClickMenuDescription": 
   [
     {"MenuName": "创建顺序表类","ClassName": "PJR.Editor.OrdinalConfigClassHelper", "MethodName": "OrdinalConfigClassDialog"}

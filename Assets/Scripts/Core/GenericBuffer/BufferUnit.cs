@@ -1,4 +1,4 @@
-namespace PJR.BlackBoard.CachedValueBoard
+namespace PJR.Core
 {
     public struct BufferUnit<T>
     {

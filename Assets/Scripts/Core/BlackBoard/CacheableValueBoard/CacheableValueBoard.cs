@@ -16,7 +16,7 @@ namespace PJR.BlackBoard.CachedValueBoard
     {
         [OdinSerialize,LabelText("黑板值")]
         private Dictionary<string, ICacheableValue> _key2Value = new();
-        public Dictionary<string, ICacheableValue> Key2Value => _key2Value;
+        public Dictionary<string, ICacheableValue> Key2Value => _key2Value ??= new();
      
         /// <summary>
         /// 将_key2Value中的Value缓存到GenericBuffer<T>中,细节信息记录在返回的IndexMap
@@ -91,7 +91,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         {
             if (indexMap.Length <= 0)
                 return false;
-            if (_key2Value == null || _key2Value.Count <= 0)
+            if (_key2Value == null)
                 return false;
             for (int i = 0; i < indexMap.Length; i++)
             {
@@ -110,13 +110,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         /// </summary>
         /// <param name="holder"></param>
         /// <returns></returns>
-        public bool OverrideTo(ICachedValueBoardHolder holder)
-        {
-            var destBoard = holder?.GetCachedValueBoard();
-            if (destBoard == null)
-                return false;
-            return OverrideTo(destBoard);
-        }
+        public bool OverrideTo(ICachedValueBoardHolder holder)=>OverrideTo(holder?.GetCachedValueBoard());
 
         /// <summary>
         /// 覆盖targetBoard

@@ -1,4 +1,5 @@
 using System;
+using PJR.Core;
 
 namespace PJR.BlackBoard.CachedValueBoard
 {

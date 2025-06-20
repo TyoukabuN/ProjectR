@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PJR.BlackBoard.CachedValueBoard
+namespace PJR.Core
 {
     /// <summary>
     /// 提供诸如类型转VariableBuffer<T>,间接释放VariableBuffer的等服务, 

@@ -142,7 +142,7 @@ namespace PJR.Timeline.Editor
             trackRect.Debug();
             EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
 
-            Draw_TimelineRuler_TrackView();
+            //Draw_TimelineRuler_TrackView();
                 
             //分割TrackMenu和View边界部分
             DrawSpliterAboutTrackMenuAndView();
@@ -296,14 +296,16 @@ namespace PJR.Timeline.Editor
                 return;
 
             EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
-            GUIUtil.CheckWheelEvent(timelineRulerRect, evt =>
+            GUIUtil.CheckWheelEvent(trackRect, evt =>
             {
                 State.currentPixelPerFrame -= (int)evt.delta.y;
                 State.currentPixelPerFrame = Mathf.Clamp(State.currentPixelPerFrame, Constants.pixelPerFrame, Constants.maxPixelPerFrame);
                 Repaint();
             });
 
-            int tickStep = Constants.pixelPerFrame + 1 - (State.currentPixelPerFrame / Constants.pixelPerFrame);
+            //int tickStep = Constants.pixelPerFrame + 1 - (State.currentPixelPerFrame / Constants.pixelPerFrame);
+            int tickStep = Constants.pixelPerFrame + 1 - (State.currentPixelPerFrame / 50);
+            Debug.Log($"[tickStep:{tickStep}]  [State.currentPixelPerFrame:{State.currentPixelPerFrame}]");
             tickStep /= 2;
             tickStep = Mathf.Max(tickStep, 1);
 
@@ -321,21 +323,34 @@ namespace PJR.Timeline.Editor
             float longTickStartY = 6f;
             float shortTickStartY = rect.height - 6f;
 
+            int[] labelIntervalFactors = new[] { 5, 2, 3, 2 };
 
-            for (int i = 0; i < rect.width; i += State.currentPixelPerFrame, frameIndex++)
+            int labelIntervalFactorIndex = 0;
+            int pixelConter = 50;
+            int pixelConter2 = 5;
+            for (int i = 0; i < rect.width; 
+                 i += State.currentPixelPerFrame,
+                 pixelConter += State.currentPixelPerFrame, 
+                 pixelConter2 += State.currentPixelPerFrame, 
+                 frameIndex++
+                 )
             {
-                if (frameIndex % tickStep == 0)
+                //if (i % 50 < 5)
+                //if (frameIndex % tickStep == 0)
+                if (pixelConter >= 50)
                 {
+                    pixelConter = 0;
                     using (new Handles.DrawingScope(Color.white))
                     {
                         Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
 
-                        GUI.Label(new Rect(i + 1f, -3f, 40f, 20f), frameIndex.ToString(),
+                        GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
                             Styles.Instance.timeAreaStyles.timelineTick);
                     }
                 }
-                else
+                else if(pixelConter2 >= 5)
                 {
+                    pixelConter2 = 0;
                     using (new Handles.DrawingScope(Color.white * 0.733f))
                         Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
                 }
@@ -344,42 +359,42 @@ namespace PJR.Timeline.Editor
             GUILayout.EndArea();
 
 
-            //TrackView下的刻度
-            var rulerInTrackView = new Rect(
-                State.trackMenuAreaWidth, 
-                Constants.clipStartPositionY, 
-                position.width - State.trackMenuAreaWidth, 
-                position.height - Constants.clipStartPositionY);
-            
-            //新开一个坐标系
-            GUILayout.BeginArea(rulerInTrackView);
-            Handles.BeginGUI();
-            
-            rect = rulerInTrackView;
-            frameIndex = 0;
-            longTickStartY = 0f;
-            shortTickStartY = 0f;
-
-            for (int i = 0; i < rect.width; i += State.currentPixelPerFrame, frameIndex++)
-            {
-                if (frameIndex % tickStep == 0)
-                {
-                    using (new Handles.DrawingScope(Color.white))
-                    {
-                        Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
-
-                        GUI.Label(new Rect(i + 1f, -3f, 40f, 20f), frameIndex.ToString(),
-                            Styles.Instance.timeAreaStyles.timelineTick);
-                    }
-                }
-                else
-                {
-                    using (new Handles.DrawingScope(Color.white * 0.733f))
-                        Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
-                }
-            }
-            Handles.EndGUI();
-            GUILayout.EndArea();
+            // //TrackView下的刻度
+            // var rulerInTrackView = new Rect(
+            //     State.trackMenuAreaWidth, 
+            //     Constants.clipStartPositionY, 
+            //     position.width - State.trackMenuAreaWidth, 
+            //     position.height - Constants.clipStartPositionY);
+            //
+            // //新开一个坐标系
+            // GUILayout.BeginArea(rulerInTrackView);
+            // Handles.BeginGUI();
+            //
+            // rect = rulerInTrackView;
+            // frameIndex = 0;
+            // longTickStartY = 0f;
+            // shortTickStartY = 0f;
+            //
+            // for (int i = 0; i < rect.width; i += State.currentPixelPerFrame, frameIndex++)
+            // {
+            //     if (frameIndex % tickStep == 0)
+            //     {
+            //         using (new Handles.DrawingScope(Color.white))
+            //         {
+            //             Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
+            //
+            //             GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
+            //                 Styles.Instance.timeAreaStyles.timelineTick);
+            //         }
+            //     }
+            //     else
+            //     {
+            //         using (new Handles.DrawingScope(Color.white * 0.733f))
+            //             Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
+            //     }
+            // }
+            // Handles.EndGUI();
+            // GUILayout.EndArea();
         }
 
         void Draw_TimelineRuler_TrackView()

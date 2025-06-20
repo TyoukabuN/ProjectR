@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using PJR.BlackBoard.CachedValueBoard;
 using UnityEngine;
 
-namespace PJR.BlackBoard.CachedValueBoard
+namespace PJR.Core
 {
-    public interface IVariableBuffer
-    {
-        public Type VariableType { get; }
-        public bool ClearBuffer(int index, uint guid);
-    }
-
     /// <summary>
     /// 一块缓存
     /// 通过使用缓存内的index来存取值,避免类型转换GC.Alloc
@@ -37,7 +32,7 @@ namespace PJR.BlackBoard.CachedValueBoard
         {
             _buffer = new BufferUnit<T>[BufferLength];
             Array.Fill(_buffer, BufferUnit<T>.Free);
-                 
+            
             _freeBufferIndex = new Stack<int>(BufferLength);
             for (int i = 0; i < BufferLength; i++)
                 _freeBufferIndex.Push(i);
@@ -54,38 +49,72 @@ namespace PJR.BlackBoard.CachedValueBoard
         
         private BufferUnit<T>[] _buffer;
         private Stack<int> _freeBufferIndex;
+        private readonly object _bufferLock = new object(); // buffer锁对象
+        private readonly object _indexLock = new object();  // index栈锁对象
+
         public uint NewGUID => ++s_guid;
         public uint GetGUID => s_guid;
-        public Stack<int> freeBufferIndex => _freeBufferIndex;
-        public BufferUnit<T>[] buffer => _buffer;
+        
+        public Stack<int> freeBufferIndex
+        {
+            get
+            {
+                lock (_indexLock)
+                    return new Stack<int>(_freeBufferIndex); // 返回副本以保证线程安全
+            }
+        }
+
+        public BufferUnit<T>[] buffer
+        {
+            get
+            {
+                lock (_bufferLock)
+                    return (BufferUnit<T>[])_buffer.Clone(); // 返回克隆数组避免外部修改
+            }
+        }
      
         public int GetEmptyBufferIndex()
         {
-            if (_freeBufferIndex.Count > 0)
-                return _freeBufferIndex.Pop();
-            return -1;
+            lock (_indexLock)
+            {
+                if (_freeBufferIndex.Count > 0)
+                    return _freeBufferIndex.Pop();
+                return -1;
+            }
         }
      
         public bool ExtractBuffer(int index, out BufferUnit<T> unit)
         {
-            unit = default;
-            if (index >= buffer.Length)
-                return false;
-            unit = buffer[index];
-            return !unit.IsFree;
+            lock (_bufferLock)
+            {
+                unit = default;
+                if(index < 0 || index >= _buffer.Length)
+                    return false;
+                
+                unit = _buffer[index];
+                return !unit.IsFree;
+            }
         }
+
         public bool TryGetValue(int index, uint guid, out T value)
         {
             BufferUnit<T> unit = default;
             value = default;
             if(index <  0 || index >= buffer.Length)
                 return false;
-            unit = buffer[index];
+            
+            lock (_bufferLock)
+            {
+                unit = _buffer[index];
+            }
+
             if (unit.IsFree || unit.guid != guid)
                 return false;
+            
             value = unit.Value;
             return true;
         }
+
         public bool TryGetValue(ICacheableValue.IToBufferToken token, out T value)
         {
             value = default;
@@ -97,32 +126,58 @@ namespace PJR.BlackBoard.CachedValueBoard
         public bool TryCacheValue(T value ,out Type type, out int index,out uint guid)
         {
             type = typeof(T);
-            index = GetEmptyBufferIndex();
+            index = -1;
             guid = 0;
+
+            lock (_indexLock)
+            {
+                if (_freeBufferIndex.Count > 0)
+                    index = _freeBufferIndex.Pop();
+                else
+                    return false;
+            }
+
             if (index < 0 || index >= buffer.Length)
                 return false;
-            buffer[index] = new(value){
-                guid = NewGUID,
-            };
+
+            lock (_bufferLock)
+            {
+                _buffer[index] = new(value)
+                {
+                    guid = NewGUID,
+                };
+            }
+
             guid = GetGUID;
             return true;
         }
+
         public bool ClearBuffer(int index, uint guid)
         {
             if (index < 0 || index >= buffer.Length)
                 throw new ArgumentOutOfRangeException($"{_logHead}错误缓存索引! [index:{index}] [guid:{guid}]");
-            if (buffer[index].guid != guid)
+            
+            lock (_bufferLock)
             {
-                Debug.LogWarning($"{_logHead}尝试释放的guid不匹配的缓存! [index:{index}] [guid:{guid}]");
-                return false;
+                if (_buffer[index].guid != guid)
+                {
+                    Debug.LogWarning($"{_logHead}尝试释放的guid不匹配的缓存! [index:{index}] [guid:{guid}]");
+                    return false;
+                }
+
+                _buffer[index] = BufferUnit<T>.Free;
             }
-            buffer[index] = BufferUnit<T>.Free;
-            if (_freeBufferIndex.Contains(index))
+
+            lock (_indexLock)
             {
-                Debug.LogWarning($"{_logHead}尝试释放已释放的缓存! [index:{index}] [guid:{guid}]");
-                return false;
+                if (_freeBufferIndex.Contains(index))
+                {
+                    Debug.LogWarning($"{_logHead}尝试释放已释放的缓存! [index:{index}] [guid:{guid}]");
+                    return false;
+                }
+                _freeBufferIndex.Push(index);
             }
-            _freeBufferIndex.Push(index);
+
             return true;
         }
 
@@ -135,4 +190,5 @@ namespace PJR.BlackBoard.CachedValueBoard
             }
         }
     }
+
 }

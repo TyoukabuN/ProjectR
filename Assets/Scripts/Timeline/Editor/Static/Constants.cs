@@ -9,7 +9,7 @@ namespace PJR.Timeline.Editor
         /// <summary>
         /// 默认每帧占多少像素
         /// </summary>
-        public const int pixelPerFrame = 10;
+        public const int pixelPerFrame = 1;
         /// <summary>
         /// 最大默认每帧占多少像素的倍率
         /// </summary>
@@ -17,7 +17,8 @@ namespace PJR.Timeline.Editor
         /// <summary>
         /// 最大默认每帧占多少像素
         /// </summary>
-        public const int maxPixelPerFrame = pixelPerFrame * maxPixelPerFrameRate;
+        //public const int maxPixelPerFrame = pixelPerFrame * maxPixelPerFrameRate;
+        public const int maxPixelPerFrame = 180;
 
         public const float timelineAreaYPosition = 19.0f;
         public const float timelineRulerHeight = 21.0f;

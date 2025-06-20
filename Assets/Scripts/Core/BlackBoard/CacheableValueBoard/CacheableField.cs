@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PJR.BlackBoard.Inspector;
+using PJR.Core;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Serialization;

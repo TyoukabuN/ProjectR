@@ -31,6 +31,8 @@ namespace PJR.Timeline.Editor
             /// 时间轴的放大缩小
             /// </summary>
             public int currentPixelPerFrame = Constants.pixelPerFrame;
+            
+            public float currentRulerScaleFactor = 1f;
             /// <summary>
             /// debugging=true会绘制一些额外的GUI
             /// </summary>

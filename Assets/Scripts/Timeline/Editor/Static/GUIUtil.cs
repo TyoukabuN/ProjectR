@@ -73,6 +73,11 @@ namespace PJR.Timeline.Editor
    
         public static void CheckWheelEvent(Rect rect, Action<Event> callback) => EventUtil.EventCheck(rect, EventType.ScrollWheel, callback);
 
+        /// <summary>
+        /// 将Rect原点归零
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
         public static Rect ToOrigin(this Rect rect)
         {
             rect.x = 0;

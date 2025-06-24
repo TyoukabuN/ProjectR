@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1213707319}
   - component: {fileID: 1213707320}
+  - component: {fileID: 1213707321}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -170,7 +171,8 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 1213707321}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -178,11 +180,11 @@ MonoBehaviour:
     SerializationNodes:
     - Name: cacheableValueBoard
       Entry: 7
-      Data: 0|PJR.BlackBoard.CachedValueBoard.CacheableValueBoard, PJR
+      Data: 0|PJR.Core.BlackBoard.CachedValueBoard.CacheableValueBoard, PJR.Core
     - Name: _key2Value
       Entry: 7
-      Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.BlackBoard.CachedValueBoard.ICacheableValue,
-        PJR]], mscorlib
+      Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.Core.BlackBoard.CachedValueBoard.ICacheableValue,
+        PJR.Core]], mscorlib
     - Name: comparer
       Entry: 7
       Data: 2|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
@@ -198,14 +200,14 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: "\u5B57\u7B26\u4E32B"
+      Data: "\u5B57\u7B26\u4E32A"
     - Name: $v
       Entry: 7
-      Data: 3|PJR.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String, mscorlib]],
-        PJR
+      Data: 3|PJR.Core.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String,
+        mscorlib]], PJR.Core
     - Name: _localValue
       Entry: 1
-      Data: 1112
+      Data: AAA
     - Name: 
       Entry: 8
       Data: 
@@ -217,14 +219,14 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: "\u5B57\u7B26\u4E32A"
+      Data: "\u5B57\u7B26\u4E32B"
     - Name: $v
       Entry: 7
-      Data: 4|PJR.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String, mscorlib]],
-        PJR
+      Data: 4|PJR.Core.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String,
+        mscorlib]], PJR.Core
     - Name: _localValue
       Entry: 1
-      Data: BBBBBB1231
+      Data: BBB
     - Name: 
       Entry: 8
       Data: 
@@ -242,21 +244,17 @@ MonoBehaviour:
       Data: 
     - Name: cacheableValueBoard2
       Entry: 7
-      Data: 5|PJR.BlackBoard.CachedValueBoard.CacheableValueBoard, PJR
+      Data: 5|PJR.Core.BlackBoard.CachedValueBoard.CacheableValueBoard, PJR.Core
     - Name: _key2Value
       Entry: 7
-      Data: 6|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.BlackBoard.CachedValueBoard.ICacheableValue,
-        PJR]], mscorlib
+      Data: 6|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.Core.BlackBoard.CachedValueBoard.ICacheableValue,
+        PJR.Core]], mscorlib
     - Name: comparer
-      Entry: 7
-      Data: 7|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
+      Entry: 9
+      Data: 2
     - Name: 
       Entry: 12
-      Data: 3
+      Data: 2
     - Name: 
       Entry: 7
       Data: 
@@ -265,11 +263,11 @@ MonoBehaviour:
       Data: "\u5B57\u7B26\u4E32C"
     - Name: $v
       Entry: 7
-      Data: 8|PJR.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String, mscorlib]],
-        PJR
+      Data: 7|PJR.Core.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String,
+        mscorlib]], PJR.Core
     - Name: _localValue
       Entry: 1
-      Data: CCCC
+      Data: CCC
     - Name: 
       Entry: 8
       Data: 
@@ -284,30 +282,11 @@ MonoBehaviour:
       Data: "\u5B57\u7B26\u4E32D"
     - Name: $v
       Entry: 7
-      Data: 9|PJR.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String, mscorlib]],
-        PJR
+      Data: 8|PJR.Core.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String,
+        mscorlib]], PJR.Core
     - Name: _localValue
       Entry: 1
-      Data: DDDD
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: "\u5B57\u7B26\u4E32E"
-    - Name: $v
-      Entry: 7
-      Data: 10|PJR.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String, mscorlib]],
-        PJR
-    - Name: _localValue
-      Entry: 1
-      Data: EEEEEE
+      Data: DDD
     - Name: 
       Entry: 8
       Data: 
@@ -325,24 +304,74 @@ MonoBehaviour:
       Data: 
     - Name: StringValue
       Entry: 7
-      Data: 11|PJR.BlackBoard.CachedValueBoard.CacheableField`1[[System.String, mscorlib]],
-        PJR
+      Data: 9|PJR.Core.BlackBoard.CachedValueBoard.CacheableField`1[[System.String,
+        mscorlib]], PJR.Core
     - Name: _valueGainApproach
       Entry: 3
       Data: 1
     - Name: _localValue
-      Entry: 1
-      Data: 321
+      Entry: 6
+      Data: 
     - Name: _boardValueReference
       Entry: 7
-      Data: 12|PJR.BlackBoard.CachedValueBoard.BoardValueReference`1[[System.String,
-        mscorlib]], PJR
+      Data: 10|PJR.Core.BlackBoard.CachedValueBoard.BoardValueReference`1[[System.String,
+        mscorlib]], PJR.Core
     - Name: Board
       Entry: 9
       Data: 5
     - Name: Key
       Entry: 1
-      Data: "\u5B57\u7B26\u4E32E"
+      Data: "\u5B57\u7B26\u4E32D"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: TargetBoard
+      Entry: 10
+      Data: 0
+--- !u!114 &1213707321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213707318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673f50f2a6d88f24b8a80e6099ac7c7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: cacheableValueBoard
+      Entry: 7
+      Data: 0|PJR.Core.BlackBoard.CachedValueBoard.CacheableValueBoard, PJR.Core
+    - Name: _key2Value
+      Entry: 7
+      Data: 1|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[PJR.Core.BlackBoard.CachedValueBoard.ICacheableValue,
+        PJR.Core]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 2|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
     - Name: 
       Entry: 8
       Data: 

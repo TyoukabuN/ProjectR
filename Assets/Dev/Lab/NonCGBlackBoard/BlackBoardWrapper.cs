@@ -1,5 +1,5 @@
 using System;
-using PJR.BlackBoard.CachedValueBoard;
+using PJR.Core.BlackBoard.CachedValueBoard;
 using PJR.BlackBoard.Inspector;
 using PJR.Editor;
 using Sirenix.OdinInspector;

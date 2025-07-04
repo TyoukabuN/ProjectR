@@ -74,9 +74,9 @@ MonoBehaviour:
   _frameRateType: 0
   _mute: 0
   _description: 0
-  _start: 0.033333333333333326
+  _start: 0.08333333333333333
   _end: 2.716666680326064
-  _startFrame: 2
+  _startFrame: 5
   _endFrame: 163
   animationClip: {fileID: 7400000, guid: 337aeda223844c24ebcfcdd4a0d6c513, type: 2}
 --- !u!114 &-1803158325532232275
@@ -112,9 +112,9 @@ MonoBehaviour:
   _mute: 0
   _description: 
   _start: 0.1833333333333334
-  _end: 1.0000000136593978
+  _end: 1.1666666803260646
   _startFrame: 11
-  _endFrame: 60
+  _endFrame: 70
   animationClip: {fileID: 7400000, guid: 4fac081162949dc47a3bfe3325988492, type: 2}
 --- !u!114 &-1644592549630497685
 MonoBehaviour:

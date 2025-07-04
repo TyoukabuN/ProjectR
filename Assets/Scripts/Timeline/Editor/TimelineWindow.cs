@@ -341,7 +341,13 @@ namespace PJR.Timeline.Editor
 
             return ruleScope;
         }
-        
+
+        struct IntervalInfo
+        {
+            public int patternIndex;
+            public int framePerlabelInterval;
+        }
+
         void Draw_TimelineRuler_New()
         {
             if (State.NonEditingSequence())
@@ -351,11 +357,11 @@ namespace PJR.Timeline.Editor
             GUIUtil.CheckWheelEvent(trackRect, evt =>
             {
                 UnityEngine.Debug.Log($"[evt.delta.y: {evt.delta.y}]");
-                //滑轮上滑是ZoomIn
+                //滑轮上滑是ZoomIn(sign:-1 unit:-3)
                 //State.currentRulerScaleFactor += Mathf.Sign(evt.delta.y) * 0.433f;
                 var sign = -Mathf.Sign(evt.delta.y);
                 State.currentRulerScaleFactor *= 1 + sign * 0.0833f;
-                State.currentRulerScaleFactor = Mathf.Max(State.currentRulerScaleFactor, 0);
+                State.currentRulerScaleFactor = Mathf.Clamp01(State.currentRulerScaleFactor);
                 State.currentPixelPerFrame = State.currentRulerScaleFactor * 180;
                 Repaint();
             });
@@ -374,158 +380,134 @@ namespace PJR.Timeline.Editor
             float shortTickStartY = rect.height - 6f;
 
             var rulerScope = GetRulerScopeDesc(State.currentRulerScaleFactor);
-            var cursorWidth = rulerScope.TotalPixel / rulerScope.IncludeFrames;
-            if (cursorWidth < 1)
+            //var cursorWidth = rulerScope.TotalPixel / rulerScope.IncludeFrames;
+
+            int frameUnit = 1;
+            int patternIndex = 0;
+            float pixelPerFrame = 180 * State.currentRulerScaleFactor;
+            float pixelPerCursor = pixelPerFrame * frameUnit;
+            while (pixelPerCursor < 5)
             {
-                Handles.EndGUI();
-                GUILayout.EndArea();
+                frameUnit *= RulerScalingPattern[patternIndex++ % RulerScalingPattern.Length];
+                pixelPerCursor = pixelPerFrame * frameUnit;
             }
 
-            float cursorWidthCounter = 0;
-            for (int i = 0; i < rect.width; 
-                 i += cursorWidth,
-                 cursorWidthCounter += cursorWidth)
+            patternIndex = 0;
+            int framePerlabelInterval = 1;
+            float labelIncludePixel = pixelPerFrame * framePerlabelInterval;
+            while (labelIncludePixel < 50)
             {
-                if (i <= 0)
-                {
-                    Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
-                    GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
-                        Styles.Instance.timeAreaStyles.timelineTick);
-                    frameIndex += rulerScope.IncludeFrames;
-                }
-                else if (cursorWidthCounter >= rulerScope.TotalPixel)
-                {
-                    cursorWidthCounter -= rulerScope.TotalPixel;
-                    using (new Handles.DrawingScope(Color.white))
-                    {
-                        Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
+                framePerlabelInterval *= RulerScalingPattern[patternIndex++ % RulerScalingPattern.Length];
+                labelIncludePixel = pixelPerFrame * framePerlabelInterval;
+            }
 
-                        GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
-                            Styles.Instance.timeAreaStyles.timelineTick);
-                    }
-                    frameIndex += rulerScope.IncludeFrames;
+
+            IntervalInfo GetIntervalInfo(int frame)
+            {
+                var info = new IntervalInfo
+                {
+                    patternIndex = 0,
+                    framePerlabelInterval = 1
+                };
+                if (frame <= 0)
+                    return info;
+                int temp = 1;
+                while (true)
+                {
+                    temp *= RulerScalingPattern[info.patternIndex++ % RulerScalingPattern.Length];
+                    if(frame % temp != 0)
+                        break;
+                    info.framePerlabelInterval = temp;
+                }
+                return info;
+            }
+
+            float GetPct(float min, float max, float value, bool clamp = true)
+            {
+                if (value <= min)
+                    return 0;
+                if (value >= max)
+                    return 1;
+                float range = max - min;
+                if(clamp)
+                    return Mathf.Clamp01((value - min) / range);
+                return (value - min) / range;
+            }
+
+            float totalPixel = 0;
+            float pixelCount = 0;
+            int index = 0;
+            int cursorCount = 0;
+            for (
+                    int frame = 0; 
+                    totalPixel < rect.width;
+                    frame += frameUnit,
+                    cursorCount += frameUnit,
+                    totalPixel += pixelPerCursor,
+                    pixelCount += pixelPerCursor,
+                    index++
+                )
+            {
+                if(index > 200)
+                    break;
+
+                var intervalInfo = GetIntervalInfo(frame);
+                
+                if (frame % framePerlabelInterval == 0)
+                {
+                    GUI.Label(new Rect(totalPixel + 1f, -3f, 50f, 20f), frame.ToString(), Styles.Instance.timeAreaStyles.timelineTick);
+                    Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, longTickStartY),0);
                 }
                 else
                 {
-                    using (new Handles.DrawingScope(Color.white * 0.733f))
-                        Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
+                    var p = intervalInfo.framePerlabelInterval * pixelPerFrame;
+                    float cursorPct = GetPct(5,50f,p);
+                    //float cursorPct = pixelPerCursor / labelIncludePixel;
+                    float cursorMinY = Mathf.Lerp(longTickStartY, rect.height, 1f - cursorPct);// rect.height - cursorHeight * ; 
+                    //下到上画
+                    Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, cursorMinY),0);
                 }
             }
+            
+            
+            // int index = 0;
+            // float cursorWidthCounter = 0;
+            // for (int i = 0; i < rect.width; 
+            //      i += cursorWidth,
+            //      cursorWidthCounter += cursorWidth,
+            //     index ++)
+            // {
+            //     if(index > 100)
+            //         break;
+            //     if (i <= 0)
+            //     {
+            //         Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
+            //         GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
+            //             Styles.Instance.timeAreaStyles.timelineTick);
+            //         frameIndex += rulerScope.IncludeFrames;
+            //     }
+            //     else if (cursorWidthCounter >= rulerScope.TotalPixel)
+            //     {
+            //         cursorWidthCounter -= rulerScope.TotalPixel;
+            //         using (new Handles.DrawingScope(Color.white))
+            //         {
+            //             Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
+            //
+            //             GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
+            //                 Styles.Instance.timeAreaStyles.timelineTick);
+            //         }
+            //         frameIndex += rulerScope.IncludeFrames;
+            //     }
+            //     else
+            //     {
+            //         using (new Handles.DrawingScope(Color.white * 0.733f))
+            //             Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
+            //     }
+            // }
 
-           
             Handles.EndGUI();
             GUILayout.EndArea();
         }
-
-
-        // void Draw_TimelineRuler()
-        // {
-        //     if (State.NonEditingSequence())
-        //         return;
-        //
-        //     EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
-        //     GUIUtil.CheckWheelEvent(trackRect, evt =>
-        //     {
-        //         UnityEngine.Debug.Log($"[evt.delta.y: {evt.delta.y}]");
-        //         //滑轮上滑是ZoomIn
-        //         State.currentPixelPerFrame -= (int)(evt.delta.y * 0.433f);
-        //         State.currentPixelPerFrame = Mathf.Clamp(State.currentPixelPerFrame, Constants.pixelPerFrame, Constants.maxPixelPerFrame);
-        //         Repaint();
-        //     });
-        //
-        //     //int tickStep = Constants.pixelPerFrame + 1 - (State.currentPixelPerFrame / Constants.pixelPerFrame);
-        //     int tickStep = Constants.pixelPerFrame + 1 - (State.currentPixelPerFrame / 50);
-        //     Debug.Log($"[tickStep:{tickStep}]  [State.currentPixelPerFrame:{State.currentPixelPerFrame}]");
-        //     tickStep /= 2;
-        //     tickStep = Mathf.Max(tickStep, 1);
-        //
-        //     timelineRulerRect.Debug();
-        //     //新开一个坐标系
-        //     GUILayout.BeginArea(timelineRulerRect);
-        //
-        //     if (timelineRulerRect.ToOrigin().Contains(Event.current.mousePosition))
-        //     { 
-        //         //Debug.Log(Event.current.mousePosition);
-        //     }
-        //     Handles.BeginGUI();
-        //     var rect = timelineRulerRect;
-        //     int frameIndex = 0;
-        //     float longTickStartY = 6f;
-        //     float shortTickStartY = rect.height - 6f;
-        //
-        //     int[] labelIntervalFactors = new[] { 5, 2, 3, 2 };
-        //
-        //     int labelIntervalFactorIndex = 0;
-        //     int pixelConter = 50;
-        //     int pixelConter2 = 5;
-        //     for (int i = 0; i < rect.width; 
-        //          i += State.currentPixelPerFrame,
-        //          pixelConter += State.currentPixelPerFrame, 
-        //          pixelConter2 += State.currentPixelPerFrame, 
-        //          frameIndex++
-        //          )
-        //     {
-        //         //if (i % 50 < 5)
-        //         //if (frameIndex % tickStep == 0)
-        //         if (pixelConter >= 50)
-        //         {
-        //             pixelConter = 0;
-        //             using (new Handles.DrawingScope(Color.white))
-        //             {
-        //                 Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
-        //
-        //                 GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
-        //                     Styles.Instance.timeAreaStyles.timelineTick);
-        //             }
-        //         }
-        //         else if(pixelConter2 >= 5)
-        //         {
-        //             pixelConter2 = 0;
-        //             using (new Handles.DrawingScope(Color.white * 0.733f))
-        //                 Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
-        //         }
-        //     }
-        //     Handles.EndGUI();
-        //     GUILayout.EndArea();
-        //
-        //
-        //     // //TrackView下的刻度
-        //     // var rulerInTrackView = new Rect(
-        //     //     State.trackMenuAreaWidth, 
-        //     //     Constants.clipStartPositionY, 
-        //     //     position.width - State.trackMenuAreaWidth, 
-        //     //     position.height - Constants.clipStartPositionY);
-        //     //
-        //     // //新开一个坐标系
-        //     // GUILayout.BeginArea(rulerInTrackView);
-        //     // Handles.BeginGUI();
-        //     //
-        //     // rect = rulerInTrackView;
-        //     // frameIndex = 0;
-        //     // longTickStartY = 0f;
-        //     // shortTickStartY = 0f;
-        //     //
-        //     // for (int i = 0; i < rect.width; i += State.currentPixelPerFrame, frameIndex++)
-        //     // {
-        //     //     if (frameIndex % tickStep == 0)
-        //     //     {
-        //     //         using (new Handles.DrawingScope(Color.white))
-        //     //         {
-        //     //             Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
-        //     //
-        //     //             GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
-        //     //                 Styles.Instance.timeAreaStyles.timelineTick);
-        //     //         }
-        //     //     }
-        //     //     else
-        //     //     {
-        //     //         using (new Handles.DrawingScope(Color.white * 0.733f))
-        //     //             Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
-        //     //     }
-        //     // }
-        //     // Handles.EndGUI();
-        //     // GUILayout.EndArea();
-        // }
 
         // void Draw_TimelineRuler_TrackView()
         // {

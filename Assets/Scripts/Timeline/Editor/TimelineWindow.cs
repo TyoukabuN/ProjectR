@@ -290,58 +290,15 @@ namespace PJR.Timeline.Editor
             State.requireRepaint = true;
         }
 
-        public struct RuleScalingDescription
-        {
-            public static RuleScalingDescription Default 
-                => new()
-                {
-                    IncludeFrames = 1,
-                    TotalPixel = MaxPixelPerFrame,
-                    RulerScalingPatternIndex = -1,
-                };
-            //每个scope占多少可见帧
-            public int IncludeFrames;
-            //每个scope占多少像素
-            public int TotalPixel;
-            //缩放显示游标模式索引
-            public int RulerScalingPatternIndex;
-        }
-
         //Ruler的缩放显示游标模式
         public static int[] RulerScalingPattern = { 5, 2, 3 ,2};
         //一帧可以占的最大像素
         public static int MaxPixelPerFrame = (int)(50f * 3.6); // 180px
         //一帧可以占的最大像素
         public static int SubMaxPixelPerFrame = (int)(50f * 3.0); // 150px
-        
-        public static int rulerScaleUnit = 3;
         //最小的游标显示像素
         public static int MinCursorVisiblePixel = 3;
         
-        public static RuleScalingDescription GetRulerScopeDesc(float scaleFactor)
-        {
-            int i = -1;
-            var ruleScope = RuleScalingDescription.Default;
-            
-            float pixelPerFrame = 180 * scaleFactor;
-            ruleScope.TotalPixel = (int)(ruleScope.IncludeFrames * pixelPerFrame);
-            while (ruleScope.TotalPixel < 50)
-            {
-                if (i > 1000)
-                {
-                    UnityEngine.Debug.LogError("DeadLoop");
-                    return RuleScalingDescription.Default;
-                }
-
-                i++;
-                ruleScope.IncludeFrames *= RulerScalingPattern[i % RulerScalingPattern.Length];
-                ruleScope.RulerScalingPatternIndex = i;
-                ruleScope.TotalPixel = (int)(ruleScope.IncludeFrames * pixelPerFrame);
-            }
-
-            return ruleScope;
-        }
-
         struct IntervalInfo
         {
             public int patternIndex;
@@ -352,6 +309,7 @@ namespace PJR.Timeline.Editor
         {
             if (State.NonEditingSequence())
                 return;
+    
 
             EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
             GUIUtil.CheckWheelEvent(trackRect, evt =>
@@ -362,7 +320,7 @@ namespace PJR.Timeline.Editor
                 var sign = -Mathf.Sign(evt.delta.y);
                 State.currentRulerScaleFactor *= 1 + sign * 0.0833f;
                 State.currentRulerScaleFactor = Mathf.Clamp01(State.currentRulerScaleFactor);
-                State.currentPixelPerFrame = State.currentRulerScaleFactor * 180;
+                State.currentPixelPerFrame = State.currentRulerScaleFactor * MaxPixelPerFrame;
                 Repaint();
             });
 
@@ -373,18 +331,16 @@ namespace PJR.Timeline.Editor
             if (timelineRulerRect.ToOrigin().Contains(Event.current.mousePosition))
             {
             }
+            
             Handles.BeginGUI();
             var rect = timelineRulerRect;
             int frameIndex = 0;
             float longTickStartY = 6f;
             float shortTickStartY = rect.height - 6f;
 
-            var rulerScope = GetRulerScopeDesc(State.currentRulerScaleFactor);
-            //var cursorWidth = rulerScope.TotalPixel / rulerScope.IncludeFrames;
-
             int frameUnit = 1;
             int patternIndex = 0;
-            float pixelPerFrame = 180 * State.currentRulerScaleFactor;
+            float pixelPerFrame = MaxPixelPerFrame * State.currentRulerScaleFactor;
             float pixelPerCursor = pixelPerFrame * frameUnit;
             while (pixelPerCursor < 5)
             {
@@ -400,40 +356,7 @@ namespace PJR.Timeline.Editor
                 framePerlabelInterval *= RulerScalingPattern[patternIndex++ % RulerScalingPattern.Length];
                 labelIncludePixel = pixelPerFrame * framePerlabelInterval;
             }
-
-
-            IntervalInfo GetIntervalInfo(int frame)
-            {
-                var info = new IntervalInfo
-                {
-                    patternIndex = 0,
-                    framePerlabelInterval = 1
-                };
-                if (frame <= 0)
-                    return info;
-                int temp = 1;
-                while (true)
-                {
-                    temp *= RulerScalingPattern[info.patternIndex++ % RulerScalingPattern.Length];
-                    if(frame % temp != 0)
-                        break;
-                    info.framePerlabelInterval = temp;
-                }
-                return info;
-            }
-
-            float GetPct(float min, float max, float value, bool clamp = true)
-            {
-                if (value <= min)
-                    return 0;
-                if (value >= max)
-                    return 1;
-                float range = max - min;
-                if(clamp)
-                    return Mathf.Clamp01((value - min) / range);
-                return (value - min) / range;
-            }
-
+            
             float totalPixel = 0;
             float pixelCount = 0;
             int index = 0;
@@ -457,56 +380,70 @@ namespace PJR.Timeline.Editor
                 {
                     GUI.Label(new Rect(totalPixel + 1f, -3f, 50f, 20f), frame.ToString(), Styles.Instance.timeAreaStyles.timelineTick);
                     Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, longTickStartY),0);
+                    //DrawVerticalLineFast(totalPixel, longTickStartY, rect.height, new Color(1f, 1f, 1f, 0.5f));
                 }
                 else
                 {
                     var p = intervalInfo.framePerlabelInterval * pixelPerFrame;
-                    float cursorPct = GetPct(5,50f,p);
-                    //float cursorPct = pixelPerCursor / labelIncludePixel;
+                    float cursorPct = GetPct(MinCursorVisiblePixel,50f,p);
                     float cursorMinY = Mathf.Lerp(longTickStartY, rect.height, 1f - cursorPct);// rect.height - cursorHeight * ; 
                     //下到上画
                     Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, cursorMinY),0);
                 }
             }
             
-            
-            // int index = 0;
-            // float cursorWidthCounter = 0;
-            // for (int i = 0; i < rect.width; 
-            //      i += cursorWidth,
-            //      cursorWidthCounter += cursorWidth,
-            //     index ++)
-            // {
-            //     if(index > 100)
-            //         break;
-            //     if (i <= 0)
-            //     {
-            //         Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
-            //         GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
-            //             Styles.Instance.timeAreaStyles.timelineTick);
-            //         frameIndex += rulerScope.IncludeFrames;
-            //     }
-            //     else if (cursorWidthCounter >= rulerScope.TotalPixel)
-            //     {
-            //         cursorWidthCounter -= rulerScope.TotalPixel;
-            //         using (new Handles.DrawingScope(Color.white))
-            //         {
-            //             Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
-            //
-            //             GUI.Label(new Rect(i + 1f, -3f, 50f, 20f), frameIndex.ToString(),
-            //                 Styles.Instance.timeAreaStyles.timelineTick);
-            //         }
-            //         frameIndex += rulerScope.IncludeFrames;
-            //     }
-            //     else
-            //     {
-            //         using (new Handles.DrawingScope(Color.white * 0.733f))
-            //             Handles.DrawLine(new Vector3(i, shortTickStartY), new Vector3(i, rect.height));
-            //     }
-            // }
-
             Handles.EndGUI();
             GUILayout.EndArea();
+        }
+        
+        IntervalInfo GetIntervalInfo(int frame)
+        {
+            var info = new IntervalInfo
+            {
+                patternIndex = 0,
+                framePerlabelInterval = 1
+            };
+            if (frame <= 0)
+                return info;
+            int temp = 1;
+            while (true)
+            {
+                temp *= RulerScalingPattern[info.patternIndex++ % RulerScalingPattern.Length];
+                if(frame % temp != 0)
+                    break;
+                info.framePerlabelInterval = temp;
+            }
+            return info;
+        }
+
+        float GetPct(float min, float max, float value, bool clamp = true)
+        {
+            if (value <= min)
+                return 0;
+            if (value >= max)
+                return 1;
+            float range = max - min;
+            if(clamp)
+                return Mathf.Clamp01((value - min) / range);
+            return (value - min) / range;
+        }
+        
+        public static void DrawVerticalLineFast(float x, float minY, float maxY, Color color)
+        {
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                GL.Color(color);
+                GL.Vertex(new Vector3(x - 0.5f, minY, 0.0f));
+                GL.Vertex(new Vector3(x + 0.5f, minY, 0.0f));
+                GL.Vertex(new Vector3(x + 0.5f, maxY, 0.0f));
+                GL.Vertex(new Vector3(x - 0.5f, maxY, 0.0f));
+            }
+            else
+            {
+                GL.Color(color);
+                GL.Vertex(new Vector3(x, minY, 0.0f));
+                GL.Vertex(new Vector3(x, maxY, 0.0f));
+            }
         }
 
         // void Draw_TimelineRuler_TrackView()

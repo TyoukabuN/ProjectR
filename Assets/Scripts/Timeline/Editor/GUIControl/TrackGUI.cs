@@ -19,7 +19,7 @@ namespace PJR.Timeline.Editor
 
         public virtual float CalculateHeight()
         {
-            return Constants.trackHeight;
+            return Const.trackHeight;
         }
 
         GUIStyle backgroundStyle = new GUIStyle(GUI.skin.box)
@@ -41,10 +41,10 @@ namespace PJR.Timeline.Editor
                     //TrackMenu（左边）
                     using (new GUILayout.VerticalScope(GUILayout.Width(trackMenuAreaWidth)))
                     {
-                        GUILayout.Space(Constants.trackMenuAreaTop);
+                        GUILayout.Space(Const.trackMenuAreaTop);
                         for (int i = 0; i < tracks.Count; i++)
                         {
-                            GUILayout.Space(Constants.trackMenuPadding);
+                            GUILayout.Space(Const.trackMenuPadding);
                             var clip = tracks[i]?.clips[0];
                             if (clip == null)
                                 continue;
@@ -55,10 +55,10 @@ namespace PJR.Timeline.Editor
 
                             using (new GUILayout.HorizontalScope(GUILayout.Height(clipGUI.CalculateHeight())))
                             {
-                                GUILayout.Space(Constants.trackMenuLeftSpace);
+                                GUILayout.Space(Const.trackMenuLeftSpace);
                                 var menuRect = GUILayoutUtility.GetRect(0, clipGUI.CalculateHeight(),
                                     GUILayout.ExpandWidth(false));
-                                menuRect.width = trackMenuAreaWidth - Constants.trackMenuLeftSpace;
+                                menuRect.width = trackMenuAreaWidth - Const.trackMenuLeftSpace;
                                 clipGUI.OnDrawMenu(menuRect);
                             }
                         }
@@ -75,11 +75,11 @@ namespace PJR.Timeline.Editor
                                                                        windowState.headerSizeHandleRect.width / 2)))
                     {
                         //GUILayoutUtility.GetRect(50, 50).Debug();
-                        GUILayout.Space(Constants.trackMenuAreaTop);
+                        GUILayout.Space(Const.trackMenuAreaTop);
 
                         for (int i = 0; i < tracks.Count; i++)
                         {
-                            GUILayout.Space(Constants.trackMenuPadding);
+                            GUILayout.Space(Const.trackMenuPadding);
                             var clip = tracks[i]?.clips[0];
                             if (clip == null)
                                 continue;

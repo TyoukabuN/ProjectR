@@ -28,6 +28,14 @@ namespace PJR.Timeline.Editor
             }
         }
         public static void DebugRect(Rect position) => DebugRect(position, Color.green, true, false);
+        
+        /// <summary>
+        /// 将Rect用指定颜色画出来
+        /// </summary>
+        /// <param name="position">rect</param>
+        /// <param name="color">颜色</param>
+        /// <param name="displaySize">显示大小</param>
+        /// <param name="forceDraw">不是debug状态也绘制rect</param>
         public static void DebugRect(Rect position, Color color, bool displaySize, bool forceDraw)
         {
             if (!forceDraw && !(windowState?.debugging ?? false))

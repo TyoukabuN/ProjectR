@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
-using UnityEngine;
 using static PJR.Timeline.Define;
 
 namespace PJR.Timeline

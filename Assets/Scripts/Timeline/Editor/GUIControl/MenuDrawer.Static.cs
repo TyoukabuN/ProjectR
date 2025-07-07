@@ -18,7 +18,7 @@ namespace PJR.Timeline.Editor
         /// <param name="rect"></param>
         public static void DrawMenuHandle(Rect rect)
         {
-            rect.yMin = rect.yMax - Constants.trackMenuDragHandleHeight;
+            rect.yMin = rect.yMax - Const.trackMenuDragHandleHeight;
             rect.Debug(Color.magenta);
             EditorGUIUtility.AddCursorRect(rect, MouseCursor.SplitResizeUpDown);
 

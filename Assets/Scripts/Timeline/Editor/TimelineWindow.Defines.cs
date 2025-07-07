@@ -11,24 +11,24 @@ namespace PJR.Timeline.Editor
         public float headerHeight
         {
             get {
-                return Constants.clipStartPositionY_Offseted;
+                return Const.clipStartPositionY_Offseted;
             }
         }
         public Rect controlBarRect
         {
             get {
-                return new Rect(0.0f, Constants.timelineAreaYPosition, position.width, Constants.timelineRulerHeight);
+                return new Rect(0.0f, Const.timelineAreaYPosition, position.width, Const.timelineRulerHeight);
             }
         }
         public Rect headerRect
         {
             //get { return new Rect(0.0f, Constants.clipStartPositionY, Constants.defaultHeaderWidth, position.height - Constants.timelineAreaYPosition); }
-            get { return new Rect(0.0f, Constants.clipStartPositionY_Offseted, State.trackMenuAreaWidth, position.height - Constants.timelineAreaYPosition); }
+            get { return new Rect(0.0f, Const.clipStartPositionY_Offseted, State.trackMenuAreaWidth, position.height - Const.timelineAreaYPosition); }
         }
         public Rect timelineRulerRect
         {
             //get { return new Rect(headerRect.width, Constants.timelineRulerHeight, position.width - headerRect.width, Constants.timelineRulerHeight); }
-            get { return new Rect(State.trackMenuAreaWidth, Constants.timelineRulerHeight, position.width - State.trackMenuAreaWidth, Constants.timelineRulerHeight); }
+            get { return new Rect(State.trackMenuAreaWidth, Const.timelineRulerHeight, position.width - State.trackMenuAreaWidth, Const.timelineRulerHeight); }
         }
 
         public Rect trackRect

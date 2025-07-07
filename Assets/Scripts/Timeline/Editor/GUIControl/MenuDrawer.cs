@@ -52,7 +52,7 @@ namespace PJR.Timeline.Editor
             GUILayoutUtility.GetLastRect().Debug(Color.green);
 
             var evtRect = rect;
-            evtRect.xMin -= Constants.trackMenuLeftSpace;
+            evtRect.xMin -= Const.trackMenuLeftSpace;
             EventUtil.MouseEvent.LeftOrRightClick(evtRect, OnClick, OnContextClick);
         }
         

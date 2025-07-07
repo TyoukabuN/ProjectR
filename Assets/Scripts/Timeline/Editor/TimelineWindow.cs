@@ -1,4 +1,5 @@
 using System;
+using NPOI.HSSF.Record.Cont;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -80,7 +81,8 @@ namespace PJR.Timeline.Editor
                 State.editingSequence = EditingSequare.Empty;
                 return;
             }
-
+            //trackView的背景，放这是不想它遮住时间尺刻度
+            EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
             Draw_Headers(); 
             TrackViewsGUI(); 
         }
@@ -111,7 +113,6 @@ namespace PJR.Timeline.Editor
                 {
                     Draw_HeaderEditBar();
                     Draw_TimelineRuler_New();
-                    //Draw_TimelineRuler();
                 }
             }
         }
@@ -140,9 +141,6 @@ namespace PJR.Timeline.Editor
         public void TrackViewsGUI()
         {
             trackRect.Debug();
-            EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
-
-            //Draw_TimelineRuler_TrackView();
                 
             //分割TrackMenu和View边界部分
             DrawSpliterAboutTrackMenuAndView();
@@ -183,7 +181,7 @@ namespace PJR.Timeline.Editor
             headerSizeHandleRect.DragEventCheck((rect) =>
             {
                 float relativeX = Event.current.mousePosition.x - rect.x;
-                State.trackMenuAreaWidth = Mathf.Clamp(State.trackMenuAreaWidth + relativeX, Constants.trackMenuMinAreaWidth, Constants.trackMenuMaxAreaWidth);
+                State.trackMenuAreaWidth = Mathf.Clamp(State.trackMenuAreaWidth + relativeX, Const.trackMenuMinAreaWidth, Const.trackMenuMaxAreaWidth);
             });
         }
 
@@ -293,9 +291,8 @@ namespace PJR.Timeline.Editor
         struct MainScaleMarkInfo
         {
             public int patternIndex;
-            public int framePerlabelInterval;
+            public int framePerMainScaleMark;
         }
-
         void Draw_TimelineRuler_New()
         {
             if (State.NonEditingSequence())
@@ -310,20 +307,20 @@ namespace PJR.Timeline.Editor
                 //按比例缩放系数
                 State.currentPixelPerFrameScaleFactor *= 1 + sign * 0.0833f;
                 State.currentPixelPerFrameScaleFactor = Mathf.Clamp01(State.currentPixelPerFrameScaleFactor);
-                State.currentPixelPerFrame = State.currentPixelPerFrameScaleFactor * Constants.MaxPixelPerFrame;
+                State.currentPixelPerFrame = State.currentPixelPerFrameScaleFactor * Const.MaxPixelPerFrame;
                 Repaint();
             });
 
             timelineRulerRect.Debug();
+            
+            var rect = timelineRulerRect;
             //新开一个坐标系
-            GUILayout.BeginArea(timelineRulerRect);
+            GUILayout.BeginArea(rect);
             //将rect移动回原点方便计算
-            if (timelineRulerRect.ToOrigin().Contains(Event.current.mousePosition))
+            if (rect.ToOrigin().Contains(Event.current.mousePosition))
             {
             }
-            
             Handles.BeginGUI();
-            var rect = timelineRulerRect;
             int frameIndex = 0;
             float longTickStartY = 6f;
 
@@ -332,14 +329,14 @@ namespace PJR.Timeline.Editor
             int frameStep = 1;//时间尺绘制循环的帧数步长  
             int tScaleIndex = 0;//临时时间尺主刻度线间隔模式索引
             //时间尺的缩放的本质是对<像素/帧>的缩放
-            float pixelPerFrame = Constants.MaxPixelPerFrame * State.currentPixelPerFrameScaleFactor;
+            float pixelPerFrame = State.currentPixelPerFrame;
             //绘制时间尺的时候每一步都会绘制一个刻度线
             //每个刻度线的间隔不能小于MinCursorVisiblePixel(3)像素,否则增加绘制循环步长 (为了缩放时间尺的视觉效果)
             //从而增加间隔刻度线像素间隔
             float pixelPerStep = pixelPerFrame * frameStep;
-            while (pixelPerStep < Constants.MinPixelPerScaleMark)
+            while (pixelPerStep < Const.MinPixelPerScaleMark)
             {
-                frameStep *= Constants.RulerScaleMarkingPattern[tScaleIndex++ % Constants.RulerScaleMarkingPattern.Length];
+                frameStep *= Const.RulerScaleMarkingPattern[tScaleIndex++ % Const.RulerScaleMarkingPattern.Length];
                 pixelPerStep = pixelPerFrame * frameStep;
             }
             
@@ -352,11 +349,11 @@ namespace PJR.Timeline.Editor
             float pixelPerMainScaleMark = pixelPerFrame * framePerMainScaleMark;
             //找到可以正常绘制的刻度线像素间隔，以及对应的时间尺主刻度线间隔模式索引
             //{5，2，3，2} i=1循环累乘可以得到下面的主刻度帧数间隔 
-            //1，5，10，30，60，300，600，1800，3600，18000，36000，108000，216000
-            //这里是为了找到一个所占像素大于MinGraduationPixel的主刻度线帧数间隔
-            while (pixelPerMainScaleMark < Constants.MinMajorGraduationPixel)
+            //1，5，10，30，60，300，600，1800，3600，18000，36000，108000，216000...
+            //这里是为了找到一个所占像素大于MinMajorGraduationPixel的主刻度线帧数间隔
+            while (pixelPerMainScaleMark < Const.MinMainScaleMarkPixel)
             {
-                framePerMainScaleMark *= Constants.RulerScaleMarkingPattern[tScaleIndex++ % Constants.RulerScaleMarkingPattern.Length];
+                framePerMainScaleMark *= Const.RulerScaleMarkingPattern[tScaleIndex++ % Const.RulerScaleMarkingPattern.Length];
                 pixelPerMainScaleMark = pixelPerFrame * framePerMainScaleMark;
             }
             
@@ -377,6 +374,7 @@ namespace PJR.Timeline.Editor
                 }
                 
                 var mainScaleMarkInfo = GetMaxMainScaleMarkInfo(frame);
+                var framePerScaleMark = mainScaleMarkInfo.framePerMainScaleMark * pixelPerFrame;
                 
                 if (frame % framePerMainScaleMark == 0)
                 {
@@ -386,11 +384,40 @@ namespace PJR.Timeline.Editor
                 }
                 else
                 {
-                    var p = mainScaleMarkInfo.framePerlabelInterval * pixelPerFrame;
-                    float markPct = GetPct(Constants.MinPixelPerScaleMark,50f,p);
+                    //根据比例缩小非主刻度
+                    float markPct = GetPct(Const.MinPixelPerScaleMark,50f,framePerScaleMark);
                     float markMinY = Mathf.Lerp(longTickStartY, rect.height, 1f - markPct);// rect.height - cursorHeight * ; 
                     //下到上画
                     Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, markMinY),0);
+                }
+            }
+            Handles.EndGUI();
+            GUILayout.EndArea();
+            
+            //TrackView背景部分的刻度线
+            rect = trackRect;
+            rect.xMin = timelineRulerRect.xMin;
+            GUILayout.BeginArea(rect);
+            rect.ToOrigin().Contains(Event.current.mousePosition);
+            Handles.BeginGUI();
+            totalPixel = 0;
+            index = 0;
+            var color = Color.white * 0.533f;
+            for (
+                int frame = 0; 
+                totalPixel < rect.width; //限制时间尺区域
+                frame += frameStep, //帧数步长
+                totalPixel += pixelPerStep,
+                index++
+            )
+            {
+                var mainScaleMarkInfo = GetMaxMainScaleMarkInfo(frame);
+                var framePerScaleMark = mainScaleMarkInfo.framePerMainScaleMark * pixelPerFrame;
+
+                if(framePerScaleMark > Const.MinPixelPerBgScaleMark)
+                {
+                    using(new Handles.DrawingScope(color))
+                        Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, 0),0);
                 }
             }
             
@@ -408,17 +435,17 @@ namespace PJR.Timeline.Editor
             var info = new MainScaleMarkInfo
             {
                 patternIndex = 0,
-                framePerlabelInterval = 1
+                framePerMainScaleMark = 1
             };
             if (frame <= 0)
                 return info;
             int temp = 1;
             while (true)
             {
-                temp *= Constants.RulerScaleMarkingPattern[info.patternIndex++ % Constants.RulerScaleMarkingPattern.Length];
+                temp *= Const.RulerScaleMarkingPattern[info.patternIndex++ % Const.RulerScaleMarkingPattern.Length];
                 if(frame % temp != 0)
                     break;
-                info.framePerlabelInterval = temp;
+                info.framePerMainScaleMark = temp;
             }
             return info;
         }
@@ -452,52 +479,7 @@ namespace PJR.Timeline.Editor
                 GL.Vertex(new Vector3(x, maxY, 0.0f));
             }
         }
-
-        // void Draw_TimelineRuler_TrackView()
-        // {
-        //     if (State.NonEditingSequence())
-        //         return;
-        //     
-        //     //TrackView下的刻度
-        //     var rect = new Rect(
-        //         State.trackMenuAreaWidth, 
-        //         Constants.clipStartPositionY, 
-        //         position.width - State.trackMenuAreaWidth, 
-        //         position.height - Constants.clipStartPositionY);
-        //
-        //     DrawRect(rect, Styles.Instance.customSkin.colorSubSequenceBackground);
-        //
-        //     int tickStep = Constants.pixelPerFrame + 1 - (State.currentPixelPerFrame / Constants.pixelPerFrame);
-        //     tickStep /= 2;
-        //     tickStep = Mathf.Max(tickStep, 1);
-        //
-        //     rect.Debug();
-        //     //新开一个坐标系
-        //     GUILayout.BeginArea(rect);
-        //     //debug用的local坐标log
-        //     // if (rect.ToOrigin().Contains(Event.current.mousePosition))
-        //     //     Debug.Log(Event.current.mousePosition);
-        //     
-        //     Handles.BeginGUI();
-        //     int frameIndex = 0;
-        //     float longTickStartY = 0f;
-        //
-        //     var color = Color.white * 0.533f;
-        //
-        //     for (int i = 0; i < rect.width; i += State.currentPixelPerFrame, frameIndex++)
-        //     {
-        //         if (frameIndex % tickStep == 0)
-        //         {
-        //             using (new Handles.DrawingScope(color))
-        //                 Handles.DrawLine(new Vector3(i, longTickStartY), new Vector3(i, rect.height));
-        //         }
-        //     }
-        //     Handles.EndGUI();
-        //     GUILayout.EndArea();
-        // }
-
-        //private float sliderValue = 0f;
-
+     
         public void Draw_MenuTrackBoundary()
         { 
         }

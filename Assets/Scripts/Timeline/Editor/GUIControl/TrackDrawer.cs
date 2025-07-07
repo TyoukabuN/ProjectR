@@ -9,7 +9,7 @@ namespace PJR.Timeline.Editor
     public abstract class TrackDrawer : TimelineGUIElement
     {
         public abstract IClip IClip { get; }
-        public virtual float CalculateHeight() => Constants.trackHeight + DraggedMenuSpace;
+        public virtual float CalculateHeight() => Const.trackHeight + DraggedMenuSpace;
 
         float _draggedMenuSpace = 0f;
         public float DraggedMenuSpace => _draggedMenuSpace;

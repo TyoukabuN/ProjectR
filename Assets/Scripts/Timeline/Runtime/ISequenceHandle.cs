@@ -3,8 +3,8 @@ namespace PJR.Timeline
     public interface ISequenceHandle
     {
         public Sequence Sequence { get; }
+        public SequenceRunner GetSequenceRunner();
     }
-    
     public class SequenceHandle : ISequenceHandle
     {
         private Sequence _sequence;
@@ -15,5 +15,6 @@ namespace PJR.Timeline
         {
             return handle.Sequence;
         }
+        public virtual SequenceRunner GetSequenceRunner() => null;
     }
 }

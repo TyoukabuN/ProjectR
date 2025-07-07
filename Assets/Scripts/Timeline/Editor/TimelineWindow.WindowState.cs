@@ -30,11 +30,11 @@ namespace PJR.Timeline.Editor
             /// <summary>
             /// 当前每帧所占像素(px/f)
             /// </summary>
-            public float currentPixelPerFrame = Constants.DefaultPpixelPerFrame;
+            public float currentPixelPerFrame = Const.DefaultPixelPerFrame;
             /// <summary>
             /// 当前PixelPerFrame缩放系数
             /// </summary>
-            public float currentPixelPerFrameScaleFactor = 1f;
+            public float currentPixelPerFrameScaleFactor = Const.DefaultPixelPerFrameScaleFactor;
             /// <summary>
             /// debugging=true会绘制一些额外的GUI
             /// </summary>
@@ -45,12 +45,12 @@ namespace PJR.Timeline.Editor
             private TrackGUI trackGUI;
             public TrackGUI TrackGUI => trackGUI ??= new TrackGUI();
 
-#region 一些动态的Rect
-            public float trackMenuAreaWidth = Constants.trackMenuDefaultAreaWidth;
+            #region 一些动态的Rect
+            public float trackMenuAreaWidth = Const.trackMenuDefaultAreaWidth;
             public Rect headerSizeHandleRect;// = instance.headerSizeHandleRect;
-#endregion
-
-#region UI Hotspot相关方法
+            #endregion
+            
+            #region UI Hotspot相关方法
             public void ClearHotspot()
             {
                 Hotspot?.OnDeselect();
@@ -165,17 +165,7 @@ namespace PJR.Timeline.Editor
                 GameObject = null;
             }
 
-            public bool Valid
-            {
-                get=>  Sequence != null && Sequence != null;
-            }
-        }
-
-        public struct HotSpot
-        {
-            public static HotSpot Empty => new(){};
-            private bool _IsEmpty;
-            public bool IsEmpty => _IsEmpty;
+            public bool Valid => Sequence != null && Sequence != null;
         }
     }
 }

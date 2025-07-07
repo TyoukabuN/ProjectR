@@ -4,12 +4,13 @@ using UnityEngine;
 
 namespace PJR.Timeline.Editor
 {
-    public static class Constants
+    public static class Const
     {
         /// <summary>
         /// 默认每帧占多少像素
         /// </summary>
-        public const int DefaultPpixelPerFrame = 60;
+        public const int DefaultPixelPerFrame = 60;
+        public const float DefaultPixelPerFrameScaleFactor = 0.333f;
         /// <summary>
         /// Ruler的主刻度线间隔模式
         /// 时间尺以一定的规律改变主刻度线间隔(缩放)
@@ -22,7 +23,9 @@ namespace PJR.Timeline.Editor
         //最小的可显示刻度线像素
         public const int MinPixelPerScaleMark = 3;
         //最小的可显示<主>刻度线像素
-        public const int MinMajorGraduationPixel = 50;
+        public const int MinMainScaleMarkPixel = 50;
+        //最小的可显示背景刻度线像素
+        public const int MinPixelPerBgScaleMark = 30;
 
         public const float timelineAreaYPosition = 19.0f;
         public const float timelineRulerHeight = 21.0f;
@@ -90,7 +93,5 @@ namespace PJR.Timeline.Editor
         public const int autoPanPaddingInPixels = 50;
 
         public const float overlayTextPadding = 40.0f;
-
-
     }
 }

@@ -82,7 +82,7 @@ namespace PJR.Timeline.Editor
         /// <param name="rect"></param>
         public virtual void DrawResizeHandle(Rect rect)
         {
-            var handleWidth = Mathf.Clamp(rect.width * 0.3f, Constants.clipMinHandleWidth, Constants.clipMaxHandleWidth);
+            var handleWidth = Mathf.Clamp(rect.width * 0.3f, Const.clipMinHandleWidth, Const.clipMaxHandleWidth);
 
             var rectLeft = rect;
             rectLeft.width = handleWidth;

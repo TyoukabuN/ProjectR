@@ -84,7 +84,18 @@ namespace PJR.Timeline.Editor
             rect.y = 0;
             return rect;
         }
+        /// <summary>
+        /// 为rect缩小一个像素
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
         public static Rect Shrink(this Rect rect) => rect.Expand(-1);
+        /// <summary>
+        /// 为rect缩小对应像素(没容错)
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="pixel"></param>
+        /// <returns></returns>
         public static Rect Shrink(this Rect rect, float pixel) => rect.Expand(-pixel);
     }
 

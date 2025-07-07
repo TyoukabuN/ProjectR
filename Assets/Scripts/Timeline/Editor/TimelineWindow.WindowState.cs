@@ -28,11 +28,13 @@ namespace PJR.Timeline.Editor
             public bool NonEditingSequence() => !AnyEditingSequence();
 
             /// <summary>
-            /// 时间轴的放大缩小
+            /// 当前每帧所占像素(px/f)
             /// </summary>
-            public float currentPixelPerFrame = Constants.pixelPerFrame;
-            
-            public float currentRulerScaleFactor = 1f;
+            public float currentPixelPerFrame = Constants.DefaultPpixelPerFrame;
+            /// <summary>
+            /// 当前PixelPerFrame缩放系数
+            /// </summary>
+            public float currentPixelPerFrameScaleFactor = 1f;
             /// <summary>
             /// debugging=true会绘制一些额外的GUI
             /// </summary>
@@ -48,8 +50,7 @@ namespace PJR.Timeline.Editor
             public Rect headerSizeHandleRect;// = instance.headerSizeHandleRect;
 #endregion
 
-
-#region 一些hotspot
+#region UI Hotspot相关方法
             public void ClearHotspot()
             {
                 Hotspot?.OnDeselect();
@@ -84,29 +85,13 @@ namespace PJR.Timeline.Editor
             #endregion
 
             #region 一些单位转换用的方法
-            public int PixelToFrame(float pixel)
-            {
-                return (int)(pixel / currentPixelPerFrame);
-            }
-            public double PixelToSecond(float pixel)
-            {
-                return (int)(pixel / currentPixelPerFrame) / CurrentFrameRate;
-            }
-            public float FrameToPixel(int frames)
-            {
-                return frames * currentPixelPerFrame;
-            }
+            public int PixelToFrame(float pixel)=>(int)(pixel / currentPixelPerFrame);
+            public double PixelToSecond(float pixel)=> (int)(pixel / currentPixelPerFrame) / CurrentFrameRate;
+            public float FrameToPixel(int frames)=> frames * currentPixelPerFrame;
 
-            public double CurrentFrameRate
-            {
-                get
-                {
-                    return Define.FPS_Default;
-                }
-            }
+            public double CurrentFrameRate => Define.FPS_Default;
             public double CurrentSecondPerFrame => 1 / CurrentFrameRate;
             #endregion
-
             
             public static string Default_UndoName = "Sequence Asset Modify";
 

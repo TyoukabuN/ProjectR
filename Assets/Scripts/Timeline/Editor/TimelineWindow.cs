@@ -290,16 +290,7 @@ namespace PJR.Timeline.Editor
             State.requireRepaint = true;
         }
 
-        //Ruler的缩放显示游标模式
-        public static int[] RulerScalingPattern = { 5, 2, 3 ,2};
-        //一帧可以占的最大像素
-        public static int MaxPixelPerFrame = (int)(50f * 3.6); // 180px
-        //一帧可以占的最大像素
-        public static int SubMaxPixelPerFrame = (int)(50f * 3.0); // 150px
-        //最小的游标显示像素
-        public static int MinCursorVisiblePixel = 3;
-        
-        struct IntervalInfo
+        struct MainScaleMarkInfo
         {
             public int patternIndex;
             public int framePerlabelInterval;
@@ -310,24 +301,23 @@ namespace PJR.Timeline.Editor
             if (State.NonEditingSequence())
                 return;
     
-
             EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
             GUIUtil.CheckWheelEvent(trackRect, evt =>
             {
                 UnityEngine.Debug.Log($"[evt.delta.y: {evt.delta.y}]");
                 //滑轮上滑是ZoomIn(sign:-1 unit:-3)
-                //State.currentRulerScaleFactor += Mathf.Sign(evt.delta.y) * 0.433f;
                 var sign = -Mathf.Sign(evt.delta.y);
-                State.currentRulerScaleFactor *= 1 + sign * 0.0833f;
-                State.currentRulerScaleFactor = Mathf.Clamp01(State.currentRulerScaleFactor);
-                State.currentPixelPerFrame = State.currentRulerScaleFactor * MaxPixelPerFrame;
+                //按比例缩放系数
+                State.currentPixelPerFrameScaleFactor *= 1 + sign * 0.0833f;
+                State.currentPixelPerFrameScaleFactor = Mathf.Clamp01(State.currentPixelPerFrameScaleFactor);
+                State.currentPixelPerFrame = State.currentPixelPerFrameScaleFactor * Constants.MaxPixelPerFrame;
                 Repaint();
             });
 
             timelineRulerRect.Debug();
             //新开一个坐标系
             GUILayout.BeginArea(timelineRulerRect);
-
+            //将rect移动回原点方便计算
             if (timelineRulerRect.ToOrigin().Contains(Event.current.mousePosition))
             {
             }
@@ -336,47 +326,59 @@ namespace PJR.Timeline.Editor
             var rect = timelineRulerRect;
             int frameIndex = 0;
             float longTickStartY = 6f;
-            float shortTickStartY = rect.height - 6f;
 
-            int frameUnit = 1;
-            int patternIndex = 0;
-            float pixelPerFrame = MaxPixelPerFrame * State.currentRulerScaleFactor;
-            float pixelPerCursor = pixelPerFrame * frameUnit;
-            while (pixelPerCursor < 5)
+            //找<刻度帧数步长>和对应<每步长所占像素>
+            
+            int frameStep = 1;//时间尺绘制循环的帧数步长  
+            int tScaleIndex = 0;//临时时间尺主刻度线间隔模式索引
+            //时间尺的缩放的本质是对<像素/帧>的缩放
+            float pixelPerFrame = Constants.MaxPixelPerFrame * State.currentPixelPerFrameScaleFactor;
+            //绘制时间尺的时候每一步都会绘制一个刻度线
+            //每个刻度线的间隔不能小于MinCursorVisiblePixel(3)像素,否则增加绘制循环步长 (为了缩放时间尺的视觉效果)
+            //从而增加间隔刻度线像素间隔
+            float pixelPerStep = pixelPerFrame * frameStep;
+            while (pixelPerStep < Constants.MinPixelPerScaleMark)
             {
-                frameUnit *= RulerScalingPattern[patternIndex++ % RulerScalingPattern.Length];
-                pixelPerCursor = pixelPerFrame * frameUnit;
+                frameStep *= Constants.RulerScaleMarkingPattern[tScaleIndex++ % Constants.RulerScaleMarkingPattern.Length];
+                pixelPerStep = pixelPerFrame * frameStep;
             }
-
-            patternIndex = 0;
-            int framePerlabelInterval = 1;
-            float labelIncludePixel = pixelPerFrame * framePerlabelInterval;
-            while (labelIncludePixel < 50)
+            
+            //找<每主刻度所占帧数>和对应<每主刻度所占像素>
+            
+            tScaleIndex = 0;
+            //每个主刻度占多少帧
+            int framePerMainScaleMark = 1;
+            //每个主刻度占多少像素
+            float pixelPerMainScaleMark = pixelPerFrame * framePerMainScaleMark;
+            //找到可以正常绘制的刻度线像素间隔，以及对应的时间尺主刻度线间隔模式索引
+            //{5，2，3，2} i=1循环累乘可以得到下面的主刻度帧数间隔 
+            //1，5，10，30，60，300，600，1800，3600，18000，36000，108000，216000
+            //这里是为了找到一个所占像素大于MinGraduationPixel的主刻度线帧数间隔
+            while (pixelPerMainScaleMark < Constants.MinMajorGraduationPixel)
             {
-                framePerlabelInterval *= RulerScalingPattern[patternIndex++ % RulerScalingPattern.Length];
-                labelIncludePixel = pixelPerFrame * framePerlabelInterval;
+                framePerMainScaleMark *= Constants.RulerScaleMarkingPattern[tScaleIndex++ % Constants.RulerScaleMarkingPattern.Length];
+                pixelPerMainScaleMark = pixelPerFrame * framePerMainScaleMark;
             }
             
             float totalPixel = 0;
-            float pixelCount = 0;
             int index = 0;
-            int cursorCount = 0;
             for (
                     int frame = 0; 
-                    totalPixel < rect.width;
-                    frame += frameUnit,
-                    cursorCount += frameUnit,
-                    totalPixel += pixelPerCursor,
-                    pixelCount += pixelPerCursor,
+                    totalPixel < rect.width; //限制时间尺区域
+                    frame += frameStep, //帧数步长
+                    totalPixel += pixelPerStep,
                     index++
                 )
             {
-                if(index > 200)
+                if (index > 300)
+                {
+                    UnityEngine.Debug.LogWarning("绘制时间尺的循环数>300");
                     break;
-
-                var intervalInfo = GetIntervalInfo(frame);
+                }
                 
-                if (frame % framePerlabelInterval == 0)
+                var mainScaleMarkInfo = GetMaxMainScaleMarkInfo(frame);
+                
+                if (frame % framePerMainScaleMark == 0)
                 {
                     GUI.Label(new Rect(totalPixel + 1f, -3f, 50f, 20f), frame.ToString(), Styles.Instance.timeAreaStyles.timelineTick);
                     Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, longTickStartY),0);
@@ -384,11 +386,11 @@ namespace PJR.Timeline.Editor
                 }
                 else
                 {
-                    var p = intervalInfo.framePerlabelInterval * pixelPerFrame;
-                    float cursorPct = GetPct(MinCursorVisiblePixel,50f,p);
-                    float cursorMinY = Mathf.Lerp(longTickStartY, rect.height, 1f - cursorPct);// rect.height - cursorHeight * ; 
+                    var p = mainScaleMarkInfo.framePerlabelInterval * pixelPerFrame;
+                    float markPct = GetPct(Constants.MinPixelPerScaleMark,50f,p);
+                    float markMinY = Mathf.Lerp(longTickStartY, rect.height, 1f - markPct);// rect.height - cursorHeight * ; 
                     //下到上画
-                    Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, cursorMinY),0);
+                    Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, markMinY),0);
                 }
             }
             
@@ -396,9 +398,14 @@ namespace PJR.Timeline.Editor
             GUILayout.EndArea();
         }
         
-        IntervalInfo GetIntervalInfo(int frame)
+        /// <summary>
+        /// 根据刻度帧数找最大的主刻度信息
+        /// </summary>
+        /// <param name="frame">刻度帧数</param>
+        /// <returns></returns>
+        MainScaleMarkInfo GetMaxMainScaleMarkInfo(int frame)
         {
-            var info = new IntervalInfo
+            var info = new MainScaleMarkInfo
             {
                 patternIndex = 0,
                 framePerlabelInterval = 1
@@ -408,7 +415,7 @@ namespace PJR.Timeline.Editor
             int temp = 1;
             while (true)
             {
-                temp *= RulerScalingPattern[info.patternIndex++ % RulerScalingPattern.Length];
+                temp *= Constants.RulerScaleMarkingPattern[info.patternIndex++ % Constants.RulerScaleMarkingPattern.Length];
                 if(frame % temp != 0)
                     break;
                 info.framePerlabelInterval = temp;

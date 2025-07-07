@@ -9,16 +9,20 @@ namespace PJR.Timeline.Editor
         /// <summary>
         /// 默认每帧占多少像素
         /// </summary>
-        public const int pixelPerFrame = 1;
+        public const int DefaultPpixelPerFrame = 60;
         /// <summary>
-        /// 最大默认每帧占多少像素的倍率
+        /// Ruler的主刻度线间隔模式
+        /// 时间尺以一定的规律改变主刻度线间隔(缩放)
         /// </summary>
-        public const int maxPixelPerFrameRate = 10;
-        /// <summary>
-        /// 最大默认每帧占多少像素
-        /// </summary>
-        //public const int maxPixelPerFrame = pixelPerFrame * maxPixelPerFrameRate;
-        public const int maxPixelPerFrame = 180;
+        public static readonly int[] RulerScaleMarkingPattern = { 5, 2, 3 ,2};
+        //一帧可以占的最大像素
+        public const int MaxPixelPerFrame = (int)(50f * 3.6); // 180px
+        //一帧可以占的最大像素
+        public const int SubMaxPixelPerFrame = (int)(50f * 3.0); // 150px
+        //最小的可显示刻度线像素
+        public const int MinPixelPerScaleMark = 3;
+        //最小的可显示<主>刻度线像素
+        public const int MinMajorGraduationPixel = 50;
 
         public const float timelineAreaYPosition = 19.0f;
         public const float timelineRulerHeight = 21.0f;

@@ -27,7 +27,7 @@ namespace PJR.Timeline.Editor
                 GUI.color = color2;
             }
         }
-        public static void DebugRect(Rect position) => DebugRect(position, Color.green, true, false);
+        public static void DebugRect(Rect position) => DebugRect(position, Color.green, false, false);
         
         /// <summary>
         /// 将Rect用指定颜色画出来
@@ -38,8 +38,11 @@ namespace PJR.Timeline.Editor
         /// <param name="forceDraw">不是debug状态也绘制rect</param>
         public static void DebugRect(Rect position, Color color, bool displaySize, bool forceDraw)
         {
-            if (!forceDraw && !(windowState?.debugging ?? false))
+            bool debugging = windowState?.debugging ?? false;
+            if (!forceDraw && !debugging)
                 return;
+            if(debugging)
+                UnityEngine.Debug.LogWarning(position);
 
             Handles.BeginGUI();
             var rect = position;
@@ -49,34 +52,34 @@ namespace PJR.Timeline.Editor
             Vector3 bottomLeft = new Vector3(rect.xMin, rect.yMax, 0);
             Vector3 center = (topLeft + bottomRight) * 0.5f;
 
-            // 设置线条颜色
-            Handles.color = color;
-
-            // 绘制矩形边框
-            Handles.DrawLine(topLeft, topRight);
-            Handles.DrawLine(topRight, bottomRight);
-            Handles.DrawLine(bottomRight, bottomLeft);
-            Handles.DrawLine(bottomLeft, topLeft);
-            
-            //在中显示大小
-            if (displaySize)
+            using (new Handles.DrawingScope(color))
             {
-                var temp = topLeft;
-                temp.x += 1f;
-                temp.y += 1f;
-                Handles.Label(topLeft, new GUIContent(rect.ToString()), EditorStyles.miniLabel);
+                // 绘制矩形边框
+                Handles.DrawLine(topLeft, topRight);
+                Handles.DrawLine(topRight, bottomRight);
+                Handles.DrawLine(bottomRight, bottomLeft);
+                Handles.DrawLine(bottomLeft, topLeft);
+
+                //在中显示大小
+                if (displaySize)
+                {
+                    var temp = topLeft;
+                    temp.x += 1f;
+                    temp.y += 1f;
+                    Handles.Label(topLeft, new GUIContent(rect.ToString()), EditorStyles.miniLabel);
+                }
+
+                //对角线
+                if (rect.width > 50)
+                    Handles.DrawLine(topLeft, bottomRight);
             }
-            
-            //对角线
-            if (rect.width > 50)
-                Handles.DrawLine(topLeft, bottomRight);
 
             Handles.EndGUI();
         }
         public static void Debug(this Rect rect, bool displaySize, bool forceDraw) => DebugRect(rect, Color.green, displaySize, forceDraw);
-        public static void Debug(this Rect rect, Color color, bool forceDraw) => DebugRect(rect, color, true, forceDraw);
+        public static void Debug(this Rect rect, Color color, bool forceDraw) => DebugRect(rect, color, false, forceDraw);
         public static void Debug(this Rect rect, bool displaySize) => DebugRect(rect, Color.green, displaySize, false);
-        public static void Debug(this Rect rect, Color color) => DebugRect(rect, color, true, false);
+        public static void Debug(this Rect rect, Color color) => DebugRect(rect, color, false, false);
         public static void Debug(this Rect rect) => DebugRect(rect);
    
         public static void CheckWheelEvent(Rect rect, Action<Event> callback) => EventUtil.EventCheck(rect, EventType.ScrollWheel, callback);
@@ -146,5 +149,6 @@ namespace PJR.Timeline.Editor
             visualElement.style.borderBottomLeftRadius = bottomLeft;
             visualElement.style.borderBottomRightRadius = bottomRight;
         }
+        
     }
 }

@@ -8,28 +8,16 @@ namespace PJR.Timeline.Editor
 {
     public partial class TimelineWindow
     {
-        public float headerHeight
-        {
-            get {
-                return Const.clipStartPositionY_Offseted;
-            }
-        }
-        public Rect controlBarRect
-        {
-            get {
-                return new Rect(0.0f, Const.timelineAreaYPosition, position.width, Const.timelineRulerHeight);
-            }
-        }
+        public float headerHeight => Const.clipStartPositionY_Offseted;
+
+        public Rect controlBarRect =>
+            new(0.0f, Const.timelineAreaYPosition, position.width, Const.timelineRulerHeight);
         public Rect headerRect
-        {
-            //get { return new Rect(0.0f, Constants.clipStartPositionY, Constants.defaultHeaderWidth, position.height - Constants.timelineAreaYPosition); }
-            get { return new Rect(0.0f, Const.clipStartPositionY_Offseted, State.trackMenuAreaWidth, position.height - Const.timelineAreaYPosition); }
-        }
+            => new(0.0f, Const.clipStartPositionY_Offseted, State.trackMenuAreaWidth, position.height - Const.timelineAreaYPosition); 
+
+        //时间尺区域
         public Rect timelineRulerRect
-        {
-            //get { return new Rect(headerRect.width, Constants.timelineRulerHeight, position.width - headerRect.width, Constants.timelineRulerHeight); }
-            get { return new Rect(State.trackMenuAreaWidth, Const.timelineRulerHeight, position.width - State.trackMenuAreaWidth, Const.timelineRulerHeight); }
-        }
+            => new(State.trackMenuAreaWidth + Const.timelineRulerXOffset + Const.headerSizeHandleWidth, Const.timelineRulerHeight, position.width - State.trackMenuAreaWidth, Const.timelineRulerHeight);
 
         public Rect trackRect
         {
@@ -39,14 +27,21 @@ namespace PJR.Timeline.Editor
                 return new Rect(0, yMinHeight, position.width, position.height - yMinHeight - 0);
             }
         }
+        
+        //调整TrackView两边大小的Handle的区域
         public Rect headerSizeHandleRect
+            =>Rect.MinMaxRect(State.trackMenuAreaWidth, trackRect.yMin, State.trackMenuAreaWidth + Const.headerSizeHandleWidth, trackRect.yMax);
+            //=>Rect.MinMaxRect(State.trackMenuAreaWidth - Const.headerSizeHandleWidth/2 - Const.headerSizeHandleWidth/2, trackRect.yMin, State.trackMenuAreaWidth + Const.headerSizeHandleWidth/2, trackRect.yMax);
+        
+        
+        public Rect trackClipAreaRect
         {
             get
             {
-                return Rect.MinMaxRect(State.trackMenuAreaWidth - 2, trackRect.yMin, State.trackMenuAreaWidth + 2, trackRect.yMax);
+                var temp = trackRect;
+                temp.xMin = timelineRulerRect.xMin; 
+                return temp;
             }
         }
-
-       
     }
 }

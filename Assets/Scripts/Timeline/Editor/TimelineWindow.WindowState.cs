@@ -48,6 +48,8 @@ namespace PJR.Timeline.Editor
             #region 一些动态的Rect
             public float trackMenuAreaWidth = Const.trackMenuDefaultAreaWidth;
             public Rect headerSizeHandleRect;// = instance.headerSizeHandleRect;
+            
+            
             #endregion
             
             #region UI Hotspot相关方法
@@ -88,6 +90,7 @@ namespace PJR.Timeline.Editor
             public int PixelToFrame(float pixel)=>(int)(pixel / currentPixelPerFrame);
             public double PixelToSecond(float pixel)=> (int)(pixel / currentPixelPerFrame) / CurrentFrameRate;
             public float FrameToPixel(int frames)=> frames * currentPixelPerFrame;
+            public float TimeToPixel(double time) => (float)(time * CurrentFrameRate * currentPixelPerFrame);
 
             public double CurrentFrameRate => Define.FPS_Default;
             public double CurrentSecondPerFrame => 1 / CurrentFrameRate;
@@ -148,6 +151,8 @@ namespace PJR.Timeline.Editor
                 }
                 requireRepaint = true;
             }
+
+            public bool IsEditingAPrefabAsset() => true;
         }
 
         public struct EditingSequare

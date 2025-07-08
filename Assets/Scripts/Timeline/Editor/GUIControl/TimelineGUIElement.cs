@@ -42,6 +42,9 @@ namespace PJR.Timeline.Editor
             _propertyTree?.Dispose();
             _propertyTree = null;
         }
+        public virtual void OnDrawOverlapGUI()
+        {
+        }
     }
 
     public abstract partial class TimelineGUIElement

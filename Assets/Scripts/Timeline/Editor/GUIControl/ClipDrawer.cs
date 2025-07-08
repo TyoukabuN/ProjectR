@@ -33,8 +33,8 @@ namespace PJR.Timeline.Editor
             Rect clipRect = Rect.MinMaxRect(start, rect.yMin, end, rect.yMax);
 
             if (clipDragging)
-                clipRect.x += clipDrag_draggedPixelOffsetClamped;// clipDrag_draggedFrameOffset * windowState.currentPixelPerFrame;
-            if (clipResizing)
+                clipRect.x += clipDrag_draggedPixelOffsetClamped;
+            else if (clipResizing)
             { 
                 if(clipResie_purpose == ResizePurpose.Left)
                     clipRect.xMin += clipResize_draggedFrameOffset * windowState.currentPixelPerFrame;
@@ -86,17 +86,98 @@ namespace PJR.Timeline.Editor
 
             var rectLeft = rect;
             rectLeft.width = handleWidth;
-            rectLeft.Debug(false);
 
             var rectRight = rectLeft;
             rectRight.x = rect.xMax - handleWidth;
-            rectRight.Debug(false);
 
             EditorGUIUtility.AddCursorRect(rectLeft, MouseCursor.SplitResizeLeftRight);
             SplitResizeHandleEvent(rectLeft, ResizePurpose.Left);
 
             EditorGUIUtility.AddCursorRect(rectRight, MouseCursor.SplitResizeLeftRight);
             SplitResizeHandleEvent(rectRight, ResizePurpose.Right);
+        }
+
+        public override void OnDrawOverlapGUI()
+        {
+
+
+            var window = TimelineWindow.instance;
+            var rightTrackView = window.trackRect;
+            rightTrackView.xMin = window.timelineRulerRect.xMin;
+            
+            var rulerNTrack = window.timelineRulerRect;
+            rulerNTrack.yMax = rightTrackView.yMax;
+            
+            var rect = rulerNTrack;
+            rect.Debug();
+            GUILayout.BeginArea(rect);
+            rect.ToOrigin();
+
+            {
+                var start = IClip.StartFrame * GUIUtil.windowState.currentPixelPerFrame;
+                var end = IClip.EndFrame * GUIUtil.windowState.currentPixelPerFrame;
+                Rect clipRect = Rect.MinMaxRect(start, 0, end, rect.yMax);
+                if (clipDragging)
+                    clipRect.x += clipDrag_draggedPixelOffsetClamped;
+                else if (clipResizing)
+                { 
+                    if(clipResie_purpose == ResizePurpose.Left)
+                        clipRect.xMin += clipResize_draggedFrameOffset * windowState.currentPixelPerFrame;
+                    if (clipResie_purpose == ResizePurpose.Right)
+                        clipRect.xMax += clipResize_draggedFrameOffset * windowState.currentPixelPerFrame;
+                }
+                float lineMinY = Const.timelineRulerHeight;
+                
+                void DrawEditingFrameLabel(int frameOffset, bool isLeftSide)
+                {
+                    var labelWidth = 50f;
+                    var originX = isLeftSide ? clipRect.xMin : clipRect.xMax;
+                    var rect = Rect.MinMaxRect(originX - labelWidth / 2, 0, originX + labelWidth / 2, lineMinY);
+                    var editingEndFrame = isLeftSide? IClip.StartFrame + frameOffset :IClip.EndFrame + frameOffset;
+                    Graphics.ShadowLabel(rect, editingEndFrame.ToString(), Styles.editingRulerClipFrameLabel,Color.white,Color.black, 14);
+                }
+                void DrawEditingFrameLabel_Left(int frameOffset) =>
+                    DrawEditingFrameLabel(frameOffset, true);
+                void DrawEditingFrameLabel_Right(int frameOffset) =>
+                    DrawEditingFrameLabel(frameOffset, false);
+
+                clipRect.Debug(Color.white);
+                
+
+                Handles.BeginGUI();
+                if (clipDragging)
+                {
+                    //左边虚线
+                    Graphics.DrawDottedLine(new Vector3(clipRect.xMin, lineMinY), new Vector3(clipRect.xMin, clipRect.yMax),4, Color.black);
+                    //右边虚线
+                    Graphics.DrawDottedLine(new Vector3(clipRect.xMax, lineMinY), new Vector3(clipRect.xMax, clipRect.yMax),4, Color.black);
+                    //时间尺上的白影
+                    var rulerShadow = Rect.MinMaxRect(clipRect.xMin, 0, clipRect.xMax, lineMinY);
+                    var rulerShadowColor = Color.white;
+                    rulerShadowColor.a = 0.333f;
+                    EditorGUI.DrawRect(rulerShadow, rulerShadowColor);
+                    //时间尺上的当前Clip的Start和End对应的帧数
+                    DrawEditingFrameLabel_Left(clipDrag_draggedFrameOffset);
+                    DrawEditingFrameLabel_Right(clipDrag_draggedFrameOffset);
+                }
+                else if (clipResizing)
+                {
+                    if (clipResie_purpose == ResizePurpose.Left)
+                    {
+                        Graphics.DrawDottedLine(new Vector3(clipRect.xMin, lineMinY), new Vector3(clipRect.xMin, clipRect.yMax),4, Color.black);
+                        DrawEditingFrameLabel_Left(clipResize_draggedFrameOffset);
+                    }
+
+                    if (clipResie_purpose == ResizePurpose.Right)
+                    {
+                        Graphics.DrawDottedLine(new Vector3(clipRect.xMax, lineMinY), new Vector3(clipRect.xMax, clipRect.yMax),4, Color.black);
+                        DrawEditingFrameLabel_Right(clipResize_draggedFrameOffset);
+                    }
+                }
+                Handles.EndGUI();
+            }
+            
+            GUILayout.EndArea();
         }
 
         #region Clip Resize
@@ -235,7 +316,6 @@ namespace PJR.Timeline.Editor
                     clipDragging = true;
                     float draggedPixelOffset = Event.current.mousePosition.x - clipDrag_startPosition.x;
                     int frames = TimeUtil.ToFrames(windowState.PixelToSecond(draggedPixelOffset), windowState.CurrentFrameRate);
-                    
                     //Debug.Log($"[draggedPixelOffset:{draggedPixelOffset}] [frames:{frames}] [valid:{IClip.ValidRangeChangeableByFrame(frames)}]");
                     
                     //后面可能改成纯用帧判断，而不是时间

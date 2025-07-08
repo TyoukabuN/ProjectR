@@ -26,9 +26,13 @@ namespace PJR.Timeline.Editor
         public const int MinMainScaleMarkPixel = 50;
         //最小的可显示背景刻度线像素
         public const int MinPixelPerBgScaleMark = 30;
+        //缩放速度
+        public const float ScalingSpeed = 0.0833f;
+        
 
         public const float timelineAreaYPosition = 19.0f;
         public const float timelineRulerHeight = 21.0f;
+        public const float timelineRulerXOffset = 6;
         public const float timelineRulerPreSpace = 5.0f;
         public const float clipStartOffsetY = 3;
         public const float clipStartPositionY_Offseted = timelineAreaYPosition + timelineRulerHeight + clipStartOffsetY;
@@ -38,6 +42,8 @@ namespace PJR.Timeline.Editor
         public const float trackMenuLeftSpace = 18f;
         public const float trackMenuAreaTop = 6f;
         public const float trackMenuPadding = 3f;
+
+        public const float headerSizeHandleWidth = 4;
 
         //调整TrackMenu大小(高度)的handle的Height
         public const float trackMenuDragHandleHeight = 4f;

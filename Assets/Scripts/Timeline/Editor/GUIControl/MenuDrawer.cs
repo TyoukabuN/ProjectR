@@ -31,8 +31,6 @@ namespace PJR.Timeline.Editor
         {
             EditorGUI.DrawRect(rect, GetMenuBgColor(IsSelect));
 
-            rect.Debug();
-
             var labelSize = Styles.CalcLabelSize(Clip.GetClipName());
 
             GUILayout.Label(new GUIContent(Clip.GetClipName(), Clip.GetClipName()), GUILayout.Width(labelSize.x),
@@ -48,8 +46,6 @@ namespace PJR.Timeline.Editor
                     Clip.Mute = !Clip.Mute;
                 }
             }
-
-            GUILayoutUtility.GetLastRect().Debug(Color.green);
 
             var evtRect = rect;
             evtRect.xMin -= Const.trackMenuLeftSpace;

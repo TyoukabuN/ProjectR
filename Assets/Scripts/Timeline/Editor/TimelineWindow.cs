@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using NPOI.HSSF.Record.Cont;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -84,7 +85,14 @@ namespace PJR.Timeline.Editor
             //trackView的背景，放这是不想它遮住时间尺刻度
             EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
             Draw_Headers(); 
-            TrackViewsGUI(); 
+            TrackViewsGUI();
+            Draw_OverlapGUI();
+        }
+
+        private void Draw_OverlapGUI()
+        {
+            if (_state != null)
+                _state.Hotspot?.OnDrawOverlapGUI();
         }
 
         /// <summary>
@@ -140,8 +148,6 @@ namespace PJR.Timeline.Editor
 
         public void TrackViewsGUI()
         {
-            trackRect.Debug();
-                
             //分割TrackMenu和View边界部分
             DrawSpliterAboutTrackMenuAndView();
             
@@ -174,8 +180,7 @@ namespace PJR.Timeline.Editor
         /// </summary>
         void DrawSpliterAboutTrackMenuAndView()
         {
-            if(State.debugging)
-                GUIUtil.DebugRect(headerSizeHandleRect, Color.cyan, false, true);
+            GUIUtil.DebugRect(headerSizeHandleRect, Color.cyan, false, true);
 
             EditorGUIUtility.AddCursorRect(headerSizeHandleRect, MouseCursor.SplitResizeLeftRight);
             headerSizeHandleRect.DragEventCheck((rect) =>
@@ -202,10 +207,8 @@ namespace PJR.Timeline.Editor
                         }
                         GUILayout.FlexibleSpace();
                     }
-                    GUILayoutUtility.GetLastRect().Debug(Color.red);
                     GUILayout.FlexibleSpace();
                 }
-                GUILayoutUtility.GetLastRect().Debug();
             }
         }
 
@@ -305,21 +308,24 @@ namespace PJR.Timeline.Editor
                 //滑轮上滑是ZoomIn(sign:-1 unit:-3)
                 var sign = -Mathf.Sign(evt.delta.y);
                 //按比例缩放系数
-                State.currentPixelPerFrameScaleFactor *= 1 + sign * 0.0833f;
+                State.currentPixelPerFrameScaleFactor *= 1 + sign * Const.ScalingSpeed;
                 State.currentPixelPerFrameScaleFactor = Mathf.Clamp01(State.currentPixelPerFrameScaleFactor);
                 State.currentPixelPerFrame = State.currentPixelPerFrameScaleFactor * Const.MaxPixelPerFrame;
                 Repaint();
             });
 
-            timelineRulerRect.Debug();
+            var rightTrackView = trackRect;
+            rightTrackView.xMin = timelineRulerRect.xMin;
             
-            var rect = timelineRulerRect;
+            var rulerNTrack = timelineRulerRect;
+            rulerNTrack.yMax = rightTrackView.yMax;
+            
+            var rect = rulerNTrack;
             //新开一个坐标系
             GUILayout.BeginArea(rect);
-            //将rect移动回原点方便计算
-            if (rect.ToOrigin().Contains(Event.current.mousePosition))
-            {
-            }
+            //将rect移动回原点方便计算,因为也已经BeginArea了
+            rect.ToOrigin();
+            
             Handles.BeginGUI();
             int frameIndex = 0;
             float longTickStartY = 6f;
@@ -350,7 +356,7 @@ namespace PJR.Timeline.Editor
             //找到可以正常绘制的刻度线像素间隔，以及对应的时间尺主刻度线间隔模式索引
             //{5，2，3，2} i=1循环累乘可以得到下面的主刻度帧数间隔 
             //1，5，10，30，60，300，600，1800，3600，18000，36000，108000，216000...
-            //这里是为了找到一个所占像素大于MinMajorGraduationPixel的主刻度线帧数间隔
+            //这里是为了找到一个所占像素大于MinMainScaleMarkPixel的主刻度线帧数间隔
             while (pixelPerMainScaleMark < Const.MinMainScaleMarkPixel)
             {
                 framePerMainScaleMark *= Const.RulerScaleMarkingPattern[tScaleIndex++ % Const.RulerScaleMarkingPattern.Length];
@@ -379,48 +385,25 @@ namespace PJR.Timeline.Editor
                 if (frame % framePerMainScaleMark == 0)
                 {
                     GUI.Label(new Rect(totalPixel + 1f, -3f, 50f, 20f), frame.ToString(), Styles.Instance.timeAreaStyles.timelineTick);
-                    Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, longTickStartY),0);
+                    Handles.DrawLine(new Vector3(totalPixel, timelineRulerRect.height), new Vector3(totalPixel, longTickStartY),0);
                     //DrawVerticalLineFast(totalPixel, longTickStartY, rect.height, new Color(1f, 1f, 1f, 0.5f));
                 }
                 else
                 {
                     //根据比例缩小非主刻度
                     float markPct = GetPct(Const.MinPixelPerScaleMark,50f,framePerScaleMark);
-                    float markMinY = Mathf.Lerp(longTickStartY, rect.height, 1f - markPct);// rect.height - cursorHeight * ; 
+                    float markMinY = Mathf.Lerp(longTickStartY, timelineRulerRect.height, 1f - markPct);// rect.height - cursorHeight * ; 
                     //下到上画
-                    Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, markMinY),0);
+                    Handles.DrawLine(new Vector3(totalPixel, timelineRulerRect.height), new Vector3(totalPixel, markMinY),0);
                 }
-            }
-            Handles.EndGUI();
-            GUILayout.EndArea();
-            
-            //TrackView背景部分的刻度线
-            rect = trackRect;
-            rect.xMin = timelineRulerRect.xMin;
-            GUILayout.BeginArea(rect);
-            rect.ToOrigin().Contains(Event.current.mousePosition);
-            Handles.BeginGUI();
-            totalPixel = 0;
-            index = 0;
-            var color = Color.white * 0.533f;
-            for (
-                int frame = 0; 
-                totalPixel < rect.width; //限制时间尺区域
-                frame += frameStep, //帧数步长
-                totalPixel += pixelPerStep,
-                index++
-            )
-            {
-                var mainScaleMarkInfo = GetMaxMainScaleMarkInfo(frame);
-                var framePerScaleMark = mainScaleMarkInfo.framePerMainScaleMark * pixelPerFrame;
-
-                if(framePerScaleMark > Const.MinPixelPerBgScaleMark)
+                
+                //TrackView背景部分的刻度线
+                if(index <=0 || framePerScaleMark > Const.MinPixelPerBgScaleMark)
                 {
-                    using(new Handles.DrawingScope(color))
+                    using(new Handles.DrawingScope(Color.white * 0.533f))
                         Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, 0),0);
                 }
             }
-            
             Handles.EndGUI();
             GUILayout.EndArea();
         }

@@ -37,7 +37,8 @@ namespace PJR.Timeline.Editor
             {
                 using (new GUILayout.HorizontalScope(GUILayout.Width(instance.trackRect.width)))
                 {
-                    var trackMenuAreaWidth = windowState.trackMenuAreaWidth - 2;
+                    var trackMenuAreaWidth = windowState.trackMenuAreaWidth;
+                    var usedPixelX = trackMenuAreaWidth;
                     //TrackMenu（左边）
                     using (new GUILayout.VerticalScope(GUILayout.Width(trackMenuAreaWidth)))
                     {
@@ -64,15 +65,13 @@ namespace PJR.Timeline.Editor
                         }
                     }
 
-                    GUILayoutUtility.GetLastRect().Debug(Color.red);
-
                     //Menu和Track之间的空间
                     //用于修改HeaderWidth
-                    GUILayout.Space(instance.headerSizeHandleRect.width);
-
+                    GUILayout.Space(Const.headerSizeHandleWidth + Const.timelineRulerXOffset);
+                    usedPixelX += Const.headerSizeHandleWidth + Const.timelineRulerXOffset;
+                    
                     //TrackClip（右边）
-                    using (new GUILayout.VerticalScope(GUILayout.Width(position.width - windowState.trackMenuAreaWidth +
-                                                                       windowState.headerSizeHandleRect.width / 2)))
+                    using (new GUILayout.VerticalScope(GUILayout.Width(position.width - usedPixelX)))
                     {
                         //GUILayoutUtility.GetRect(50, 50).Debug();
                         GUILayout.Space(Const.trackMenuAreaTop);
@@ -95,8 +94,6 @@ namespace PJR.Timeline.Editor
                         }
                     }
                 }
-
-                GUILayoutUtility.GetLastRect().Debug(Color.red);
 
                 if (changeCheck.changed)
                     OnTrakcChanged();

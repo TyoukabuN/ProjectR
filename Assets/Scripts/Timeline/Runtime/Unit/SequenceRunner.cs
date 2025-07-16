@@ -13,6 +13,7 @@ namespace PJR.Timeline
             None = 0,       
             Running,
             Done,
+            Paused,
             Failure,
             Diposed,
         }
@@ -21,7 +22,7 @@ namespace PJR.Timeline
         public EState State
         {
             get => _state;
-            private set
+            set
             {
                 if (_state == value)
                     return;
@@ -32,6 +33,8 @@ namespace PJR.Timeline
             }
         }
         public bool IsRunning => State == EState.Running;
+        public bool IsDone => State == EState.Done;
+        public bool IsPaused => State == EState.Paused;
         public List<TrackRunner> trackRunner => _trackRunners;
         public double FrameUpdateFrequency => _secondPerFrame;
 
@@ -112,25 +115,32 @@ namespace PJR.Timeline
 
         void OnUpdate(UpdateContext context)
         {
-            if (State != EState.Running)
-                return;
-            if (_trackRunners == null)
+            if (State == EState.Running)
             {
-                State = EState.Done;
-                return;
-            }
+                if (_trackRunners == null)
+                {
+                    State = EState.Done;
+                    return;
+                }
 
-            bool allDone = true;
-            for (int i = 0; i < _trackRunners.Count; i++)
+                bool allDone = true;
+                for (int i = 0; i < _trackRunners.Count; i++)
+                {
+                    var trackRunner = _trackRunners[i];
+                    trackRunner.OnUpdate(context);
+
+                    if (trackRunner.State < TrackRunner.EState.Done)
+                        allDone = false;
+                }
+
+                State = allDone ? EState.Done : _state;
+            }
+            else if (State == EState.Paused)
             {
-                var trackRunner = _trackRunners[i];
-                trackRunner.OnUpdate(context);
-
-                if (trackRunner.State < TrackRunner.EState.Done)
-                    allDone = false;
             }
-
-            State = allDone ? EState.Done : _state;
+            else if (State == EState.Done)
+            {
+            }
         }
 
         public float _remainDeltaTime;

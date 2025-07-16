@@ -5,6 +5,7 @@ namespace PJR.Timeline.Pool
     
     /// <summary>
     /// Timeline内部的ObjectPool，会在Release的时候调用IDisposable.Dispose
+    /// 可以将Dispose当作Clear方法来实现,作用都是清理
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public static class ObjectPool<T> where T : PoolableObject, IDisposable, new()
@@ -27,9 +28,16 @@ namespace PJR.Timeline.Pool
             pool.Release(toRelease);
         }
     }
-    public abstract class PoolableObject
+    public abstract class PoolableObject 
     {
         public bool IsReleased = false;
         public abstract void Release();
+        public static bool operator ==(PoolableObject lhs, object rhs)
+        {
+            if(ReferenceEquals(lhs, null) || lhs.IsReleased)
+                return ReferenceEquals(rhs, null);
+            return Equals(lhs, rhs);
+        }
+        public static bool operator !=(PoolableObject obj, object nullCheck) => !(obj == nullCheck);
     }
 }

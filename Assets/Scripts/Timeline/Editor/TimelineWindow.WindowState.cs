@@ -11,15 +11,8 @@ namespace PJR.Timeline.Editor
         /// <summary>
         /// Undo,Selection,Save之类的Sequence的管理都在这
         /// </summary>
-        public class WindowState
+        public partial class WindowState
         {
-            private ISequenceHandle _sequenceHandle;
-            public ISequenceHandle SequenceHandle
-            {
-                get => _sequenceHandle ??= SequenceEditHandle.Empty;
-                set => _sequenceHandle = value;
-            }
-            
             public WindowState()
             {
                 AssetProcessor.OnWillSaveAssetsCall -= OnWillSaveAssetsCall;
@@ -57,62 +50,13 @@ namespace PJR.Timeline.Editor
             public TrackGUI TrackGUI => trackGUI ??= new TrackGUI();
 
             #region 一些动态的Rect
-            public float trackMenuAreaWidth = Const.trackMenuDefaultAreaWidth;
+            public float currentTrackMenuAreaWidth = Const.trackMenuDefaultAreaWidth;
             public Rect headerSizeHandleRect;// = instance.headerSizeHandleRect;
-            
-            
             #endregion
-            
-            #region UI Hotspot相关方法
-            public void ClearHotspot()
-            {
-                Hotspot?.OnDeselect();
-                Hotspot = null;
-            }
-            
-            public Action<TimelineGUIElement, TimelineGUIElement> OnHotspotChanged;
-            public void SetHotspot(TimelineGUIElement timelineGUIElement)
-            {
-                if (timelineGUIElement != null && timelineGUIElement == _hotspot)
-                    return;
-                Selection.activeObject = instance;
-                OnHotspotChanged?.Invoke(_hotspot,timelineGUIElement);
-                _hotspot = timelineGUIElement;
-            }
-            public void UnSetHotspot(TimelineGUIElement timelineGUIElement)
-            {
-                if (timelineGUIElement == null)
-                    return;
-                if (timelineGUIElement != _hotspot)
-                    return;
-                timelineGUIElement.OnDeselect();
-                _hotspot = null;
-            }
-            private TimelineGUIElement _hotspot;
-            public TimelineGUIElement Hotspot
-            {
-                get => _hotspot;
-                set => SetHotspot(value);
-            }
-
-            #endregion
-
+  
             public bool draggingRulerCursor = false;
 
-            #region 一些单位转换用的方法
-            public int PixelToFrame(float pixel)=>(int)(pixel / currentPixelPerFrame);
-            public int PixelRoundToFrame(float pixel)=>Mathf.RoundToInt(pixel / currentPixelPerFrame);
-            public double PixelToTime(float pixel)=> (int)(pixel / currentPixelPerFrame) / CurrentFrameRate;
-            public float FrameToPixel(int frames)=> frames * currentPixelPerFrame;
-            public float TimeToPixel(double time) => (float)(time * CurrentFrameRate * currentPixelPerFrame);
-            public int ToFrames(double time)=> TimeUtil.ToFrames(time,CurrentFrameRate);
-            public double FromFrames(int frames) => TimeUtil.FromFrames(frames, CurrentFrameRate);
-            public double CurrentFrameRate => Define.FPS_Default;
-            public double CurrentSecondPerFrame => 1 / CurrentFrameRate;
-            #endregion
-            
             public static string Default_UndoName = "Sequence Asset Modify";
-
 
             /// <summary>
             /// 监听sequenceAsset有没有被保存
@@ -168,6 +112,87 @@ namespace PJR.Timeline.Editor
             }
 
             public bool IsEditingAPrefabAsset() => true;
+        }
+
+        /// <summary>
+        /// 一些单位转换用的方法
+        /// </summary>
+        public partial class WindowState
+        {
+            public int PixelToFrame(float pixel)=>(int)(pixel / currentPixelPerFrame);
+            public int PixelRoundToFrame(float pixel)=>Mathf.RoundToInt(pixel / currentPixelPerFrame);
+            public double PixelToTime(float pixel)=> (int)(pixel / currentPixelPerFrame) / CurrentFrameRate;
+            public float FrameToPixel(int frames)=> frames * currentPixelPerFrame;
+            public float TimeToPixel(double time) => (float)(time * CurrentFrameRate * currentPixelPerFrame);
+            public int ToFrames(double time)=> TimeUtil.ToFrames(time,CurrentFrameRate);
+            public double FromFrames(int frames) => TimeUtil.FromFrames(frames, CurrentFrameRate);
+            public double CurrentFrameRate => Define.FPS_Default;
+            public double CurrentSecondPerFrame => 1 / CurrentFrameRate;
+        }
+
+        /// <summary>
+        /// Timeline GUI Hotspot
+        /// </summary>
+        public partial class WindowState
+        {
+            private TimelineGUIElement _hotspot;
+
+            public void ClearHotspot()
+            {
+                Hotspot?.OnDeselect();
+                Hotspot = null;
+            }
+            
+            public Action<TimelineGUIElement, TimelineGUIElement> OnHotspotChanged;
+            public void SetHotspot(TimelineGUIElement timelineGUIElement)
+            {
+                if (timelineGUIElement != null && timelineGUIElement == _hotspot)
+                    return;
+                Selection.activeObject = instance;
+                OnHotspotChanged?.Invoke(_hotspot,timelineGUIElement);
+                _hotspot = timelineGUIElement;
+            }
+            public void UnSetHotspot(TimelineGUIElement timelineGUIElement)
+            {
+                if (timelineGUIElement == null)
+                    return;
+                if (timelineGUIElement != _hotspot)
+                    return;
+                timelineGUIElement.OnDeselect();
+                _hotspot = null;
+            }
+            public TimelineGUIElement Hotspot
+            {
+                get => _hotspot;
+                set => SetHotspot(value);
+            }
+        }
+
+        /// <summary>
+        /// 播放相关 
+        /// </summary>
+        public partial class WindowState
+        {
+            private ISequenceHandle _sequenceHandle;
+            public ISequenceHandle SequenceHandle
+            {
+                get => _sequenceHandle ??= SequenceEditHandle.Empty;
+                set
+                {
+                    if (value == null)
+                    {
+                        _sequenceHandle?.Release();
+                        _sequencePlayableHandle = null;
+                    }
+                    else if(value is ISequencePlayableHandle temp)
+                        _sequencePlayableHandle = temp;
+
+                    _sequenceHandle = value;
+                }
+            }
+
+            private ISequencePlayableHandle _sequencePlayableHandle;
+            public ISequencePlayableHandle SequencePlayableHandle => _sequencePlayableHandle;
         }
 
         public class SequenceEditHandle : ISequenceHandle

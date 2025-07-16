@@ -39,10 +39,14 @@ namespace PJR.Timeline.Editor
             Selection_CheckSelectionChange();
             RegisterEvent(true);
         }
-        void OnLostFocus()
+        public void OnDisable() => Clear();
+
+        void OnFocus()
         {
-            Repaint();
+            RegisterEvent(true);
         }
+        public void OnDestroy() => Clear();
+
         void RegisterEvent(bool enable)
         {
             Selection.selectionChanged -= OnSelectionChanged;
@@ -55,8 +59,6 @@ namespace PJR.Timeline.Editor
         {
             Selection_CheckSelectionChange();
         }
-        public void OnDisable() => Clear();
-        public void OnDestroy() => Clear();
         public void Clear()
         {
             RegisterEvent(false);
@@ -67,9 +69,20 @@ namespace PJR.Timeline.Editor
             base.SaveChanges();
             State?.SaveSequenceAsset();
         }
+
+        private void Update()
+        {
+            if (State.SequencePlayableHandle != null)
+            {
+                if (State.SequencePlayableHandle.IsPlaying())
+                    Repaint();
+            }
+        }
+
         void OnGUI()
         {
             Styles.ReloadStylesIfNeeded();
+
 
             if (CheckRepaintRequired())
                 return;
@@ -80,7 +93,6 @@ namespace PJR.Timeline.Editor
             TrackViewsGUI();
             Draw_OverlapGUI();
         }
-
         /// <summary>
         /// 最上层的GUI,时间尺右边之类的
         /// </summary>
@@ -251,7 +263,7 @@ namespace PJR.Timeline.Editor
             headerSizeHandleRect.DragEventCheck((rect) =>
             {
                 float relativeX = Event.current.mousePosition.x - rect.x;
-                State.trackMenuAreaWidth = Mathf.Clamp(State.trackMenuAreaWidth + relativeX, Const.trackMenuMinAreaWidth, Const.trackMenuMaxAreaWidth);
+                State.currentTrackMenuAreaWidth = Mathf.Clamp(State.currentTrackMenuAreaWidth + relativeX, Const.trackMenuMinAreaWidth, Const.trackMenuMaxAreaWidth);
             });
         }
 
@@ -330,7 +342,7 @@ namespace PJR.Timeline.Editor
         {
             using (new EditorGUI.DisabledScope(State.NonEditingSequence()))
             { 
-                using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(State.trackMenuAreaWidth)))
+                using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(State.currentTrackMenuAreaWidth)))
                 {
                     GUILayout.Space(15f);
                     Draw_AddTrackButton();
@@ -342,23 +354,6 @@ namespace PJR.Timeline.Editor
 
         void Draw_TimeCodeGUI()
         {
-            //from unity timeline
-            // const string timeFieldHint = "TimelineWindow-TimeCodeGUI";
-            //
-            // EditorGUI.BeginChangeCheck();
-            // var currentTime = State.EditingSequenceAsset.SequenceAsset != null ? TimeReferenceUtility.ToTimeString(State.EditingSequenceAsset.time, "0.####") : "0";
-            // //var r = EditorGUILayout.GetControlRect(false, EditorGUI.kSingleLineHeight, EditorStyles.toolbarTextField, GUILayout.Width(Const.timeCodeWidth));
-            // var r = EditorGUILayout.GetControlRect(false, 18, EditorStyles.toolbarTextField, GUILayout.Width(Const.timeCodeWidth));
-            // var id = GUIUtility.GetControlID(timeFieldHint.GetHashCode(), FocusType.Keyboard, r);
-            // var newCurrentTime = EditorGUIReflection.DelayedTextField(r, id, GUIContent.none, currentTime, null, EditorStyles.toolbarTextField);
-            //
-            //
-            // if (EditorGUI.EndChangeCheck())
-            // {
-            //     Debug.Log($"newCurrentTime: {newCurrentTime}");
-            //     State.EditingSequenceAsset.time = TimeReferenceUtility.FromTimeString(newCurrentTime);
-            // }
-            
             //这里先处理以<帧>为单位的的时间修改,后面有需求再加秒
             if (State.SequenceHandle == null)
                 return;

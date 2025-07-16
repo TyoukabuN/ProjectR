@@ -298,7 +298,7 @@ GameObject:
   - component: {fileID: 1103173523}
   - component: {fileID: 1103173525}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Sphere_Sequence1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -437,8 +437,8 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  _sequenceAsset: {fileID: 11400000, guid: 815aa537212073043bf3f52e9114b573, type: 2}
   PlayOnAwake: 0
+  _sequenceAsset: {fileID: 11400000, guid: 815aa537212073043bf3f52e9114b573, type: 2}
 --- !u!320 &1103173525
 PlayableDirector:
   m_ObjectHideFlags: 0

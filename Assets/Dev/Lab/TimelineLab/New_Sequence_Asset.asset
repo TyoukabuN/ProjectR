@@ -32,10 +32,10 @@ MonoBehaviour:
   _mute: 0
   _description: 0
   _start: 0.000000000000000027755575615628914
-  _end: 0.2833333469927309
+  _end: 0.8000001311302185
   _startFrame: 0
-  _endFrame: 17
-  animationClip: {fileID: 7400000, guid: 337aeda223844c24ebcfcdd4a0d6c513, type: 2}
+  _endFrame: 48
+  animationClip: {fileID: 7400000, guid: 4fac081162949dc47a3bfe3325988492, type: 2}
 --- !u!114 &-1644592549630497685
 MonoBehaviour:
   m_ObjectHideFlags: 2

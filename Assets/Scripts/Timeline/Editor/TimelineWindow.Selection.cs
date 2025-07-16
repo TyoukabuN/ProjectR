@@ -20,22 +20,23 @@ namespace PJR.Timeline.Editor
                 return;
             if (Selection.activeObject == null)
                 return;
-            ISequenceHandle holder = null;
-            if (IsSequenceAssetSelected(Selection.activeObject, out holder))
+            ISequenceHandle handle = null;
+            if (IsSequenceAssetSelected(Selection.activeObject, out handle))
             {
                 //选中Project里的SequenceAsset
             }
-            else if (IsGameObjectSelected(Selection.activeObject, out holder))
+            else if (IsGameObjectSelected(Selection.activeObject, out handle))
             {
                 //选中Hierarchy里的MonoSequenceHandle
             }
-            if (holder == null)
+            if (handle == null)
             {
                 //可能有没选中时候的处理
                 return;
             }
             
-            instance.State.SequenceHandle = holder;
+            instance.State.SequenceHandle = handle;
+            instance.State.RefreshWindow(true);
         }
 
         static bool IsSequenceAssetSelected(Object activeObject,out ISequenceHandle holder)
@@ -46,7 +47,7 @@ namespace PJR.Timeline.Editor
             var sequenceAsset = Selection.activeObject as SequenceAsset;
             if (sequenceAsset == null)
                 return false;
-            SequenceEditHandle.Get(sequenceAsset);
+            holder = SequenceEditHandle.Get(sequenceAsset);
             return true;
         }
         

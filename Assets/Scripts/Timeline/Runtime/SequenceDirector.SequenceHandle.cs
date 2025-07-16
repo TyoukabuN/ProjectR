@@ -1,5 +1,7 @@
 ﻿using System;
 using PJR.Timeline.Pool;
+using UnityEditor;
+using UnityEngine;
 
 namespace PJR.Timeline
 {
@@ -51,9 +53,23 @@ namespace PJR.Timeline
             }
             void ISequencePlayableHandle.Play()
             {
-                if (!Valid || _director._sequenceRunner == null) 
+                if (!Valid) 
                     return;
-                _director._sequenceRunner.State = SequenceRunner.EState.Running;
+                if (_director._sequenceRunner != null)
+                {
+                    if (_director._sequenceRunner.State == SequenceRunner.EState.Diposed)
+                    {
+                        _director._sequenceRunner.Release();
+                        _director._sequenceRunner = null;
+                    }
+                    else
+                        _director._sequenceRunner.State = SequenceRunner.EState.Running;
+                }
+
+                
+                
+                if (_director._sequenceRunner == null)
+                    _director._sequenceRunner = _director.GetRunner();
             }
             void ISequencePlayableHandle.Pause()
             {

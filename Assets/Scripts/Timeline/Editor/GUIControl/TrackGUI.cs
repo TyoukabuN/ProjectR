@@ -37,7 +37,7 @@ namespace PJR.Timeline.Editor
             {
                 using (new GUILayout.HorizontalScope(GUILayout.Width(instance.trackRect.width)))
                 {
-                    var trackMenuAreaWidth = windowState.trackMenuAreaWidth;
+                    var trackMenuAreaWidth = windowState.currentTrackMenuAreaWidth;
                     var usedPixelX = trackMenuAreaWidth;
                     //TrackMenu（左边）
                     using (new GUILayout.VerticalScope(GUILayout.Width(trackMenuAreaWidth)))

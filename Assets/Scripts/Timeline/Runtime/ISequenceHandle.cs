@@ -13,4 +13,12 @@ namespace PJR.Timeline
         double ToLocalTime(double t);
         void Release();
     }
+
+    public interface ISequencePlayableHandle : ISequenceHandle
+    {
+        bool IsPlaying();
+        void Play();
+        void Pause();
+        void Reset();
+    }
 }

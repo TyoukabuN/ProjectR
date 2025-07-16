@@ -8,21 +8,21 @@ namespace PJR.Timeline
     /// </summary>
     public class SequenceUnitReference
     {
-        protected Sequence _sequence;
+        protected SequenceAsset SequenceAsset;
         protected Track _track;
         protected Clip _clip ;
-        public virtual Sequence Sequence => _sequence;
+        public virtual SequenceAsset sequenceAsset => SequenceAsset;
         public virtual Track Track => _track;
         public virtual Clip Clip  => _clip ;
-        public SequenceUnitReference(Sequence sequence)
+        public SequenceUnitReference(SequenceAsset sequenceAsset)
         {
-            _sequence = sequence;
+            SequenceAsset = sequenceAsset;
         }
     }
 
     public class TrackReference : SequenceUnitReference
     {
-        public TrackReference(Sequence sequenceAsset, Track track):base(sequenceAsset)
+        public TrackReference(SequenceAsset sequenceAssetAsset, Track track):base(sequenceAssetAsset)
         {
             _track = track;
         }
@@ -30,7 +30,7 @@ namespace PJR.Timeline
     
     public class ClipReference : SequenceUnitReference
     {
-        public ClipReference(Sequence sequenceAsset, Track track, Clip clip):base(sequenceAsset)
+        public ClipReference(SequenceAsset sequenceAssetAsset, Track track, Clip clip):base(sequenceAssetAsset)
         {
             _track = track;
             _clip = clip;

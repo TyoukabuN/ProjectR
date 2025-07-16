@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,64 +16,51 @@ namespace PJR.Timeline.Editor
         /// </summary>
         public void Selection_CheckSelectionChange()
         {
-            if (instance?.State == null)
+            if (instance == null)
                 return;
             if (Selection.activeObject == null)
                 return;
-            ISequenceHandle handle = null;
-            if (IsSequenceAssetSelected(Selection.activeObject, out handle))
+            ISequenceHandle holder = null;
+            if (IsSequenceAssetSelected(Selection.activeObject, out holder))
             {
                 //选中Project里的SequenceAsset
             }
-            else if (IsGameObjectSelected(Selection.activeObject, out handle))
+            else if (IsGameObjectSelected(Selection.activeObject, out holder))
             {
                 //选中Hierarchy里的MonoSequenceHandle
             }
-
-            if (handle == null)
+            if (holder == null)
             {
                 //可能有没选中时候的处理
                 return;
             }
-            Selection_OnSelectedSequenceAsset(handle.Sequence);
+            
+            instance.State.SequenceHandle = holder;
         }
 
-        static bool IsSequenceAssetSelected(Object activeObject,out ISequenceHandle handle)
+        static bool IsSequenceAssetSelected(Object activeObject,out ISequenceHandle holder)
         {
-            handle = null;
-            if (activeObject is not Sequence)
+            holder = null;
+            if (activeObject is not SequenceAsset)
                 return false;
-            var sequenceAsset = Selection.activeObject as Sequence;
+            var sequenceAsset = Selection.activeObject as SequenceAsset;
             if (sequenceAsset == null)
                 return false;
-            handle = new SequenceHandle(sequenceAsset);
+            SequenceEditHandle.Get(sequenceAsset);
             return true;
         }
         
-        static bool IsGameObjectSelected(Object activeObject,out ISequenceHandle handle)
+        static bool IsGameObjectSelected(Object activeObject,out ISequenceHandle holder)
         {
-            handle = null;
+            holder = null;
             if (activeObject is not GameObject)
                 return false;
             var gameObject = activeObject as GameObject;
-            var director = gameObject?.GetComponent<SequenceDirector>();
+            var director = gameObject.GetComponent<SequenceDirector>();
             if (director == null)
                 return false;
-            handle = director;
+            holder = director.GetHandle();
             return true;
-        }
-
-        public static void Selection_OnSelectedSequenceAsset(SequenceHandle sequenceHandle)=>  Selection_OnSelectedSequenceAsset(sequenceHandle.Sequence);
-        public static void Selection_OnSelectedSequenceAsset(Sequence sequenceAsset)
-        {
-            if (sequenceAsset == null)
-                return;
-            if (instance == null)
-                return;
-            if (!instance.State.editingSequence.IsEmpty && instance.State.editingSequence.Sequence == sequenceAsset)
-                return;
-            instance.State.editingSequence = new EditingSequare(sequenceAsset);
-            instance.Repaint();
         }
     }
 }

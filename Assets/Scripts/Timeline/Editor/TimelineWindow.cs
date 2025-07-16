@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using NPOI.HSSF.Record.Cont;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -28,7 +26,7 @@ namespace PJR.Timeline.Editor
         public static bool OnDoubleClick(int instanceID, int line)
         {
             var asset = AssetDatabase.GetMainAssetTypeAtPath(AssetDatabase.GetAssetPath(instanceID));
-            if (asset == typeof(Sequence))
+            if (asset == typeof(SequenceAsset))
             {
                 ShowWindow()?.Selection_CheckSelectionChange();
                 return true;
@@ -41,7 +39,6 @@ namespace PJR.Timeline.Editor
             Selection_CheckSelectionChange();
             RegisterEvent(true);
         }
-        
         void OnLostFocus()
         {
             Repaint();
@@ -77,11 +74,6 @@ namespace PJR.Timeline.Editor
             if (CheckRepaintRequired())
                 return;
 
-            if (!State.editingSequence.IsEmpty && !State.editingSequence.Valid)
-            {
-                State.editingSequence = EditingSequare.Empty;
-                return;
-            }
             //trackView的背景，放这是不想它遮住时间尺刻度
             EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
             Draw_Headers(); 
@@ -89,12 +81,83 @@ namespace PJR.Timeline.Editor
             Draw_OverlapGUI();
         }
 
+        /// <summary>
+        /// 最上层的GUI,时间尺右边之类的
+        /// </summary>
         private void Draw_OverlapGUI()
         {
-            if (_state != null)
-                _state.Hotspot?.OnDrawOverlapGUI();
+            if (State != null)
+                State.Hotspot?.OnDrawOverlapGUI();
+            Draw_TimeRulerCursor();
         }
+        
+        /// <summary>
+        /// 有时间尺的游标,就是播放的时候显示当前时间的白线
+        /// </summary>
+        private void Draw_TimeRulerCursor()
+        {
+            if (State.NonEditingSequence())
+                return;
+            //将上面ruler部分和track右边部分合成一个rect
+            var rightTrackView = trackRect;
+            rightTrackView.xMin = timelineRulerRect.xMin;
+            
+            var rulerNTrack = timelineRulerRect;
+            rulerNTrack.yMax = rightTrackView.yMax;
+            
+            var rect = rulerNTrack;
+            //新开一个坐标系
+            GUILayout.BeginArea(rect);
+            //将rect移动回原点方便计算,因为也已经BeginArea了
+            rect.ToOrigin();
+            Handles.BeginGUI();
+            
+            float posX = State.TimeToPixel(State.SequenceHandle.time);
+            float minY = 12f;
+            Handles.DrawLine(new Vector3(posX, rect.height), new Vector3(posX, minY),0);
+            
+            //游标上的帧数
+            if (State.draggingRulerCursor)
+            {
+                var labelWidth = 50f;
+                var originX = posX;
+                var rectLabel = Rect.MinMaxRect(originX - labelWidth / 2, 0, originX + labelWidth / 2, Const.timelineRulerHeight);
+                string cursorLabel = State.ToFrames(State.SequenceHandle.time).ToString();
+                Graphics.ShadowLabel(rectLabel, cursorLabel, Styles.editingRulerClipFrameLabel, Color.white,
+                    Color.black, 14);
+            }
 
+            Handles.EndGUI();
+            GUILayout.EndArea();
+            
+            //拖拽游标
+            var dragRect = timelineRulerRect;
+            dragRect.Debug();
+            dragRect.DragEventCheck(
+                rt =>
+                {
+                    State.draggingRulerCursor = true;
+                    float px = Event.current.mousePosition.x - rt.x;
+                    int f = State.PixelRoundToFrame(px);
+                    if(State.debugging)
+                        Debug.Log($"[px:{px}] [f:{f}]");
+                    State.SequenceHandle.time = State.FromFrames(f);
+                },
+                rt =>
+                {
+                    float px = Event.current.mousePosition.x - rt.x;
+                    int f = State.PixelRoundToFrame(px);
+                    State.SequenceHandle.time = State.FromFrames(f);
+                    State.RefreshWindow(true);
+                },
+                rt =>
+                {
+                    State.draggingRulerCursor = false;
+                    State.RefreshWindow(true);
+                }
+            );
+
+        }
         /// <summary>
         /// 检测是不是要重新绘制
         /// </summary>
@@ -102,9 +165,9 @@ namespace PJR.Timeline.Editor
         {
             if (Event.current.type != EventType.Repaint)
                 return false;
-            if (!State.requireRepaint)
+            if (!State.RequireRepaint)
                 return false;
-            State.requireRepaint = false;
+            State.RequireRepaint = false;
             //GUIUtility.ExitGUI();
             Repaint();
             return true;
@@ -120,7 +183,7 @@ namespace PJR.Timeline.Editor
                 using (new GUILayout.HorizontalScope())
                 {
                     Draw_HeaderEditBar();
-                    Draw_TimelineRuler_New();
+                    Draw_TimelineRuler();
                 }
             }
         }
@@ -137,10 +200,12 @@ namespace PJR.Timeline.Editor
                 Draw_PlayerButton();
                 Draw_NewFrameButton();
                 Draw_GotoEndButton();
+                
+                Draw_TimeCodeGUI();
                 GUILayout.FlexibleSpace();
             }
         }
-
+        
         void Draw_DebugButtons()
         { 
             Draw_RepaintButton();
@@ -269,9 +334,38 @@ namespace PJR.Timeline.Editor
                 {
                     GUILayout.Space(15f);
                     Draw_AddTrackButton();
+                    
                     GUILayout.FlexibleSpace();
                 }
             }
+        }
+
+        void Draw_TimeCodeGUI()
+        {
+            //from unity timeline
+            // const string timeFieldHint = "TimelineWindow-TimeCodeGUI";
+            //
+            // EditorGUI.BeginChangeCheck();
+            // var currentTime = State.EditingSequenceAsset.SequenceAsset != null ? TimeReferenceUtility.ToTimeString(State.EditingSequenceAsset.time, "0.####") : "0";
+            // //var r = EditorGUILayout.GetControlRect(false, EditorGUI.kSingleLineHeight, EditorStyles.toolbarTextField, GUILayout.Width(Const.timeCodeWidth));
+            // var r = EditorGUILayout.GetControlRect(false, 18, EditorStyles.toolbarTextField, GUILayout.Width(Const.timeCodeWidth));
+            // var id = GUIUtility.GetControlID(timeFieldHint.GetHashCode(), FocusType.Keyboard, r);
+            // var newCurrentTime = EditorGUIReflection.DelayedTextField(r, id, GUIContent.none, currentTime, null, EditorStyles.toolbarTextField);
+            //
+            //
+            // if (EditorGUI.EndChangeCheck())
+            // {
+            //     Debug.Log($"newCurrentTime: {newCurrentTime}");
+            //     State.EditingSequenceAsset.time = TimeReferenceUtility.FromTimeString(newCurrentTime);
+            // }
+            
+            //这里先处理以<帧>为单位的的时间修改,后面有需求再加秒
+            if (State.SequenceHandle == null)
+                return;
+            int tFrame = State.ToFrames(State.SequenceHandle.time);
+            tFrame = EditorGUILayout.IntField(tFrame);
+            if (State.SequenceHandle != null && State.SequenceHandle.Valid)
+                State.SequenceHandle.time = State.FromFrames(tFrame);
         }
 
         void Draw_AddTrackButton()
@@ -286,9 +380,9 @@ namespace PJR.Timeline.Editor
         {
             if (State.NonEditingSequence())
                 return;
-            if (!SequenceUnitCreateHelper.CreateTrack(State.editingSequence.Sequence, type))
+            if (!SequenceUnitCreateHelper.CreateTrack(State.SequenceHandle.SequenceAsset, type))
                 return;
-            State.requireRepaint = true;
+            State.RequireRepaint = true;
         }
 
         struct MainScaleMarkInfo
@@ -296,15 +390,22 @@ namespace PJR.Timeline.Editor
             public int patternIndex;
             public int framePerMainScaleMark;
         }
-        void Draw_TimelineRuler_New()
+        void Draw_TimelineRuler()
         {
             if (State.NonEditingSequence())
                 return;
+
+            //将上面ruler部分和track右边部分合成一个rect
+            var rightTrackView = trackRect;
+            rightTrackView.xMin = timelineRulerRect.xMin;
+            
+            var rulerNTrack = timelineRulerRect;
+            rulerNTrack.yMax = rightTrackView.yMax;
     
             EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
-            GUIUtil.CheckWheelEvent(trackRect, evt =>
+            GUIUtil.CheckWheelEvent(rulerNTrack, evt =>
             {
-                UnityEngine.Debug.Log($"[evt.delta.y: {evt.delta.y}]");
+                //UnityEngine.Debug.Log($"[evt.delta.y: {evt.delta.y}]");
                 //滑轮上滑是ZoomIn(sign:-1 unit:-3)
                 var sign = -Mathf.Sign(evt.delta.y);
                 //按比例缩放系数
@@ -314,11 +415,6 @@ namespace PJR.Timeline.Editor
                 Repaint();
             });
 
-            var rightTrackView = trackRect;
-            rightTrackView.xMin = timelineRulerRect.xMin;
-            
-            var rulerNTrack = timelineRulerRect;
-            rulerNTrack.yMax = rightTrackView.yMax;
             
             var rect = rulerNTrack;
             //新开一个坐标系
@@ -362,6 +458,9 @@ namespace PJR.Timeline.Editor
                 framePerMainScaleMark *= Const.RulerScaleMarkingPattern[tScaleIndex++ % Const.RulerScaleMarkingPattern.Length];
                 pixelPerMainScaleMark = pixelPerFrame * framePerMainScaleMark;
             }
+
+
+            int overflowNum = 500;
             
             float totalPixel = 0;
             int index = 0;
@@ -373,9 +472,9 @@ namespace PJR.Timeline.Editor
                     index++
                 )
             {
-                if (index > 300)
+                if (index > overflowNum)
                 {
-                    UnityEngine.Debug.LogWarning("绘制时间尺的循环数>300");
+                    UnityEngine.Debug.LogWarning($"绘制时间尺的循环数>{overflowNum}");
                     break;
                 }
                 
@@ -397,10 +496,10 @@ namespace PJR.Timeline.Editor
                     Handles.DrawLine(new Vector3(totalPixel, timelineRulerRect.height), new Vector3(totalPixel, markMinY),0);
                 }
                 
-                //TrackView背景部分的刻度线
+                //TrackView背景部分的透明的(就是暗点的)刻度线
                 if(index <=0 || framePerScaleMark > Const.MinPixelPerBgScaleMark)
                 {
-                    using(new Handles.DrawingScope(Color.white * 0.533f))
+                    using(new Handles.DrawingScope(Color.white * 0.333f))
                         Handles.DrawLine(new Vector3(totalPixel, rect.height), new Vector3(totalPixel, 0),0);
                 }
             }

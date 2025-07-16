@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 1213707319}
   - component: {fileID: 1213707320}
   - component: {fileID: 1213707321}
+  - component: {fileID: 1213707322}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -331,6 +332,7 @@ MonoBehaviour:
     - Name: TargetBoard
       Entry: 10
       Data: 0
+  color: {r: 0.132, g: 0.231, b: 0.33, a: 1}
 --- !u!114 &1213707321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,3 +380,20 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+--- !u!320 &1213707322
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213707318}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: b62f210781863d546a6601046a66ba23, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings: []
+  m_ExposedReferences:
+    m_References: []

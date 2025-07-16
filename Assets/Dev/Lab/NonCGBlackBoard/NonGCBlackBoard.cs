@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class NonGCBlackBoard : SerializedMonoBehaviour, ICachedValueBoardHolder
 {
+    public Color color;
     [TitleGroup("黑板1"),OdinSerialize]
     [HideReferenceObjectPicker]
     private CacheableValueBoard cacheableValueBoard;

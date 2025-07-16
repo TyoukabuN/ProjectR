@@ -299,7 +299,7 @@ namespace PJR.Timeline.Editor
 
                     if (clipDragging)
                     {
-                        double rangeOffset = windowState.PixelToSecond(clipDrag_draggedPixelOffsetClamped);
+                        double rangeOffset = windowState.PixelToTime(clipDrag_draggedPixelOffsetClamped);
                         IClip.start += rangeOffset;
                         IClip.end += rangeOffset;
                         clipDrag_startPosition = Vector2.zero;
@@ -315,7 +315,7 @@ namespace PJR.Timeline.Editor
                         return;
                     clipDragging = true;
                     float draggedPixelOffset = Event.current.mousePosition.x - clipDrag_startPosition.x;
-                    int frames = TimeUtil.ToFrames(windowState.PixelToSecond(draggedPixelOffset), windowState.CurrentFrameRate);
+                    int frames = TimeUtil.ToFrames(windowState.PixelToTime(draggedPixelOffset), windowState.CurrentFrameRate);
                     //Debug.Log($"[draggedPixelOffset:{draggedPixelOffset}] [frames:{frames}] [valid:{IClip.ValidRangeChangeableByFrame(frames)}]");
                     
                     //后面可能改成纯用帧判断，而不是时间

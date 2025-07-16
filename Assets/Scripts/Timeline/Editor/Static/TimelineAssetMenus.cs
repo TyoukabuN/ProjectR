@@ -15,7 +15,7 @@ namespace PJR.Timeline.Editor
             string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
             assetPath = $"{assetPath}/New_Sequence_Asset.asset";
             assetPath = AssetDatabase.GenerateUniqueAssetPath(assetPath);
-            var asset = ScriptableObject.CreateInstance<Sequence>();
+            var asset = ScriptableObject.CreateInstance<SequenceAsset>();
             asset.name = "Sequence";
             AssetDatabase.CreateAsset(asset, assetPath);
             AssetDatabase.SaveAssets();

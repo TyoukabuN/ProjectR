@@ -9,7 +9,7 @@ namespace PJR.Timeline
 {
     public static class SequenceUnitCreateHelper
     {
-        public static bool CreateTrack(Sequence sequenceAsset,Type clipType)
+        public static bool CreateTrack(SequenceAsset sequenceAssetAsset,Type clipType)
         {
             var clipScriptableObject = ScriptableObject.CreateInstance(clipType);
             clipScriptableObject.name = clipType.Name;
@@ -23,25 +23,25 @@ namespace PJR.Timeline
             //创建Track
             Track track = ScriptableObject.CreateInstance<Track>();
             track.name = "Track";
-            track.Sequence = sequenceAsset;
+            track.sequenceAsset = sequenceAssetAsset;
             track.hideFlags |= HideFlags.HideInInspector;
             //创建clip
-            clip.FrameRateType = sequenceAsset.FrameRateType;
+            clip.FrameRateType = sequenceAssetAsset.FrameRateType;
             clip.StartFrame = 0;
             clip.EndFrame = 5;
-            clip.Sequence = sequenceAsset;
+            clip.sequenceAsset = sequenceAssetAsset;
             clip.hideFlags |= HideFlags.HideInInspector;
             clip.Track = track;
             
             //内部引用
             track.clips = new List<Clip>{ clip };
             //内部SubAsset
-            AssetDatabase.AddObjectToAsset(track, sequenceAsset);
-            AssetDatabase.AddObjectToAsset(clipScriptableObject, sequenceAsset);
+            AssetDatabase.AddObjectToAsset(track, sequenceAssetAsset);
+            AssetDatabase.AddObjectToAsset(clipScriptableObject, sequenceAssetAsset);
 
-            sequenceAsset.Tracks.Add(track);
-            if(sequenceAsset != null)
-                EditorUtility.SetDirty(sequenceAsset);
+            sequenceAssetAsset.Tracks.Add(track);
+            if(sequenceAssetAsset != null)
+                EditorUtility.SetDirty(sequenceAssetAsset);
             AssetDatabase.SaveAssets();
             return true;
         }
@@ -50,11 +50,11 @@ namespace PJR.Timeline
         {
             if (track == null)
                 return false;
-            if (track.Sequence == null)
+            if (track.sequenceAsset == null)
                 return false;
             //移除内部引用
-            if (track.Sequence.Tracks?.Contains(track) ?? false)
-                track.Sequence.Tracks.Remove(track);
+            if (track.sequenceAsset.Tracks?.Contains(track) ?? false)
+                track.sequenceAsset.Tracks.Remove(track);
             //删除ClipAsset
             foreach (var clip in track.clips)
                 if (AssetDatabase.Contains(clip) && AssetDatabase.Contains(clip))

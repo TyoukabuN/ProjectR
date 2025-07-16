@@ -428,7 +428,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf8bb71f6960ed44b824c54696fafb34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sequence: {fileID: 11400000, guid: 815aa537212073043bf3f52e9114b573, type: 2}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  _sequenceAsset: {fileID: 11400000, guid: 815aa537212073043bf3f52e9114b573, type: 2}
   PlayOnAwake: 0
 --- !u!320 &1103173525
 PlayableDirector:

@@ -6,7 +6,7 @@ using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public class Sequence : SerializedScriptableObject, ISequence
+    public class SequenceAsset : SerializedScriptableObject, ISequence
     {
         public EFrameRate frameRateType;
         [OdinSerialize]
@@ -14,6 +14,7 @@ namespace PJR.Timeline
         [DisableIf("@true")]
         public bool runtimeInstance;
         public EFrameRate FrameRateType { get => frameRateType; set => frameRateType = value; }
+        public double FrameRate => FrameRateType.FPS();
         public List<Track> Tracks
         {
             get => _tracks??=new List<Track>(); 

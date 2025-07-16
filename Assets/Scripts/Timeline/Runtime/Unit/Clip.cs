@@ -25,12 +25,13 @@ namespace PJR.Timeline
         public ClipRunner GetRunner();
         public Color GetClipColor();
 #if UNITY_EDITOR
+        public ClipRunner Editor_GetPreviewRunner();
         public void GetContextMenu(GenericMenu menu){}
 #endif
     }
     public interface ISequenceUnit
     {
-       public Sequence Sequence { get; set; }
+       public SequenceAsset sequenceAsset { get; set; }
        public Track Track { get; set; }
     }
     public abstract class Clip : SerializedScriptableObject,ISequenceUnit, IClip
@@ -133,20 +134,21 @@ namespace PJR.Timeline
 
 #if UNITY_EDITOR
         public virtual void GetContextMenu(GenericMenu menu){}
+        public virtual ClipRunner Editor_GetPreviewRunner() => null;
 #endif
 
         #region ISequenceUnit Impl
 
         [OdinSerialize, HideInInspector]
-        private Sequence _sequence;
+        private SequenceAsset _sequenceAsset;
         [OdinSerialize, HideInInspector]
         private Track _track;
 
-        public Sequence Sequence
+        public SequenceAsset sequenceAsset
         {
-            get => _sequence;
+            get => _sequenceAsset;
         #if UNITY_EDITOR
-            set => _sequence = value;
+            set => _sequenceAsset = value;
         #endif
         }
         public Track Track

@@ -29,12 +29,12 @@ namespace PJR.Timeline
         }
         #region ISequenceUnit Impl
         [OdinSerialize, HideInInspector]
-        private Sequence _sequence;
-        public Sequence Sequence
+        private SequenceAsset _sequenceAsset;
+        public SequenceAsset sequenceAsset
         {
-            get => _sequence;
+            get => _sequenceAsset;
 #if UNITY_EDITOR
-            set => _sequence = value;
+            set => _sequenceAsset = value;
 #endif
         }
         Track ISequenceUnit.Track

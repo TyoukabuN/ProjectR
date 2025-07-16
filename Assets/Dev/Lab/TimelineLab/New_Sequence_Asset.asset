@@ -1,47 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7598146098342087857
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adf808bbadaf913459b971daa0838d9d, type: 3}
-  m_Name: Track
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: -1803158325532232275}
-    - {fileID: 11400000}
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: _clips
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[PJR.Timeline.Clip, PJR.Timeline.Runtime]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _sequence
-      Entry: 10
-      Data: 1
 --- !u!114 &-5924321450747703863
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -58,64 +16,26 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000}
     - {fileID: -1644592549630497685}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: _sequence
-      Entry: 10
-      Data: 0
+    - Name: _sequenceAsset
+      Entry: 6
+      Data: 
     - Name: _track
       Entry: 10
-      Data: 1
+      Data: 0
   _frameRateType: 0
   _mute: 0
   _description: 0
-  _start: 0.08333333333333333
-  _end: 2.716666680326064
-  _startFrame: 5
-  _endFrame: 163
+  _start: 0.000000000000000027755575615628914
+  _end: 0.2833333469927309
+  _startFrame: 0
+  _endFrame: 17
   animationClip: {fileID: 7400000, guid: 337aeda223844c24ebcfcdd4a0d6c513, type: 2}
---- !u!114 &-1803158325532232275
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a963fb878a998c84cb6b4e7517bdbfff, type: 3}
-  m_Name: AnimancerClip
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000}
-    - {fileID: -7598146098342087857}
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: _sequence
-      Entry: 10
-      Data: 0
-    - Name: _track
-      Entry: 10
-      Data: 1
-  _frameRateType: 0
-  _mute: 0
-  _description: 
-  _start: 0.1833333333333334
-  _end: 1.1666666803260646
-  _startFrame: 11
-  _endFrame: 70
-  animationClip: {fileID: 7400000, guid: 4fac081162949dc47a3bfe3325988492, type: 2}
 --- !u!114 &-1644592549630497685
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -133,7 +53,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: -5924321450747703863}
-    - {fileID: 11400000}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -155,9 +74,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: _sequence
-      Entry: 10
-      Data: 1
+    - Name: _sequenceAsset
+      Entry: 6
+      Data: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,7 +94,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: -1644592549630497685}
-    - {fileID: -7598146098342087857}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -187,13 +105,10 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 1
     - Name: 
       Entry: 10
       Data: 0
-    - Name: 
-      Entry: 10
-      Data: 1
     - Name: 
       Entry: 13
       Data: 

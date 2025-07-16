@@ -29,7 +29,6 @@ namespace PJR.Timeline
         }
 #endif
     }
-
     public class AnimancerClipRunner : ClipRunner<AnimancerClip>
     {
         public override Type ClipType => typeof(AnimancerClip);
@@ -38,6 +37,8 @@ namespace PJR.Timeline
 
         public AnimancerClipRunner() : base(null){}
         public AnimancerClipRunner(AnimancerClip clip) : base(clip) { }
+
+        public static ClipRunner Get(AnimancerClip clip)=> Pool.ObjectPool<AnimancerClipRunner>.Get()?.Reset(clip);
 
         public override void OnStart(UpdateContext context)
         {
@@ -70,7 +71,7 @@ namespace PJR.Timeline
             base.Dispose();
             Clear();
         }
-        void Clear()
+        private void Clear()
         {
             if (animancerState != null)
                 animancerState.IsPlaying = false;
@@ -78,9 +79,9 @@ namespace PJR.Timeline
 
         public override void Release()
         {
+            Clear();
             Pool.ObjectPool<AnimancerClipRunner>.Release(this);
         }
         
-        public static ClipRunner Get(AnimancerClip clip)=> Pool.ObjectPool<AnimancerClipRunner>.Get()?.Reset(clip);
     }
 }

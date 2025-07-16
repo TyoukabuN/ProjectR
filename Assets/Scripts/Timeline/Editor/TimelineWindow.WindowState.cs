@@ -13,7 +13,13 @@ namespace PJR.Timeline.Editor
         /// </summary>
         public class WindowState
         {
-            public EditingSequare editingSequence;
+            private ISequenceHandle _sequenceHandle;
+            public ISequenceHandle SequenceHandle
+            {
+                get => _sequenceHandle ??= SequenceEditHandle.Empty;
+                set => _sequenceHandle = value;
+            }
+            
             public WindowState()
             {
                 AssetProcessor.OnWillSaveAssetsCall -= OnWillSaveAssetsCall;
@@ -24,7 +30,7 @@ namespace PJR.Timeline.Editor
             private void OnUndoRedoPerformed() => RefreshWindow(true);
 
             public bool IsControlBarDisabled() => !AnyEditingSequence();
-            public bool AnyEditingSequence() => editingSequence.Sequence != null;
+            public bool AnyEditingSequence() => SequenceHandle?.Valid ?? false;
             public bool NonEditingSequence() => !AnyEditingSequence();
 
             /// <summary>
@@ -40,7 +46,12 @@ namespace PJR.Timeline.Editor
             /// </summary>
             public bool debugging = false;
 
-            public bool requireRepaint = false;
+            private bool _requireRepaint = false;
+            public bool RequireRepaint
+            {
+                get=> _requireRepaint;
+                set => _requireRepaint = value;
+            }
 
             private TrackGUI trackGUI;
             public TrackGUI TrackGUI => trackGUI ??= new TrackGUI();
@@ -86,12 +97,16 @@ namespace PJR.Timeline.Editor
 
             #endregion
 
+            public bool draggingRulerCursor = false;
+
             #region 一些单位转换用的方法
             public int PixelToFrame(float pixel)=>(int)(pixel / currentPixelPerFrame);
-            public double PixelToSecond(float pixel)=> (int)(pixel / currentPixelPerFrame) / CurrentFrameRate;
+            public int PixelRoundToFrame(float pixel)=>Mathf.RoundToInt(pixel / currentPixelPerFrame);
+            public double PixelToTime(float pixel)=> (int)(pixel / currentPixelPerFrame) / CurrentFrameRate;
             public float FrameToPixel(int frames)=> frames * currentPixelPerFrame;
             public float TimeToPixel(double time) => (float)(time * CurrentFrameRate * currentPixelPerFrame);
-
+            public int ToFrames(double time)=> TimeUtil.ToFrames(time,CurrentFrameRate);
+            public double FromFrames(int frames) => TimeUtil.FromFrames(frames, CurrentFrameRate);
             public double CurrentFrameRate => Define.FPS_Default;
             public double CurrentSecondPerFrame => 1 / CurrentFrameRate;
             #endregion
@@ -105,10 +120,10 @@ namespace PJR.Timeline.Editor
             /// <param name="paths"></param>
             private void OnWillSaveAssetsCall(string[] paths)
             {
-                if (editingSequence.Sequence == null)
+                if (SequenceHandle.SequenceAsset == null)
                     return;
                     
-                var seqPath = AssetDatabase.GetAssetPath(editingSequence.Sequence);
+                var seqPath = AssetDatabase.GetAssetPath(SequenceHandle.SequenceAsset);
                 if (string.IsNullOrEmpty(seqPath))
                     return;
                 
@@ -125,11 +140,11 @@ namespace PJR.Timeline.Editor
 
             public bool TrySetSequenceAssetDirty(string undoName = null)
             {
-                if (editingSequence.Sequence == null)
+                if (SequenceHandle.SequenceAsset == null)
                     return false;
                 undoName ??= Default_UndoName;
-                Undo.RecordObject(editingSequence.Sequence, undoName);
-                EditorUtility.SetDirty(editingSequence.Sequence);
+                Undo.RecordObject(SequenceHandle.SequenceAsset, undoName);
+                EditorUtility.SetDirty(SequenceHandle.SequenceAsset);
                 instance.hasUnsavedChanges = true;
                 return true;
             }
@@ -138,7 +153,7 @@ namespace PJR.Timeline.Editor
                 if (!TrySetSequenceAssetDirty(undoName))
                     return false;
                 instance.hasUnsavedChanges = false;
-                AssetDatabase.SaveAssetIfDirty(editingSequence.Sequence);
+                AssetDatabase.SaveAssetIfDirty(SequenceHandle.SequenceAsset);
                 return true;
             }
             
@@ -149,28 +164,56 @@ namespace PJR.Timeline.Editor
                     instance.Repaint();
                     return;
                 }
-                requireRepaint = true;
+                _requireRepaint = true;
             }
 
             public bool IsEditingAPrefabAsset() => true;
         }
 
-        public struct EditingSequare
+        public class SequenceEditHandle : ISequenceHandle
         {
-            public static EditingSequare Empty = new() { _isEmpty = true };
-            private bool _isEmpty;
+            public static SequenceEditHandle Empty = new() { _isEmpty = true };
+            private bool _isEmpty = false;
             public bool IsEmpty => _isEmpty;
-            public Sequence Sequence;
-            public GameObject GameObject;
-
-            public EditingSequare(Sequence sequence)
-            {
-                Sequence = sequence;
-                _isEmpty = false;
-                GameObject = null;
+            private SequenceAsset _sequenceAssetAsset;
+            private SequenceDirector _sequenceDirector;
+            private double _time_test = 0;
+            public double time {
+                get => _time_test;
+                set => _time_test = value;
             }
+            public bool Valid => SequenceAsset != null && SequenceAsset != null;
 
-            public bool Valid => Sequence != null && Sequence != null;
+            public SequenceAsset SequenceAsset
+            {
+                get => _sequenceAssetAsset;
+                set => _sequenceAssetAsset = value;
+            }
+            public SequenceDirector Director
+            {
+                get => _sequenceDirector;
+                set => _sequenceDirector = value;
+            }
+            public double ToGlobalTime(double t) => t;
+            public double ToLocalTime(double t)=> t;
+
+            public static SequenceEditHandle Get(SequenceAsset sequenceAssetAsset)
+            {
+                var temp = UnityEngine.Pool.GenericPool<SequenceEditHandle>.Get();
+                temp._sequenceAssetAsset = sequenceAssetAsset;
+                temp._sequenceDirector = null;
+                temp._isEmpty = false;
+                temp._time_test = 0;
+                return temp;
+            }
+            public void Release()
+            {
+                _sequenceAssetAsset = null;
+                _sequenceDirector = null;
+                _isEmpty = false;
+                _time_test = 0;
+                UnityEngine.Pool.GenericPool<SequenceEditHandle>.Release(this);
+            }
         }
     }
 }

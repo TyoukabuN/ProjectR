@@ -32,6 +32,9 @@ namespace PJR.Timeline.Editor
 
         public const float timelineAreaYPosition = 19.0f;
         public const float timelineRulerHeight = 21.0f;
+        /// <summary>
+        /// 不想让时间尺太靠近分割线
+        /// </summary>
         public const float timelineRulerXOffset = 6;
         public const float timelineRulerPreSpace = 5.0f;
         public const float clipStartOffsetY = 3;

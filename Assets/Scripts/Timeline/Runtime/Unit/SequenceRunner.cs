@@ -32,54 +32,57 @@ namespace PJR.Timeline
             }
         }
         public bool IsRunning => State == EState.Running;
-
         public List<TrackRunner> trackRunner => _trackRunners;
         public double FrameUpdateFrequency => _secondPerFrame;
 
+        public double TotalTime
+        {
+            get => _totalTime; 
+            set => _totalTime = value;
+        }
 
         List<TrackRunner> _trackRunners;
-        private Sequence _sequence;
+        private SequenceAsset _sequenceAsset;
 
         double _totalTime = 0f;
         double _unscaleTotalTime = 0f;
         double _secondPerFrame = 0f;
         double _frameUpdateCounter = 0f;
         GameObject _gameObject;
-
         UpdateContext _updateContext;
 
         public SequenceRunner()
         { 
         }
-        public SequenceRunner(GameObject gameObject, Sequence sequence)
+        public SequenceRunner(GameObject gameObject, SequenceAsset sequenceAsset)
         {
-            Reset(gameObject, sequence);
+            Reset(gameObject, sequenceAsset);
         }
 
-        public void Reset(GameObject gameObject, Sequence sequence)
+        public void Reset(GameObject gameObject, SequenceAsset sequenceAsset)
         {
             _gameObject = gameObject;
-            _sequence = sequence;
+            _sequenceAsset = sequenceAsset;
 
-            if (_sequence == null)
+            if (_sequenceAsset == null)
             { 
                 State = EState.Failure;
                 return;
             }
-            if (!_sequence.IsValid())
+            if (!_sequenceAsset.IsValid())
             { 
                 State = EState.Done;
                 return;
             }
 
             _trackRunners = UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Get();
-            for (int i = 0; i < _sequence.Tracks.Count; i++)
+            for (int i = 0; i < _sequenceAsset.Tracks.Count; i++)
             { 
-                var track = _sequence.Tracks[i];
+                var track = _sequenceAsset.Tracks[i];
                 if (!track.IsValid())
                     continue;
                 var trackRunner = TrackRunner.Get();
-                trackRunner.Reset(_sequence, track);
+                trackRunner.Reset(_sequenceAsset, track);
                 if (trackRunner.Invalid)
                 {
                     trackRunner.Release();
@@ -200,7 +203,7 @@ namespace PJR.Timeline
         }
 
         public double GetTimeScale() => Time.timeScale;
-        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.FrameRateType ?? EFrameRate.Game);
+        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequenceAsset?.FrameRateType ?? EFrameRate.Game);
 
         void StartTrackRunner(TrackRunner clipHandle) => clipHandle?.OnStart();
         void DisposeTrackRunner(TrackRunner clipHandle) => clipHandle?.Dispose();
@@ -230,7 +233,7 @@ namespace PJR.Timeline
             }
 
             State = EState.Diposed;
-            _sequence = null;
+            _sequenceAsset = null;
 
             _totalTime = 0f;
             _unscaleTotalTime = 0f;

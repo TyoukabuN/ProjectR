@@ -39,10 +39,15 @@ namespace PJR.Timeline.Editor
 
         public static Vector2 msPos => Event.current.mousePosition;
 
-        public static void DragEventCheck(this Rect position, Action<Rect> OnMouseDrag)
+        public static void UseCurrentEvent()
+        {
+            Event.current.Use();
+        }
+
+        public static void DragEventCheck(this Rect position, Action<Rect> onMouseDrag, Action<Rect> onMouseDown = null,Action<Rect> onMouseUp = null)
         {
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
-            if (OnMouseDrag == null)
+            if (onMouseDrag == null)
             {
                 controlID.CleaHotControl();
                 return;
@@ -53,29 +58,29 @@ namespace PJR.Timeline.Editor
                 case EventType.MouseDown:
                 {
                     if (position.Contains(msPos) && Event.current.button == 0)
+                    {
                         controlID.AsHotControl();
+                        onMouseDown?.Invoke( position);
+                    }
                     break;
                 }
                 case EventType.MouseUp:
                 {
                     controlID.CleaHotControl();
+                    onMouseUp?.Invoke( position);
                     break;
                 }
                 case EventType.MouseDrag:
                 {
                     if (GUIUtility.hotControl != controlID)
                         return;
-                    OnMouseDrag.Invoke(position);
+                    onMouseDrag.Invoke(position);
                     EventType.MouseDrag.Use();
                     break;
                 }
             }
         }
-        
-        public static void UseCurrentEvent()
-        {
-            Event.current.Use();
-        }
+
         public static void Use(this EventType eventType)
         {
             //走通用的use,不然后面use多起来了,都不知道哪里use了

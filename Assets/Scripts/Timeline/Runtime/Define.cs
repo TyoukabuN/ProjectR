@@ -1,4 +1,8 @@
+using System;
+using System.Globalization;
+using System.Reflection;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 
 namespace PJR.Timeline
@@ -92,5 +96,141 @@ namespace PJR.Timeline
         public const string ErrCode_ClipRunner_ClipTypeNotMatched = "[ClipRunner] clip.ClipType not matched with clipHandle.ClipType";
 
         public delegate ClipRunner Clip2ClipHandleFunc(IClip clip);
+        
+       
+    }
+    
+    public enum TimeReferenceMode
+    {
+        Local = 0,
+        Global = 1
+    }
+    
+    public enum TimeFormat
+    {
+        /// <summary>Displays time values as frames.</summary>
+        Frames,
+
+        /// <summary>Displays time values as timecode (SS:FF) format.</summary>
+        Timecode,
+
+        /// <summary>Displays time values as seconds.</summary>
+        Seconds
+    }
+    
+    public static class TimeDisplayUnitExtensions
+    {
+        // public static TimeArea.TimeFormat ToTimeAreaFormat(this TimeFormat timeDisplayUnit)
+        // {
+        //     switch (timeDisplayUnit)
+        //     {
+        //         case TimeFormat.Frames: return TimeArea.TimeFormat.Frame;
+        //         case TimeFormat.Timecode: return TimeArea.TimeFormat.TimeFrame;
+        //         case TimeFormat.Seconds: return TimeArea.TimeFormat.None;
+        //     }
+        //
+        //     return TimeArea.TimeFormat.Frame;
+        // }
+
+        public static string ToTimeString(this TimeFormat timeFormat, double time, double frameRate, string format = "f2")
+        {
+            switch (timeFormat)
+            {
+                case TimeFormat.Frames: return TimeUtil.TimeAsFrames(time, frameRate, format);
+                case TimeFormat.Timecode: return TimeUtil.TimeAsTimeCode(time, frameRate, format);
+                case TimeFormat.Seconds: return time.ToString(format, (IFormatProvider)CultureInfo.InvariantCulture.NumberFormat);
+            }
+
+            return time.ToString(format);
+        }
+
+        public static string ToTimeStringWithDelta(this TimeFormat timeFormat, double time, double frameRate, double delta, string format = "f2")
+        {
+            const double epsilon = 1e-7;
+            var result = ToTimeString(timeFormat, time, frameRate, format);
+            if (delta > epsilon || delta < -epsilon)
+            {
+                var sign = ((delta >= 0) ? "+" : "-");
+                var deltaStr = ToTimeString(timeFormat, Math.Abs(delta), frameRate, format);
+                return $"{result} ({sign}{deltaStr})";
+            }
+            return result;
+        }
+
+        public static double FromTimeString(this TimeFormat timeFormat, string timeString, double frameRate, double defaultValue)
+        {
+            double time = defaultValue;
+            switch (timeFormat)
+            {
+                case TimeFormat.Frames:
+                    if (!double.TryParse(timeString, NumberStyles.Any, CultureInfo.InvariantCulture, out time))
+                        return defaultValue;
+                    time = TimeUtil.FromFrames(time, frameRate);
+                    break;
+                case TimeFormat.Seconds:
+                    time = TimeUtil.ParseTimeSeconds(timeString, frameRate, defaultValue);
+                    break;
+                case TimeFormat.Timecode:
+                    time = TimeUtil.ParseTimeCode(timeString, frameRate, defaultValue);
+                    break;
+                default:
+                    time = defaultValue;
+                    break;
+            }
+
+            return time;
+        }
+    }
+    
+    public static class EditorGUIReflection
+    {
+        private static Type _editorGuiType;
+        private static MethodInfo _delayedTextFieldMethod;
+
+        static EditorGUIReflection()
+        {
+            // 获取EditorGUI类型（来自UnityEditor.CoreModule.dll）
+            _editorGuiType = Type.GetType("UnityEditor.EditorGUI, UnityEditor.CoreModule");
+        
+            // 获取方法信息
+            _delayedTextFieldMethod = _editorGuiType.GetMethod(
+                "DelayedTextFieldInternal",
+                BindingFlags.Static | BindingFlags.NonPublic,
+                null,
+                new Type[] {
+                    typeof(Rect),
+                    typeof(int),
+                    typeof(GUIContent),
+                    typeof(string),
+                    typeof(string),
+                    typeof(GUIStyle)
+                },
+                null);
+        }
+
+        public static string DelayedTextField(
+            Rect position,
+            int id,
+            GUIContent label,
+            string value,
+            string allowedLetters = null,
+            GUIStyle style = null)
+        {
+            // 设置默认参数
+            allowedLetters = allowedLetters ?? string.Empty;
+            style = style ?? EditorStyles.textField;
+
+            // 通过反射调用方法
+            return (string)_delayedTextFieldMethod.Invoke(
+                null,
+                new object[] {
+                    position,
+                    id,
+                    label,
+                    value,
+                    allowedLetters,
+                    style
+                });
+        }
     }
 }

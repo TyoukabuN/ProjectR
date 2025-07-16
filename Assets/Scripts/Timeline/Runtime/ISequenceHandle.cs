@@ -1,20 +1,16 @@
 namespace PJR.Timeline
 {
+    /// <summary>
+    /// 可以直接用来控制播放
+    /// </summary>
     public interface ISequenceHandle
     {
-        public Sequence Sequence { get; }
-        public SequenceRunner GetSequenceRunner();
-    }
-    public class SequenceHandle : ISequenceHandle
-    {
-        private Sequence _sequence;
-        public Sequence Sequence => _sequence;
-        public SequenceHandle(Sequence sequence) => _sequence = sequence;
-
-        public static implicit operator Sequence(SequenceHandle handle)
-        {
-            return handle.Sequence;
-        }
-        public virtual SequenceRunner GetSequenceRunner() => null;
+        double time { get; set; }
+        bool Valid { get; }
+        SequenceAsset SequenceAsset { get; }
+        SequenceDirector Director { get; }
+        double ToGlobalTime(double t);
+        double ToLocalTime(double t);
+        void Release();
     }
 }

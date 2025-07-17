@@ -13,7 +13,7 @@ namespace InfinityCode.UltimateEditorEnhancer
 {
     public static partial class Prefs
     {
-        public static bool hierarchyBookmarks = true;
+        public static bool hierarchyBookmarks = false;
         public static bool hierarchyRowBackground = true;
         public static HierarchyRowBackgroundStyle hierarchyRowBackgroundStyle = HierarchyRowBackgroundStyle.gradient;
         public static bool hierarchyEnableGameObject = true;

@@ -30,9 +30,19 @@ namespace PJR.Timeline.Editor
             /// <summary>
             /// 当前每帧所占像素(px/f)
             /// </summary>
-            public float currentPixelPerFrame = Const.DefaultPixelPerFrame;
+            public float currentPixelPerFrame
+            {
+                get => _currentPixelPerFrame;
+                set
+                {
+                    if()
+                    _currentPixelPerFrame = value;
+                }
+            }
+            private float _currentPixelPerFrame = Const.DefaultPixelPerFrame;
+
             /// <summary>
-            /// 当前PixelPerFrame缩放系数
+            /// 当前PixelPerFrame缩放系数，用在鼠标滚轮事件回调修改currentPixelPerFrame那
             /// </summary>
             public float currentPixelPerFrameScaleFactor = Const.DefaultPixelPerFrameScaleFactor;
             /// <summary>

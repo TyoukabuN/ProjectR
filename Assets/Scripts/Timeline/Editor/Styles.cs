@@ -49,6 +49,7 @@ namespace PJR.Timeline.Editor
 
         //Unity Default Resources
         public static readonly GUIContent playContent = L10n.IconContent("Animation.Play", "Play the timeline (Space)");
+        public static readonly GUIContent pauseContent = L10n.IconContent("d_PauseButton", "Pause the timeline (Space)");
         public static readonly GUIContent gotoBeginingContent = L10n.IconContent("Animation.FirstKey", "Go to the beginning of the timeline (Shift+<)");
         public static readonly GUIContent gotoEndContent = L10n.IconContent("Animation.LastKey", "Go to the end of the timeline (Shift+>)");
         public static readonly GUIContent nextFrameContent = L10n.IconContent("Animation.NextKey", "Go to the next frame");

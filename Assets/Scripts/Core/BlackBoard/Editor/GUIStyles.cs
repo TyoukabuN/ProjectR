@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using UnityEngine;
 using UnityEditor;
 
@@ -24,3 +26,4 @@ namespace PJR.BlackBoard.Editor
         }
     }
 }
+#endif

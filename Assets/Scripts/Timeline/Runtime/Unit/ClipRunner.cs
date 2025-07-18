@@ -4,7 +4,7 @@ using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public abstract class ClipRunner : PoolableObject , IDisposable
+    public abstract class ClipRunner : PoolableObject
     {
         public enum EState
         {
@@ -31,6 +31,7 @@ namespace PJR.Timeline
         public bool WaitingForStart => State == EState.None;
         public bool Running => State == EState.Running;
         public bool Done => State == EState.Done;
+        public bool IsFailure => State == EState.Failure;
 
         public abstract Type ClipType { get; }
         public abstract Clip Clip {get;}
@@ -46,7 +47,7 @@ namespace PJR.Timeline
         public virtual void OnEnd() { State = EState.Done; }
         public virtual void OnDispose() { State = EState.Diposed; }
 
-        public virtual void Dispose()
+        public override void Clear()
         {
             State = EState.Diposed;
             error = string.Empty;
@@ -65,7 +66,7 @@ namespace PJR.Timeline
         {
             if (updateContext == null)
                 return 0;
-            return (float)(updateContext.Value.totalTime - Clip.start);
+            return (float)updateContext.Value.totalTime - (float)Clip.start;
         }
         
         public Action<EState, EState> OnStateChanged;
@@ -99,9 +100,9 @@ namespace PJR.Timeline
             return this;
         }
 
-        public override void Dispose()
+        public override void Clear()
         {
-            base.Dispose();
+            base.Clear();
             _clip = null;
         }
     }

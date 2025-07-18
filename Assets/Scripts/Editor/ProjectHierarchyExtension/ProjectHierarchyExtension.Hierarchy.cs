@@ -1,9 +1,15 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using InfinityCode.UltimateEditorEnhancer;
 using UnityEngine;
 using UnityEditor;
 using PJR.ClassExtension;
-using PJR.Editor;
+using InfinityCode.UltimateEditorEnhancer.Integration;
+using PJR.Timeline;
+using PJR.Timeline.Editor;
+using Sirenix.Utilities.Editor;
+using Debug = UnityEngine.Debug;
+using Styles = PJR.Editor.Styles;
 
 namespace PJR
 {
@@ -65,6 +71,73 @@ namespace PJR
             textEditor.text = guid;
             textEditor.OnFocus();
             textEditor.Copy();
+        }
+    }
+    
+    [InitializeOnLoad]
+    public static class SequenceDirectorButton
+    {
+        private static Texture2D offTexture;
+
+        static SequenceDirectorButton()
+        {
+            HierarchyItemDrawer.Register("SequenceDirectorButton", OnHierarchyItem, 100);
+        }
+
+        public static bool Contain(GameObject gameObject)
+        {
+            return gameObject.GetComponent<SequenceDirector>() != null;
+        }
+        private static void OnHierarchyItem(HierarchyItem item)
+        {
+            if (item.gameObject == null) return;
+
+            Event e = Event.current;
+
+            bool contain = Contain(item.gameObject);
+            if (!contain)
+                return;
+
+            Rect rect = item.rect;
+            Rect r = new Rect(rect.xMax - 16, rect.y, 16, rect.height);
+            if (Cinemachine.ContainBrain(item.gameObject)) r.x -= 16;
+
+            string tooltip = "Open PJR.TimelineWindow";
+            GUIContent content = TempContent.Get(DirectorIcon.image, tooltip);
+            
+            //右键
+            if (e.type == EventType.MouseUp && e.button == 1 && r.Contains(e.mousePosition))
+            {
+                e.Use();
+            }
+
+            bool onFocus = TimelineWindow.Selection_IsObjectFocused(item.gameObject);
+
+            if (onFocus)
+            {
+                GUIHelper.PushColor(Color.green, true);
+            }
+            if (GUI.Button(r, content, GUIStyle.none))
+            {
+                TimelineWindow.ShowWindow()?.Selection_TrySelectObject(item.gameObject);
+            }
+
+            if (onFocus)
+            {
+                GUIHelper.PopColor();
+            }
+            item.rect.xMax -= 16;
+        }
+        
+        
+        private static GUIContent _directorIcon;
+        public static GUIContent DirectorIcon
+        {
+            get
+            {
+                if (_directorIcon == null) _directorIcon = EditorGUIUtility.IconContent("d_PlayableDirector Icon");
+                return _directorIcon;
+            }
         }
     }
 }

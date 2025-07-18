@@ -31,7 +31,7 @@ MonoBehaviour:
   _frameRateType: 0
   _mute: 0
   _description: 0
-  _start: 0.000000000000000027755575615628914
+  _start: 0
   _end: 0.8000001311302185
   _startFrame: 0
   _endFrame: 48

@@ -1,4 +1,5 @@
-using PJR.Core.BlackBoard.CachedValueBoard;
+#if  UNITY_EDITOR
+
 using PJR.BlackBoard.Inspector;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -275,3 +276,4 @@ namespace PJR.BlackBoard.Editor.Drawers
         }
     }
 }
+#endif

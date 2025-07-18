@@ -2,14 +2,15 @@
 using PJR.Timeline.Pool;
 using UnityEditor;
 using UnityEngine;
+using Object = System.Object;
 
 namespace PJR.Timeline
 {
     public partial class SequenceDirector
     {
-        public class SequenceHandle : PoolableObject, ISequencePlayableHandle, IDisposable
+        public class SequenceHandle : PoolableObject, ISequencePlayableHandle
         {
-            public double time
+            public virtual float time
             {
                 get
                 {
@@ -19,16 +20,15 @@ namespace PJR.Timeline
                 }
                 set
                 {
-                    if (!Valid || _director._sequenceRunner == null)
-                        return;
-                    _director._sequenceRunner.TotalTime = value;   
+                    //runtime就不改了
                 }
             }
             public bool Valid => Director != null;
             public SequenceAsset SequenceAsset => Director?.SequenceAsset;
             public SequenceDirector Director => _director;
-            private SequenceDirector _director;
-            
+            protected SequenceDirector _director;
+            public UnityEngine.Object Object => _director?.gameObject;
+            public SequenceRunner SequenceRunner => _director?.GetRunner();
             public SequenceHandle(){}
             public SequenceHandle(SequenceDirector director)=>_director = director;
             public static SequenceHandle Get(SequenceDirector director)
@@ -37,51 +37,28 @@ namespace PJR.Timeline
                 temp._director = director;
                 return temp;
             }
-            public void Dispose()
+            public override void Clear()
             {
                 _director = null;
             }
             public override void Release() => ObjectPool<SequenceHandle>.Release(this);
-            public double ToGlobalTime(double t) => t;
-            public double ToLocalTime(double t) => t;
+            public virtual  double ToGlobalTime(double t) => t;
+            public virtual double ToLocalTime(double t) => t;
 
-            bool ISequencePlayableHandle.IsPlaying()
+            public virtual bool IsPlaying()
             {
                 if (!Valid || _director._sequenceRunner == null)
                     return false;
                 return _director._sequenceRunner.IsRunning;
             }
-            void ISequencePlayableHandle.Play()
+            public virtual void Play()
             {
-                if (!Valid) 
-                    return;
-                if (_director._sequenceRunner != null)
-                {
-                    if (_director._sequenceRunner.State == SequenceRunner.EState.Diposed)
-                    {
-                        _director._sequenceRunner.Release();
-                        _director._sequenceRunner = null;
-                    }
-                    else
-                        _director._sequenceRunner.State = SequenceRunner.EState.Running;
-                }
-
-                
-                
-                if (_director._sequenceRunner == null)
-                    _director._sequenceRunner = _director.GetRunner();
             }
-            void ISequencePlayableHandle.Pause()
+            public virtual void Pause()
             {
-                if (!Valid || _director._sequenceRunner == null) 
-                    return;
-                _director._sequenceRunner.State = SequenceRunner.EState.Paused;
             }
-            void ISequencePlayableHandle.Reset()
+            public virtual void Stop()
             {
-                if (!Valid || _director._sequenceRunner == null) 
-                    return;
-                _director._sequenceRunner.Release();
             }
         }
     }

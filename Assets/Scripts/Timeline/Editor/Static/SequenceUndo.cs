@@ -24,7 +24,7 @@ namespace PJR.Timeline
             for (var i = 0; i < thingsToDirty.Length; i++)
             {
                 if (thingsToDirty[i] is Track track)
-                    track.MarkDirty();
+                    track.Editor_MarkDirty();
                 EditorUtility.SetDirty(thingsToDirty[i]);
             }
 
@@ -40,7 +40,7 @@ namespace PJR.Timeline
             {
                 var track = thingToDirty as Track;
                 if (track != null)
-                    track.MarkDirty();
+                    track.Editor_MarkDirty();
 
                 EditorUtility.SetDirty(thingToDirty);
                 Undo.RegisterCompleteObjectUndo(thingToDirty, UndoName(operation));

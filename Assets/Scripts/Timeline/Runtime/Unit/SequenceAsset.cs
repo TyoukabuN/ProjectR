@@ -20,7 +20,9 @@ namespace PJR.Timeline
             get => _tracks??=new List<Track>(); 
             set => _tracks = value;
         }
-        public void MarkDirty()
+
+#if UNITY_EDITOR
+        public void Editor_MarkDirty()
         {
             EditorUtility.SetDirty(this);
             if (_tracks == null)
@@ -28,9 +30,10 @@ namespace PJR.Timeline
             for (var i = 0; i < _tracks.Count; i++)
             {
                 var track = _tracks[i];
-                track.MarkDirty();
+                track.Editor_MarkDirty();
             }
         }
+#endif
     }
     public interface ISequence
     {

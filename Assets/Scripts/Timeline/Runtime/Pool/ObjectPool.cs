@@ -8,10 +8,19 @@ namespace PJR.Timeline.Pool
     /// 可以将Dispose当作Clear方法来实现,作用都是清理
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public static class ObjectPool<T> where T : PoolableObject, IDisposable, new()
+    public static class ObjectPool<T> where T : PoolableObject, new()
     {
         static UnityEngine.Pool.ObjectPool<T> _pool;
-        static UnityEngine.Pool.ObjectPool<T> pool => _pool ??= new UnityEngine.Pool.ObjectPool<T>(() => new T(), null, obj=>obj.Dispose(), null, false);
+
+        private static UnityEngine.Pool.ObjectPool<T> pool
+            => _pool ??= new UnityEngine.Pool.ObjectPool<T>
+            (
+                () => new T(), 
+                null,
+                obj => obj.Clear(),
+                null,
+                false
+            );
 
         public static T Get()
         {
@@ -31,6 +40,7 @@ namespace PJR.Timeline.Pool
     public abstract class PoolableObject 
     {
         public bool IsReleased = false;
+        public abstract void Clear();
         public abstract void Release();
         public static bool operator ==(PoolableObject lhs, object rhs)
         {

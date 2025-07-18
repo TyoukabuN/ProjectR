@@ -23,6 +23,7 @@ namespace PJR.Timeline
         string GetClipName();
         string GetClipInfo();
         public ClipRunner GetRunner();
+        public ClipRunner GetPreviewRunner();
         public Color GetClipColor();
 #if UNITY_EDITOR
         public ClipRunner Editor_GetPreviewRunner();
@@ -31,7 +32,11 @@ namespace PJR.Timeline
     }
     public interface ISequenceUnit
     {
-       public SequenceAsset sequenceAsset { get; set; }
+        public SequenceAsset sequenceAsset
+        {
+            get;
+            set;
+        }
        public Track Track { get; set; }
     }
     public abstract class Clip : SerializedScriptableObject,ISequenceUnit, IClip
@@ -41,9 +46,7 @@ namespace PJR.Timeline
         public EFrameRate FrameRateType
         {
             get => _frameRateType;
-    #if UNITY_EDITOR
             set => _frameRateType = value;
-    #endif
         }
         [LabelText("禁用"), SerializeField]
         private bool _mute = false;
@@ -69,6 +72,8 @@ namespace PJR.Timeline
             {
                 _start = value;
                 _startFrame = TimeUtil.ToFrames(value, FrameRate);
+                if (_startFrame <= 0)
+                    _start = 0;
             }
         }
         /// <summary>
@@ -130,6 +135,7 @@ namespace PJR.Timeline
             return false;
         }
         public abstract ClipRunner GetRunner();
+        public virtual ClipRunner GetPreviewRunner() => GetRunner();
         public virtual Color GetClipColor() => Color.green;
 
 #if UNITY_EDITOR
@@ -147,23 +153,21 @@ namespace PJR.Timeline
         public SequenceAsset sequenceAsset
         {
             get => _sequenceAsset;
-        #if UNITY_EDITOR
             set => _sequenceAsset = value;
-        #endif
         }
         public Track Track
         {
             get => _track;
-#if UNITY_EDITOR
             set => _track = value;
-#endif
         }
         #endregion
         
-        public void MarkDirty()
+#if UNITY_EDITOR
+        public void Editor_MarkDirty()
         {
             EditorUtility.SetDirty(this);
         }
+#endif
     }
 
     /// <summary>

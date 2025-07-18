@@ -1,4 +1,5 @@
-﻿using PJR.BlackBoard.Inspector;
+﻿#if  UNITY_EDITOR
+using PJR.BlackBoard.Inspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 
@@ -52,3 +53,4 @@ namespace PJR.BlackBoard.Editor.Drawers
         }
     }
 }
+#endif

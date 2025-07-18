@@ -1,3 +1,5 @@
+using System;
+
 namespace PJR.Timeline
 {
     /// <summary>
@@ -5,10 +7,10 @@ namespace PJR.Timeline
     /// </summary>
     public interface ISequenceHandle
     {
-        double time { get; set; }
+        float time { get; set; }
         bool Valid { get; }
         SequenceAsset SequenceAsset { get; }
-        SequenceDirector Director { get; }
+        UnityEngine.Object Object { get; }
         double ToGlobalTime(double t);
         double ToLocalTime(double t);
         void Release();
@@ -16,9 +18,11 @@ namespace PJR.Timeline
 
     public interface ISequencePlayableHandle : ISequenceHandle
     {
+        SequenceDirector Director { get; }
+        SequenceRunner SequenceRunner { get; }
         bool IsPlaying();
         void Play();
         void Pause();
-        void Reset();
+        void Stop();
     }
 }

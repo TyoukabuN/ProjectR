@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using PJR.BlackBoard;
 using PJR.BlackBoard.Inspector;
-using PJR.Core;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Pool;
+
+#if UNITY_EDITOR
+using Sirenix.OdinInspector.Editor;
+#endif
 
 namespace PJR.Core.BlackBoard.CachedValueBoard
 {
@@ -94,13 +96,6 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
 #if UNITY_EDITOR
         public bool ShowBoardValueReference => UsingValueFromBoard && AnyBoardValueReference;
         public bool ShowBoardValueGainButton => UsingValueFromBoard && !AnyBoardValueReference;
-        
-        // [HorizontalGroup("Value/BoardValue")] 
-        // [Button("获取黑板值")]
-        // [ShowIf("ShowBoardValueGainButton")]
-        // public void Editor_FindBoard()
-        // {
-        // }
 #endif
     }
     

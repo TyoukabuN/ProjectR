@@ -20,14 +20,15 @@ namespace PJR.Timeline.Editor
                 return;
             if (Selection.activeObject == null)
                 return;
+            Selection_CheckSpecificObject(Selection.activeObject);
+        }
+        
+        public void Selection_CheckSpecificObject(Object obj)
+        {
             ISequenceHandle handle = null;
-            if (IsSequenceAssetSelected(Selection.activeObject, out handle))
+            if (IsSequenceAssetSelected(obj, out handle))
             {
                 //选中Project里的SequenceAsset
-            }
-            else if (IsGameObjectSelected(Selection.activeObject, out handle))
-            {
-                //选中Hierarchy里的MonoSequenceHandle
             }
             if (handle == null)
             {
@@ -38,6 +39,7 @@ namespace PJR.Timeline.Editor
             instance.State.SequenceHandle = handle;
             instance.State.RefreshWindow(true);
         }
+
 
         static bool IsSequenceAssetSelected(Object activeObject,out ISequenceHandle holder)
         {
@@ -62,6 +64,33 @@ namespace PJR.Timeline.Editor
                 return false;
             holder = director.GetHandle();
             return true;
+        }
+        public void Selection_TrySelectObject(Object obj)
+        {
+            ISequenceHandle handle = null;
+
+            if (!Selection_TryGetSequenceHandle(obj, out handle))
+                return;
+            
+            instance.State.SequenceHandle = handle;
+            instance.State.RefreshWindow(true);
+        }
+        public bool Selection_TryGetSequenceHandle(Object obj,out ISequenceHandle handle)
+        {
+            if (IsSequenceAssetSelected(obj, out handle))
+                return true;
+            if (IsGameObjectSelected(obj, out handle))
+                return true;
+            return false;
+        }
+
+        public static bool Selection_IsObjectFocused<T>(T obj) where T : UnityEngine.Object
+        {
+            if (ReferenceEquals(obj,null))
+                return false;
+            if (instance == null)
+                return false;
+            return instance.State.SequenceHandle?.Object == obj;
         }
     }
 }

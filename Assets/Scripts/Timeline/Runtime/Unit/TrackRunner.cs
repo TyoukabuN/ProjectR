@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using NPOI.SS.Formula.Functions;
 using static PJR.Timeline.Define;
 using PJR.Timeline.Pool;
+using UnityEditor;
+using UnityEngine;
 
 namespace PJR.Timeline
 {
-    public class TrackRunner : PoolableObject, IDisposable, IErrorRecorder
+    public class TrackRunner : PoolableObject, IErrorRecorder
     {
         public enum EState
         {
@@ -41,7 +44,7 @@ namespace PJR.Timeline
 
         public TrackRunner() 
         {
-            Dispose();
+            Clear();
             State = EState.None;
         }
         public TrackRunner(SequenceAsset sequenceAsset, Track track):this(sequenceAsset, track, Global.Clip2ClipHandleFunc) { }
@@ -49,9 +52,9 @@ namespace PJR.Timeline
         {
             Reset(sequenceAsset, track, clip2ClipHandle);
         }
-        public virtual void Dispose()
+        public override void Clear()
         {
-            ForEachClipRunner(DisposeClipRunner);
+            ForEachClipRunner(ClearClipRunner);
 
             if (_clipRunners != null)
             {
@@ -93,7 +96,15 @@ namespace PJR.Timeline
                 var clip = _track.clips[i];
                 if (clip == null)
                     continue;
-                var clipRunner = clip.GetRunner();
+                ClipRunner clipRunner = null;
+
+#if UNITY_EDITOR
+                if(!EditorApplication.isPlaying)
+                    clipRunner =clip.GetPreviewRunner();
+                else
+#endif
+                    clipRunner =clip.GetRunner();
+                
                 if (clipRunner == null)
                     continue;
                 _clipRunners.Add(clipRunner);
@@ -161,10 +172,9 @@ namespace PJR.Timeline
         }
         private void Internal_OnDone()
         {
-            Debug.Log("Sequence Done");
         }
 
-        void DisposeClipRunner(ClipRunner clipHandle) => clipHandle?.Dispose();
+        void ClearClipRunner(ClipRunner clipHandle) => clipHandle?.Clear();
         void InitClipRunner(ClipRunner clipHandle) => clipHandle?.OnInit();
         void ForEachClipRunner(Action<ClipRunner> func)
         {

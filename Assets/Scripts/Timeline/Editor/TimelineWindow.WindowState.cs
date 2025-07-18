@@ -3,6 +3,7 @@ using System.Linq;
 using PJR.Editor;
 using UnityEditor;
 using UnityEngine;
+using Object = System.Object;
 
 namespace PJR.Timeline.Editor
 {
@@ -176,7 +177,12 @@ namespace PJR.Timeline.Editor
             private ISequenceHandle _sequenceHandle;
             public ISequenceHandle SequenceHandle
             {
-                get => _sequenceHandle ??= SequenceEditHandle.Empty;
+                get
+                {
+                    if ((!_sequenceHandle?.Valid) ?? false)
+                        _sequenceHandle = null;
+                    return _sequenceHandle ??= SequenceEditHandle.Empty;
+                }
                 set
                 {
                     if (value == null)
@@ -193,17 +199,50 @@ namespace PJR.Timeline.Editor
 
             private ISequencePlayableHandle _sequencePlayableHandle;
             public ISequencePlayableHandle SequencePlayableHandle => _sequencePlayableHandle;
+            public float Time
+            {
+                set
+                {
+                    if (_sequencePlayableHandle == null)
+                        return;
+                    _sequencePlayableHandle.time = value;
+                }
+            }
+            public bool IsPlaying => _sequencePlayableHandle?.IsPlaying() ?? false;
+            public void Play()
+            {
+                if (EditorApplication.isPlaying)
+                    return;
+                instance._lastUpdateTime = (float)EditorApplication.timeSinceStartup;
+                _sequencePlayableHandle?.Play();
+            }
+            public void Pause()
+            {
+                if (EditorApplication.isPlaying)
+                    return;
+                _sequencePlayableHandle?.Pause();
+            }
+            public void Stop()
+            {
+                _sequencePlayableHandle?.Stop();
+                SequenceHandle = null;
+            }
+            public void ManualUpdateDirector(float deltaTime, bool force = false)
+            {
+                SequencePlayableHandle?.SequenceRunner?.OnUpdate(deltaTime,force);
+            }
         }
-
+        
         public class SequenceEditHandle : ISequenceHandle
         {
             public static SequenceEditHandle Empty = new() { _isEmpty = true };
             private bool _isEmpty = false;
             public bool IsEmpty => _isEmpty;
             private SequenceAsset _sequenceAssetAsset;
-            private SequenceDirector _sequenceDirector;
-            private double _time_test = 0;
-            public double time {
+            public UnityEngine.Object Object => _sequenceAssetAsset;
+            
+            private float _time_test = 0;
+            public float time {
                 get => _time_test;
                 set => _time_test = value;
             }
@@ -214,11 +253,6 @@ namespace PJR.Timeline.Editor
                 get => _sequenceAssetAsset;
                 set => _sequenceAssetAsset = value;
             }
-            public SequenceDirector Director
-            {
-                get => _sequenceDirector;
-                set => _sequenceDirector = value;
-            }
             public double ToGlobalTime(double t) => t;
             public double ToLocalTime(double t)=> t;
 
@@ -226,7 +260,6 @@ namespace PJR.Timeline.Editor
             {
                 var temp = UnityEngine.Pool.GenericPool<SequenceEditHandle>.Get();
                 temp._sequenceAssetAsset = sequenceAssetAsset;
-                temp._sequenceDirector = null;
                 temp._isEmpty = false;
                 temp._time_test = 0;
                 return temp;
@@ -234,7 +267,6 @@ namespace PJR.Timeline.Editor
             public void Release()
             {
                 _sequenceAssetAsset = null;
-                _sequenceDirector = null;
                 _isEmpty = false;
                 _time_test = 0;
                 UnityEngine.Pool.GenericPool<SequenceEditHandle>.Release(this);

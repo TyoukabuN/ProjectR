@@ -50,11 +50,17 @@ namespace PJR.Timeline.Editor
         void RegisterEvent(bool enable)
         {
             Selection.selectionChanged -= OnSelectionChanged;
+            EditorApplication.update -= OnEditorUpdate;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             if (enable)
             { 
                 Selection.selectionChanged += OnSelectionChanged;
+                EditorApplication.update += OnEditorUpdate;
+                EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
             }
         }
+        
+        
         void OnSelectionChanged()
         {
             Selection_CheckSelectionChange();
@@ -72,17 +78,13 @@ namespace PJR.Timeline.Editor
 
         private void Update()
         {
-            if (State.SequencePlayableHandle != null)
-            {
-                if (State.SequencePlayableHandle.IsPlaying())
-                    Repaint();
-            }
+            if (State.IsPlaying)
+                Repaint();
         }
 
         void OnGUI()
         {
             Styles.ReloadStylesIfNeeded();
-
 
             if (CheckRepaintRequired())
                 return;
@@ -153,14 +155,18 @@ namespace PJR.Timeline.Editor
                     int f = State.PixelRoundToFrame(px);
                     if(State.debugging)
                         Debug.Log($"[px:{px}] [f:{f}]");
-                    State.SequenceHandle.time = State.FromFrames(f);
+                    State.Pause();
+                    State.Time = (float)State.FromFrames(f);
+                    State.ManualUpdateDirector(0, true);
                 },
                 rt =>
                 {
                     float px = Event.current.mousePosition.x - rt.x;
                     int f = State.PixelRoundToFrame(px);
-                    State.SequenceHandle.time = State.FromFrames(f);
+                    State.Pause();
+                    State.Time = (float)State.FromFrames(f);
                     State.RefreshWindow(true);
+                    State.ManualUpdateDirector(0, true);
                 },
                 rt =>
                 {
@@ -320,8 +326,15 @@ namespace PJR.Timeline.Editor
         }
         void Draw_PlayerButton()
         {
-            if (GUILayout.Button(Styles.playContent, EditorStyles.toolbarButton))
+            if (State.IsPlaying)
             {
+                if (GUILayout.Button(Styles.pauseContent, EditorStyles.toolbarButton))
+                    State.Pause();
+            }
+            else
+            {
+                if (GUILayout.Button(Styles.playContent, EditorStyles.toolbarButton))
+                    State.Play();
             }
         }
         void Draw_NewFrameButton()
@@ -358,9 +371,15 @@ namespace PJR.Timeline.Editor
             if (State.SequenceHandle == null)
                 return;
             int tFrame = State.ToFrames(State.SequenceHandle.time);
+            
+            if (State.IsPlaying)
+                return;
+            
+            BeginChangeCheck();
             tFrame = EditorGUILayout.IntField(tFrame);
-            if (State.SequenceHandle != null && State.SequenceHandle.Valid)
-                State.SequenceHandle.time = State.FromFrames(tFrame);
+
+            if(EndChangeCheck())
+                State.Time = (float)State.FromFrames(tFrame);
         }
 
         void Draw_AddTrackButton()

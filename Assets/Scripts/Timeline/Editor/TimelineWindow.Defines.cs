@@ -27,6 +27,17 @@ namespace PJR.Timeline.Editor
                 return new Rect(0, yMinHeight, position.width, position.height - yMinHeight - 0);
             }
         }
+
+        //track view右边，左边画的menu
+        public Rect trackRectTrackSide
+        {
+            get
+            {
+                var rightTrackView = trackRect;
+                rightTrackView.xMin = timelineRulerRect.xMin;
+                return rightTrackView;
+            }
+        }
         
         //调整TrackView两边大小的Handle的区域
         public Rect headerSizeHandleRect

@@ -231,14 +231,14 @@ namespace PJR.Timeline.Editor
 
         public void TrackViewsGUI()
         {
-            //分割TrackMenu和View边界部分
-            DrawSpliterAboutTrackMenuAndView();
-            
             if (State.NonEditingSequence())
             {
                 Draw_NonEditingSequenceTrackView();
                 return;
             }    
+            
+            //分割TrackMenu和View边界部分
+            DrawSpliterAboutTrackMenuAndView();
 
             GUILayout.BeginArea(trackRect);
             var localTrackRect = trackRect.ToOrigin();
@@ -425,6 +425,7 @@ namespace PJR.Timeline.Editor
                 //按比例缩放系数
                 State.currentPixelPerFrameScaleFactor *= 1 + sign * Const.ScalingSpeed;
                 State.currentPixelPerFrameScaleFactor = Mathf.Clamp01(State.currentPixelPerFrameScaleFactor);
+                //将缩放系数转成PixelPerFrame
                 State.currentPixelPerFrame = State.currentPixelPerFrameScaleFactor * Const.MaxPixelPerFrame;
                 Repaint();
             });
@@ -437,7 +438,6 @@ namespace PJR.Timeline.Editor
             rect.ToOrigin();
             
             Handles.BeginGUI();
-            int frameIndex = 0;
             float longTickStartY = 6f;
 
             //找<刻度帧数步长>和对应<每步长所占像素>

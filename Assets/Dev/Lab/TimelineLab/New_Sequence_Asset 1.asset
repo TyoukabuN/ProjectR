@@ -61,7 +61,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 5670150904230507870}
-    - {fileID: 11400000}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -83,9 +82,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: _sequence
-      Entry: 10
-      Data: 1
+    - Name: _sequenceAsset
+      Entry: 6
+      Data: 
 --- !u!114 &4440806096383948920
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -103,7 +102,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 6551776409821285510}
-    - {fileID: 11400000}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -125,9 +123,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: _sequence
-      Entry: 10
-      Data: 1
+    - Name: _sequenceAsset
+      Entry: 6
+      Data: 
 --- !u!114 &5670150904230507870
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -144,19 +142,18 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000}
     - {fileID: 1829279718577719689}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: _sequence
-      Entry: 10
-      Data: 0
+    - Name: _sequenceAsset
+      Entry: 6
+      Data: 
     - Name: _track
       Entry: 10
-      Data: 1
+      Data: 0
   _frameRateType: 0
   _mute: 0
   _description: 
@@ -181,24 +178,23 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000}
     - {fileID: 4440806096383948920}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: _sequence
-      Entry: 10
-      Data: 0
+    - Name: _sequenceAsset
+      Entry: 6
+      Data: 
     - Name: _track
       Entry: 10
-      Data: 1
+      Data: 0
   _frameRateType: 0
   _mute: 0
   _description: 
   _start: 0.13333333333333347
-  _end: 0.5000000136593977
+  _end: 0.5833333469927311
   _startFrame: 8
-  _endFrame: 30
+  _endFrame: 35
   animationClip: {fileID: 0}

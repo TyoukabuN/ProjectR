@@ -42,8 +42,7 @@ public class TimelineTest : MonoBehaviour
             return;
         }
         Clear();
-        runner = SequenceRunner.Get();
-        runner.Reset(Director.gameObject, Director.SequenceAsset);
+        runner = Director.SequenceAsset.GetRunner(Director.gameObject);
     }
 
     SequenceRunner runner;

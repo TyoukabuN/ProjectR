@@ -10,7 +10,7 @@ namespace PJR.Timeline.Editor
 {
     public class TrackGUI
     {
-        public List<Track> tracks => windowState.SequenceHandle.SequenceAsset?.Tracks;
+        public List<Track> tracks => windowState.SequenceHandle.Sequence?.Tracks;
         public WindowState windowState => TimelineWindow.instance.State;
         public Rect position => TimelineWindow.instance.position;
         public TrackGUI()
@@ -46,7 +46,7 @@ namespace PJR.Timeline.Editor
                         for (int i = 0; i < tracks.Count; i++)
                         {
                             GUILayout.Space(Const.trackMenuPadding);
-                            var clip = tracks[i]?.clips[0];
+                            var clip = tracks[i]?.Clips[0];
                             if (clip == null)
                                 continue;
 
@@ -79,7 +79,7 @@ namespace PJR.Timeline.Editor
                         for (int i = 0; i < tracks.Count; i++)
                         {
                             GUILayout.Space(Const.trackMenuPadding);
-                            var clip = tracks[i]?.clips[0];
+                            var clip = tracks[i]?.Clips[0];
                             if (clip == null)
                                 continue;
 

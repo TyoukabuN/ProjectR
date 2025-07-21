@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using PJR.Editor;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 using Object = System.Object;
@@ -35,7 +36,6 @@ namespace PJR.Timeline.Editor
                 get => _currentPixelPerFrame;
                 set
                 {
-                    if()
                     _currentPixelPerFrame = value;
                 }
             }
@@ -75,7 +75,7 @@ namespace PJR.Timeline.Editor
             /// <param name="paths"></param>
             private void OnWillSaveAssetsCall(string[] paths)
             {
-                if (SequenceHandle.SequenceAsset == null)
+                if (SequenceHandle.Sequence == null)
                     return;
                     
                 var seqPath = AssetDatabase.GetAssetPath(SequenceHandle.SequenceAsset);
@@ -95,7 +95,7 @@ namespace PJR.Timeline.Editor
 
             public bool TrySetSequenceAssetDirty(string undoName = null)
             {
-                if (SequenceHandle.SequenceAsset == null)
+                if (SequenceHandle.Sequence == null)
                     return false;
                 undoName ??= Default_UndoName;
                 Undo.RecordObject(SequenceHandle.SequenceAsset, undoName);
@@ -204,6 +204,19 @@ namespace PJR.Timeline.Editor
                         _sequencePlayableHandle = temp;
 
                     _sequenceHandle = value;
+                    currentPixelPerFrame = Const.DefaultPixelPerFrame;
+                    currentPixelPerFrameScaleFactor = Const.DefaultPixelPerFrameScaleFactor;
+                    
+                    if (value != null)
+                    {
+                        //计算一个能看到所有clip的pixelPerFrame
+                        var maxFrame = value.SequenceAsset?.Editor_GetSequenceMaxFrame() ?? -1;
+                        if (maxFrame > 0)
+                        {
+                            currentPixelPerFrame = instance.trackRectTrackSide.width / maxFrame;
+                            currentPixelPerFrameScaleFactor = currentPixelPerFrame / Const.MaxPixelPerFrame;
+                        }
+                    }
                 }
             }
 
@@ -239,7 +252,7 @@ namespace PJR.Timeline.Editor
             }
             public void ManualUpdateDirector(float deltaTime, bool force = false)
             {
-                SequencePlayableHandle?.SequenceRunner?.OnUpdate(deltaTime,force);
+                SequencePlayableHandle?.Runner?.OnUpdate(deltaTime,force);
             }
         }
         
@@ -248,35 +261,37 @@ namespace PJR.Timeline.Editor
             public static SequenceEditHandle Empty = new() { _isEmpty = true };
             private bool _isEmpty = false;
             public bool IsEmpty => _isEmpty;
-            private SequenceAsset _sequenceAssetAsset;
-            public UnityEngine.Object Object => _sequenceAssetAsset;
+            private ISequence _sequence;
+            public UnityEngine.Object Object => (UnityEngine.Object)_sequence;
             
             private float _time_test = 0;
             public float time {
                 get => _time_test;
                 set => _time_test = value;
             }
-            public bool Valid => SequenceAsset != null && SequenceAsset != null;
+            public bool Valid => Sequence != null && Sequence != null;
 
-            public SequenceAsset SequenceAsset
+            public ISequence Sequence
             {
-                get => _sequenceAssetAsset;
-                set => _sequenceAssetAsset = value;
+                get => _sequence;
+                set => _sequence = value;
             }
+            public SequenceAsset SequenceAsset => (SequenceAsset)_sequence;
+            
             public double ToGlobalTime(double t) => t;
             public double ToLocalTime(double t)=> t;
 
             public static SequenceEditHandle Get(SequenceAsset sequenceAssetAsset)
             {
                 var temp = UnityEngine.Pool.GenericPool<SequenceEditHandle>.Get();
-                temp._sequenceAssetAsset = sequenceAssetAsset;
+                temp._sequence = sequenceAssetAsset;
                 temp._isEmpty = false;
                 temp._time_test = 0;
                 return temp;
             }
             public void Release()
             {
-                _sequenceAssetAsset = null;
+                _sequence = null;
                 _isEmpty = false;
                 _time_test = 0;
                 UnityEngine.Pool.GenericPool<SequenceEditHandle>.Release(this);

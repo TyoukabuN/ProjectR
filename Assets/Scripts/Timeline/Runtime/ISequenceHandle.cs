@@ -9,6 +9,7 @@ namespace PJR.Timeline
     {
         float time { get; set; }
         bool Valid { get; }
+        ISequence Sequence { get; }
         SequenceAsset SequenceAsset { get; }
         UnityEngine.Object Object { get; }
         double ToGlobalTime(double t);
@@ -19,7 +20,7 @@ namespace PJR.Timeline
     public interface ISequencePlayableHandle : ISequenceHandle
     {
         SequenceDirector Director { get; }
-        SequenceRunner SequenceRunner { get; }
+        SequenceRunner Runner { get; }
         bool IsPlaying();
         void Play();
         void Pause();

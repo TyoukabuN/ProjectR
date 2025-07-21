@@ -5,17 +5,37 @@ using UnityEngine;
 
 namespace PJR.Timeline
 {
+    /// <summary>
+    /// 感觉Sequence的运行依赖Director没啥意义，后面感觉可以抽成一个System之类的单例类来统一Tick
+    /// </summary>
     public partial class SequenceDirector : SerializedMonoBehaviour, ISequenceHolder
     {
+        public enum EState
+        {
+            None,
+            WaitingForStart,
+            Running,
+            Paused,
+            Failure,
+            Done,
+        }
+        [NonSerialized]
+        private EState _state = EState.None;
+        public EState State => _state;
+        
         public bool PlayOnAwake = false;
         
         [SerializeField]
         protected SequenceAsset _sequenceAsset;
         public SequenceAsset SequenceAsset => _sequenceAsset;
 
-        [NonSerialized] protected SequenceRunner _sequenceRunner;
-        public SequenceRunner SequenceRunner => _sequenceRunner;
-        public void Start()
+        [ShowInInspector,ShowIf("@_runtimeTempSequence!=null")]
+        private ISequence _runtimeTempSequence;
+        public ISequence Sequence => _sequenceAsset ?? _runtimeTempSequence;
+
+        [NonSerialized] protected SequenceRunner _runner;
+        public SequenceRunner Runner => _runner;
+        void Start()
         {
             if (PlayOnAwake)
                 GetRunner();
@@ -28,23 +48,34 @@ namespace PJR.Timeline
 
         public void ManualUpdate(float deltaTime, bool force = false)
         {
-            if (_sequenceRunner != null)
+            if (_runner != null)
             {
-                if (_sequenceRunner.State == SequenceRunner.EState.None)
+                if (_runner.State == SequenceRunner.EState.None)
                 {
-                    _sequenceRunner.OnStart();
+                    _runner.OnStart();
+                    _state = EState.Running;
                 }
-                else if(_sequenceRunner.State == SequenceRunner.EState.Diposed)
+                else if(_runner.State == SequenceRunner.EState.Diposed)
                 {
-                    _sequenceRunner.Release();
-                    _sequenceRunner = null;
+                    _runner.Release();
+                    _runner = null;
+                    _state = EState.Done;
                 }
-                else if(_sequenceRunner.State == SequenceRunner.EState.Paused)
+                else if(_runner.State == SequenceRunner.EState.Paused)
                 {
+                    _state = EState.Paused;
                 }
-                else
+                else if(_runner.State == SequenceRunner.EState.Failure)
                 {
-                    _sequenceRunner.OnUpdate(deltaTime, force);
+                    _state = EState.Failure;
+                }
+                else if(_runner.State == SequenceRunner.EState.Done)
+                {
+                    _state = EState.Done;
+                }
+                else //_sequenceRunner.State == SequenceRunner.EState.Running
+                {
+                    _runner.OnUpdate(deltaTime, force);
                 }
             }
         }
@@ -55,10 +86,21 @@ namespace PJR.Timeline
         {
             if (!EditorApplication.isPlaying)
                 return GetPreviewHandle();
-            
             return GetRuntimeHandle();
         }
 
+        public bool SetRuntimeTempSequence(ISequence sequence)
+        {
+            if (sequence == null)
+                return false;
+            _runtimeTempSequence = sequence;
+            return true;
+        }
+
+        /// <summary>
+        /// 获取EditMode下用的Handle
+        /// </summary>
+        /// <returns></returns>
         private ISequenceHandle GetPreviewHandle()
         {
             _sequenceHandle?.Release();
@@ -68,6 +110,10 @@ namespace PJR.Timeline
             return _previewSequenceHandle;
         }
         
+        /// <summary>
+        /// 获取Runtime(PlayMode)下用的Handle
+        /// </summary>
+        /// <returns></returns>
         private ISequenceHandle GetRuntimeHandle()
         {
             _previewSequenceHandle?.Release();
@@ -79,18 +125,46 @@ namespace PJR.Timeline
 
         public SequenceRunner GetRunner()
         {
-            if (_sequenceRunner == null || _sequenceRunner.IsDisposed)
+            if (_runner == null || _runner.IsDisposed)
             {
-                _sequenceRunner = SequenceRunner.Get();
-                _sequenceRunner.Reset(gameObject, SequenceAsset);
+                _runner = Sequence.GetRunner(gameObject);
             }
-            return _sequenceRunner;
+            return _runner;
         }
 
         public void Stop()
         {
-            _sequenceRunner?.Release();
-            _sequenceRunner = null;
+            _runner?.Release();
+            _runner = null;
+        }
+        
+        public void Pause()
+        {
+            if (_runner == null || !_runner.IsRunning)
+                return;
+            _runner.Pause();
+            _state = EState.Paused;
+        }
+
+        public void Play()
+        {
+            if (_runner == null)
+            {
+                GetRunner();
+                return;
+            }
+
+            if (_runner.IsRunning)
+                return;
+            if (_runner.State >= SequenceRunner.EState.Done)
+                return;
+            _runner.State = SequenceRunner.EState.Running;
+        }
+        public void Replay()
+        {
+            _runner?.Release();
+            _runner = null;
+            GetRunner();
         }
     }
 }

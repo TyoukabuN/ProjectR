@@ -4,27 +4,29 @@ namespace PJR.Timeline.Editor
 {
     public partial class TimelineWindow
     {
+        //进入PlayMode之前清理下，预览相关的
         void OnPlayModeStateChanged(PlayModeStateChange playModeState)
         {
-            // case 923506 - make sure we save view data before switching modes
-            if (playModeState == PlayModeStateChange.ExitingEditMode ||
-                playModeState == PlayModeStateChange.ExitingPlayMode)
+            if (playModeState == PlayModeStateChange.ExitingEditMode 
+                || playModeState == PlayModeStateChange.ExitingPlayMode)
             {
             }
 
-            bool isPlaymodeAboutToChange = playModeState == PlayModeStateChange.ExitingEditMode || playModeState == PlayModeStateChange.ExitingPlayMode;
+            bool isPlaymodeAboutToChange = 
+                playModeState == PlayModeStateChange.ExitingEditMode 
+                || playModeState == PlayModeStateChange.ExitingPlayMode;
 
-            // Important to stop the graph on any director so temporary objects are properly cleaned up
             if (isPlaymodeAboutToChange && State != null)
                 State.Stop();
         }
 
+        //EditMode下的Update tick
         private float? _lastUpdateTime = 0;
         private void OnEditorUpdate()
         {
             if (EditorApplication.isPlaying)
                 return;
-            if (State.SequencePlayableHandle?.Director?.SequenceRunner == null)
+            if (State.SequencePlayableHandle?.Director?.Runner == null)
                 return;
             if (_lastUpdateTime == null)
                 _lastUpdateTime = (float)EditorApplication.timeSinceStartup;

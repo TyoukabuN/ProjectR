@@ -14,9 +14,9 @@ namespace PJR.Timeline
             {
                 get
                 {
-                    if (!Valid || _director._sequenceRunner == null)
+                    if (!Valid || _director._runner == null)
                         return 0;
-                    return _director._sequenceRunner.TotalTime;
+                    return _director._runner.TotalTime;
                 }
                 set
                 {
@@ -24,11 +24,12 @@ namespace PJR.Timeline
                 }
             }
             public bool Valid => Director != null;
-            public SequenceAsset SequenceAsset => Director?.SequenceAsset;
+            public ISequence Sequence => Director?.SequenceAsset;
+            public SequenceAsset SequenceAsset => (SequenceAsset)Director?.SequenceAsset;
             public SequenceDirector Director => _director;
             protected SequenceDirector _director;
             public UnityEngine.Object Object => _director?.gameObject;
-            public SequenceRunner SequenceRunner => _director?.GetRunner();
+            public SequenceRunner Runner => _director?.GetRunner();
             public SequenceHandle(){}
             public SequenceHandle(SequenceDirector director)=>_director = director;
             public static SequenceHandle Get(SequenceDirector director)
@@ -47,9 +48,9 @@ namespace PJR.Timeline
 
             public virtual bool IsPlaying()
             {
-                if (!Valid || _director._sequenceRunner == null)
+                if (!Valid || _director._runner == null)
                     return false;
-                return _director._sequenceRunner.IsRunning;
+                return _director._runner.IsRunning;
             }
             public virtual void Play()
             {

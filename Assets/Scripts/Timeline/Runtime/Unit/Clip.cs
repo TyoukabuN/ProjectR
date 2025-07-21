@@ -118,6 +118,18 @@ namespace PJR.Timeline
                 _end = FrameRateType.SPF() * _endFrame;
             }
         }
+        public void SetFrameScope(int startFrame,int endFrame)
+        {
+            StartFrame = startFrame;
+            EndFrame = endFrame;
+        }
+        public void SetTimeScope(float start,float end)
+        {
+            this.start = start;
+            this.end = end;
+        }
+
+
         public Clip() { }
         public Clip(string description) { this._description = description; }
 

@@ -34,7 +34,7 @@ namespace PJR.Timeline
             clip.Track = track;
             
             //内部引用
-            track.clips = new List<Clip>{ clip };
+            track.Clips = new List<Clip>{ clip };
             //内部SubAsset
             AssetDatabase.AddObjectToAsset(track, sequenceAssetAsset);
             AssetDatabase.AddObjectToAsset(clipScriptableObject, sequenceAssetAsset);
@@ -56,7 +56,7 @@ namespace PJR.Timeline
             if (track.sequenceAsset.Tracks?.Contains(track) ?? false)
                 track.sequenceAsset.Tracks.Remove(track);
             //删除ClipAsset
-            foreach (var clip in track.clips)
+            foreach (var clip in track.Clips)
                 if (AssetDatabase.Contains(clip) && AssetDatabase.Contains(clip))
                     AssetDatabase.RemoveObjectFromAsset(clip);
             //删除TrackAsset
@@ -71,8 +71,8 @@ namespace PJR.Timeline
             if (clip.Track == null)
                 return false;
             //移除内部引用
-            if (clip.Track.clips?.Contains(clip) ?? false)
-                clip.Track.clips.Remove(clip);
+            if (clip.Track.Clips?.Contains(clip) ?? false)
+                clip.Track.Clips.Remove(clip);
             //删除Asset
             if (AssetDatabase.Contains(clip) && AssetDatabase.Contains(clip))
                 AssetDatabase.RemoveObjectFromAsset(clip);

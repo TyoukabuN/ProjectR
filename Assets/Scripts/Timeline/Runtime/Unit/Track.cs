@@ -9,16 +9,15 @@ using UnityEditor;
 
 namespace PJR.Timeline
 {
-    public class Track : SerializedScriptableObject, ISequenceUnit
+    public class Track : SerializedScriptableObject, ITrack, ISequenceUnit
     {
         [OdinSerialize]
         private List<Clip> _clips;
-        public List<Clip> clips
+        public List<Clip> Clips
         {
             get => _clips;
             set=> _clips = value;
         }
-        
         public Clip Clip => _clips?.Count > 0 ? _clips[0] : null;
         
 #if  UNITY_EDITOR
@@ -45,5 +44,10 @@ namespace PJR.Timeline
             set { }
         }
         #endregion
+    }
+    
+    public interface ITrack
+    {
+        public List<Clip> Clips { get; }
     }
 }

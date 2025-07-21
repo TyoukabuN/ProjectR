@@ -34,8 +34,8 @@ namespace PJR.Timeline
         public List<ClipRunner> clipRunners => _clipRunners;
 
         List<ClipRunner> _clipRunners;
-        private Track _track;
-        private SequenceAsset _sequenceAsset;
+        private ITrack _track;
+        private ISequence _sequence;
         Clip2ClipHandleFunc _clip2ClipHandle;
 
         public double totalTime = 0f;
@@ -47,11 +47,6 @@ namespace PJR.Timeline
             Clear();
             State = EState.None;
         }
-        public TrackRunner(SequenceAsset sequenceAsset, Track track):this(sequenceAsset, track, Global.Clip2ClipHandleFunc) { }
-        public TrackRunner(SequenceAsset sequenceAsset, Track track, Clip2ClipHandleFunc clip2ClipHandle) 
-        {
-            Reset(sequenceAsset, track, clip2ClipHandle);
-        }
         public override void Clear()
         {
             ForEachClipRunner(ClearClipRunner);
@@ -62,7 +57,7 @@ namespace PJR.Timeline
                 _clipRunners = null;
             }
             _track = null;
-            _sequenceAsset = null;
+            _sequence = null;
             _clip2ClipHandle = null;
 
             totalTime = 0f;
@@ -70,10 +65,10 @@ namespace PJR.Timeline
             State = EState.Diposed;
         }
 
-        public virtual bool Reset(SequenceAsset sequenceAsset, Track track) => Reset(sequenceAsset, track, Global.Clip2ClipHandleFunc);
-        public virtual bool Reset(SequenceAsset sequenceAsset, Track track, Clip2ClipHandleFunc clip2ClipHandle)
+        public virtual bool Reset(ISequence sequence, ITrack track) => Reset(sequence, track, Global.Clip2ClipHandleFunc);
+        public virtual bool Reset(ISequence sequence, ITrack track, Clip2ClipHandleFunc clip2ClipHandle)
         {
-            _sequenceAsset = sequenceAsset;
+            _sequence = sequence;
             _track = track;
             _clip2ClipHandle = clip2ClipHandle;
 
@@ -91,9 +86,9 @@ namespace PJR.Timeline
             }
 
             _clipRunners = UnityEngine.Pool.CollectionPool<List<ClipRunner>, ClipRunner>.Get();
-            for (int i = 0; i < _track.clips.Count; i++)
+            for (int i = 0; i < _track.Clips.Count; i++)
             {
-                var clip = _track.clips[i];
+                var clip = _track.Clips[i];
                 if (clip == null)
                     continue;
                 ClipRunner clipRunner = null;
@@ -143,7 +138,7 @@ namespace PJR.Timeline
 
                 clipRunner.SetUpdateContext(context);
                 
-                if (clipRunner.Clip.OutOfRange(context.totalTime, _sequenceAsset.FrameRateType.SPF()))
+                if (clipRunner.Clip.OutOfRange(context.totalTime, _sequence.FrameRateType.SPF()))
                 {
                     if (clipRunner.Running)
                         clipRunner.OnEnd();
@@ -197,8 +192,7 @@ namespace PJR.Timeline
                 return false;
             return true;
         }
-        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequenceAsset?.FrameRateType ?? EFrameRate.Game);
-
+        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.FrameRateType ?? EFrameRate.Game);
 
         #region IErrorRecorder Impl
         string _error;

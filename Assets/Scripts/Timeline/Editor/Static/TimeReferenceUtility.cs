@@ -45,13 +45,13 @@ namespace PJR.Timeline.Editor
                 time = state.SequenceHandle.ToGlobalTime(time);
         
             //return state.timeFormat.ToTimeString(time, state.referenceSequence.frameRate, format);
-            return EditorPreferences.TimeFormat.Value.ToTimeString(time, state.SequenceHandle.SequenceAsset.FrameRate, format);
+            return EditorPreferences.TimeFormat.Value.ToTimeString(time, state.SequenceHandle.Sequence.FrameRateType.FPS(), format);
         }
         
         public static double FromTimeString(string timeString)
         {
             //double newTime = state.timeFormat.FromTimeString(timeString, state.referenceSequence.frameRate, -1);
-            double newTime = EditorPreferences.TimeFormat.Value.FromTimeString(timeString, state.SequenceHandle.SequenceAsset.FrameRate, -1);
+            double newTime = EditorPreferences.TimeFormat.Value.FromTimeString(timeString, state.SequenceHandle.Sequence.FrameRateType.FPS(), -1);
             if (newTime >= 0.0)
             {
                 // return state.timeReferenceMode == TimeReferenceMode.Global ?

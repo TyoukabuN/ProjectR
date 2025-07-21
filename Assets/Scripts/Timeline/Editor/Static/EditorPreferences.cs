@@ -1,9 +1,6 @@
 #nullable enable
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 
 namespace PJR.Timeline.Editor
 {
@@ -19,10 +16,10 @@ namespace PJR.Timeline.Editor
         public struct EnumPref<T> where T : Enum
         {
             private bool _hasValue;
-            private T _cache;
+            private T? _cache;
             private readonly string _editorPrefKey;
 
-            public T Value
+            public T? Value
             {
                 get
                 {

@@ -10,15 +10,15 @@ namespace PJR.Timeline
             {
                 get
                 {
-                    if (!Valid || _director._sequenceRunner == null)
+                    if (!Valid || _director._runner == null)
                         return 0;
-                    return _director._sequenceRunner.TotalTime;
+                    return _director._runner.TotalTime;
                 }
                 set
                 {
-                    if (!Valid || _director._sequenceRunner == null)
+                    if (!Valid || _director._runner == null)
                         return;
-                    SequenceRunner.TotalTime = value;   
+                    Runner.TotalTime = value;   
                 }
             }
             public static PreviewSequenceHandle Get(SequenceDirector director)
@@ -37,43 +37,43 @@ namespace PJR.Timeline
 
             public override bool IsPlaying()
             {
-                if (!Valid || _director._sequenceRunner == null)
+                if (!Valid || _director._runner == null)
                     return false;
-                return _director._sequenceRunner.IsRunning;
+                return _director._runner.IsRunning;
             }
             public override void Play()
             {
                 if (!Valid) 
                     return;
-                if (_director._sequenceRunner == null)
-                    _director._sequenceRunner = _director.GetRunner();
+                if (_director._runner == null)
+                    _director._runner = _director.GetRunner();
                 
-                if (_director._sequenceRunner != null)
+                if (_director._runner != null)
                 {
-                    if (_director._sequenceRunner.State == SequenceRunner.EState.None)
+                    if (_director._runner.State == SequenceRunner.EState.None)
                     {
-                        _director._sequenceRunner.OnStart();
+                        _director._runner.OnStart();
                     }
-                    else if (_director._sequenceRunner.State == SequenceRunner.EState.Paused)
+                    else if (_director._runner.State == SequenceRunner.EState.Paused)
                     {
-                        _director._sequenceRunner.State = SequenceRunner.EState.Running;
+                        _director._runner.State = SequenceRunner.EState.Running;
                     }
-                    else if (_director._sequenceRunner.State == SequenceRunner.EState.Diposed)
+                    else if (_director._runner.State == SequenceRunner.EState.Diposed)
                     {
-                        _director._sequenceRunner.Release();
-                        _director._sequenceRunner = null;
+                        _director._runner.Release();
+                        _director._runner = null;
                     }
                 }
             }
             public override void Pause()
             {
-                if (!Valid || _director._sequenceRunner == null) 
+                if (!Valid || _director._runner == null) 
                     return;
-                _director._sequenceRunner.State = SequenceRunner.EState.Paused;
+                _director._runner.State = SequenceRunner.EState.Paused;
             }
             public override void Stop()
             {
-                if (!Valid) 
+                if (!Valid)
                     return;
                 _director.Stop();
             }

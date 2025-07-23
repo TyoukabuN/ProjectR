@@ -2,6 +2,12 @@ using System;
 
 namespace PJR.Core.BlackBoard.CachedValueBoard
 {
+    /// <summary>
+    /// 可以被缓存的值
+    /// 实现这个接口的对象会记录这个对象的类型和值
+    /// 而对象之间值的赋值是通过GenericBuffer来间接赋值
+    /// 从而省去类型转成的GC.Alloc
+    /// </summary>
     public interface ICacheableValue
     {
         public Type ValueType { get; }

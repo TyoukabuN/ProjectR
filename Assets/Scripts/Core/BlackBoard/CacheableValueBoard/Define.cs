@@ -14,6 +14,11 @@ namespace PJR.BlackBoard
 
 namespace PJR.Core.BlackBoard.CachedValueBoard
 {
+    /// <summary>
+    /// 黑板值引用
+    /// 包含一个需要用Odin序列化的黑板引用Board
+    /// 一个黑板值的Key用作取值用
+    /// </summary>
     public abstract class BoardValueReference
     {
         public abstract Type ValueType { get; }
@@ -30,26 +35,28 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
             return  Activator.CreateInstance(genericType) as BoardValueReference;
         }
         
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         [HorizontalGroup]
         [ShowInInspector]
         [HideLabel]
-        public string Editor_Key
-        {
-            get => Key;
-        }
-        #endif
+        public string Editor_Key => Key;
+#endif
     }
 
+    /// <summary>
+    /// 黑板值得引用(泛型)
+    /// BoardValueReference的子类,包含一个泛型的属性Value用于取值
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class BoardValueReference<T>: BoardValueReference
     {
         public override Type ValueType => typeof(T);
-#if UNITY_EDITOR
+        
         [HorizontalGroup]
         [ShowInInspector]
         [HideLabel]
-        public T Editor_Value
+        public T Value
         {
             get
             {
@@ -59,6 +66,5 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
                 return value;
             }
         }
-#endif
     }
 }

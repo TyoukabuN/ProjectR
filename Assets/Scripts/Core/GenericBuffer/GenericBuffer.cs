@@ -6,7 +6,7 @@ using UnityEngine;
 namespace PJR.Core
 {
     /// <summary>
-    /// 一块缓存
+    /// 一块泛型缓存
     /// 通过使用缓存内的index来存取值,避免类型转换GC.Alloc
     /// 即避免Value:object => Value:Type的unboxing,
     /// 而是用index => A:Type,即通过过A内部的泛型和buffer中index,从buffer中直接获取值

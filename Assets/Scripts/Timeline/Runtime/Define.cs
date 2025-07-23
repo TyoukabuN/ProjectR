@@ -7,6 +7,15 @@ using UnityEngine;
 
 namespace PJR.Timeline
 {
+    public enum ERunnerState
+    {
+        None = 0,
+        Running,
+        Paused,
+        Done,
+        Failure,
+        Diposed,
+    }
     public static class Define
     {
         public enum EFrameRate
@@ -91,6 +100,8 @@ namespace PJR.Timeline
 
         public const string ErrCode_TrackRuner_TrackIsNull = "[TrackRuner] Track is null";
         public const string ErrCode_TrackRuner_Clip2ClipHandle = "[TrackRuner] clip2ClipHandle is null";
+        public const string ErrCode_TrackRuner_ClipsIsNull = "[TrackRuner] track.Clips is null";
+        public const string ErrCode_TrackRuner_NoneClip = "[TrackRuner] track.Clips.Count <= 0";
         //ClipHandle ErrorCode
         public const string ErrCode_ClipRunner_ClipIsNull = "[ClipRunner] Clip is null";
         public const string ErrCode_ClipRunner_ClipTypeNotMatched = "[ClipRunner] clip.ClipType not matched with clipHandle.ClipType";

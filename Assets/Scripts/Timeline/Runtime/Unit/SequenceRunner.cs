@@ -6,34 +6,28 @@ namespace PJR.Timeline
 {
     public abstract class SequenceRunner : PoolableObject
     {
-        public enum EState
+        protected abstract ISequence sequence { get; }
+
+        protected GameObject _gameObject;
+        public virtual ERunnerState runnerState
         {
-            None = 0,
-            Running,
-            Paused,
-            Done,
-            Failure,
-            Diposed,
-        }
-        public virtual EState State
-        {
-            get => _state;
+            get => RunnerState;
             set
             {
-                if (_state == value)
+                if (RunnerState == value)
                     return;
-                Internal_OnStateChanged(_state, value);
-                _state = value;
-                if (_state == EState.Done)
+                Internal_OnStateChanged(RunnerState, value);
+                RunnerState = value;
+                if (RunnerState == ERunnerState.Done)
                     Internal_OnDone();
             }
         }
         
-        protected EState _state;
-        public bool IsRunning => State == EState.Running;
-        public bool IsPaused => State == EState.Paused;
-        public bool IsDone => State == EState.Done;
-        public bool IsDisposed => State == EState.Diposed;
+        protected ERunnerState RunnerState;
+        public bool IsRunning => runnerState == ERunnerState.Running;
+        public bool IsPaused => runnerState == ERunnerState.Paused;
+        public bool IsDone => runnerState == ERunnerState.Done;
+        public bool IsDisposed => runnerState == ERunnerState.Diposed;
 
         public float TotalTime
         {
@@ -49,27 +43,60 @@ namespace PJR.Timeline
 
         float _totalTime = 0f;
         float _unscaleTotalTime = 0f;
-        public Action<EState, EState> OnStateChanged;
+        public Action<ERunnerState, ERunnerState> OnStateChanged;
         
         public abstract void OnStart();
         public abstract void OnUpdate(float deltaTime, bool force = false);
-        protected virtual void Internal_OnStateChanged(EState oldState, EState newState) 
-            => OnStateChanged?.Invoke(oldState, newState);
+        protected virtual void Internal_OnStateChanged(ERunnerState oldRunnerState, ERunnerState newRunnerState) 
+            => OnStateChanged?.Invoke(oldRunnerState, newRunnerState);
         protected virtual void Internal_OnDone() => Clear();
         public virtual void Pause()
         {
             if (IsPaused)
                 return;
-            State = EState.Paused;
+            runnerState = ERunnerState.Paused;
+        }
+        
+        protected Define.UpdateContext _updateContext;
+
+        protected Define.UpdateContext UpdateContext(double scaledDeltaTime, double unscaledDeltaTime)
+        {
+            _updateContext.timeScale = GetTimeScale();
+            _updateContext.totalTime = _totalTime;
+
+            _updateContext.unscaledDeltaTime = unscaledDeltaTime;
+            _updateContext.deltaTime = scaledDeltaTime;
+
+            _updateContext.updateIntervalType = Define.IntervalType.Second;
+            _updateContext.gameObject = _gameObject;
+
+            return _updateContext;
         }
 
+        protected Define.UpdateContext UpdateContext(int frame)
+        {
+            if (frame > 0)
+            {
+                _updateContext.frameChanged = true;
+                _updateContext.totalFrame += frame;
+            }
+
+            _updateContext.updateIntervalType = Define.IntervalType.Frame;
+
+            return _updateContext;
+        }
+
+        protected double GetTimeScale() => Time.timeScale;
+        double GetSecondPerFrame() => Utility.GetSecondPerFrame(sequence?.FrameRateType ?? Define.EFrameRate.Game);
+        float GetSecondPerFrame_Float() => (float)GetSecondPerFrame();
         public override void Clear()
         {
-            if (_state == EState.Diposed)
+            if (RunnerState == ERunnerState.Diposed)
                 return;
-            State = EState.Diposed;
+            runnerState = ERunnerState.Diposed;
             _totalTime = 0f;
             _unscaleTotalTime = 0f;
+            _gameObject = null;
             OnStateChanged = null;
         }
         public abstract override void Release();

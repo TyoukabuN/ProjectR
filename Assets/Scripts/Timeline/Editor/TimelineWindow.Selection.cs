@@ -62,6 +62,11 @@ namespace PJR.Timeline.Editor
             var director = gameObject.GetComponent<SequenceDirector>();
             if (director == null)
                 return false;
+            if (director.Sequence == null)
+            {
+                UnityEngine.Debug.LogWarning("SequenceDirector没有有效的Sequence");
+                return false;
+            }
             holder = director.GetHandle();
             return true;
         }

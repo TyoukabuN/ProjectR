@@ -5,7 +5,6 @@ using PJR.Editor;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
-using UnityEngine.Serialization;
 
 public class BlackBoardWrapper : SerializedScriptableObject
 {

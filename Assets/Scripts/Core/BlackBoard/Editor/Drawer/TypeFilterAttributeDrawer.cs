@@ -19,6 +19,12 @@ using UnityEngine;
 
 namespace PJR.BlackBoard.Editor.Drawers
 {
+    /// <summary>
+    /// 重写了Odin的TypeFilterAttributeDrawer<br/>
+    /// 会通过Type.GetTypeFilter()获取过滤后的类型<br/>
+    /// 让点开类型选择菜单的时候不那么卡<br/>
+    /// 也限制了可选类型的数量,不用找那么久
+    /// </summary>
     [DrawerPriority(0.0, 0.0, 2002.0)]
     public sealed class TypeFilterAttributeDrawer : OdinAttributeDrawer<GenericTypeFilterAttribute>
     {
@@ -44,7 +50,7 @@ namespace PJR.BlackBoard.Editor.Drawers
                 this.Property.ChildResolver is ICollectionResolver && !this.Attribute.DrawValueNormally;
             this.getSelection = (Func<IEnumerable<object>>)(() => this.Property.ValueEntry.WeakValues.Cast<object>());
             this.getValues = (Func<IEnumerable<ValueDropdownItem>>)(() =>
-                (Property.ValueEntry.TypeOfValue.GetFiTypeFilter() as IEnumerable).Cast<object>()
+                (Property.ValueEntry.TypeOfValue.GetTypeFilter() as IEnumerable).Cast<object>()
                 .Where<object>((Func<object, bool>)(x => x != null))
                 .Select<object, ValueDropdownItem>((Func<object, ValueDropdownItem>)(x =>
                 {
@@ -67,8 +73,8 @@ namespace PJR.BlackBoard.Editor.Drawers
             if (this.error != null)
                 return;
             object obj = (object)null;
-            if (Property.ValueEntry.TypeOfValue.GetFiTypeFilter() != null)
-                obj = (Property.ValueEntry.TypeOfValue.GetFiTypeFilter() as IEnumerable).Cast<object>()
+            if (Property.ValueEntry.TypeOfValue.GetTypeFilter() != null)
+                obj = (Property.ValueEntry.TypeOfValue.GetTypeFilter() as IEnumerable).Cast<object>()
                     .FirstOrDefault<object>();
             else
                 this.nameLookup = (Dictionary<object, string>)null;

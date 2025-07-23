@@ -50,15 +50,15 @@ namespace PJR.Timeline
                 
                 if (_director._runner != null)
                 {
-                    if (_director._runner.State == SequenceRunner.EState.None)
+                    if (_director._runner.runnerState == ERunnerState.None)
                     {
                         _director._runner.OnStart();
                     }
-                    else if (_director._runner.State == SequenceRunner.EState.Paused)
+                    else if (_director._runner.runnerState == ERunnerState.Paused)
                     {
-                        _director._runner.State = SequenceRunner.EState.Running;
+                        _director._runner.runnerState = ERunnerState.Running;
                     }
-                    else if (_director._runner.State == SequenceRunner.EState.Diposed)
+                    else if (_director._runner.runnerState == ERunnerState.Diposed)
                     {
                         _director._runner.Release();
                         _director._runner = null;
@@ -69,7 +69,7 @@ namespace PJR.Timeline
             {
                 if (!Valid || _director._runner == null) 
                     return;
-                _director._runner.State = SequenceRunner.EState.Paused;
+                _director._runner.runnerState = ERunnerState.Paused;
             }
             public override void Stop()
             {

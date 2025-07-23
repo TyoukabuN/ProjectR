@@ -50,26 +50,26 @@ namespace PJR.Timeline
         {
             if (_runner != null)
             {
-                if (_runner.State == SequenceRunner.EState.None)
+                if (_runner.runnerState == ERunnerState.None)
                 {
                     _runner.OnStart();
                     _state = EState.Running;
                 }
-                else if(_runner.State == SequenceRunner.EState.Diposed)
+                else if(_runner.runnerState == ERunnerState.Diposed)
                 {
                     _runner.Release();
                     _runner = null;
                     _state = EState.Done;
                 }
-                else if(_runner.State == SequenceRunner.EState.Paused)
+                else if(_runner.runnerState == ERunnerState.Paused)
                 {
                     _state = EState.Paused;
                 }
-                else if(_runner.State == SequenceRunner.EState.Failure)
+                else if(_runner.runnerState == ERunnerState.Failure)
                 {
                     _state = EState.Failure;
                 }
-                else if(_runner.State == SequenceRunner.EState.Done)
+                else if(_runner.runnerState == ERunnerState.Done)
                 {
                     _state = EState.Done;
                 }
@@ -125,10 +125,10 @@ namespace PJR.Timeline
 
         public SequenceRunner GetRunner()
         {
+            if (Sequence == null)
+                return null;
             if (_runner == null || _runner.IsDisposed)
-            {
                 _runner = Sequence.GetRunner(gameObject);
-            }
             return _runner;
         }
 
@@ -156,9 +156,9 @@ namespace PJR.Timeline
 
             if (_runner.IsRunning)
                 return;
-            if (_runner.State >= SequenceRunner.EState.Done)
+            if (_runner.runnerState >= ERunnerState.Done)
                 return;
-            _runner.State = SequenceRunner.EState.Running;
+            _runner.runnerState = ERunnerState.Running;
         }
         public void Replay()
         {

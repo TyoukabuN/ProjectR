@@ -15,7 +15,7 @@ public class TimelineTest : MonoBehaviour
         SirenixEditorGUI.BeginBox("Runner State");
         if (runner != null)
         {
-            GUILayout.Label($"State: {runner.State}");
+            GUILayout.Label($"State: {runner.runnerState}");
         }
         else
             GUILayout.Label("No Runner");
@@ -50,7 +50,7 @@ public class TimelineTest : MonoBehaviour
     {
         if (runner != null)
         {
-            if (runner.State == SequenceRunner.EState.None)
+            if (runner.runnerState == ERunnerState.None)
             {
                 Profiler.BeginSample("SequenceStart");
                 runner.OnStart();

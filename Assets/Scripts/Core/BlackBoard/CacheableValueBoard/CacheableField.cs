@@ -16,12 +16,12 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
     [InlineProperty]
     public class CacheableField<T> : ICacheableValue
     {
-        public static bool ExtractBuffer(int index, out BufferUnit<T> unit) => GenericBuffer<T>.instance.ExtractBuffer(index, out unit);
-        public static void ClearBuffer(int index, uint guid) => GenericBuffer<T>.instance.ClearBuffer(index,guid);
-        public bool UsingLocalValue =>  (EGetValueApproach)_valueGainApproach == EGetValueApproach.LocalValue;
-        public bool UsingValueFromBoard =>  (EGetValueApproach)_valueGainApproach == EGetValueApproach.FromBoard;
-        //public bool UsingValueByEvaluation =>  (EGetValueApproach)_valueGainApproach == EGetValueApproach.ByEvaluation;
-        public bool AnyBoardValueReference => _boardValueReference != null;
+        protected static bool ExtractBuffer(int index, out BufferUnit<T> unit) => GenericBuffer<T>.instance.ExtractBuffer(index, out unit);
+        protected static void ClearBuffer(int index, uint guid) => GenericBuffer<T>.instance.ClearBuffer(index,guid);
+        protected bool UsingLocalValue =>  (EGetValueApproach)_valueGainApproach == EGetValueApproach.LocalValue;
+        protected bool UsingValueFromBoard =>  (EGetValueApproach)_valueGainApproach == EGetValueApproach.FromBoard;
+        //protected bool UsingValueByEvaluation =>  (EGetValueApproach)_valueGainApproach == EGetValueApproach.ByEvaluation;
+        protected bool AnyBoardValueReference => _boardValueReference != null;
         public Type ValueType => typeof(T);
 
         private CacheableValueBoard _boardReference = null;
@@ -29,17 +29,30 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
 
         public object GetValue() => _localValue;
 
+        /// <summary>
+        /// 获取值的方法
+        /// 这个Field是怎样获取值的
+        /// 0:本地值 1:黑板
+        /// </summary>
         [HorizontalGroup("Value",width:20)]
         [GetValueApproach]
         [SerializeField]
         private int _valueGainApproach = 0;
         
+        /// <summary>
+        /// 本地值
+        /// 如果是从本地拿值的话,editor显示这个
+        /// </summary>
         [HorizontalGroup("Value/LocalValue"),] 
         [SerializeField] 
         [HideLabel]
         [ShowIf("UsingLocalValue")]
         private T _localValue;
 
+        /// <summary>
+        /// 黑板值引用
+        /// 如果是从黑板拿值的话,editor显示这个
+        /// </summary>
         [HorizontalGroup("Value/BoardValue"),] 
         [OdinSerialize] 
         [HideLabel]
@@ -48,14 +61,58 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
         [ShowIf("UsingValueFromBoard")]
         private BoardValueReference<T> _boardValueReference;
 
-        public void WriteFromBoard(CacheableValueBoard board)
+        /// <summary>
+        /// 获取有可能获取到一个default(T)
+        /// 使用TryGetValue代替会知道取值是否是吧
+        /// </summary>
+        public T Value
         {
+            get
+            {
+                TryGetValue(out T value);
+                return value;
+            }
         }
 
-        public static IEnumerable<Type> GetFiTypeFilter()
+        /// <summary>
+        /// 尝试取值,失败会返回default(T)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool TryGetValue(out T value)
+        {
+            value = default;
+            if (UsingLocalValue)
+            {
+                value = _localValue; 
+                return true;
+            }
+            if (UsingValueFromBoard)
+            {
+                if(_boardValueReference == null)
+                    return false;
+                value = _boardValueReference.Value;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 用于给GenericTypeFilter提过类型筛选
+        /// 获取方法在TypeExtension.GetTypeFilter()
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetTypeFilter()
         {
             yield return typeof(CacheableField<>).MakeGenericType(typeof(T));
         }
+        
+        /// <summary>
+        /// 这个方法只会修改本地值
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="clearBuffer"></param>
+        /// <returns></returns>
         public bool WriteFromBuffer(ICacheableValue.IToBufferToken token, bool clearBuffer)
         {
             if (!token.Valid())
@@ -68,6 +125,12 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
             return true;
         }
 
+        /// <summary>
+        /// 这个方法只会修改本地值
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="clearBuffer"></param>
+        /// <returns></returns>
         public bool WriteFromBuffer(int index, uint guid, bool clearBuffer)
         {
             if (!GenericBuffer<T>.instance.TryGetValue(index, guid, out T bufferValue))
@@ -79,11 +142,24 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
         }
 
         public bool CacheToBuffer(out Type type, out int index, out uint guid)
-            => GenericBuffer<T>.instance.TryCacheValue(_localValue, out type, out index, out guid);
+        {
+            type = null;
+            index = 0;
+            guid = 0;
+            if (UsingLocalValue)
+                return GenericBuffer<T>.instance.TryCacheValue(_localValue, out type, out index, out guid);
+            if (UsingValueFromBoard)
+            {
+                if (_boardValueReference == null)
+                    return false;
+                return GenericBuffer<T>.instance.TryCacheValue(_boardValueReference.Value, out type, out index, out guid);
+            }
+            return false;
+        }
         
         public bool CacheToBuffer(out ICacheableValue.IToBufferToken token)
         {
-            if (!CacheToBuffer(out Type type,out var index, out var guid))
+            if (!CacheToBuffer(out Type _,out var index, out var guid))
             {
                 token = CacheableValue<T>.ToBufferToken.Invalid;
                 return false;
@@ -93,6 +169,13 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
             return true;
         }
         
+        public static implicit operator T(CacheableField<T> rhs)
+        {
+            if (rhs == null)
+                return default;
+            return rhs.Value;
+        }
+
 #if UNITY_EDITOR
         public bool ShowBoardValueReference => UsingValueFromBoard && AnyBoardValueReference;
         public bool ShowBoardValueGainButton => UsingValueFromBoard && !AnyBoardValueReference;
@@ -101,7 +184,6 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
     
     
 #if UNITY_EDITOR
-
     public static class BoardEditorUtil
     {
         public struct InspectorPropertyRef<T>

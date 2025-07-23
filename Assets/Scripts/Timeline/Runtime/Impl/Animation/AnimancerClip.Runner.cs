@@ -22,7 +22,7 @@ namespace PJR.Timeline
                 Debug.Log("Clip Start!");
                 animancer = context.gameObject?.GetComponent<AnimancerComponent>();
                 if (animancer == null)
-                    AsFailure();
+                    AsFailure("animancer == null");
                 else if (clip.animationClip == null)
                     AsFailure("clip.animationClip == null");
                 
@@ -38,7 +38,7 @@ namespace PJR.Timeline
             {
                 if (animancerState == null)
                     return;
-                Debug.Log($"[AnimancerClip.Runner.OnUpdate] GetLocalSecond:{GetLocalSecond()}");
+                //Debug.Log($"[AnimancerClip.Runner.OnUpdate] GetLocalSecond:{GetLocalSecond()}");
                 animancerState.Time = GetLocalSecond();
             }
             public override void OnEnd()

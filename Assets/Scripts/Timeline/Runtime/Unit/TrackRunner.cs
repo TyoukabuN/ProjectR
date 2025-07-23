@@ -10,24 +10,16 @@ namespace PJR.Timeline
 {
     public class TrackRunner : PoolableObject, IErrorRecorder
     {
-        public enum EState
+        ERunnerState _runnerState = 0;
+        public ERunnerState runnerState
         {
-            None = 0,
-            Running,
-            Done,
-            Failure,
-            Diposed,
-        }
-        EState _state = 0;
-        public EState State
-        {
-            get => _state;
+            get => _runnerState;
             private set
             {
-                if (_state == value)
+                if (_runnerState == value)
                     return;
-                Internal_OnStateChanged(_state, value);
-                _state = value;
+                Internal_OnStateChanged(_runnerState, value);
+                _runnerState = value;
             }
         }
         
@@ -40,12 +32,12 @@ namespace PJR.Timeline
 
         public double totalTime = 0f;
         double _timeCounter = 0f;
-        public bool Invalid => _state >= EState.Diposed || !string.IsNullOrEmpty(Error);
+        public bool Invalid => _runnerState >= ERunnerState.Diposed || !string.IsNullOrEmpty(Error);
 
         public TrackRunner() 
         {
             Clear();
-            State = EState.None;
+            runnerState = ERunnerState.None;
         }
         public override void Clear()
         {
@@ -62,7 +54,7 @@ namespace PJR.Timeline
 
             totalTime = 0f;
             _timeCounter = 0f;
-            State = EState.Diposed;
+            runnerState = ERunnerState.Diposed;
         }
 
         public virtual bool Reset(ISequence sequence, ITrack track) => Reset(sequence, track, Global.Clip2ClipHandleFunc);
@@ -74,14 +66,26 @@ namespace PJR.Timeline
 
             if (_track == null)
             {
-                State = EState.Failure;
-                _error = Define.ErrCode_TrackRuner_TrackIsNull;
+                runnerState = ERunnerState.Failure;
+                _error = ErrCode_TrackRuner_TrackIsNull;
                 return false;
             }
             if (_clip2ClipHandle == null)
             {
-                State = EState.Failure;
-                _error = Define.ErrCode_TrackRuner_Clip2ClipHandle;
+                runnerState = ERunnerState.Failure;
+                _error = ErrCode_TrackRuner_Clip2ClipHandle;
+                return false;
+            }
+            if (_track.Clips == null)
+            {
+                runnerState = ERunnerState.Failure;
+                _error = ErrCode_TrackRuner_ClipsIsNull;
+                return false;
+            }
+            if (_track.Clips.Count <= 0)
+            {
+                runnerState = ERunnerState.Failure;
+                _error = ErrCode_TrackRuner_NoneClip;
                 return false;
             }
 
@@ -107,25 +111,25 @@ namespace PJR.Timeline
 
             ForEachClipRunner(InitClipRunner);
 
-            State = EState.None;
+            runnerState = ERunnerState.None;
             return true;
         }
         public virtual void OnInit()
         {
-            State = EState.None;
+            runnerState = ERunnerState.None;
         }
         public virtual void OnStart()
         {
-            State = EState.Running;
+            runnerState = ERunnerState.Running;
         }
 
         public virtual void OnUpdate(UpdateContext context)
         {
-            if (_state >= EState.Done)
+            if (_runnerState >= ERunnerState.Done)
                 return;
             if (clipRunners == null)
             {
-                State = EState.Done;
+                runnerState = ERunnerState.Done;
                 return;
             }
 
@@ -155,14 +159,14 @@ namespace PJR.Timeline
                     allDone = false;
             }
 
-            State = allDone ? EState.Done : _state;
+            runnerState = allDone ? ERunnerState.Done : _runnerState;
         }
         
-        public Action<EState, EState> OnStateChanged;
-        private void Internal_OnStateChanged(EState oldState, EState newState)
+        public Action<ERunnerState, ERunnerState> OnStateChanged;
+        private void Internal_OnStateChanged(ERunnerState oldRunnerState, ERunnerState newRunnerState)
         {
-            OnStateChanged?.Invoke(oldState, newState);
-            if (newState == EState.Done)
+            OnStateChanged?.Invoke(oldRunnerState, newRunnerState);
+            if (newRunnerState == ERunnerState.Done)
                 Internal_OnDone();
         }
         private void Internal_OnDone()

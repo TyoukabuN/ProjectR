@@ -5,6 +5,13 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
+/// <summary>
+/// 这个类是用来展示怎样使用黑板的<br/>
+/// 可以看到怎样定义一个黑板<br/>
+/// 可以看到怎样定义一个CacheableField<br/>
+/// 它们需要什么Attrubute标记<br/>
+/// BBOverrideToTest可以看到怎样进行黑板的覆盖
+/// </summary>
 public class NonGCBlackBoard : SerializedMonoBehaviour, ICachedValueBoardHolder
 {
     public Color color;
@@ -17,8 +24,9 @@ public class NonGCBlackBoard : SerializedMonoBehaviour, ICachedValueBoardHolder
     private CacheableValueBoard cacheableValueBoard2;
     
     [TitleGroup("黑板Field测试")]
-    [NonSerialized,OdinSerialize,GenericTypeFilter]
-    [HideReferenceObjectPicker,Button]
+    [NonSerialized,OdinSerialize]//禁用掉unity的序列化,只用Odin序列化,因为有些字段用到内部引用
+    [GenericTypeFilter]
+    [HideReferenceObjectPicker]
     public CacheableField<string> StringValue;
         
     CacheableValueBoard ICachedValueBoardHolder.GetCachedValueBoard() => cacheableValueBoard;
@@ -26,26 +34,18 @@ public class NonGCBlackBoard : SerializedMonoBehaviour, ICachedValueBoardHolder
     [TitleGroup("黑板覆写测试")]
     public ICachedValueBoardHolder TargetBoard;
     [Button,TitleGroup("黑板覆写测试")]
-    public void Test()
+    public void BBOverrideToTest()
     {
         if (TargetBoard == null)
             return;
-        CacheableField<int>.GetFiTypeFilter();
         Debug.Log(cacheableValueBoard?.OverrideTo(TargetBoard));
     }
 
-    // private bool _doRuntimeGCTest;
-    // [Button, ShowIf("@EditorApplication.isPlaying"),TitleGroup("黑板测试")]
-    // public void RuntimeTest()
-    // {
-    //     _doRuntimeGCTest = true;
-    // }
-    // private void Update()
-    // {
-    //     if (_doRuntimeGCTest)
-    //     {
-    //         using (new ProfileScope("BoardGCTest"))
-    //             cacheableValueBoard?.OverrideTo(TargetBoard);
-    //     }
-    // }
+    [Button]
+    public void Test2()
+    {
+        string str = StringValue; 
+        Debug.Log($"str: {str}");
+        Debug.Log($"StringValue.Value: {StringValue.Value}");
+    }
 }

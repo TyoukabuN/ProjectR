@@ -86,7 +86,8 @@ namespace PJR
 
         public static bool Contain(GameObject gameObject)
         {
-            return gameObject.GetComponent<SequenceDirector>() != null;
+            var director = gameObject.GetComponent<SequenceDirector>();
+            return director?.Sequence != null;
         }
         private static void OnHierarchyItem(HierarchyItem item)
         {

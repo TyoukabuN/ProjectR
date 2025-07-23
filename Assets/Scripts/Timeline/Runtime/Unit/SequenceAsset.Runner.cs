@@ -30,36 +30,37 @@ namespace PJR.Timeline
             float _unscaleTotalTime = 0f;
             float _secondPerFrame = 0f;
             float _frameUpdateCounter = 0f;
-            Define.UpdateContext _updateContext;
             
             protected GameObject _gameObject;
-            protected SequenceAsset _sequence;
+            protected SequenceAsset _sequenceAsset;
+
+            protected override ISequence sequence => _sequenceAsset;
 
             public void Reset(GameObject gameObject, SequenceAsset sequenceAsset)
             {
                 _gameObject = gameObject;
-                _sequence = sequenceAsset;
+                _sequenceAsset = sequenceAsset;
 
-                if (_sequence == null)
+                if (_sequenceAsset == null)
                 {
-                    State = EState.Failure;
+                    runnerState = ERunnerState.Failure;
                     return;
                 }
 
-                if (!_sequence.Valid)
+                if (!_sequenceAsset.Valid)
                 {
-                    State = EState.Done;
+                    runnerState = ERunnerState.Done;
                     return;
                 }
 
                 _trackRunners = UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Get();
-                for (int i = 0; i < _sequence.Tracks.Count; i++)
+                for (int i = 0; i < _sequenceAsset.Tracks.Count; i++)
                 {
-                    var track = _sequence.Tracks[i];
+                    var track = _sequenceAsset.Tracks[i];
                     if (!track.IsValid())
                         continue;
                     var trackRunner = TrackRunner.Get();
-                    trackRunner.Reset(_sequence, track);
+                    trackRunner.Reset(_sequenceAsset, track);
                     if (trackRunner.Invalid)
                     {
                         trackRunner.Release();
@@ -70,7 +71,7 @@ namespace PJR.Timeline
                 }
 
                 _secondPerFrame = GetSecondPerFrame_Float();
-                State = EState.None;
+                runnerState = ERunnerState.None;
 
                 _updateContext = new Define.UpdateContext();
                 _updateContext.totalTime = 0;
@@ -80,10 +81,10 @@ namespace PJR.Timeline
 
             public override void OnStart()
             {
-                if (State >= EState.Done)
+                if (runnerState >= ERunnerState.Done)
                     return;
                 Debug.Log("SequenceRunner.OnStart");
-                State = EState.Running;
+                runnerState = ERunnerState.Running;
 
                 ForEachTrackRunner(StartTrackRunner);
                 OnUpdate(_updateContext);
@@ -97,11 +98,11 @@ namespace PJR.Timeline
             
             protected void OnUpdate(Define.UpdateContext context, bool force = false)
             {
-                if (State == EState.Running || force)
+                if (runnerState == ERunnerState.Running || force)
                 {
                     if (_trackRunners == null)
                     {
-                        State = EState.Done;
+                        runnerState = ERunnerState.Done;
                         return;
                     }
 
@@ -111,16 +112,16 @@ namespace PJR.Timeline
                         var trackRunner = _trackRunners[i];
                         trackRunner.OnUpdate(context);
 
-                        if (trackRunner.State < TrackRunner.EState.Done)
+                        if (trackRunner.runnerState < ERunnerState.Done)
                             allDone = false;
                     }
 
-                    State = allDone ? EState.Done : _state;
+                    runnerState = allDone ? ERunnerState.Done : RunnerState;
                 }
-                else if (State == EState.Paused)
+                else if (runnerState == ERunnerState.Paused)
                 {
                 }
-                else if (State == EState.Done)
+                else if (runnerState == ERunnerState.Done)
                 {
                 }
             }
@@ -133,7 +134,7 @@ namespace PJR.Timeline
                     return;
                 if (_trackRunners == null)
                 {
-                    State = EState.Done;
+                    runnerState = ERunnerState.Done;
                     return;
                 }
 
@@ -160,39 +161,8 @@ namespace PJR.Timeline
                     frameUpdateRound++;
                 }
             }
-
-            Define.UpdateContext UpdateContext(double scaledDeltaTime, double unscaledDeltaTime)
-            {
-                _updateContext.timeScale = GetTimeScale();
-                _updateContext.totalTime = _totalTime;
-
-                _updateContext.unscaledDeltaTime = unscaledDeltaTime;
-                _updateContext.deltaTime = scaledDeltaTime;
-
-                _updateContext.updateIntervalType = Define.IntervalType.Second;
-
-                return _updateContext;
-            }
-
-            Define.UpdateContext UpdateContext(int frame)
-            {
-                if (frame > 0)
-                {
-                    _updateContext.frameChanged = true;
-                    _updateContext.totalFrame += frame;
-                }
-
-                _updateContext.updateIntervalType = Define.IntervalType.Frame;
-
-                return _updateContext;
-            }
-
-
-
-            public double GetTimeScale() => Time.timeScale;
-            double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.FrameRateType ?? Define.EFrameRate.Game);
+            double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequenceAsset?.FrameRateType ?? Define.EFrameRate.Game);
             float GetSecondPerFrame_Float() => (float)GetSecondPerFrame();
-
             void StartTrackRunner(TrackRunner clipHandle) => clipHandle?.OnStart();
             void ClearTrackRunner(TrackRunner clipHandle) => clipHandle?.Clear();
 
@@ -213,7 +183,7 @@ namespace PJR.Timeline
             {
                 base.Clear();
                 
-                if (_state == EState.Diposed)
+                if (RunnerState == ERunnerState.Diposed)
                     return;
                 ForEachTrackRunner(ClearTrackRunner);
 
@@ -223,7 +193,7 @@ namespace PJR.Timeline
                     _trackRunners = null;
                 }
 
-                _sequence = null;
+                _sequenceAsset = null;
                 _secondPerFrame = 0;
                 _frameUpdateCounter = 0f;
                 _remainDeltaTime = 0f;

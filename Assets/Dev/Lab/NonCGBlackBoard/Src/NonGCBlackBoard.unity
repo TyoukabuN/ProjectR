@@ -369,7 +369,45 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 0
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: "\u5B57\u7B26\u4E32A"
+    - Name: $v
+      Entry: 7
+      Data: 3|PJR.Core.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String,
+        mscorlib]], PJR.Core
+    - Name: _localValue
+      Entry: 1
+      Data: AAA
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: "\u5B57\u7B26\u4E32B"
+    - Name: $v
+      Entry: 7
+      Data: 4|PJR.Core.BlackBoard.CachedValueBoard.CacheableValue`1[[System.String,
+        mscorlib]], PJR.Core
+    - Name: _localValue
+      Entry: 1
+      Data: BBB
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 

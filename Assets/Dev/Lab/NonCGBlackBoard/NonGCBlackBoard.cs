@@ -3,6 +3,7 @@ using PJR.Core.BlackBoard.CachedValueBoard;
 using PJR.BlackBoard.Inspector;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -29,16 +30,19 @@ public class NonGCBlackBoard : SerializedMonoBehaviour, ICachedValueBoardHolder
     [HideReferenceObjectPicker]
     public CacheableField<string> StringValue;
         
-    CacheableValueBoard ICachedValueBoardHolder.GetCachedValueBoard() => cacheableValueBoard;
+    CacheableValueBoard ICachedValueBoardHolder.GetCachedValueBoard() => cacheableValueBoard2;
 
     [TitleGroup("黑板覆写测试")]
     public ICachedValueBoardHolder TargetBoard;
-    [Button,TitleGroup("黑板覆写测试")]
+    [Button("B1覆盖B2"),TitleGroup("黑板覆写测试")]
     public void BBOverrideToTest()
     {
-        if (TargetBoard == null)
+        if (cacheableValueBoard == null)
+            return; 
+        if (cacheableValueBoard2 == null)
             return;
-        Debug.Log(cacheableValueBoard?.OverrideTo(TargetBoard));
+        Undo.RecordObject(this, "B1覆盖B2");
+        Debug.Log(cacheableValueBoard?.OverrideTo(cacheableValueBoard2));
     }
 
     [Button]

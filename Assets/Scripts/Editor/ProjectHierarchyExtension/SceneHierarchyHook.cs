@@ -28,11 +28,17 @@ namespace PJR.Editor
                 return;
             menu.AddItem(new GUIContent("Reload Scene"), false, () =>Internal_ReloadScene(target));
         }
+
         /// <summary>
         /// 重新记载场景的快捷键
         /// </summary>
-        [Shortcut("PJR/Editor/ReloadScene", KeyCode.R, ShortcutModifiers.Control | ShortcutModifiers.Shift | ShortcutModifiers.Alt)]
-        public static void ReloadCurrentScene() => Internal_ReloadScene(EditorSceneManager.GetActiveScene());
+        [Shortcut("PJR/Editor/ReloadScene", KeyCode.R,
+            ShortcutModifiers.Control | ShortcutModifiers.Shift | ShortcutModifiers.Alt)]
+        public static void ReloadCurrentScene()
+        {
+            Internal_ReloadScene(EditorSceneManager.GetActiveScene());
+        }
+
         static void Internal_ReloadScene(Scene target)
         {
             if (target == null || !target.isLoaded)

@@ -60,7 +60,7 @@ namespace PJR.Timeline.Editor
             private TrackGUI trackGUI;
             public TrackGUI TrackGUI => trackGUI ??= new TrackGUI();
 
-            #region 一些动态的Rect
+            #region 一些绘制相关的临时变量
             public float currentTrackMenuAreaWidth = Const.trackMenuDefaultAreaWidth;
             public Rect headerSizeHandleRect;// = instance.headerSizeHandleRect;
             #endregion

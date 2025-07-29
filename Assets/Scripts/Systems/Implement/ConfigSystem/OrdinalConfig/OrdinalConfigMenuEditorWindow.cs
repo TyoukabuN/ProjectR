@@ -25,19 +25,24 @@ namespace PJR.Config
     where TAsset : OrdinalConfigAsset<TItemAsset>
     where TItemAsset : OrdinalConfigItemAsset
     {
-
-        public enum HierarchyType
+        public enum HierarchyType : int
         {
-            ID顺序,
-            文件路径,
+            IDOrdered = 0,
+            PathBase = 1,
+            Length,
         }
+        private static string[] HierarchyTypes = new[]
+        {
+            "ID顺序",
+            "文件路径",
+        };
 
         protected OdinMenuTree _tree = null;
         protected TConfig _config = null;
         protected string _error = null;
-        protected HierarchyType _hierarchyType = HierarchyType.ID顺序;
+        protected int _hierarchyType = (int)HierarchyType.IDOrdered;
         protected bool _inited = false;
-        public virtual string WindowTitle { get { return typeof(TConfig).Name; } }
+        public virtual string WindowTitle => typeof(TConfig).Name;
         public virtual bool DrawSearchToolbar => true;
 
         public virtual void Init(TConfig config)
@@ -51,6 +56,9 @@ namespace PJR.Config
         public abstract void Init();
 
         protected bool _rebuildTreeNextFrame = false;
+        
+        private static string[] _tempHierarchyTypes;
+
         protected override void OnBeginDrawEditors()
         {
             var selected = MenuTree.Selection.FirstOrDefault();
@@ -59,11 +67,25 @@ namespace PJR.Config
             SirenixEditorGUI.BeginHorizontalToolbar(toolbarHeight);
             {
                 GUILayout.Label("菜单显示方式:");
-                var _hierarchyTypeTemp = (HierarchyType)EditorGUILayout.EnumPopup(_hierarchyType, GUILayout.Width(80));
-                if (_hierarchyTypeTemp != _hierarchyType)
+                if (_tempHierarchyTypes == null)
+                {
+                    var length = (int)HierarchyType.Length;
+                    if(CustomHierarchyType != null)
+                        length += CustomHierarchyType.Length;
+                    
+                    _tempHierarchyTypes = new string[length];
+                    for (var i = 0; i < HierarchyTypes.Length; i++)
+                        _tempHierarchyTypes[i] = HierarchyTypes[i];
+                    //override的HierarchyType
+                    if(CustomHierarchyType!= null)
+                        for (var i = HierarchyTypes.Length; i < length; i++)
+                            _tempHierarchyTypes[i] = CustomHierarchyType[i - HierarchyTypes.Length];
+                }
+                var hierarchyTypeTemp = EditorGUILayout.Popup(_hierarchyType, _tempHierarchyTypes, GUILayout.Width(100));
+                if (hierarchyTypeTemp != _hierarchyType)
                 {
                     _rebuildTreeNextFrame = true;
-                    _hierarchyType = _hierarchyTypeTemp;
+                    _hierarchyType = hierarchyTypeTemp;
                 }
 
                 GUILayout.FlexibleSpace();
@@ -71,7 +93,7 @@ namespace PJR.Config
                 Editor_OnDrawToolbarButton();
 
                 //创建配置按钮
-                if (_hierarchyType == HierarchyType.文件路径)
+                if (_hierarchyType == (int)HierarchyType.PathBase)
                 {
                     if (selected != null)
                     {
@@ -81,10 +103,8 @@ namespace PJR.Config
                         }
                     }
                 }
-                else if (_hierarchyType == HierarchyType.ID顺序)
-                {
+                else 
                     Editor_DrawCreateConfigBtn();
-                }
 
                 Editor_DrawCorrectConfigBtn();
                 Editor_DrawRefreshConfigBtn();
@@ -138,7 +158,15 @@ namespace PJR.Config
             _tree.Config.DrawSearchToolbar = DrawSearchToolbar;
             _tree.Selection.SelectionChanged += OnMenuSelectionChanged;
 
-            OnFillTree(_tree);
+            OnBeforeFillTree(_tree);
+                
+            if (_hierarchyType < (int)HierarchyType.Length)
+                FillTreeDefault(_tree);
+            else
+            {
+                if(!OnFillTree(_tree, _hierarchyType - (int)HierarchyType.Length)) 
+                    FillTreeDefault(_tree);
+            }
 
             _tree.EnumerateTree(OnSetupMenuItemRightClick);
 
@@ -162,12 +190,37 @@ namespace PJR.Config
             return path.Replace('\\', '/').Replace("\\", "/");
         }
 
-        protected void OnFillTree(OdinMenuTree tree)
+        /// <summary>
+        /// 可以通过重写这个属性来自定自己的HierarchyType
+        /// 你还需要重写OnFillTree(OdinMenuTree tree, int localHierarchyType)方法来填充MenuTree
+        /// </summary>
+        protected virtual string[] CustomHierarchyType => null;
+        protected virtual void OnBeforeFillTree(OdinMenuTree tree){}
+        /// <summary>
+        /// 可以被重写的MenuTree填充方法
+        /// </summary>
+        /// <param name="tree"></param>
+        /// <param name="localHierarchyType">本地HierarchyType索引,减去OrdinalConfigMenuEditorWindow.HierarchyType长度之后的值</param>
+        /// <returns></returns>
+        protected virtual bool OnFillTree(OdinMenuTree tree, int localHierarchyType) => false;
+        /// <summary>
+        /// 获取以id顺序排列是TItemAsset的菜单名字
+        /// </summary>
+        /// <param name="itemAsset"></param>
+        /// <param name="menuItemName"></param>
+        /// <returns></returns>
+        protected virtual bool GetMenuItemName_IDOrdered(TItemAsset itemAsset, out string menuItemName)
         {
-            FillTreeDefault(tree);
+            menuItemName = string.Empty;
+            return false;
         }
-        protected void FillTreeDefault(OdinMenuTree tree)
-
+        /// <summary>
+        /// 填充默认的MenuTree
+        /// 可以通过重写OnFillTree方法,并返回true来打断FillTreeDefault的调用
+        /// 从而实现自定应
+        /// </summary>
+        /// <param name="tree"></param>
+        protected virtual void FillTreeDefault(OdinMenuTree tree)
         {
             if (!CheckValid())
             {
@@ -175,7 +228,7 @@ namespace PJR.Config
                 return;
             }
 
-            if (_hierarchyType == HierarchyType.ID顺序)
+            if (_hierarchyType == (int)HierarchyType.IDOrdered)
             {
                 var temp = new List<TItemAsset>(_config.Editor_Asset.itemAssets);
                 temp.Sort(); 
@@ -185,11 +238,12 @@ namespace PJR.Config
                     if (itemAsset == null)
                         continue;
 
-                    string menuItemName = $"[{itemAsset.ID}] {itemAsset.Editor_LabelName}";
+                    if(!GetMenuItemName_IDOrdered(itemAsset,out string menuItemName)) 
+                        menuItemName = $"[{itemAsset.ID}] {itemAsset.Editor_LabelName}";
                     tree.Add(menuItemName, itemAsset);
                 }
             }
-            else if (_hierarchyType == HierarchyType.文件路径)
+            else if (_hierarchyType == (int)HierarchyType.PathBase)
             {
                 var guids = AssetDatabase.FindAssets($"t:Folder t:{typeof(TItemAsset).Name}", new string[] { _config.ItemAssetRoot });
                 for (int i = 0; i < guids.Length; i++)
@@ -217,6 +271,7 @@ namespace PJR.Config
                 }
             }
         }
+
 
         /// <summary>
         /// 文件夹MenuItem

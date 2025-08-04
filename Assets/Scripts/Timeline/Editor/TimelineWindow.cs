@@ -423,10 +423,10 @@ namespace PJR.Timeline.Editor
                 //滑轮上滑是ZoomIn(sign:-1 unit:-3)
                 var sign = -Mathf.Sign(evt.delta.y);
                 //按比例缩放系数
-                State.currentPixelPerFrameScaleFactor *= 1 + sign * Const.ScalingSpeed;
-                State.currentPixelPerFrameScaleFactor = Mathf.Clamp01(State.currentPixelPerFrameScaleFactor);
+                State.CurrentPixelPerFrameScaleFactor *= 1 + sign * Const.ScalingSpeed;
+                State.CurrentPixelPerFrameScaleFactor = Mathf.Clamp01(State.CurrentPixelPerFrameScaleFactor);
                 //将缩放系数转成PixelPerFrame
-                State.currentPixelPerFrame = State.currentPixelPerFrameScaleFactor * Const.MaxPixelPerFrame;
+                State.CurrentPixelPerFrame = State.CurrentPixelPerFrameScaleFactor * Const.MaxPixelPerFrame;
                 Repaint();
             });
 
@@ -445,7 +445,7 @@ namespace PJR.Timeline.Editor
             int frameStep = 1;//时间尺绘制循环的帧数步长  
             int tScaleIndex = 0;//临时时间尺主刻度线间隔模式索引
             //时间尺的缩放的本质是对<像素/帧>的缩放
-            float pixelPerFrame = State.currentPixelPerFrame;
+            float pixelPerFrame = State.CurrentPixelPerFrame;
             //绘制时间尺的时候每一步都会绘制一个刻度线
             //每个刻度线的间隔不能小于MinCursorVisiblePixel(3)像素,否则增加绘制循环步长 (为了缩放时间尺的视觉效果)
             //从而增加间隔刻度线像素间隔

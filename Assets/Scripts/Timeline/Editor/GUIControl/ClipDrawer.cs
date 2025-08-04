@@ -28,8 +28,8 @@ namespace PJR.Timeline.Editor
         /// <param name="rect"></param>
         public virtual void DrawClip(Rect rect)
         {
-            var start = IClip.StartFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
-            var end = IClip.EndFrame * GUIUtil.windowState.currentPixelPerFrame + rect.xMin;
+            var start = IClip.StartFrame * GUIUtil.windowState.CurrentPixelPerFrame + rect.xMin;
+            var end = IClip.EndFrame * GUIUtil.windowState.CurrentPixelPerFrame + rect.xMin;
             Rect clipRect = Rect.MinMaxRect(start, rect.yMin, end, rect.yMax);
 
             if (clipDragging)
@@ -37,9 +37,9 @@ namespace PJR.Timeline.Editor
             else if (clipResizing)
             { 
                 if(clipResie_purpose == ResizePurpose.Left)
-                    clipRect.xMin += clipResize_draggedFrameOffset * windowState.currentPixelPerFrame;
+                    clipRect.xMin += clipResize_draggedFrameOffset * windowState.CurrentPixelPerFrame;
                 if (clipResie_purpose == ResizePurpose.Right)
-                    clipRect.xMax += clipResize_draggedFrameOffset * windowState.currentPixelPerFrame;
+                    clipRect.xMax += clipResize_draggedFrameOffset * windowState.CurrentPixelPerFrame;
             }
 
             //背景
@@ -114,17 +114,17 @@ namespace PJR.Timeline.Editor
             rect.ToOrigin();
 
             {
-                var start = IClip.StartFrame * GUIUtil.windowState.currentPixelPerFrame;
-                var end = IClip.EndFrame * GUIUtil.windowState.currentPixelPerFrame;
+                var start = IClip.StartFrame * GUIUtil.windowState.CurrentPixelPerFrame;
+                var end = IClip.EndFrame * GUIUtil.windowState.CurrentPixelPerFrame;
                 Rect clipRect = Rect.MinMaxRect(start, 0, end, rect.yMax);
                 if (clipDragging)
                     clipRect.x += clipDrag_draggedPixelOffsetClamped;
                 else if (clipResizing)
                 { 
                     if(clipResie_purpose == ResizePurpose.Left)
-                        clipRect.xMin += clipResize_draggedFrameOffset * windowState.currentPixelPerFrame;
+                        clipRect.xMin += clipResize_draggedFrameOffset * windowState.CurrentPixelPerFrame;
                     if (clipResie_purpose == ResizePurpose.Right)
-                        clipRect.xMax += clipResize_draggedFrameOffset * windowState.currentPixelPerFrame;
+                        clipRect.xMax += clipResize_draggedFrameOffset * windowState.CurrentPixelPerFrame;
                 }
                 float lineMinY = Const.timelineRulerHeight;
                 

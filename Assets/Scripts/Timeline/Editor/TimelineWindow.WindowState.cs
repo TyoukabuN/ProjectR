@@ -31,20 +31,12 @@ namespace PJR.Timeline.Editor
             /// <summary>
             /// 当前每帧所占像素(px/f)
             /// </summary>
-            public float currentPixelPerFrame
-            {
-                get => _currentPixelPerFrame;
-                set
-                {
-                    _currentPixelPerFrame = value;
-                }
-            }
-            private float _currentPixelPerFrame = Const.DefaultPixelPerFrame;
-
+            public float CurrentPixelPerFrame = Const.DefaultPixelPerFrame;
             /// <summary>
             /// 当前PixelPerFrame缩放系数，用在鼠标滚轮事件回调修改currentPixelPerFrame那
             /// </summary>
-            public float currentPixelPerFrameScaleFactor = Const.DefaultPixelPerFrameScaleFactor;
+            public float CurrentPixelPerFrameScaleFactor = Const.DefaultPixelPerFrameScaleFactor;
+
             /// <summary>
             /// debugging=true会绘制一些额外的GUI
             /// </summary>
@@ -130,11 +122,11 @@ namespace PJR.Timeline.Editor
         /// </summary>
         public partial class WindowState
         {
-            public int PixelToFrame(float pixel)=>(int)(pixel / currentPixelPerFrame);
-            public int PixelRoundToFrame(float pixel)=>Mathf.RoundToInt(pixel / currentPixelPerFrame);
-            public double PixelToTime(float pixel)=> (int)(pixel / currentPixelPerFrame) / CurrentFrameRate;
-            public float FrameToPixel(int frames)=> frames * currentPixelPerFrame;
-            public float TimeToPixel(double time) => (float)(time * CurrentFrameRate * currentPixelPerFrame);
+            public int PixelToFrame(float pixel)=>(int)(pixel / CurrentPixelPerFrame);
+            public int PixelRoundToFrame(float pixel)=>Mathf.RoundToInt(pixel / CurrentPixelPerFrame);
+            public double PixelToTime(float pixel)=> (int)(pixel / CurrentPixelPerFrame) / CurrentFrameRate;
+            public float FrameToPixel(int frames)=> frames * CurrentPixelPerFrame;
+            public float TimeToPixel(double time) => (float)(time * CurrentFrameRate * CurrentPixelPerFrame);
             public int ToFrames(double time)=> TimeUtil.ToFrames(time,CurrentFrameRate);
             public double FromFrames(int frames) => TimeUtil.FromFrames(frames, CurrentFrameRate);
             public double CurrentFrameRate => Define.FPS_Default;
@@ -204,8 +196,8 @@ namespace PJR.Timeline.Editor
                         _sequencePlayableHandle = temp;
 
                     _sequenceHandle = value;
-                    currentPixelPerFrame = Const.DefaultPixelPerFrame;
-                    currentPixelPerFrameScaleFactor = Const.DefaultPixelPerFrameScaleFactor;
+                    CurrentPixelPerFrame = Const.DefaultPixelPerFrame;
+                    CurrentPixelPerFrameScaleFactor = Const.DefaultPixelPerFrameScaleFactor;
                     
                     if (value != null)
                     {
@@ -213,12 +205,37 @@ namespace PJR.Timeline.Editor
                         var maxFrame = value.SequenceAsset?.Editor_GetSequenceMaxFrame() ?? -1;
                         if (maxFrame > 0)
                         {
-                            currentPixelPerFrame = instance.trackRectTrackSide.width / maxFrame;
-                            currentPixelPerFrameScaleFactor = currentPixelPerFrame / Const.MaxPixelPerFrame;
+                            CurrentPixelPerFrame = instance.trackRectTrackSide.width / maxFrame;
+                            CurrentPixelPerFrameScaleFactor = CurrentPixelPerFrame / Const.MaxPixelPerFrame;
                         }
                     }
                 }
             }
+
+            /// <summary>
+            /// 设置SequenceAsset相关的EditorPrefKey
+            /// 主要是为了CurrentPixelPerFrameScaleFactor
+            /// 但是现在CurrentPixelPerFrameScaleFactor是计算出来的
+            /// 这个方法可能会用在其他动态量上
+            /// </summary>
+            /// <param name="sequenceAsset"></param>
+            private void SetupEditorPrefKey(SequenceAsset sequenceAsset)
+            {
+                _pixelPerFrameScaleFactorKey = null;
+
+                if (sequenceAsset == null)
+                    return;
+                string assetPath = AssetDatabase.GetAssetPath(sequenceAsset);
+                if (string.IsNullOrEmpty(assetPath))
+                    return;
+                
+                string guid = AssetDatabase.AssetPathToGUID(assetPath);
+                if (string.IsNullOrEmpty(guid))
+                    return;
+                _pixelPerFrameScaleFactorKey = $"{guid}_pixelPerFrameScaleFactorKey";
+            }
+
+            private string _pixelPerFrameScaleFactorKey = null;
 
             private ISequencePlayableHandle _sequencePlayableHandle;
             public ISequencePlayableHandle SequencePlayableHandle => _sequencePlayableHandle;

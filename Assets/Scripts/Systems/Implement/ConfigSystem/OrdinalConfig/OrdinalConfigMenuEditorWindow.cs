@@ -230,48 +230,57 @@ namespace PJR.Config
 
             if (_hierarchyType == (int)HierarchyType.IDOrdered)
             {
-                var temp = new List<TItemAsset>(_config.Editor_Asset.itemAssets);
-                temp.Sort(); 
-                for (int i = 0; i < temp.Count; i++)
-                {
-                    var itemAsset = temp[i];
-                    if (itemAsset == null)
-                        continue;
-
-                    if(!GetMenuItemName_IDOrdered(itemAsset,out string menuItemName)) 
-                        menuItemName = $"[{itemAsset.ID}] {itemAsset.Editor_LabelName}";
-                    tree.Add(menuItemName, itemAsset);
-                }
+                FillTree_IDOrdered(tree);
             }
             else if (_hierarchyType == (int)HierarchyType.PathBase)
             {
-                var guids = AssetDatabase.FindAssets($"t:Folder t:{typeof(TItemAsset).Name}", new string[] { _config.ItemAssetRoot });
-                for (int i = 0; i < guids.Length; i++)
-                {
-                    var guid = guids[i];
-                    var assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                    if (string.IsNullOrEmpty(assetPath))
-                        continue;
+                FillTree_PathBase(tree);
+            }
+        }
 
-                    if (AssetDatabase.IsValidFolder(assetPath))
+        protected virtual void FillTree_IDOrdered(OdinMenuTree tree)
+        {
+            var temp = new List<TItemAsset>(_config.Editor_Asset.itemAssets);
+            temp.Sort(); 
+            for (int i = 0; i < temp.Count; i++)
+            {
+                var itemAsset = temp[i];
+                if (itemAsset == null)
+                    continue;
+
+                if(!GetMenuItemName_IDOrdered(itemAsset,out string menuItemName)) 
+                    menuItemName = $"[{itemAsset.ID}] {itemAsset.Editor_LabelName}";
+                tree.Add(menuItemName, itemAsset);
+            }
+        }
+
+        protected virtual void FillTree_PathBase(OdinMenuTree tree)
+        {
+            var guids = AssetDatabase.FindAssets($"t:Folder t:{typeof(TItemAsset).Name}", new string[] { _config.ItemAssetRoot });
+            for (int i = 0; i < guids.Length; i++)
+            {
+                var guid = guids[i];
+                var assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                if (string.IsNullOrEmpty(assetPath))
+                    continue;
+
+                if (AssetDatabase.IsValidFolder(assetPath))
+                {
+                    tree.Add(GetRelativePath(assetPath), new FolderMenuItem(assetPath));
+                }
+                else
+                {
+                    TItemAsset asset = AssetDatabase.LoadAssetAtPath(assetPath, typeof(TItemAsset)) as TItemAsset;
+                    if (asset != null)
                     {
-                        tree.Add(GetRelativePath(assetPath), new FolderMenuItem(assetPath));
-                    }
-                    else
-                    {
-                        TItemAsset asset = AssetDatabase.LoadAssetAtPath(assetPath, typeof(TItemAsset)) as TItemAsset;
-                        if (asset != null)
-                        {
-                            string menuItemName = $"[{asset.ID}] {asset.Editor_LabelName}";
-                            if (!_config.Editor_ContainItemAsset(asset))
-                                menuItemName = $"[未收录] {asset.Editor_LabelName}";
-                            tree.Add(ReplaceFileName(GetRelativePath(assetPath), menuItemName), asset);
-                        }
+                        string menuItemName = $"[{asset.ID}] {asset.Editor_LabelName}";
+                        if (!_config.Editor_ContainItemAsset(asset))
+                            menuItemName = $"[未收录] {asset.Editor_LabelName}";
+                        tree.Add(ReplaceFileName(GetRelativePath(assetPath), menuItemName), asset);
                     }
                 }
             }
         }
-
 
         /// <summary>
         /// 文件夹MenuItem

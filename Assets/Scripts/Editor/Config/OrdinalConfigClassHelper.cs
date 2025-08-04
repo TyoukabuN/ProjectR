@@ -206,6 +206,14 @@ namespace PJR.Editor
             window.Window = odinEditorWindow;
         }
 
+        private const string DocUrl = "https://docs.qq.com/doc/DY1pITndwRVZFa3R0";
+        
+        [RequireConfigMenuItem("顺序表使用文档")]
+        public static void OrdinalDocument()
+        {
+            Application.OpenURL(DocUrl);
+        }
+
         public abstract class Skeleton
         {
             public abstract Transform GetBoneByName(string name);

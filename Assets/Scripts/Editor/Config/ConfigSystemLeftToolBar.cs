@@ -84,16 +84,18 @@ namespace PJR.Editor
             return _shortcutRequire;
         }
 
-        public interface IConfigMenuItemRequire
+        public interface IConfigMenuItemRequire : IComparable<IConfigMenuItemRequire>
         {
             public void Add2GenericMenu(GenericMenu menu);
+            public int Order { get; }
         }
 
-        public struct ConfigMenuItemRequire : IConfigMenuItemRequire
+        public struct ConfigMenuItemRequire : IConfigMenuItemRequire 
         {
             private MethodInfo _methodInfo;
             private RequireConfigMenuItemAttribute _requireAttribute;
             public string MenuName => _requireAttribute.MenuName;
+            public int Order => _requireAttribute.Order;
 
             public string FinalMenuName => $"{MenuName}";
             public ConfigMenuItemRequire(MethodInfo methodInfo, RequireConfigMenuItemAttribute requireAttribute)
@@ -108,6 +110,17 @@ namespace PJR.Editor
             public void InvoleMethod()
             {
                 _methodInfo?.Invoke(null, null);
+            }
+            public int CompareTo(ConfigMenuItemRequire other)
+            {
+                return Order.CompareTo(other.Order);
+            }
+
+            public int CompareTo(IConfigMenuItemRequire other)
+            {
+                if (ReferenceEquals(other, null))
+                    return -1;
+                return Order.CompareTo(other.Order);
             }
         }
     }

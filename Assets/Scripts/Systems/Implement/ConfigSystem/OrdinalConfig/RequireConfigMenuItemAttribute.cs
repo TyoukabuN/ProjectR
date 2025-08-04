@@ -8,10 +8,12 @@ namespace PJR.Config
     public class RequireConfigMenuItemAttribute : Attribute
     {
         public string MenuName { get; }
+        public int Order { get; }
 
-        public RequireConfigMenuItemAttribute(string menuName)
+        public RequireConfigMenuItemAttribute(string menuName, int order = 0)
         {
             MenuName = menuName;
+            Order = order;
         }
     }
 }

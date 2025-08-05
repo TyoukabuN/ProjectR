@@ -41,7 +41,6 @@ namespace PJR.Config
         protected TConfig _config = null;
         protected string _error = null;
         protected int _hierarchyType = (int)HierarchyType.IDOrdered;
-        protected bool _inited = false;
         public virtual string WindowTitle => typeof(TConfig).Name;
         public virtual bool DrawSearchToolbar => true;
 
@@ -49,7 +48,6 @@ namespace PJR.Config
         {
             _config = config;
             _error = string.Empty;
-            _inited = _config != null;
             titleContent = new GUIContent(WindowTitle);
         }
 
@@ -129,14 +127,13 @@ namespace PJR.Config
             base.OnDestroy();
             _error = null;
             _config = null;
-            _inited = false;
             Debug.Log($"Destroy {this.GetType().Name}");
         }
 
         public virtual bool CheckValid()
         {
             _error = null;
-            if (_config == null && !_inited)
+            if (_config == null)
                 Init();
             if (_config == null)
                 _error = "Config is Null!";

@@ -23,6 +23,5 @@ namespace PJR.Timeline
             temp.SetTimeScope(startTime, endTime);
             return temp;
         }
-        
     }
 }

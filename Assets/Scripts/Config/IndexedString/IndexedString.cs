@@ -9,8 +9,16 @@ namespace PJR.Config
     {
         private static IndexedString _instance;
         public static IndexedString Instance => _instance ??= new IndexedString();
+        
+        
 
 #if UNITY_EDITOR
+
+        public override void Editor_OpenMenuEditorWindow()
+        {
+            MenuEditorWindow.OpenWindow();
+        }
+
         public override void Editor_OpenItemCreateWindow(Action<IndexedStringItemAsset> onFinish, string directory = null)
         {
             ItemCreateWindow.OpenWindow();

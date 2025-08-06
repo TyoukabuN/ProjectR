@@ -60,8 +60,6 @@ namespace PJR.Editor
             //
             menu.AddItem(new GUIContent("Asset相关工具/批量重命名窗口"), false, () => { BatchRename.BatchRenameWindow.Open(); });
             //
-            menu.AddItem(new GUIContent("Debug/Setting/ResourceSystem.DebugLevel/0"), ResourceSystem.DebugLevel == 0, () => { ResourceSystem.DebugLevel = 0; });
-            menu.AddItem(new GUIContent("Debug/Setting/ResourceSystem.DebugLevel/1"), ResourceSystem.DebugLevel == 1, () => { ResourceSystem.DebugLevel = 1; });
             menu.AddItem(new GUIContent("Debug/编译测试"), false, () => { EditorUtil.Build.BuildCurrentTargetCompiles(); });
             //
             menu.AddItem(new GUIContent("编辑菜单脚本"), false, () => { EditorUtil.Asset.OpenScriptOfType(typeof(QuickMenuLeftToolbar)); });

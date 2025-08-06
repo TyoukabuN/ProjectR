@@ -7,10 +7,7 @@ using UnityEngine;
 
 public class AvatarConfigIDAttributeDrawer : OdinAttributeDrawer<AvatarConfigIDAttribute, int>
 {
-    private static GUIContent GUIContent_Label = new GUIContent("配置");
     private bool _enablePropTreeGroup = false;
-    private float _propTreeGroupFloat = 0;
-
     protected override void DrawPropertyLayout(GUIContent label)
     {
         CallNextDrawer(label);

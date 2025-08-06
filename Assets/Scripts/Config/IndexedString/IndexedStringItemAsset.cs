@@ -17,7 +17,7 @@ namespace PJR.Config
         public string StringValue => _stringValue;
         public int hashCode => _hashCode;
 
-        public bool Valid
+        public override bool Valid
         {
             get
             {
@@ -25,7 +25,7 @@ namespace PJR.Config
                     return false;
                 if (_hashCode <= 0)
                     return false;
-                return true;
+                return base.Valid;
             }
         }
         public override string Name => _stringValue;

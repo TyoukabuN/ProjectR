@@ -61,7 +61,7 @@ namespace PJR.Config
             _items = null;
             _id2Item = null;
         }
-        public virtual TItem GetConfig(int id)
+        public virtual TItem GetConfigItem(int id)
         {
             if (!CheckValid())
                 return null;

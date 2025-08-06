@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using PJR.Core.Pooling;
 
 namespace PJR.ScriptStates
 {

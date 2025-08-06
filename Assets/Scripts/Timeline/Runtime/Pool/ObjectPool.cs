@@ -1,8 +1,5 @@
-using System;
-
 namespace PJR.Timeline.Pool
 {
-    
     /// <summary>
     /// Timeline内部的ObjectPool，会在Release的时候调用IDisposable.Dispose
     /// 可以将Dispose当作Clear方法来实现,作用都是清理

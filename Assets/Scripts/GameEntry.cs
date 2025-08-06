@@ -2,6 +2,7 @@ using PJR;
 using System.Collections;
 using UnityEngine;
 using PJR.Systems;
+using Sirenix.OdinInspector;
 
 public class GameEntry : MonoBehaviour
 {
@@ -24,7 +25,6 @@ public class GameEntry : MonoBehaviour
         yield return ResourceSystem.instance.Initialize();
         yield return InputSystem.instance.Initialize();
         yield return SceneSystem.instance.Initialize();
-        //yield return UISystem.instance.Initialize();
     }
     IEnumerator InitConfig()
     {
@@ -44,7 +44,6 @@ public class GameEntry : MonoBehaviour
     }
     void InitGame()
     {
-
     }
 
     void OnAfterInitGame()
@@ -52,5 +51,11 @@ public class GameEntry : MonoBehaviour
         if (SceneSystem.CheckReadyInValidGameScene()) { 
             SceneSystem.instance.OnEnterScene();
         }
+    }
+
+    [Button]
+    void Test()
+    {
+        LogSystem.Log("Test");
     }
 }

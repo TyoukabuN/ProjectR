@@ -2,7 +2,8 @@
     "name": "PJR.Timeline.Runtime",
     "rootNamespace": "",
     "references": [
-        "GUID:4c25c05f410a3a447a75c3b0909152ef"
+        "GUID:4c25c05f410a3a447a75c3b0909152ef",
+        "GUID:f7e926b04c0297e4baf40bf19adf91a9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

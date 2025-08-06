@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Diagnostics;
 using System;
-
+using System.IO;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -25,13 +25,17 @@ namespace PJR.Systems
                 Log("////////////////////[BatchMode]////////////////////");
                 Log("///////////////////////////////////////////////////");
             }
-            Application.logMessageReceived -= OnLogMessageReceived2;
-            Application.logMessageReceived += OnLogMessageReceived2;
+            Application.logMessageReceived -= OnLogMessageReceived;
+            Application.logMessageReceived += OnLogMessageReceived;
         }
          
-        static void OnLogMessageReceived2(string condition, string stackTrace, LogType type)
+        static void OnLogMessageReceived(string condition, string stackTrace, LogType type)
         {
-            LogWithTag(stackTrace, LogType2Tag(type));
+            //防止循环调用
+            //后面还是改成标志位吧
+            if (condition.IndexOf(TAG_PROJECT, StringComparison.Ordinal) >= 0)
+                return;
+            LogWithTag(condition, LogType2Tag(type));
         }
         static string LogType2Tag(LogType logType)
         {
@@ -52,6 +56,18 @@ namespace PJR.Systems
             }
         }
 
+        static void BackupLogToPrev(bool clearLog = false)
+        {
+            string logPath = GetLogFileOutputPath(); 
+            if (!File.Exists(logPath))
+                return;
+            string prevLogPath = GetPreviousLogFileOutputPath();
+            File.Copy(logPath, prevLogPath, true);
+            
+            if(clearLog)
+                ClearLog();
+        }
+
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
         static void RegisterEditorEvent()
@@ -61,17 +77,19 @@ namespace PJR.Systems
         }
         static void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            if (state == PlayModeStateChange.EnteredPlayMode)
+            if (state == PlayModeStateChange.ExitingEditMode)
             {
-                Log("/////////////////////////////////////////////////////////");
-                Log("////////////////////[EnteredPlayMode]////////////////////");
-                Log("/////////////////////////////////////////////////////////");
-            }
+                BackupLogToPrev(true);
+                
+                Log(String.Empty);
+                Log("////////////////////[EnterPlayMode]////////////////////");
+                Log(String.Empty);
+            }     
             else if (state == PlayModeStateChange.ExitingPlayMode)
             {
-                Log("/////////////////////////////////////////////////////////");
+                Log(String.Empty);
                 Log("////////////////////[ExitingPlayMode]////////////////////");
-                Log("/////////////////////////////////////////////////////////");
+                Log(String.Empty);
             }
         }
 

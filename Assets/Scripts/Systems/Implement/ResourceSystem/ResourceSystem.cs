@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
-using System.Linq;
 using YooAsset;
 using System.Diagnostics;
 using Cysharp.Threading.Tasks;
@@ -78,19 +77,14 @@ namespace PJR.Systems
         /// <returns></returns>
         public override IEnumerator Initialize()
         {
-            LoadResDesc();
-            yield return InitializePackage();
-        }
-
-        public async UniTask InitializeAsync()
-        {
             if (_initialized)
-                return;
+                yield break;
             _initialized = false;
             LoadResDesc();
-            await InitializePackage();
-            await UpdatePackageAsync(PackageName);
+            yield return InitializePackage();
+            yield return UpdatePackageAsync(PackageName);
         }
+
         public void InitializeSync(bool force = false)
         {
             if (_initialized && !force)
@@ -119,7 +113,7 @@ namespace PJR.Systems
                 else
 #endif
                 { 
-                    Debug.LogError($"find not ResourceDescription in {filePath}");
+                    LogSystem.LogError($"find not ResourceDescription in {filePath}");
                     return false;
                 }
             }
@@ -133,7 +127,7 @@ namespace PJR.Systems
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError(e);
+                        LogSystem.LogError(e);
                         return false;
                     }
                 }
@@ -152,7 +146,7 @@ namespace PJR.Systems
         /// <returns></returns>
         private void InitializePackageSync()
         {
-            Debug.Log($"[AssetSystem.InitializePackageSync] 初始化资源包");
+            LogSystem.Log($"[AssetSystem.InitializePackageSync] 初始化资源包");
 
             YooAssets.Destroy();
             YooAssets.Initialize();
@@ -170,7 +164,7 @@ namespace PJR.Systems
                 {
                     if (initOperation.Status == EOperationStatus.Failed)
                     {
-                        Debug.LogError($"[AssetSystem.InitializePackageSync] 资源包初始化失败：{packageName}");
+                        LogSystem.LogError($"[AssetSystem.InitializePackageSync] 资源包初始化失败：{packageName}");
                     }
                     else if (initOperation.Status == EOperationStatus.Processing)
                     {
@@ -179,7 +173,7 @@ namespace PJR.Systems
                     else if (initOperation.Status == EOperationStatus.Succeed)
                     {
                         Watch.Stop();
-                        Debug.Log($"[AssetSystem.InitializePackageSync] 资源包初始化成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
+                        LogSystem.Log($"[AssetSystem.InitializePackageSync] 资源包初始化成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
                         _initialized = true;
                         break;
                     }
@@ -190,7 +184,7 @@ namespace PJR.Systems
                     package = YooAssets.TryGetPackage(packageName);
                     if (package != null)
                     {
-                        Debug.LogWarning($"已存在 {packageName}");
+                        LogSystem.LogWarning($"已存在 {packageName}");
                     }
 
                     package = YooAssets.CreatePackage(packageName);
@@ -234,7 +228,7 @@ namespace PJR.Systems
             }
             if (_initialized == false)
             {
-                Debug.LogError($"[AssetSystem.InitializePackageSync] 资源包初始化失败：{packageName}");
+                LogSystem.LogError($"[AssetSystem.InitializePackageSync] 资源包初始化失败：{packageName}");
             }
         }
 
@@ -244,7 +238,7 @@ namespace PJR.Systems
         /// <returns></returns>
         private IEnumerator InitializePackage()
         {
-            Debug.Log($"[ResourceSystem.InitializePackage] 初始化资源包");
+            LogSystem.Log($"[ResourceSystem.InitializePackage] 初始化资源包");
 
             YooAssets.Destroy();
             YooAssets.Initialize();
@@ -258,7 +252,7 @@ namespace PJR.Systems
                 ResourcePackage package = YooAssets.TryGetPackage(packageName);
                 if (package != null)
                 {
-                    Debug.LogError($"已存在 {packageName}");
+                    LogSystem.LogError($"已存在 {packageName}");
                     yield return null;
                 }
 
@@ -306,12 +300,12 @@ namespace PJR.Systems
 
                 if (initOperation.Status != EOperationStatus.Succeed)
                 {
-                    Debug.LogError($"[ResourceSystem.InitializePackage] 资源包初始化失败：{packageName}");
+                    LogSystem.LogError($"[ResourceSystem.InitializePackage] 资源包初始化失败：{packageName}");
                     yield break;
                 }
 
                 Watch.Stop();
-                Debug.Log($"[ResourceSystem.InitializePackage] 资源包初始化成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
+                LogSystem.Log($"[ResourceSystem.InitializePackage] 资源包初始化成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
             }
         }
 
@@ -342,19 +336,19 @@ namespace PJR.Systems
             {
                 if (Watch.ElapsedMilliseconds > SyncUpdatePackageBreakMilliseconds)
                 {
-                    Debug.LogError($"[AssetSystem.UpdatePackage] 同步更新版本号失败：{packageName}");
+                    LogSystem.LogError($"[AssetSystem.UpdatePackage] 同步更新版本号失败：{packageName}");
                     return;
                 }
                 if (updatePackageVersionOperation == null)
                 {
-                    Debug.Log($"[AssetSystem.UpdatePackageSync] 同步更新Package [{packageName}]");
+                    LogSystem.Log($"[AssetSystem.UpdatePackageSync] 同步更新Package [{packageName}]");
                     updatePackageVersionOperation = package.UpdatePackageVersionAsync(appendTimeTicks, timeout);
                 }
                 else
                 {
                     if (updatePackageVersionOperation.Status == EOperationStatus.Failed)
                     {
-                        Debug.LogError($"[AssetSystem.UpdatePackageSync] 同步更新版本号失败：{packageName}");
+                        LogSystem.LogError($"[AssetSystem.UpdatePackageSync] 同步更新版本号失败：{packageName}");
                         return;
                     }
                     else if (updatePackageVersionOperation.Status == EOperationStatus.Processing)
@@ -363,7 +357,7 @@ namespace PJR.Systems
                     }
                     else if (updatePackageVersionOperation.Status == EOperationStatus.Succeed)
                     {
-                        Debug.Log($"[AssetSystem.UpdatePackageSync] 同步更新版本号成功：{packageName} {updatePackageVersionOperation.PackageVersion}  耗时：{Watch.ElapsedMilliseconds}ms");
+                        LogSystem.Log($"[AssetSystem.UpdatePackageSync] 同步更新版本号成功：{packageName} {updatePackageVersionOperation.PackageVersion}  耗时：{Watch.ElapsedMilliseconds}ms");
                         break;
                     }
                 }
@@ -378,7 +372,7 @@ namespace PJR.Systems
             {
                 if (Watch.ElapsedMilliseconds > SyncUpdatePackageBreakMilliseconds)
                 {
-                    Debug.LogError($"[AssetSystem.UpdatePackageSync] 同步更新资源清单失败：{packageName}");
+                    LogSystem.LogError($"[AssetSystem.UpdatePackageSync] 同步更新资源清单失败：{packageName}");
                     return;
                 }
                 if (updatePackageManifestOperation == null)
@@ -389,7 +383,7 @@ namespace PJR.Systems
                 {
                     if (updatePackageManifestOperation.Status == EOperationStatus.Failed)
                     {
-                        Debug.LogError($"[AssetSystem.UpdatePackageSync] 同步更新资源清单失败：{packageName}");
+                        LogSystem.LogError($"[AssetSystem.UpdatePackageSync] 同步更新资源清单失败：{packageName}");
                         return;
                     }
                     else if (updatePackageManifestOperation.Status == EOperationStatus.Processing)
@@ -398,7 +392,7 @@ namespace PJR.Systems
                     }
                     else if (updatePackageManifestOperation.Status == EOperationStatus.Succeed)
                     {
-                        Debug.Log($"[AssetSystem.UpdatePackageSync] 同步更新资源清单成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
+                        LogSystem.Log($"[AssetSystem.UpdatePackageSync] 同步更新资源清单成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
                         break;
                     }
                 }
@@ -423,7 +417,7 @@ namespace PJR.Systems
             if (!IsRequireUpdate)
                 yield return null;
 
-            Debug.Log($"[ResourceSystem.UpdatePackage] 更新Package [{packageName}]");
+            LogSystem.Log($"[ResourceSystem.UpdatePackage] 更新Package [{packageName}]");
 
             var package = YooAssets.GetPackage(packageName);
             var updatePackageVersionOperation = package.UpdatePackageVersionAsync(appendTimeTicks, timeout);
@@ -431,11 +425,11 @@ namespace PJR.Systems
 
             if (updatePackageVersionOperation.Status != EOperationStatus.Succeed)
             {
-                Debug.LogError($"[ResourceSystem.UpdatePackage] 更新版本号失败：{packageName}");
+                LogSystem.LogError($"[ResourceSystem.UpdatePackage] 更新版本号失败：{packageName}");
                 yield return null;
             }
             //
-            Debug.Log($"[ResourceSystem.UpdatePackage] 更新版本号成功：{packageName}");
+            LogSystem.Log($"[ResourceSystem.UpdatePackage] 更新版本号成功：{packageName}");
             var packageVersion = updatePackageVersionOperation.PackageVersion;
             var savePackageVersion = true;
             var updatePackageManifestOperation = package.UpdatePackageManifestAsync(packageVersion, savePackageVersion, timeout);
@@ -443,12 +437,12 @@ namespace PJR.Systems
 
             if (updatePackageManifestOperation.Status != EOperationStatus.Succeed)
             {
-                Debug.LogError($"[ResourceSystem.UpdatePackage] 更新资源清单失败：{packageName}");
+                LogSystem.LogError($"[ResourceSystem.UpdatePackage] 更新资源清单失败：{packageName}");
                 yield return null;
             }
 
             Watch.Stop();
-            Debug.Log($"[ResourceSystem.UpdatePackage] 更新资源清单成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
+            LogSystem.Log($"[ResourceSystem.UpdatePackage] 更新资源清单成功：{packageName}  耗时：{Watch.ElapsedMilliseconds}ms");
         }
 
 

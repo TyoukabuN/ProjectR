@@ -15,7 +15,7 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
 {
     [InlineProperty]
     public class CacheableField<T> : ICacheableValue
-    {
+    { 
         protected static bool ExtractBuffer(int index, out BufferUnit<T> unit) => GenericBuffer<T>.instance.ExtractBuffer(index, out unit);
         protected static void ClearBuffer(int index, uint guid) => GenericBuffer<T>.instance.ClearBuffer(index,guid);
         protected bool UsingLocalValue =>  (EGetValueApproach)_valueGainApproach == EGetValueApproach.LocalValue;

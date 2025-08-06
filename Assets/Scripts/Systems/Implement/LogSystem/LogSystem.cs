@@ -13,10 +13,12 @@ namespace PJR.Systems
         public static string DefaultLogFileName => defaultLogFileName;
 
         public const string NAME_logFile = "log.log";
+        public const string NAME_logFilePrev = "log-prev.log";
         public const string NAME_cmdLogFile = "cmd.log";
 
         public const string FORMAT_COMMON_LOG = "";
 
+        public const string TAG_PROJECT = "PJR";
         public const string TAG_COMMON_LOG = "Log";
         public const string TAG_WARNING_LOG = "Warning";
         public const string TAG_ERROR_LOG = "Error";
@@ -29,28 +31,28 @@ namespace PJR.Systems
         static StringBuilder s_sb;
         static StringBuilder sb => s_sb ??= new StringBuilder();
 
-        public static void Log(object content, bool invokeUnityLog = false) => Log(content.ToString(), invokeUnityLog);
-        public static void LogWarning(object content, bool invokeUnityLog = false) => LogWarning(content.ToString(), invokeUnityLog);
-        public static void LogError(object content, bool invokeUnityLog = false) => LogError(content.ToString(), invokeUnityLog);
+        public static void Log(object content, bool invokeUnityLog = true) => Log(content.ToString(), invokeUnityLog);
+        public static void LogWarning(object content, bool invokeUnityLog = true) => LogWarning(content.ToString(), invokeUnityLog);
+        public static void LogError(object content, bool invokeUnityLog = true) => LogError(content.ToString(), invokeUnityLog);
 
-        public static void Log(string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.Log(LogWithTag(content, TAG_COMMON_LOG)); else LogWithTag(content, TAG_COMMON_LOG); }
-        public static void LogWarning(string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.Log(LogWithTag(content, TAG_WARNING_LOG)); else LogWithTag(content, TAG_WARNING_LOG); }
-        public static void LogError(string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.Log(LogWithTag(content, TAG_ERROR_LOG)); else LogWithTag(content, TAG_ERROR_LOG); }
+        public static void Log(string content, bool invokeUnityLog = true) { var str = LogWithTag(content, TAG_PROJECT,TAG_COMMON_LOG); if (invokeUnityLog) Debug.Log(str); }
+        public static void LogWarning(string content, bool invokeUnityLog = true) { var str = LogWithTag(content, TAG_PROJECT,TAG_WARNING_LOG); if (invokeUnityLog) Debug.LogWarning(str); }
+        public static void LogError(string content, bool invokeUnityLog = true) { var str = LogWithTag(content, TAG_PROJECT,TAG_ERROR_LOG); if (invokeUnityLog) Debug.LogError(str); }
 
-        public static void Log(string tag, string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.Log(LogWithTag(content, TAG_COMMON_LOG, tag)); else LogWithTag(content, TAG_COMMON_LOG, tag); }
-        public static void LogWarning(string tag, string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.LogWarning(LogWithTag(content, TAG_WARNING_LOG, tag)); else LogWithTag(content, TAG_WARNING_LOG, tag); }
-        public static void LogError(string tag, string content, bool invokeUnityLog = false) { if (invokeUnityLog) Debug.LogError(LogWithTag(content, TAG_ERROR_LOG, tag)); else LogWithTag(content, TAG_ERROR_LOG, tag); }
-
-
+        public static void Log(string tag, string content, bool invokeUnityLog = true) { var str = LogWithTag(content, TAG_PROJECT,TAG_COMMON_LOG, tag); if (invokeUnityLog) Debug.Log(str); }
+        public static void LogWarning(string tag, string content, bool invokeUnityLog = true) { var str = LogWithTag(content, TAG_PROJECT,TAG_WARNING_LOG, tag); if (invokeUnityLog) Debug.LogWarning(str); }
+        public static void LogError(string tag, string content, bool invokeUnityLog = true) { var str = LogWithTag(content, TAG_PROJECT,TAG_ERROR_LOG, tag); if (invokeUnityLog) Debug.LogError(str); }
 
         public static string LogWithTag(string content, params string[] tag)
         {
             BeginEdit();
             sb.Append(GetTimeStamp());
+            //sb.Append(GetFrameCount());
             if (tag != null){ 
                 for (int i = 0; i < tag.Length; i++)
                 {
-                    sb.Append($"[{tag[i]}]{STR_BLANK}");
+                    //sb.Append($"[{tag[i]}]{STR_BLANK}");
+                    sb.Append($"[{tag[i]}]");
                 }
             }
             if (tag == null || tag.Length <= 0)
@@ -76,15 +78,25 @@ namespace PJR.Systems
             return DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss.fff]");
             //return DateTime.Now.ToString("[HH:mm:ss.fff]");
         }
+        public static string GetFrameCount()
+        {
+            return $"[f:{UnityEngine.Time.frameCount}]";
+        }
+
 
         /// <summary>
         /// 获取log文件路径
         /// </summary>
         /// <returns></returns>
-        public static string GetLogFileOutputPath()
-        {
-            return GetOutputSpaceFile(NAME_logFile);
-        }
+        public static string GetLogFileOutputPath() 
+            => GetOutputSpaceFile(NAME_logFile);
+
+        /// <summary>
+        /// 获取log文件路径
+        /// </summary>
+        /// <returns></returns>
+        public static string GetPreviousLogFileOutputPath() 
+            => GetOutputSpaceFile(NAME_logFilePrev);
 
         /// <summary>
         /// 获取log输出目录下在某个文件
@@ -131,10 +143,7 @@ namespace PJR.Systems
             logFileName = string.IsNullOrEmpty(logFileName) ? defaultLogFileName : logFileName;
             if (!Directory.Exists(PATH_logFile))
                 return;
-            using (var stream = File.AppendText(GetOutputSpaceFile(logFileName)))
-            {
-                stream.Write(string.Empty);
-            }
+            File.WriteAllText(GetOutputSpaceFile(logFileName), string.Empty);
         }
     }
 }

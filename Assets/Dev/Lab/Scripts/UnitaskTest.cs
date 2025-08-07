@@ -21,7 +21,7 @@ public class UnitaskTest : MonoBehaviour
     }
 
 
-    async void AsyncTest()
+    async UniTaskVoid AsyncTest()
     {
         await UniTask.Delay(1000);
         Debug.Log("Done");
@@ -53,7 +53,7 @@ public class UnitaskTest : MonoBehaviour
         await UniTask.Yield(PlayerLoopTiming.PreLateUpdate);
 
         // yield return null 的替代方案
-        await UniTask.Yield();
+        await UniTask.Yield( );
         await UniTask.NextFrame();
 
         // WaitForEndOfFrame 的替代方案

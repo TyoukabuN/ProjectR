@@ -22,7 +22,7 @@ namespace PJR
     /// <summary>
     /// 通用的更新上下文
     /// </summary>
-    public struct GeneralUpdateContext : IUpdateContext
+    public struct CommonUpdateContext : IUpdateContext
     {
         public float DeltaTime { get; set; }
         public float UnscaleDeltaTime { get; set; }

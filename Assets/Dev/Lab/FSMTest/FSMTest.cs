@@ -5,15 +5,18 @@ using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using static FSMTest.States;
+using static FSMTest.Transitions;
 
 public class FSMTest : MonoBehaviour
 {
     public Transform target;
     
-    private FSM<FSMTestContext> _fsm;
+    //private IFsm _fsm;
+    private Fsm<FSMTestContext> _fsm;
 
     [Button]
-    public void NewOne()
+    public void DoAutoMoveFsmTest()
     {
         if (!EditorApplication.isPlaying)
         {
@@ -21,38 +24,25 @@ public class FSMTest : MonoBehaviour
             return;
         }
         _fsm?.Release();
-        _fsm = FSM<FSMTestContext>.Get(new()
+        _fsm = Fsm<FSMTestContext>.Get(new()
             {
                 owner = this,
                 target = target
             },
+            Idle.Get(),
             Forward.Get(),
             Backward.Get(),
             Left.Get(),
             Right.Get()
         );
+        _fsm.AddTransition<States.Idle,States.Forward>(OverOneSecond.Get());
+        _fsm.AddTransition<States.Forward,States.Right>(OverOneSecond.Get());
+        _fsm.AddTransition<States.Right,States.Backward>(OverOneSecond.Get());
+        _fsm.AddTransition<States.Backward,States.Left>(OverOneSecond.Get());
+        _fsm.AddTransition<States.Left,States.Forward>(OverOneSecond.Get());
+        _fsm.ChangeState<Idle>();
     }
 
-    [Button("↑"),HideInEditorMode, HorizontalGroup("Vertical")]
-    public void DOForward()
-    {
-        _fsm?.ChangeState<Forward>();
-    }
-    [Button("↓"),HideInEditorMode, HorizontalGroup("Vertical")]
-    public void DOBackward()
-    {
-        _fsm?.ChangeState<Backward>();
-    }
-    [Button("←"),HideInEditorMode, HorizontalGroup("Horizontal")]
-    public void DOLeft()
-    {
-        _fsm?.ChangeState<Left>();
-    }
-    [Button("→"),HideInEditorMode, HorizontalGroup("Horizontal")]
-    public void DORight()
-    {
-        _fsm?.ChangeState<Right>();
-    }
     void Update()
     {
         CommonUpdateContext context = new()
@@ -67,40 +57,80 @@ public class FSMTest : MonoBehaviour
         public FSMTest owner;
         public Transform target;
     }
-    public class Forward : SimpleTransitionFSMState<FSMTestContext>
+
+    public static class States
     {
-        public override void OnEnter(FSM<FSMTestContext> fsm)
-            => Debug.Log($"Enter {GetType().Name}");
-        public override void OnUpate(IUpdateContext context, FSM<FSMTestContext> fsm)
-            => fsm.Context.target?.Translate(Vector3.forward * context.DeltaTime);
-        public static Forward Get() => GenerialPool<Forward>.Get();
-        public override void Release() => GenerialPool<Forward>.Release(this);
+        public class Idle : SimpleTransitionFsmState<FSMTestContext>
+        {
+            public override void OnEnter()
+                => Debug.Log($"Enter {GetType().Name}");
+
+            public override void OnUpate(IUpdateContext context)
+                => fsm.Context.target?.Translate(Vector3.forward * context.DeltaTime);
+
+            public static Idle Get() => GenerialPool<Idle>.Get();
+            public override void Release() => GenerialPool<Idle>.Release(this);
+        }
+
+        public class Forward : SimpleTransitionFsmState<FSMTestContext>
+        {
+            public override void OnEnter()
+                => Debug.Log($"Enter {GetType().Name}");
+
+            public override void OnUpate(IUpdateContext context)
+                => fsm.Context.target?.Translate(Vector3.forward * context.DeltaTime);
+
+            public static Forward Get() => GenerialPool<Forward>.Get();
+            public override void Release() => GenerialPool<Forward>.Release(this);
+        }
+
+        public class Backward : SimpleTransitionFsmState<FSMTestContext>
+        {
+            public override void OnEnter()
+                => Debug.Log($"Enter {GetType().Name}");
+
+            public override void OnUpate(IUpdateContext context)
+                => fsm.Context.target?.Translate(Vector3.back * context.DeltaTime);
+
+            public static Backward Get() => GenerialPool<Backward>.Get();
+            public override void Release() => GenerialPool<Backward>.Release(this);
+        }
+
+        public class Left : SimpleTransitionFsmState<FSMTestContext>
+        {
+            public override void OnEnter()
+                => Debug.Log($"Enter {GetType().Name}");
+
+            public override void OnUpate(IUpdateContext context)
+                => fsm.Context.target?.Translate(Vector3.left * context.DeltaTime);
+
+            public static Left Get() => GenerialPool<Left>.Get();
+            public override void Release() => GenerialPool<Left>.Release(this);
+        }
+
+        public class Right : SimpleTransitionFsmState<FSMTestContext>
+        {
+            public override void OnEnter()
+                => Debug.Log($"Enter {GetType().Name}");
+
+            public override void OnUpate(IUpdateContext context)
+                => fsm.Context.target?.Translate(Vector3.right * context.DeltaTime);
+
+            public static Right Get() => GenerialPool<Right>.Get();
+            public override void Release() => GenerialPool<Right>.Release(this);
+        }
     }
-    public class Backward : SimpleTransitionFSMState<FSMTestContext>
+
+    public static class Transitions
     {
-        public override void OnEnter(FSM<FSMTestContext> fsm)
-            => Debug.Log($"Enter {GetType().Name}");
-        public override void OnUpate(IUpdateContext context, FSM<FSMTestContext> fsm)
-            => fsm.Context.target?.Translate(Vector3.back * context.DeltaTime);
-        public static Backward Get() => GenerialPool<Backward>.Get();
-        public override void Release() => GenerialPool<Backward>.Release(this);
-    }
-    public class Left : SimpleTransitionFSMState<FSMTestContext>
-    {
-        public override void OnEnter(FSM<FSMTestContext> fsm)
-            => Debug.Log($"Enter {GetType().Name}");
-        public override void OnUpate(IUpdateContext context, FSM<FSMTestContext> fsm)
-            => fsm.Context.target?.Translate(Vector3.left * context.DeltaTime);
-        public static Left Get() => GenerialPool<Left>.Get();
-        public override void Release() => GenerialPool<Left>.Release(this);
-    }
-    public class Right : SimpleTransitionFSMState<FSMTestContext>
-    {
-        public override void OnEnter(FSM<FSMTestContext> fsm)
-            => Debug.Log($"Enter {GetType().Name}");
-        public override void OnUpate(IUpdateContext context, FSM<FSMTestContext> fsm)
-            => fsm.Context.target?.Translate(Vector3.right * context.DeltaTime);
-        public static Right Get() => GenerialPool<Right>.Get();
-        public override void Release() => GenerialPool<Right>.Release(this);
+        public class OverOneSecond : FsmTransition<FSMTestContext>
+        {
+            public override bool CanTransition()
+            {
+                return CurrentStateTime > 1;
+            }
+            public static OverOneSecond Get() => GenerialPool<OverOneSecond>.Get();
+            public override void Release() => GenerialPool<OverOneSecond>.Release(this);
+        }
     }
 }

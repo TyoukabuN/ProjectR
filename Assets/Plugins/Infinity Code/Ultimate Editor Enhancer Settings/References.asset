@@ -19,6 +19,20 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: FSMTest
+    path: Assets/Dev/Lab/FSMTest/FSMTest.unity
+  - name: SimpleGameProgressScene
+    path: Assets/Dev/Example/SimpleGameProgress/SimpleGameProgressScene.unity
+  - name: GameProgressScene
+    path: Assets/Dev/Example/GameProgress/GameProgressScene.unity
+  - name: UnitaskTest
+    path: Assets/Dev/Lab/Scenes/UnitaskTest.unity
+  - name: CommonTest
+    path: Assets/Dev/Lab/Common/CommonTest.unity
+  - name: IndexedString
+    path: Assets/Dev/Lab/IndexedString/IndexedString.unity
+  - name: TimelineTest
+    path: Assets/Dev/Lab/TimelineLab/TimelineTest.unity
   - name: Empty
     path: Assets/Dev/Lab/NonCGBlackBoard/Src/Empty.unity
   - name: NonGCBlackBoard
@@ -28,13 +42,9 @@ MonoBehaviour:
   - name: NonCGBlackBoard
     path: Assets/Dev/Lab/NonCGBlackBoard/NonCGBlackBoard.unity
   - name: TimelineTest
-    path: Assets/Dev/Lab/TimelineLab/TimelineTest.unity
-  - name: TimelineTest
     path: Assets/Dev/Lab/Scenes/TimelineTest.unity
   - name: OrdinalConfigTest
     path: Assets/Dev/Lab/Scenes/OrdinalConfigTest.unity
-  - name: UnitaskTest
-    path: Assets/Dev/Lab/Scenes/UnitaskTest.unity
   - name: CShaderTest
     path: Assets/Dev/Lab/Scenes/CShaderTest.unity
   - name: JobSystemTest
@@ -47,14 +57,4 @@ MonoBehaviour:
     path: Assets/Plugins/KinematicCharacterController/Examples/Scenes/StressTest.unity
   - name: CharacterPlayground
     path: Assets/Plugins/KinematicCharacterController/Examples/Scenes/CharacterPlayground.unity
-  - name: PlayerLoopTest
-    path: Assets/Dev/Lab/Scenes/PlayerLoopTest.unity
-  - name: GameEntry_2
-    path: Assets/Scenes/GameEntry_2.unity
-  - name: GameEntry
-    path: Assets/Scenes/GameEntry.unity
-  - name: ABTest
-    path: Assets/Dev/Lab/Scenes/ABTest.unity
-  - name: Beizer
-    path: Assets/Dev/Lab/Scenes/Beizer.unity
   _notes: []

@@ -208,7 +208,7 @@ namespace PJR.Editor
 
         private const string DocUrl = "https://docs.qq.com/doc/DY1pITndwRVZFa3R0";
         
-        [RequireConfigMenuItem("顺序表使用文档")]
+        [RequireConfigMenuItem("顺序表使用文档", 100)]
         public static void OrdinalDocument()
         {
             Application.OpenURL(DocUrl);

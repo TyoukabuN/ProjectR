@@ -11,11 +11,10 @@ namespace PJR.Config
         public static __OrdinalConfig Instance => _instance ??= new __OrdinalConfig();
 
 #if UNITY_EDITOR
+        public override void Editor_OpenMenuEditorWindow()
+            => MenuEditorWindow.OpenWindow();
         public override void Editor_OpenItemCreateWindow(Action<__OrdinalConfigItemAsset> onFinish, string directory = null)
-        {
-            ItemCreateWindow.OpenWindow();
-        }
-
+            => ItemCreateWindow.OpenWindow();
         public class ItemCreateWindow : OrdinalConfigItemCreateWindow<__OrdinalConfig, __OrdinalConfigAsset, __OrdinalConfigItemAsset>
         {
             public static void OpenWindow()

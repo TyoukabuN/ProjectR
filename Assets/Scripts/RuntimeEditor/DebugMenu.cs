@@ -8,18 +8,12 @@ using PJR.Systems;
 
 namespace PJR
 {
-    public class DebugMenu
+    
+    public static class DebugMenu
     {
-        public const string PJR_DebugMenuKey_Launch = "PJR_DebugMenuKey_Launch";
-        public const string PJR_DebugMenuKey_LaunchInAssetBundleMode = "PJR_DebugMenuKey_LaunchInAssetBundleMode";
-
+        public static event System.Action OnCreateLanuchSceneAndHierarchy;
         public static bool InABMode
-        {
-            get
-            {
-                return EditorPrefs.GetBool(PJR_DebugMenuKey_LaunchInAssetBundleMode);
-            }
-        }
+            => EditorPrefs.GetBool(EditorPrefKey.DebugMenu.LaunchInAssetBundleMode);
 
         [InitializeOnLoadMethod]
         static void RegisterEvent()
@@ -32,19 +26,19 @@ namespace PJR
         {
             if (state == PlayModeStateChange.ExitingPlayMode)
             {
-                EditorPrefs.SetBool(PJR_DebugMenuKey_Launch, false);
-                EditorPrefs.SetBool(PJR_DebugMenuKey_LaunchInAssetBundleMode, false);
+                EditorPrefs.SetBool(EditorPrefKey.DebugMenu.Launch, false);
+                EditorPrefs.SetBool(EditorPrefKey.DebugMenu.LaunchInAssetBundleMode, false);
             }
             else if (state == PlayModeStateChange.EnteredPlayMode )
             {
-                if (EditorPrefs.GetBool(PJR_DebugMenuKey_Launch))
+                if (EditorPrefs.GetBool(EditorPrefKey.DebugMenu.Launch))
                 { 
-                    EditorPrefs.DeleteKey(PJR_DebugMenuKey_Launch);
+                    EditorPrefs.DeleteKey(EditorPrefKey.DebugMenu.Launch);
                     CreateLanuchSceneAndHierarchy();
                 }
                 else if(AnyGameObjectNamed("[Debug]"))
                 {
-                    EditorPrefs.DeleteKey(PJR_DebugMenuKey_Launch);
+                    EditorPrefs.DeleteKey(EditorPrefKey.DebugMenu.Launch);
                     CreateLanuchSceneAndHierarchy();
                 }
             }
@@ -59,7 +53,7 @@ namespace PJR
                 return;
             }
             EditorApplication.isPlaying = true;
-            EditorPrefs.SetBool(PJR_DebugMenuKey_Launch, true);
+            EditorPrefs.SetBool(EditorPrefKey.DebugMenu.Launch, true);
             RegisterEvent();
         }
 
@@ -72,8 +66,8 @@ namespace PJR
                 return;
             }
             EditorApplication.isPlaying = true;
-            EditorPrefs.SetBool(PJR_DebugMenuKey_Launch, true);
-            EditorPrefs.SetBool(PJR_DebugMenuKey_LaunchInAssetBundleMode, true);
+            EditorPrefs.SetBool(EditorPrefKey.DebugMenu.Launch, true);
+            EditorPrefs.SetBool(EditorPrefKey.DebugMenu.LaunchInAssetBundleMode, true);
             RegisterEvent();
         }
 
@@ -96,14 +90,8 @@ namespace PJR
                 }
                 DestroyImmediate(gobj);
             }
-            //Create Entry
-            //GenTips();
-            //
-            var gEntry = new GameObject("GameEntry");
-            var entry = gEntry.AddComponent<GameEntry>();
-            //TODO:Any setting for entry;
-            DontDestroyOnLoad(gEntry);
-            //Create ControlSystem
+
+            OnCreateLanuchSceneAndHierarchy?.Invoke();
         }
         static bool AnyGameObjectNamed(string name)
         {

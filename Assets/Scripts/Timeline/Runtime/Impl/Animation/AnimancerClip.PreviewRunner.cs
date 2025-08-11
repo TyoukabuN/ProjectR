@@ -1,8 +1,8 @@
 ﻿#if UNITY_EDITOR
 using System;
 using Animancer;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.Playables;
 
 namespace PJR.Timeline
 {
@@ -61,10 +61,10 @@ namespace PJR.Timeline
             private static bool ShouldEditModeSample(AnimationClip clip, Component component)
             {
                 return
-                    !UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode &&
+                    !EditorApplication.isPlayingOrWillChangePlaymode &&
                     clip != null &&
                     component != null &&
-                    !UnityEditor.EditorUtility.IsPersistent(component);
+                    !EditorUtility.IsPersistent(component);
             }
 
             private static void EditModeSampleAnimation(AnimationClip clip, Animator component, float time = 0f)

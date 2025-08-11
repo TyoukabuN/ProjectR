@@ -1,11 +1,15 @@
-using Sirenix.OdinInspector;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
-using System.Linq;
-using UnityEditor;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using PJR.ClassExtension;
+using Sirenix.OdinInspector;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Profiling;
+using UnityEngine.Rendering;
+using UnityMeshSimplifier;
+using Object = UnityEngine.Object;
 
 namespace PJR
 {
@@ -101,7 +105,7 @@ namespace PJR
             {
                 if (!string.IsNullOrEmpty(assetPath)) 
                 { 
-                    var asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
+                    var asset = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
                     if (asset != null)
                         EditorGUIUtility.PingObject(asset);
                 }
@@ -109,7 +113,7 @@ namespace PJR
             };
         }
 
-        bool IsSimplifiedObject(UnityEngine.Object obj)
+        bool IsSimplifiedObject(Object obj)
         {
             if (obj == null)
                 return false;
@@ -144,7 +148,7 @@ namespace PJR
             //
             var renderer = gobj.AddComponent<SkinnedMeshRenderer>();
 
-            renderer.material = UnityEngine.Rendering.GraphicsSettings.renderPipelineAsset?.defaultMaterial;
+            renderer.material = GraphicsSettings.renderPipelineAsset?.defaultMaterial;
             renderer.sharedMesh = mesh;
             renderer.rootBone = original_renderer.rootBone;
             renderer.bones = original_renderer.bones;
@@ -175,7 +179,7 @@ namespace PJR
                 assetName = $"{assetName}_{mesh.name}_{Simplified_Suffix}.mesh";
 
             savePath = Path.Combine(Path.GetDirectoryName(path), assetName);
-            if (returnIfExist && AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(savePath) != null)
+            if (returnIfExist && AssetDatabase.LoadAssetAtPath<Object>(savePath) != null)
                 return true;
 
             savePath = AssetDatabase.GenerateUniqueAssetPath(savePath);
@@ -298,7 +302,7 @@ namespace PJR
             { 
                 Debug.DrawLine(info.closestPoint, info.closestPoint + wnormal * 0.1f, Color.yellow, 1f);
             }
-            UnityEngine.Profiling.Profiler.EndSample();
+            Profiler.EndSample();
 
             return info.closestPoint;
         }
@@ -372,7 +376,7 @@ namespace PJR
                     return true;
             }
 
-            var meshSimplifier = new UnityMeshSimplifier.MeshSimplifier();
+            var meshSimplifier = new MeshSimplifier();
             meshSimplifier.Initialize(orignal);
             meshSimplifier.SimplifyMesh(quality);
 

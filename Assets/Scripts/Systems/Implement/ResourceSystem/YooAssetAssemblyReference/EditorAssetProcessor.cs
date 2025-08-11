@@ -1,12 +1,11 @@
 #if UNITY_EDITOR
 using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace YooAsset
 {
-    public class EditorAssetProcessor : UnityEditor.AssetModificationProcessor
+    public class EditorAssetProcessor : AssetModificationProcessor
     {
         public static event Action<string> OnWillCreateAssetCall;
         public static event Action<string> OnWillDeleteAssetCall;

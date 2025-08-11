@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using UnityEngine;
-using System.IO;
 using System;
-
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -87,9 +86,9 @@ namespace PJR.Config
 
             string assetPath = Path.Combine(directory, $"{ItemFileNamePrefix}_{item.ID}.asset");
 
-            TItemAsset asset = ScriptableObject.CreateInstance<TItemAsset>();
+            TItemAsset asset = CreateInstance<TItemAsset>();
             asset.item = item;
-            UnityEditor.AssetDatabase.CreateAsset(asset, assetPath);
+            AssetDatabase.CreateAsset(asset, assetPath);
 
             Editor_Asset.itemAssets.Add(asset);
             Editor_MaskAssetDirty(true);

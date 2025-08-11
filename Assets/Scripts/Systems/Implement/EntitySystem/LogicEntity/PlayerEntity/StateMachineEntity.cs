@@ -1,10 +1,7 @@
-using PJR.ScriptStates.Player;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
-using UnityEngine;
+using PJR.ScriptStates.Player;
 using PJR.Systems;
-
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

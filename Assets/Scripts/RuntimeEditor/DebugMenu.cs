@@ -1,17 +1,19 @@
 #if UNITY_EDITOR
-using UnityEngine;
-using UnityEditor;
-using UnityEditor.SceneManagement;
-using UnityEditor.Build.Player;
+using System;
 using System.IO;
 using PJR.Systems;
+using UnityEditor;
+using UnityEditor.Build.Player;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PJR
 {
     
     public static class DebugMenu
     {
-        public static event System.Action OnCreateLanuchSceneAndHierarchy;
+        public static event Action OnCreateLanuchSceneAndHierarchy;
         public static bool InABMode
             => EditorPrefs.GetBool(EditorPrefKey.DebugMenu.LaunchInAssetBundleMode);
 

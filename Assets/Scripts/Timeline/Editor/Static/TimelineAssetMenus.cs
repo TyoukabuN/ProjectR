@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
-using Sirenix.Utilities;
-using static PJR.Timeline.Editor.TimelineWindow;
+using UnityEngine;
 
 namespace PJR.Timeline.Editor
 {

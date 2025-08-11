@@ -34,9 +34,9 @@ namespace PJR.Timeline.Editor
         public virtual void Select()=> SelectMethed?.Invoke();
         public virtual void DeSelect() => DeSelectMethed?.Invoke();
         public virtual void OnDeselect() {}
-        protected void Default_SelectMethod() => TimelineWindow.instance.State.Hotspot = this;
-        protected void Default_DeSelectMethod() => TimelineWindow.instance.State.UnSetHotspot(this);
-        public virtual void Repaint() => TimelineWindow.instance?.Repaint();
+        protected void Default_SelectMethod() => instance.State.Hotspot = this;
+        protected void Default_DeSelectMethod() => instance.State.UnSetHotspot(this);
+        public virtual void Repaint() => instance?.Repaint();
         public virtual void Dispose()
         {
             _propertyTree?.Dispose();

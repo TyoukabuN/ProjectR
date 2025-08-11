@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
-
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -355,7 +354,7 @@ namespace PJR
         public static string Editor_GetMenuName(int flagID)
         {
             string menu = string.Empty;
-            var flagDefine = FlagConfig.GetFlagDefine(flagID);
+            var flagDefine = GetFlagDefine(flagID);
             if (flagDefine == null)
                 return string.Empty;
 
@@ -378,7 +377,7 @@ namespace PJR
             if (flagIDInfo == null || !flagIDInfo.IsValid())
                 return menu;
 
-            var categorySet = FlagConfig.GetFlagDefineSet(flagIDInfo.categoryID);
+            var categorySet = GetFlagDefineSet(flagIDInfo.categoryID);
             if (categorySet != null)
             {
                 menu = menu.Replace(categorySet.Name, string.Empty);

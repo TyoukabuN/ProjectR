@@ -1,10 +1,6 @@
 using Cinemachine;
 using Cinemachine.Utility;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static Cinemachine.CinemachinePathBase;
-using static Cinemachine.CinemachineTrackedDolly;
 
 [AddComponentMenu("")] // Hide in menu
 [ExecuteAlways]

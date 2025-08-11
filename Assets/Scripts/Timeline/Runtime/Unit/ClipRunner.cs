@@ -93,7 +93,7 @@ namespace PJR.Timeline
             if (clip == null || clip.GetType() != ClipType)
             {
                 State = EState.Failure;
-                error = clip == null ? Define.ErrCode_ClipRunner_ClipIsNull : Define.ErrCode_ClipRunner_ClipTypeNotMatched;
+                error = clip == null ? ErrCode_ClipRunner_ClipIsNull : ErrCode_ClipRunner_ClipTypeNotMatched;
                 return this;
             }
             _clip = clip;

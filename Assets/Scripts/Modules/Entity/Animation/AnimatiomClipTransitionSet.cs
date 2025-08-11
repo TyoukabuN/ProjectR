@@ -1,10 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Sirenix.OdinInspector;
-using Animancer;
 using System.IO;
+using Animancer;
+using Sirenix.OdinInspector;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -24,7 +22,7 @@ namespace PJR
             string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
             if (AssetDatabase.IsValidFolder(assetPath))
             {
-                ScriptableObject asset = ScriptableObject.CreateInstance<AnimatiomClipTransitionSet>();
+                ScriptableObject asset = CreateInstance<AnimatiomClipTransitionSet>();
                 var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath(assetPath + "/AnimatiomClipTransitionSet.asset");
                 AssetDatabase.CreateAsset(asset, uniqueFileName);
                 return;
@@ -33,7 +31,7 @@ namespace PJR
             var clipSet = AssetDatabase.LoadAssetAtPath<AnimatiomClipSet>(assetPath) as AnimatiomClipSet;
             if (clipSet != null && clipSet.clips != null)
             {
-                AnimatiomClipTransitionSet asset = ScriptableObject.CreateInstance<AnimatiomClipTransitionSet>();
+                AnimatiomClipTransitionSet asset = CreateInstance<AnimatiomClipTransitionSet>();
                 asset.clips = new List<AnimatiomClipSet.KeyValuePair<string, ClipTransition>>();
                 foreach (var pair in clipSet.clips)
                 {
@@ -55,7 +53,7 @@ namespace PJR
                 return;
             if (AssetDatabase.IsValidFolder(folderPath))
             {
-                AnimatiomClipTransitionSet asset = ScriptableObject.CreateInstance<AnimatiomClipTransitionSet>();
+                AnimatiomClipTransitionSet asset = CreateInstance<AnimatiomClipTransitionSet>();
                 asset.clips = new List<AnimatiomClipSet.KeyValuePair<string, ClipTransition>>();
                 string _prefix = $"{prefix}_";
                 foreach (var clip in clips)

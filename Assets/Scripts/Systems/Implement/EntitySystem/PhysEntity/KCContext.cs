@@ -1,9 +1,6 @@
 using KinematicCharacterController;
-using PJR.Systems.Input;
-using System.Collections.Generic;
-using System.Security.Permissions;
-using UnityEngine;
 using PJR.Systems;
+using UnityEngine;
 
 namespace PJR
 { 

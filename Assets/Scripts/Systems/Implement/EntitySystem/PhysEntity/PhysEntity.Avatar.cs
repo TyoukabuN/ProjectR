@@ -1,10 +1,10 @@
-﻿using Sirenix.OdinInspector;
-using System;
+﻿using System;
 using System.Collections;
+using PJR.ClassExtension;
+using PJR.Systems;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using static PJR.Systems.ResourceSystem;
-using PJR.Systems;
-using PJR.ClassExtension;
 
 namespace PJR
 {
@@ -139,7 +139,7 @@ namespace PJR
             //模型
             if (!string.IsNullOrEmpty(ModelName))
             { 
-                var loader_avatar = ResourceSystem.LoadAsset<GameObject>(_assetNames.modelName);
+                var loader_avatar = LoadAsset<GameObject>(_assetNames.modelName);
                 if (loader_avatar == null)
                 {
                     LogSystem.LogError($"[{nameof(LoadAssets)}] Failure to load avatar asset");
@@ -152,7 +152,7 @@ namespace PJR
             if (!string.IsNullOrEmpty(AnimationClipSetName))
             {
                 //动画集
-                var loader_clipSet = ResourceSystem.LoadAsset<AnimatiomClipTransitionSet>(_assetNames.animationClipSet);
+                var loader_clipSet = LoadAsset<AnimatiomClipTransitionSet>(_assetNames.animationClipSet);
                 if (loader_clipSet == null)
                 {
                     LogSystem.LogError($"[{nameof(LoadAssets)}] Failure to load {nameof(AnimatiomClipTransitionSet)} asset");
@@ -178,7 +178,7 @@ namespace PJR
                 return;
             }
 
-            avatar = GameObject.Instantiate(asset);
+            avatar = Instantiate(asset);
             if (avatar == null)
             {
                 LogSystem.LogError($"[{nameof(OnLoadAvatarLoadDone)}] Failure to instantiate avatar");

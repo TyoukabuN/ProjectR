@@ -1,14 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using PJR.Systems.Input;
-using Sirenix.OdinInspector;
-using static UnityEngine.InputSystem.InputAction;
 using System;
 using System.Collections;
-using static PJR.Systems.ResourceSystem;
+using System.Collections.Generic;
 using PJR.ClassExtension;
+using PJR.Systems.Input;
+using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
+using static PJR.Systems.ResourceSystem;
 
 namespace PJR.Systems
 {
@@ -44,7 +43,7 @@ namespace PJR.Systems
             //给测试的
             if (inputActionAsset == null)
             { 
-                var loader = ResourceSystem.LoadAsset(assetPath, typeof(InputActionAsset));
+                var loader = LoadAsset(assetPath, typeof(InputActionAsset));
                 yield return loader;
                 if (!string.IsNullOrEmpty(loader.error))
                     yield return null;

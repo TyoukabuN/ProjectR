@@ -1,7 +1,6 @@
-using Sirenix.Utilities;
 using System;
+using Sirenix.Utilities;
 using UnityEditor;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 

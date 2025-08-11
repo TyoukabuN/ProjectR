@@ -1,11 +1,8 @@
 #if UNITY_EDITOR
+using System;
+using System.Linq;
 using Sirenix.OdinInspector.Editor;
 using UnityEngine;
-using UnityEditor;
-using System.Linq;
-using Sirenix.OdinInspector;
-using System.Collections.Generic;
-using System;
 
 namespace PJR
 {

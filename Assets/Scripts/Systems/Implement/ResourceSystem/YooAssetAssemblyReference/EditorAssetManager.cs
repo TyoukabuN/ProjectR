@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
-using System.IO;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 
@@ -153,7 +154,7 @@ namespace YooAsset
         /// 资源定位地址转换为资源信息。
         /// </summary>
         /// <returns>如果转换失败会返回一个无效的资源信息类</returns>
-        public AssetInfo ConvertLocationToAssetInfo(string location, System.Type assetType)
+        public AssetInfo ConvertLocationToAssetInfo(string location, Type assetType)
         {
             string assetPath = ConvertLocationToAssetInfoMapping(location);
             if (TryGetPackageAsset(assetPath, out PackageAsset packageAsset))
@@ -176,7 +177,7 @@ namespace YooAsset
         /// 资源GUID转换为资源信息。
         /// </summary>
         /// <returns>如果转换失败会返回一个无效的资源信息类</returns>
-        public AssetInfo ConvertAssetGUIDToAssetInfo(string assetGUID, System.Type assetType)
+        public AssetInfo ConvertAssetGUIDToAssetInfo(string assetGUID, Type assetType)
         {
             string assetPath = ConvertAssetGUIDToAssetInfoMapping(assetGUID);
             if (TryGetPackageAsset(assetPath, out PackageAsset packageAsset))

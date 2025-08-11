@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace PJR
 {
     public class UIListItem : MonoBehaviour
@@ -31,7 +31,7 @@ namespace PJR
         {
             if (data.ContainsKey(key))
             {
-                Debug.LogError($"[{this.GetType().Name}]{key}ÒÑ¾­´æÔÚ");
+                Debug.LogError($"[{this.GetType().Name}]{key}ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½");
                 return;
             }
             data[key] = value;

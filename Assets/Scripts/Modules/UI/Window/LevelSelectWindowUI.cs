@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,8 +22,8 @@ namespace PJR
             TestDeal();
         }
         /// <summary>
-        /// ²âÊÔÊäÈëÊı¾İ
-        /// ¿´µ½Ê±ºòÅäÖÃÔõÑùÔÙĞ´¶ÁÅäÖÃµÄ·½·¨
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        /// ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½ÃµÄ·ï¿½ï¿½ï¿½
         /// </summary>
         public void TestDeal()
         {

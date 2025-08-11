@@ -1,6 +1,4 @@
 #if UNITY_EDITOR
-using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -17,7 +15,7 @@ namespace PJR.Editor
                 ConfigAssetType asset = ScriptableObject.CreateInstance<ConfigAssetType>();
                 asset.items = new List<ItemType>();
                 var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"{assetPath}/{typeof(ConfigAssetType).Name}.asset");
-                UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
+                AssetDatabase.CreateAsset(asset, uniqueFileName);
             }
         }
         public static void CreateListConfigAsset<ConfigAssetType, ItemType>() where ConfigAssetType : ListConfigAsset<ItemType>
@@ -28,7 +26,7 @@ namespace PJR.Editor
                 ConfigAssetType asset = ScriptableObject.CreateInstance<ConfigAssetType>();
                 asset.items = new List<ItemType>();
                 var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"{assetPath}/{typeof(ConfigAssetType).Name}.asset");
-                UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
+                AssetDatabase.CreateAsset(asset, uniqueFileName);
             }
         }
 
@@ -39,7 +37,7 @@ namespace PJR.Editor
             {
                 ConfigAssetType asset = ScriptableObject.CreateInstance<ConfigAssetType>();
                 var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath($"{assetPath}/{typeof(ConfigAssetType).Name}.asset");
-                UnityEditor.AssetDatabase.CreateAsset(asset, uniqueFileName);
+                AssetDatabase.CreateAsset(asset, uniqueFileName);
             }
         }
     }

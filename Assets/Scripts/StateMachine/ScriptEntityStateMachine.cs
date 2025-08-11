@@ -1,8 +1,4 @@
-using PJR.Systems.Input;
-using PJR.ScriptStates.Player;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
 
 namespace PJR.ScriptStates
 {

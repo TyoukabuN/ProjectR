@@ -1,6 +1,7 @@
-using Sirenix.OdinInspector;
-using System;
 using System.Collections.Generic;
+using PJR.Editor;
+using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 
 namespace PJR
@@ -12,10 +13,10 @@ namespace PJR
         public int CanTriggerTimes = -1;
 
 #if UNITY_EDITOR
-        [UnityEditor.MenuItem("Assets/PJR/创建配置/机关陷阱/机关陷阱配置")]
+        [MenuItem("Assets/PJR/创建配置/机关陷阱/机关陷阱配置")]
         public static void CreateAsset()
         {
-            PJR.Editor.CSConfigHelper.CreateScriptableObject<TrapConfigAsset>();
+            CSConfigHelper.CreateScriptableObject<TrapConfigAsset>();
         }
 #endif
         /// <summary>

@@ -1,11 +1,10 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using UnityEngine;
-using UnityEngine.Profiling;
-using UnityEditor;
-using System;
-using System.Reflection;
+using System.Text;
+using Debug = UnityEngine.Debug;
+
 public abstract class CSVReport
 {
     public static string csvStr = string.Empty;
@@ -97,7 +96,7 @@ public abstract class CSVReport
             propertyName2Index[pair.Key] = i;
         }
 
-        CSVReport.WriteTitle();
+        WriteTitle();
 
         SetFileNamePre(fileNamePre);
     }
@@ -143,7 +142,7 @@ public abstract class CSVReport
         string outputPath = string.Empty;
         try
         {
-            string s = string.Format("{0:yyyyMMdd_HHmmss}", System.DateTime.Now);
+            string s = string.Format("{0:yyyyMMdd_HHmmss}", DateTime.Now);
             string path = string.Empty;
             if (string.IsNullOrEmpty(fileNamePre))
                 path = Path.Combine(reporttPath, "report_" + s + ".csv");
@@ -151,11 +150,11 @@ public abstract class CSVReport
                 path = Path.Combine(reporttPath, fileNamePre + "_" + s + ".csv");
 
             outputPath = Path.Combine(reporttPath, path);
-            File.WriteAllText(outputPath, csvStr, System.Text.Encoding.UTF8);
+            File.WriteAllText(outputPath, csvStr, Encoding.UTF8);
             if (openSavePath)
             {
                 var explorer = reporttPath.Replace('/', '\\');
-                System.Diagnostics.Process.Start("explorer.exe", explorer);
+                Process.Start("explorer.exe", explorer);
             }
         }
         catch (Exception e)

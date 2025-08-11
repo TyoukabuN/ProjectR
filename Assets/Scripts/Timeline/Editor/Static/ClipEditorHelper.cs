@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 using static PJR.Timeline.Editor.TimelineWindow;
 
 namespace PJR.Timeline.Editor
 {
     public static class ClipEditorHelper
     {
-        static WindowState windowState => TimelineWindow.instance.State;
+        static WindowState windowState => instance.State;
 
         public static void TrySave(this IClip clip)
         {

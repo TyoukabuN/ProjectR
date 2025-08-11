@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using PJR.Editor;
+using UnityEditor;
 
 namespace PJR
 {
@@ -12,10 +13,10 @@ namespace PJR
         }
 
 #if UNITY_EDITOR
-        [UnityEditor.MenuItem("Assets/PJR/创建配置/实体配置/实体配置")]
+        [MenuItem("Assets/PJR/创建配置/实体配置/实体配置")]
         public static void CreateAsset()
         {
-            PJR.Editor.CSConfigHelper.CreateScriptableObject<MonsterConfigAsset>();
+            CSConfigHelper.CreateScriptableObject<MonsterConfigAsset>();
         }
 #endif
     }

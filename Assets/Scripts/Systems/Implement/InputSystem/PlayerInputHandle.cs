@@ -1,5 +1,5 @@
-using UnityEngine.InputSystem;
 using PJR.Systems.Input;
+using UnityEngine.InputSystem;
 
 namespace PJR.Systems
 {

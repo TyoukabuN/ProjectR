@@ -1,7 +1,7 @@
-using Sirenix.OdinInspector;
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using PJR.Editor;
+using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 
 namespace PJR
@@ -15,10 +15,10 @@ namespace PJR
         public float interval = 3f;
 
 #if UNITY_EDITOR
-        [UnityEditor.MenuItem("Assets/PJR/创建配置/道具配置/道具配置")]
+        [MenuItem("Assets/PJR/创建配置/道具配置/道具配置")]
         public static void CreateAsset()
         {
-            PJR.Editor.CSConfigHelper.CreateScriptableObject<ItemConfigAsset>();
+            CSConfigHelper.CreateScriptableObject<ItemConfigAsset>();
         }
 #endif
         protected override void ExecuteActionEvents(List<EActionEvent> events, LogicEntity trapEntity, LogicEntity targetEntity)

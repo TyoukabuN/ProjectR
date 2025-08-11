@@ -42,6 +42,27 @@ public class FSMTest : MonoBehaviour
         _fsm.AddTransition<States.Left,States.Forward>(OverOneSecond.Get());
         _fsm.ChangeState<Idle>();
     }
+    
+    [Button]
+    public void DoOnFinishTest()
+    {
+        if (!EditorApplication.isPlaying)
+        {
+            EditorApplication.isPlaying = true;
+            return;
+        }
+        _fsm?.Release();
+        _fsm = Fsm<FSMTestContext>.Get(new()
+            {
+                owner = this,
+                target = target
+            }, 
+            OnFinishTest.WaitForSecond<FSMTestContext>.Get(2),
+            OnFinishTest.WaitForSecond<FSMTestContext>.Get(3)
+        );
+        _fsm.ConnectStatesWithOnFinish();
+        _fsm.ChangeState(0);
+    }
 
     void Update()
     {
@@ -120,7 +141,6 @@ public class FSMTest : MonoBehaviour
             public override void Release() => GenerialPool<Right>.Release(this);
         }
     }
-
     public static class Transitions
     {
         public class OverOneSecond : FsmTransition<FSMTestContext>
@@ -131,6 +151,30 @@ public class FSMTest : MonoBehaviour
             }
             public static OverOneSecond Get() => GenerialPool<OverOneSecond>.Get();
             public override void Release() => GenerialPool<OverOneSecond>.Release(this);
+        }
+    }
+
+    public static class OnFinishTest
+    {
+        public class WaitForSecond<TContext> : SimpleTransitionFsmState<FSMTestContext>
+        {
+            private float _second = 1f;
+            public override void OnUpate(IUpdateContext context)
+            {
+                Debug.Log($"({CurrentStateTime}/{_second})");
+                if (CurrentStateTime >= _second)
+                {
+                    Status = EStatus.Finish;
+                    Debug.Log("完成");
+                }
+            }
+            public static WaitForSecond<TContext> Get(float second = 1f)
+            {
+                var temp = GenerialPool<WaitForSecond<TContext>>.Get();
+                temp._second = second;
+                return temp;
+            }
+            public override void Release() => GenerialPool<WaitForSecond<TContext>>.Release(this);
         }
     }
 }

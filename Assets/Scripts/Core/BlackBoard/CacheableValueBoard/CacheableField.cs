@@ -6,7 +6,6 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Pool;
-
 #if UNITY_EDITOR
 using Sirenix.OdinInspector.Editor;
 #endif

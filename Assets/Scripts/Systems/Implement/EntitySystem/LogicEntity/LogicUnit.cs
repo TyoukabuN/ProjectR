@@ -1,4 +1,5 @@
 using UnityEngine;
+using Object = System.Object;
 
 namespace PJR.LogicUnits
 {
@@ -7,7 +8,7 @@ namespace PJR.LogicUnits
         public int SortOrder { get;}
         public bool Enable { get; set; }
         public bool Valid { get;}
-        public bool OnInit(System.Object obj);
+        public bool OnInit(Object obj);
         public void OnEnable();
         public void OnDisable() { }
         public void OnUpdate() => OnUpdate(Time.deltaTime);
@@ -46,7 +47,7 @@ namespace PJR.LogicUnits
         public virtual bool Valid => valid;
         public virtual int SortOrder => 0;
         public virtual string name => string.Empty;
-        public virtual bool OnInit(System.Object obj) { return false; }
+        public virtual bool OnInit(Object obj) { return false; }
         public virtual void OnEnable() { }
         public virtual void OnDisable() { }
         public virtual void OnUpdate(float deltaTime) { }
@@ -60,7 +61,7 @@ namespace PJR.LogicUnits
         protected LogicEntity logicEntity;
         public LogicEntity LogicEntity => logicEntity;
 
-        public override bool OnInit(System.Object dependency) {
+        public override bool OnInit(Object dependency) {
             if (dependency is not PJR.LogicEntity)
             {
                 Debug.LogError($"Worry dependency type with {dependency} in {nameof(EntityLogicUnit)}");

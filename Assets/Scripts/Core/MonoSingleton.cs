@@ -14,7 +14,7 @@ namespace PJR
             {
                 if (_instance == null)
                 {
-                    _instance = GameObject.FindObjectOfType<T>();
+                    _instance = FindObjectOfType<T>();
                     if (_instance == null)
                     { 
                         var gobj = new GameObject(typeof(T).Name);

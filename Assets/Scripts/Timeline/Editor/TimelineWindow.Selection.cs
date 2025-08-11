@@ -89,7 +89,7 @@ namespace PJR.Timeline.Editor
             return false;
         }
 
-        public static bool Selection_IsObjectFocused<T>(T obj) where T : UnityEngine.Object
+        public static bool Selection_IsObjectFocused<T>(T obj) where T : Object
         {
             if (ReferenceEquals(obj,null))
                 return false;

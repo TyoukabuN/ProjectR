@@ -11,19 +11,20 @@ namespace PJR.Core.StateMachine
         Failure,
         Released,
     }
-    public interface IFsm : IReference 
+    public interface IFsm : IPoolableObject 
     {
         public IFsmState CurrentState { get; }
         public bool ChangeState(Type stateType);
         public void Update(IUpdateContext updateContext);
-        public void Release();
-        public bool AddTransition<TFrom, TTo>(IFsmTransition transition);
     }
+
     public interface IFsmState : IPoolableObject
     {
         public EStatus Status { get; }
     }
     public interface IFsmTransition : IPoolableObject
     {
+        public bool CanTransition();
+        public void OnTransition(){}
     }
 }

@@ -1,11 +1,13 @@
 #if UNITY_EDITOR
-using Sirenix.Utilities;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
+using PJR.ClassExtension;
+using PJR.Systems;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
-using PJR.Systems;
-using PJR.ClassExtension;
+using Object = System.Object;
 
 namespace PJR
 {
@@ -42,7 +44,7 @@ namespace PJR
                 //}
                 for (int i = 0; i < prefabs_names.Count; i++)
                 {
-                    GameObject go = AssetDatabase.LoadAssetAtPath(prefabs_names[i], typeof(System.Object)) as GameObject;
+                    GameObject go = AssetDatabase.LoadAssetAtPath(prefabs_names[i], typeof(Object)) as GameObject;
                     if (go != null)
                     {
                         if (go.transform.TryGetComponent<UINode>() != null)
@@ -63,7 +65,7 @@ namespace PJR
                         }
                     }
                 }
-                string jsStr = Newtonsoft.Json.JsonConvert.SerializeObject(ud, Newtonsoft.Json.Formatting.Indented);
+                string jsStr = JsonConvert.SerializeObject(ud, Formatting.Indented);
                 string writePath = Application.dataPath + "/Scripts/Modules/UI/UIBindJs.json";
                 //string writePath = Application.dataPath + "/UIBindJs.json";
                 //if (!File.Exists(writePath))

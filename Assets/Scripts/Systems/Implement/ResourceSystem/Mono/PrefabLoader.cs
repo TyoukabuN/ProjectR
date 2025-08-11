@@ -1,9 +1,10 @@
-using UnityEngine;
-using System.IO;
-using Sirenix.OdinInspector;
 using System;
-using static PJR.Systems.ResourceSystem;
+using System.IO;
 using PJR.Systems;
+using Sirenix.OdinInspector;
+using UnityEngine;
+using static PJR.Systems.ResourceSystem;
+using Object = UnityEngine.Object;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -92,7 +93,7 @@ namespace PJR
             state = LoadState.Release;
             if (instance != null)
             {
-                GameObject.DestroyImmediate(instance);
+                DestroyImmediate(instance);
                 instance = null;
             }
             resourceLoader?.Release();
@@ -116,7 +117,7 @@ namespace PJR
                 return;
             state = LoadState.Loading;
 
-            resourceLoader = ResourceSystem.LoadAsset(AssetName, typeof(GameObject));
+            resourceLoader = LoadAsset(AssetName, typeof(GameObject));
             resourceLoader.Completed += OnLoadDone;
         }
         protected virtual void OnLoadDone(ResourceLoader loader)
@@ -163,7 +164,7 @@ namespace PJR
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
-                ResourceSystem.Editor_TryGetAssetInfoByName(assetName, out var assetInfo);
+                Editor_TryGetAssetInfoByName(assetName, out var assetInfo);
                 if (!string.IsNullOrEmpty(assetInfo.Error))
                 {
                     if (log) LogError($"[找不到对应Asset]", gameObject);
@@ -174,7 +175,7 @@ namespace PJR
             return true;
         }
 
-        protected virtual void LogError(object message, UnityEngine.Object context = null)
+        protected virtual void LogError(object message, Object context = null)
         {
             Error = message.ToString();
             Debug.LogError(message, context);

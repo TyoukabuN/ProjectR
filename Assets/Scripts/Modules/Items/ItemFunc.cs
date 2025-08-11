@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
 namespace PJR
 {
     public static class ItemFunc
     {
-        //Ã¿ÖÖÀàÐÍµÀ¾ßÊµÏÖ
+        //Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½Êµï¿½ï¿½
         public static void ExcuteEntrance(int type,ItemEntity itemEntity, LogicEntity targetEntity)
         {
             if (type ==0)
             {
-                Debug.Log("ÎÞµÐÁË");
+                Debug.Log("ï¿½Þµï¿½ï¿½ï¿½");
                 if (!itemEntity.itembase.isMugen)
                 {
                     if (itemEntity.config.CanRegenerateTimes -1 <=0)
@@ -36,7 +33,7 @@ namespace PJR
             itemEntity.physEntity.avatar.SetActive(false);
             itemEntity.itembase.StartCoroutine(itemEntity.itembase.CountDown(() => { itemEntity.physEntity.avatar.SetActive(true); }));
         }
-        #region À©Õ¹
+        #region ï¿½ï¿½Õ¹
         
         
         #endregion

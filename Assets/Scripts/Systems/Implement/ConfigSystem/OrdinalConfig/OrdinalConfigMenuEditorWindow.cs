@@ -1,12 +1,14 @@
 #if UNITY_EDITOR
-using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities.Editor;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PJR.Config
 {
@@ -393,10 +395,10 @@ namespace PJR.Config
         protected virtual void Editor_OnCreateConfig(FolderMenuItem folderMenuItem)
         {
             if (folderMenuItem == null || folderMenuItem == null)
-                throw new System.Exception("[FolderMenuItem is null]");
+                throw new Exception("[FolderMenuItem is null]");
             Editor_OnCreateConfig(null, folderMenuItem.AssetPath);
         }
-        protected virtual void Editor_OnCreateConfig(System.Action<TItemAsset> onFinish, string directory)
+        protected virtual void Editor_OnCreateConfig(Action<TItemAsset> onFinish, string directory)
         {
             if (string.IsNullOrEmpty(directory))
             {
@@ -405,7 +407,7 @@ namespace PJR.Config
             }
 
             if (!AssetDatabase.IsValidFolder(directory))
-                throw new System.Exception($"[Invalid Folder directory]:{directory}");
+                throw new Exception($"[Invalid Folder directory]:{directory}");
 
             _config?.Editor_OpenItemCreateWindow(onFinish, directory);
         }
@@ -429,7 +431,7 @@ namespace PJR.Config
         protected virtual void AssertValid()
         {
             if (!CheckValid())
-                throw new System.Exception(_error);
+                throw new Exception(_error);
         }
         protected virtual void OnMenuSelectionChanged(SelectionChangedType selectionChangedType)
         {

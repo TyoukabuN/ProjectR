@@ -1,6 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Text;
-using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public static class CMDUtility
 {
@@ -9,7 +10,7 @@ public static class CMDUtility
         if (string.IsNullOrEmpty(batFilePath))
             return false;
         // 创建一个新的进程启动信息对象
-        var processStartInfo = new System.Diagnostics.ProcessStartInfo();
+        var processStartInfo = new ProcessStartInfo();
         processStartInfo.FileName = batFilePath;  // 设置要运行的文件
         processStartInfo.UseShellExecute = false; // 使用操作系统外壳程序执行进程
         processStartInfo.RedirectStandardOutput = true; // 重定向标准输出
@@ -22,7 +23,7 @@ public static class CMDUtility
         try
         {
             // 启动进程
-            using (System.Diagnostics.Process process = System.Diagnostics.Process.Start(processStartInfo))
+            using (Process process = Process.Start(processStartInfo))
             {
                 // 读取输出和错误流
                 string output = process.StandardOutput.ReadToEnd();
@@ -56,7 +57,7 @@ public static class CMDUtility
         if (string.IsNullOrEmpty(Arguments))
             return false;
         // 创建一个新的进程启动信息对象
-        var processStartInfo = new System.Diagnostics.ProcessStartInfo();
+        var processStartInfo = new ProcessStartInfo();
         processStartInfo.FileName = string.IsNullOrEmpty(FileName) ? Default_fileName : FileName;  // 设置要运行的文件
         processStartInfo.Arguments = Arguments;  // 设置要运行的文件
         processStartInfo.UseShellExecute = false; // 使用操作系统外壳程序执行进程
@@ -70,7 +71,7 @@ public static class CMDUtility
         try
         {
             // 启动进程
-            using (System.Diagnostics.Process process = System.Diagnostics.Process.Start(processStartInfo))
+            using (Process process = Process.Start(processStartInfo))
             {
                 // 读取输出和错误流
                 string output = process.StandardOutput.ReadToEnd();

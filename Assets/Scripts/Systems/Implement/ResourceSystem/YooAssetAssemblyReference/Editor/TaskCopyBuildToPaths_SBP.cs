@@ -1,9 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-
 namespace YooAsset.Editor
 {
     public class TaskCopyBuildToPaths_SBP : TaskCopyBuildToPaths, IBuildTask

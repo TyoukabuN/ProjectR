@@ -1,8 +1,5 @@
-﻿using System;
-using PJR.Timeline.Pool;
-using UnityEditor;
+﻿using PJR.Timeline.Pool;
 using UnityEngine;
-using Object = System.Object;
 
 namespace PJR.Timeline
 {
@@ -28,7 +25,7 @@ namespace PJR.Timeline
             public SequenceAsset SequenceAsset => (SequenceAsset)Director?.SequenceAsset;
             public SequenceDirector Director => _director;
             protected SequenceDirector _director;
-            public UnityEngine.Object Object => _director?.gameObject;
+            public Object Object => _director?.gameObject;
             public SequenceRunner Runner => _director?.GetRunner();
             public SequenceHandle(){}
             public SequenceHandle(SequenceDirector director)=>_director = director;

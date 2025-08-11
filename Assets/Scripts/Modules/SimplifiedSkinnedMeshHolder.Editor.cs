@@ -1,11 +1,8 @@
 #if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-using Sirenix.OdinInspector.Editor;
 using Sirenix.OdinInspector;
-
+using Sirenix.OdinInspector.Editor;
+using UnityEditor;
+using UnityEngine;
 
 namespace PJR
 {
@@ -33,7 +30,7 @@ namespace PJR
         }
 
         [MenuItem("CONTEXT/SkinnedMeshRenderer/生成减面Mesh并保存为Asset")]
-        public static void Editor_CONTEXT_GenerateSimplifiedMeshAndSave(UnityEditor.MenuCommand command)
+        public static void Editor_CONTEXT_GenerateSimplifiedMeshAndSave(MenuCommand command)
         {
             var skinnedMeshRenderer = (SkinnedMeshRenderer)command?.context;
             var mesh = skinnedMeshRenderer?.sharedMesh;

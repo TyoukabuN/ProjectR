@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Sirenix.OdinInspector;
-
+using PJR.Editor;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -16,7 +12,7 @@ namespace PJR
         [MenuItem("Assets/PJR/创建配置/Int常数配置")]
         public static void CreateConstConfigAsset()
         {
-            PJR.Editor.CSConfigHelper.CreateListConfigAsset<IntConstConfig, IntConstConfigItem>();
+            CSConfigHelper.CreateListConfigAsset<IntConstConfig, IntConstConfigItem>();
         }
 #endif
     }

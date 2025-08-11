@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
-using static UnityEngine.InputSystem.InputAction;
 using PJR.Systems.Input;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 namespace PJR.Systems
 {

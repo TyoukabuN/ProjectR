@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace PJR
 {
@@ -66,7 +66,7 @@ namespace PJR
                     continue;
                 if (!ghost.IsValid())
                 {
-                    GameObject.Destroy(ghost.gameObject);
+                    Destroy(ghost.gameObject);
                     ghosts.RemoveAt(i--);
                     continue;
                 }

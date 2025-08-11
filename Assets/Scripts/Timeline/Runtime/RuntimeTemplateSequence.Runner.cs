@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PJR.Timeline.Pool;
+using UnityEngine;
 
 namespace PJR.Timeline
 {
@@ -72,8 +73,8 @@ namespace PJR.Timeline
             }
             #region Pool
 
-            public static Runner Get() => Pool.ObjectPool<Runner>.Get();
-            public override void Release() => Pool.ObjectPool<Runner>.Release(this);
+            public static Runner Get() => ObjectPool<Runner>.Get();
+            public override void Release() => ObjectPool<Runner>.Release(this);
 
             #endregion
         }

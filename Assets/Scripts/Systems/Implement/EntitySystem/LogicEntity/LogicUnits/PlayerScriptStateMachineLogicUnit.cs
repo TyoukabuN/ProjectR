@@ -1,9 +1,6 @@
 using PJR.LogicUnits;
 using PJR.ScriptStates;
 using PJR.ScriptStates.Player;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace PJR
 { 

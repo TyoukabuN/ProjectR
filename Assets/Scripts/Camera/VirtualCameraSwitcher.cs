@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using Cinemachine;
+using UnityEngine;
+
 public static class VirtualCameraSwitcher 
 {
     static List<CinemachineVirtualCamera> cameras = new List<CinemachineVirtualCamera>();

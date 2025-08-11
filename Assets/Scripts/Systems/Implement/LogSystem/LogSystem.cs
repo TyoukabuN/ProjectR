@@ -1,7 +1,7 @@
 using System;
-using UnityEngine;
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 namespace PJR.Systems
 {
@@ -80,7 +80,7 @@ namespace PJR.Systems
         }
         public static string GetFrameCount()
         {
-            return $"[f:{UnityEngine.Time.frameCount}]";
+            return $"[f:{Time.frameCount}]";
         }
 
 

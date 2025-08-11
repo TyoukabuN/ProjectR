@@ -1,4 +1,5 @@
 using YooAsset;
+
 public class RemoteServices : IRemoteServices
 {
     private enum EFormalType

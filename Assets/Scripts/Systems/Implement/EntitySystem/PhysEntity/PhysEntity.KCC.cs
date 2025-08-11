@@ -1,9 +1,9 @@
-using UnityEngine;
-using KinematicCharacterController;
-using Sirenix.OdinInspector;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using KinematicCharacterController;
 using PJR.ClassExtension;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace PJR
 {

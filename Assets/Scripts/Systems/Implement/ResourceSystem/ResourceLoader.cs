@@ -1,8 +1,7 @@
-using System.Collections;
-using System.IO;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.IO;
 using Object = UnityEngine.Object;
 
 namespace PJR.Systems
@@ -46,13 +45,13 @@ namespace PJR.Systems
                 //TODO:加个实例化，加引用计数
                 return AssetObject;
             }
-            public virtual T GetRawAsset<T>() where T : UnityEngine.Object
+            public virtual T GetRawAsset<T>() where T : Object
             {
                 return (T)AssetObject;
             }
 
-            public List<UnityEngine.Object> _instantiates = new List<UnityEngine.Object>(12);
-            public virtual T GetInstantiate<T>() where T : UnityEngine.Object
+            public List<Object> _instantiates = new List<Object>(12);
+            public virtual T GetInstantiate<T>() where T : Object
             {
                 var inst = Instantiate<T>(GetRawAsset<T>());
                 if (inst == null)

@@ -1,13 +1,13 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
+using PJR.ClassExtension;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static PJR.Systems.ResourceSystem;
-using PJR.ClassExtension;
 
 namespace PJR.Systems
 {
@@ -184,7 +184,7 @@ namespace PJR.Systems
         {
             if (!string.IsNullOrEmpty(name))
             {
-                var loader = ResourceSystem.LoadAsset<GameObject>(name);
+                var loader = LoadAsset<GameObject>(name);
                 if (loader == null)
                 {
                     LogSystem.LogError($"[{nameof(LoadAsset)}] Failure to load UI asset");
@@ -203,7 +203,7 @@ namespace PJR.Systems
                 return;
             }
 
-            GameObject ui = GameObject.Instantiate(asset);
+            GameObject ui = Instantiate(asset);
             if (ui == null)
             {
                 LogSystem.LogError($"[{nameof(OnLoadDone)}] Failure to instantiate UI");

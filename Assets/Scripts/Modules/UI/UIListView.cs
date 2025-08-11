@@ -1,8 +1,7 @@
-using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using PJR.ClassExtension;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace PJR
 {
@@ -50,7 +49,7 @@ namespace PJR
         }
         private void GenItem()
         {
-            GameObject obj = GameObject.Instantiate(itemPrefab);
+            GameObject obj = Instantiate(itemPrefab);
             obj.transform.parent = Content;
             obj.transform.localPosition = Vector3.zero; 
             obj.transform.localRotation = Quaternion.identity;

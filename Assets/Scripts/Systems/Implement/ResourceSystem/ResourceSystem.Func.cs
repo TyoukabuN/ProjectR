@@ -1,10 +1,10 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using System.IO;
-using System;
 using YooAsset;
+using Object = UnityEngine.Object;
 
 namespace PJR.Systems
 {
@@ -45,12 +45,12 @@ namespace PJR.Systems
             assetInfo = null;
             if (!IsValid())
                 return false;
-            assetInfo = YooAssets.GetAssetInfo(assetName, typeof(UnityEngine.Object));
+            assetInfo = YooAssets.GetAssetInfo(assetName, typeof(Object));
             return string.IsNullOrEmpty(assetInfo?.Error);
         }
         public static bool TryGetAssetInfoByGUID(string assetGUID, out AssetInfo assetInfo)
         {
-            assetInfo = GetAssetInfoByGUID(assetGUID, typeof(UnityEngine.Object));
+            assetInfo = GetAssetInfoByGUID(assetGUID, typeof(Object));
             return string.IsNullOrEmpty(assetInfo?.Error);
         }
 
@@ -65,7 +65,7 @@ namespace PJR.Systems
             GetGUIDInfo(assetGUID, out assetGUID, out var subAssetName);
             return YooAssets.GetAssetInfoByGUID(assetGUID);
         }
-        public static AssetInfo GetAssetInfoByGUID(string assetGUID, System.Type type)
+        public static AssetInfo GetAssetInfoByGUID(string assetGUID, Type type)
         {
             if (!IsValid())
                 return null;
@@ -97,13 +97,13 @@ namespace PJR.Systems
         #endregion
 
         #region 加载相关
-        public static ResourceLoader LoadAsset<T>(string assetFullName) where T : UnityEngine.Object
+        public static ResourceLoader LoadAsset<T>(string assetFullName) where T : Object
         {
             if (string.IsNullOrEmpty(assetFullName))
                 return null;
             return LoadAsset<T>(assetFullName, null);
         }
-        public static ResourceLoader LoadAsset<T>(string assetFullName, Action<ResourceLoader> callback) where T : UnityEngine.Object
+        public static ResourceLoader LoadAsset<T>(string assetFullName, Action<ResourceLoader> callback) where T : Object
         {
             if (string.IsNullOrEmpty(assetFullName))
                 return null;

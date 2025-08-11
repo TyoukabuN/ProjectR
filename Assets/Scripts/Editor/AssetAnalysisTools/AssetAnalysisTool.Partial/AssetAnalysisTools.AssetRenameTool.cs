@@ -1,17 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
-using UnityEditor.SceneManagement;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.Profiling;
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
-using System.Security.Cryptography;
-using Unity.EditorCoroutines.Editor;
-using UnityEngine.SceneManagement;
+using UnityEditor;
+using UnityEngine;
+
 //
 
 public partial class AssetAnalysisTool : AssetAnalysisBase

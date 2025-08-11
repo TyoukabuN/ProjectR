@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +13,7 @@ namespace PJR
         }
         public override void OnOpen()
         {
-            Debug.Log("NormalUIPanel´ò¿ªÁË");
+            Debug.Log("NormalUIPanelï¿½ï¿½ï¿½ï¿½");
         }
         public override void OnData(object data)
         {

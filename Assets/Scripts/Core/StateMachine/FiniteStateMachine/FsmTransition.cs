@@ -1,5 +1,3 @@
-using System;
-
 namespace PJR.Core.StateMachine
 {
     public abstract class FsmTransition<TContext> : IFsmTransition

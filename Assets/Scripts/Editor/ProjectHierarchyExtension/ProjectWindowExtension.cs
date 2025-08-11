@@ -1,14 +1,15 @@
 #if UNITY_EDITOR
 using System;
 using InfinityCode.UltimateEditorEnhancer;
-using InfinityCode.UltimateEditorEnhancer.ProjectTools;
-using UnityEditor;
-using UnityEngine;
-using Newtonsoft.Json;
 using InfinityCode.UltimateEditorEnhancer.Integration;
+using InfinityCode.UltimateEditorEnhancer.ProjectTools;
+using Newtonsoft.Json;
 using PJR.Timeline;
 using PJR.Timeline.Editor;
 using Sirenix.Utilities.Editor;
+using UnityEditor;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace PJR.Editor
 {
@@ -40,7 +41,7 @@ namespace PJR.Editor
             if (!item.isFolder)
                 return;
             string descFilePath = $"{item.path}/{FolderInfoName}";
-            var asset = AssetDatabase.LoadAssetAtPath<UnityEngine.TextAsset>(descFilePath);
+            var asset = AssetDatabase.LoadAssetAtPath<TextAsset>(descFilePath);
             if (asset == null)
                 return;
 
@@ -72,13 +73,13 @@ namespace PJR.Editor
             var type = Type.GetType(desc.ClassName);
             if (type == null)
             {
-                UnityEngine.Debug.Log($"failed to find type: {desc.ClassName}");
+                Debug.Log($"failed to find type: {desc.ClassName}");
                 return;
             }
             var methodInfo = type.GetMethod(desc.MethodName);
             if (methodInfo == null)
             {
-                UnityEngine.Debug.Log($"failed to find method: {desc.ClassName}.{desc.MethodName}");
+                Debug.Log($"failed to find method: {desc.ClassName}.{desc.MethodName}");
                 return;
             }
 

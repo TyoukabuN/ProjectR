@@ -18,7 +18,7 @@ namespace PJR.Systems
             {
                 if (isDone)
                     return;
-                string assetPath = ResourceSystem.EditorAssetMgr.ConvertLocationToAssetPath(AssetFullName);
+                string assetPath = EditorAssetMgr.ConvertLocationToAssetPath(AssetFullName);
                 AssetObject = AssetDatabase.LoadAssetAtPath(assetPath, AssetType);
                 if (AssetObject == null)
                 {
@@ -29,7 +29,7 @@ namespace PJR.Systems
             }
         }
 
-        public class EditorResourceLoader<T> : ResourceLoader where T : System.Type
+        public class EditorResourceLoader<T> : ResourceLoader where T : Type
         {
             public EditorResourceLoader(T assetType, string assetFullName) : base(assetFullName, assetType)
             {

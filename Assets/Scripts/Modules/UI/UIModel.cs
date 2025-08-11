@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
+using PJR.Systems;
 using UnityEngine;
 using UnityEngine.Events;
 using static PJR.Systems.ResourceSystem;
-using PJR.Systems;
 
 namespace PJR
 {
@@ -26,7 +25,7 @@ namespace PJR
         {
             if (!string.IsNullOrEmpty(name))
             {
-                var loader = ResourceSystem.LoadAsset<GameObject>(name);
+                var loader = LoadAsset<GameObject>(name);
                 if (loader == null)
                 {
                     LogSystem.LogError($"[{nameof(LoadAsset)}] Failure to load UIModel");
@@ -44,7 +43,7 @@ namespace PJR
                 LogSystem.LogError($"[{nameof(OnLoadDone)}] Failure to load LoadAsset");
                 return;
             }
-            GameObject model = GameObject.Instantiate(asset);
+            GameObject model = Instantiate(asset);
             model.transform.SetParent(transform);
             model.transform.localPosition = Vector3.zero + offset;
             model.transform.localScale = scale;

@@ -1,11 +1,10 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.IO;
 using System.Linq;
 using Sirenix.OdinInspector;
-using System.IO;
-using System;
-
-
+using UnityEngine;
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
@@ -40,7 +39,7 @@ namespace PJR.Config
 #if UNITY_EDITOR
             if (Application.isEditor)
             {
-                asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(AssetPath) as TAsset;
+                asset = AssetDatabase.LoadAssetAtPath<Object>(AssetPath) as TAsset;
                 if (asset == null)
                 {
                     asset = Editor_CreateConfigAsset();
@@ -161,7 +160,7 @@ namespace PJR.Config
                 Directory.CreateDirectory(ItemAssetRoot);
                 AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
             }
-            var asset = ScriptableObject.CreateInstance<TAsset>();
+            var asset = CreateInstance<TAsset>();
             AssetDatabase.CreateAsset(asset, AssetPath);
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
             return asset;
@@ -487,7 +486,7 @@ namespace PJR.Config
                 return;
             var configAsset = Editor_Asset;
             if (configAsset == null)
-                throw new System.Exception("Find not Config asset!");
+                throw new Exception("Find not Config asset!");
             var itemAssets = Editor_GetAllConfigItemAsset_FromItemAssetRoot();
             if (itemAssets == null)
             {

@@ -1,11 +1,11 @@
 ﻿#if UNITY_EDITOR
 
 using System;
-using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
 
 public class TEditorIcons : EditorWindow
 {
@@ -89,7 +89,7 @@ public class TEditorIcons : EditorWindow
 
                     File.WriteAllBytes(path, outTex.EncodeToPNG());
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     Debug.LogError("Cannot save the icon : " + e.Message);
                 }
@@ -195,7 +195,7 @@ public class TEditorIcons : EditorWindow
         // Found icons in resources : 1416 ( unique = 855 )
 
         Resources.UnloadUnusedAssets();
-        System.GC.Collect();
+        GC.Collect();
     }
 
     private void OnGUI()

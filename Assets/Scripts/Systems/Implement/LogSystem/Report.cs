@@ -1,13 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Runtime.CompilerServices;
 using PJR.ClassExtension;
-using NPOI.SS.Formula.Functions;
-
-
+using UnityEngine;
 #if UNITY_EDITOR
-using UnityEditor;
 #endif
 
 namespace PJR.Systems.Log
@@ -65,14 +60,14 @@ namespace PJR.Systems.Log
                 DisplayLog();
         }
         public GroupScope BeginGroupScope(string groupName) => BeginGroupScope(groupName, null, -1);
-        public GroupScope BeginGroupScope(string groupName, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1)
+        public GroupScope BeginGroupScope(string groupName, string href, [CallerLineNumber] int line = -1)
         {
             if (!Valid)
                 return null;
             return new GroupScope(this, Hyperlink.GenLink(groupName, href, line));
         }
         public void BeginGroup(string groupName) => BeginGroup(groupName, null, -1);
-        public void BeginGroup(string groupName, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1)
+        public void BeginGroup(string groupName, string href, [CallerLineNumber] int line = -1)
         {
             if (!Valid)
                 return;
@@ -107,14 +102,14 @@ namespace PJR.Systems.Log
             return durationAppendCount > 0;
         }
         public void AppendLine(string context) => AppendLine(null, context, false);
-        public void AppendLine(string context, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1) => AppendLine(null, context, false, href, line);
+        public void AppendLine(string context, string href, [CallerLineNumber] int line = -1) => AppendLine(null, context, false, href, line);
         private void AppendLine(string context, bool outOfPrefix) => AppendLine(null, context, outOfPrefix);
         public void AppendLine(string tag, object context) => AppendLine(tag, context.ToString(), false);
-        public void AppendLine(string tag, object context, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1) => AppendLine(tag, context.ToString(), false, href, line);
+        public void AppendLine(string tag, object context, string href, [CallerLineNumber] int line = -1) => AppendLine(tag, context.ToString(), false, href, line);
         public void AppendLine(string tag, string context) => AppendLine(tag, context, false, null, -1);
-        public void AppendLine(string tag, string context, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1) => AppendLine(tag, context, false, href, line);
+        public void AppendLine(string tag, string context, string href, [CallerLineNumber] int line = -1) => AppendLine(tag, context, false, href, line);
         public void AppendLine(string tag, string context, bool outOfPrefix) => AppendLine(tag, context, outOfPrefix, null, -1);
-        public void AppendLine(string tag, string context, bool outOfPrefix, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1)
+        public void AppendLine(string tag, string context, bool outOfPrefix, string href, [CallerLineNumber] int line = -1)
         {
             if (!Valid) return;
             if (string.IsNullOrEmpty(tag))
@@ -194,40 +189,40 @@ namespace PJR.Systems.Log
 
         #region Append func
         public void AppendValueModify(string title, int from, int to) => AppendValueModify(title, from, to, null, -1);
-        public void AppendValueModify(string title, int from, int to, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1)
+        public void AppendValueModify(string title, int from, int to, string href, [CallerLineNumber] int line = -1)
         {
             if (!Valid) return;
             title = Hyperlink.GenLink(title, href, line);
             AppendLine($"[{title}] [{from}]→[{to}]");
         }
         public void AppendValueModify_Mul(string title, float from, float factor) => AppendValueModify_Mul(title, from, factor, null, -1);
-        public void AppendValueModify_Mul(string title, float from, float factor, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1)
+        public void AppendValueModify_Mul(string title, float from, float factor, string href, [CallerLineNumber] int line = -1)
         {
             if (!Valid) return;
             title = Hyperlink.GenLink(title, href, line);
             AppendLine($"[{title}] [{from}]*[{factor}]→[{from * factor}]");
         }
         public void AppendValueModify_Add(string title, float from, float factor) => AppendValueModify_Add(title, from, factor, null, -1);
-        public void AppendValueModify_Add(string title, float from, float factor, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1)
+        public void AppendValueModify_Add(string title, float from, float factor, string href, [CallerLineNumber] int line = -1)
         {
             if (!Valid) return;
             title = Hyperlink.GenLink(title, href, line);
             AppendLine($"[{title}] [{from}]+[{factor}]→[{from + factor}]");
         }
         public void AppendValueModify_Reduce(string title, float from, float factor) => AppendValueModify_Reduce(title, from, factor, null, -1);
-        public void AppendValueModify_Reduce(string title, float from, float factor, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1)
+        public void AppendValueModify_Reduce(string title, float from, float factor, string href, [CallerLineNumber] int line = -1)
         {
             if (!Valid) return;
             title = Hyperlink.GenLink(title, href, line);
             AppendLine($"[{title}] [{from}]-[{factor}]→[{from - factor}]");
         }
         public void AppendValueModify(string title, Enum from, Enum to) => AppendValueModify(title, from.GetEnumNiceName(), to.GetEnumNiceName(), null, -1);
-        public void AppendValueModify(string title, Enum from, Enum to, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1) => AppendValueModify(title, from.GetEnumNiceName(), to.GetEnumNiceName(), href, line);
+        public void AppendValueModify(string title, Enum from, Enum to, string href, [CallerLineNumber] int line = -1) => AppendValueModify(title, from.GetEnumNiceName(), to.GetEnumNiceName(), href, line);
 
         public void AppendValueModify(string title, object from, object to) => AppendValueModify(title, from.ToString(), to.ToString(), null, -1);
-        public void AppendValueModify(string title, object from, object to, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1) => AppendValueModify(title, from.ToString(), to.ToString(), href, line);
+        public void AppendValueModify(string title, object from, object to, string href, [CallerLineNumber] int line = -1) => AppendValueModify(title, from.ToString(), to.ToString(), href, line);
         public void AppendValueModify(string title, string from, string to) => AppendValueModify(title, from.ToString(), to.ToString(), null, -1);
-        public void AppendValueModify(string title, string from, string to, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1)
+        public void AppendValueModify(string title, string from, string to, string href, [CallerLineNumber] int line = -1)
         {
             if (!Valid) return;
             title = Hyperlink.GenLink(title, href, line);
@@ -249,7 +244,7 @@ namespace PJR.Systems.Log
             return GenLink(context, href, line);
         }
 
-        public static string GenLink(string context, string href, [System.Runtime.CompilerServices.CallerLineNumber] int line = -1)
+        public static string GenLink(string context, string href, [CallerLineNumber] int line = -1)
         {
             if (string.IsNullOrEmpty(href))
                 return context;

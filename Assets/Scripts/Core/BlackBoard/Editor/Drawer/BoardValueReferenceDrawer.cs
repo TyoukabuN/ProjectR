@@ -2,9 +2,9 @@
 using System.Linq;
 using PJR.Core.BlackBoard.CachedValueBoard;
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
-using Sirenix.OdinInspector.Editor;
 
 namespace PJR.BlackBoard.Editor.Drawers
 {

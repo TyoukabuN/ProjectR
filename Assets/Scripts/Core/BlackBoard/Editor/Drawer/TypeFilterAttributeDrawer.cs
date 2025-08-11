@@ -1,5 +1,11 @@
 #if  UNITY_EDITOR
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using PJR.BlackBoard.Inspector;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -8,12 +14,6 @@ using Sirenix.OdinInspector.Editor.ValueResolvers;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
 using UnityEditor;
 using UnityEngine;
 
@@ -141,8 +141,8 @@ namespace PJR.BlackBoard.Editor.Drawers
                     object[] values = new object[this.Property.ParentValues.Count];
                     for (int index = 0; index < values.Length; ++index)
                     {
-                        System.Type type = obj as System.Type;
-                        if (type != (System.Type)null)
+                        Type type = obj as Type;
+                        if (type != (Type)null)
                             values[index] = this.CreateInstance(type);
                     }
 
@@ -151,16 +151,16 @@ namespace PJR.BlackBoard.Editor.Drawers
             }
             else
             {
-                System.Type type = query.FirstOrDefault<object>() as System.Type;
+                Type type = query.FirstOrDefault<object>() as Type;
                 for (int index = 0; index < this.Property.ValueEntry.WeakValues.Count; ++index)
                 {
-                    if (type != (System.Type)null)
+                    if (type != (Type)null)
                         this.Property.ValueEntry.WeakValues[index] = this.CreateInstance(type);
                 }
             }
         }
 
-        private object CreateInstance(System.Type type)
+        private object CreateInstance(Type type)
         {
             if (this.Property.ValueEntry.SerializationBackend == SerializationBackend.Unity)
             {
@@ -182,7 +182,7 @@ namespace PJR.BlackBoard.Editor.Drawers
             return type.IsValueType ||
                    type.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                        (Binder)null,
-                       System.Type.EmptyTypes, (ParameterModifier[])null) != (ConstructorInfo)null
+                       Type.EmptyTypes, (ParameterModifier[])null) != (ConstructorInfo)null
                 ? Activator.CreateInstance(type)
                 : FormatterServices.GetUninitializedObject(type);
         }

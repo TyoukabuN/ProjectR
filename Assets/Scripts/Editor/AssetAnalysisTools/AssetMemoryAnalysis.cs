@@ -1,13 +1,13 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
-using UnityEditor;
-using System;
-using System.Reflection;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
+using Object = UnityEngine.Object;
 
 public class AssetMemoryAnalysis : EditorWindow
 {
@@ -248,7 +248,7 @@ public class AssetMemoryAnalysis : EditorWindow
     private static List<MeshFilter> renderers = new List<MeshFilter>();
     private static List<Mesh> hadcount = new List<Mesh>();
 
-    static ModelInfo Model_GetFBXInfo(UnityEngine.Object[] assets, string path = "")
+    static ModelInfo Model_GetFBXInfo(Object[] assets, string path = "")
     {
         var res = new ModelInfo();
         res.vert = 0;
@@ -352,7 +352,7 @@ public class AssetMemoryAnalysis : EditorWindow
             CSVLine line;
             if (ext == ".png" || ext == ".jpg" || ext == ".tga")
             {
-                var asset = AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.Texture)) as UnityEngine.Texture;
+                var asset = AssetDatabase.LoadAssetAtPath(path, typeof(Texture)) as Texture;
                 if (!asset)
                     continue;
 
@@ -521,7 +521,7 @@ public class AssetMemoryAnalysis : EditorWindow
     {
         Texture target = Selection.activeObject as Texture;
         //var type = Types.GetType("UnityEditor.TextureUtil", "UnityEditor.dll");
-        var type = System.Reflection.Assembly.Load("UnityEditor.dll").GetType("UnityEditor.TextureUtil");
+        var type = Assembly.Load("UnityEditor.dll").GetType("UnityEditor.TextureUtil");
         GetStorageMemorySizeLong = type.GetMethod("GetStorageMemorySizeLong", BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
 
         GetAnimationClipStats = typeof(AnimationUtility).GetMethod("GetAnimationClipStats", BindingFlags.Static | BindingFlags.NonPublic);

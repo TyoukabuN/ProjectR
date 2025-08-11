@@ -1,8 +1,8 @@
-using PJR.ScriptStates.Player;
-using Sirenix.OdinInspector;
 using System;
-using UnityEngine;
+using PJR.ScriptStates.Player;
 using PJR.Systems;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace PJR
 {

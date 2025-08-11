@@ -1,8 +1,6 @@
 using System;
-using PJR.Editor;
 using UnityEditor;
 using UnityEngine;
-using static PJR.Timeline.Editor.TimelineWindow;
 
 namespace PJR.Timeline.Editor
 {

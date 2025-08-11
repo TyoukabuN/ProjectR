@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using System;
-using YooAsset.Editor;
-using YooAsset;
-using PJR;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using UnityEditor;
 using UnityEditor.Build.Content;
+using UnityEngine;
+using YooAsset;
+using YooAsset.Editor;
 
 public static class BuildCommand
 {
@@ -104,12 +101,12 @@ public static class BuildCommand
         if (!Directory.Exists(destFolder))
             Directory.CreateDirectory(destFolder);
         else
-            YooAsset.Editor.EditorTools.ClearFolder(destFolder);
+            EditorTools.ClearFolder(destFolder);
         buildPath = buildPath.TrimEnd('\\').TrimEnd('/');
         destFolder = destFolder.TrimEnd('\\').TrimEnd('/');
         try
         {
-            YooAsset.Editor.EditorTools.CopyDirectory(buildPath, destFolder);
+            EditorTools.CopyDirectory(buildPath, destFolder);
         }
         catch (Exception e)
         {
@@ -396,7 +393,7 @@ public static class BuildCommand
         {
             Debug.Log("[BuildCommand][SuperUnityBuildArgs.LoadFromCommandLine]");
 
-            SuperUnityBuildArgs temp = SuperUnityBuildArgs.Default;
+            SuperUnityBuildArgs temp = Default;
 
             var args = Environment.GetCommandLineArgs();
 
@@ -564,7 +561,7 @@ public static class BuildCommand
         };
         public static AssetBundleBuildArgs LoadFromEditorPref(string PackageName, EBuildPipeline BuildPipeline)
         {
-            AssetBundleBuildArgs temp = AssetBundleBuildArgs.Default;
+            AssetBundleBuildArgs temp = Default;
             try { temp.BuildTarget = EditorUserBuildSettings.activeBuildTarget; } catch { }
             try { temp.BuildMode = AssetBundleBuilderSetting.GetPackageBuildMode(PackageName, BuildPipeline); } catch { }
             try { temp.FileNameStyle = AssetBundleBuilderSetting.GetPackageFileNameStyle(PackageName, BuildPipeline); } catch { }
@@ -595,7 +592,7 @@ public static class BuildCommand
         {
             Debug.Log("[BuildCommand][AssetBundleBuildArgs.LoadFromCommandLine]");
 
-            AssetBundleBuildArgs temp = AssetBundleBuildArgs.Default;
+            AssetBundleBuildArgs temp = Default;
 
             var args = Environment.GetCommandLineArgs();
 

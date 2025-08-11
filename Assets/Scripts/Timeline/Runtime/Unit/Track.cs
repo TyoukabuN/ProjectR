@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
-
 #if  UNITY_EDITOR
 using UnityEditor;
 #endif

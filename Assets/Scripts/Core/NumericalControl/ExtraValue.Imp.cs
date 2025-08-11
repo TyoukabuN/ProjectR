@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-namespace PJR
+﻿namespace PJR
 {
     //public class ExtraValueObject : ExtraValue<object>
     //{

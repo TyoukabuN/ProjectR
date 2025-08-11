@@ -1,4 +1,4 @@
-using System;
+using UnityEngine;
 
 namespace PJR.Timeline
 {
@@ -11,7 +11,7 @@ namespace PJR.Timeline
         bool Valid { get; }
         ISequence Sequence { get; }
         SequenceAsset SequenceAsset { get; }
-        UnityEngine.Object Object { get; }
+        Object Object { get; }
         double ToGlobalTime(double t);
         double ToLocalTime(double t);
         void Release();

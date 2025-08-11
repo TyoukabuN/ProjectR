@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using System.IO;
 using PJR;
+using UnityEditor;
+using UnityEngine;
 
 public static class TortoiseGitUtil
 {

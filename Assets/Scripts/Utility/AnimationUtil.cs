@@ -46,7 +46,7 @@ namespace PJR
             {
                 if (animationClip == null || string.IsNullOrEmpty(path))
                     return;
-                var editorCurveBindings = UnityEditor.AnimationUtility.GetCurveBindings(animationClip);
+                var editorCurveBindings = AnimationUtility.GetCurveBindings(animationClip);
                 foreach (var curveBinding in editorCurveBindings)
                 {
                     if (curveBinding.type != typeof(Transform))
@@ -54,7 +54,7 @@ namespace PJR
                     if (curveBinding.path != path)
                         continue;
 
-                    var curve = UnityEditor.AnimationUtility.GetEditorCurve(animationClip, curveBinding);
+                    var curve = AnimationUtility.GetEditorCurve(animationClip, curveBinding);
 
                     if (curveBinding.propertyName == "m_LocalPosition.x") localPositionX = curve;
                     if (curveBinding.propertyName == "m_LocalPosition.y") localPositionY = curve;

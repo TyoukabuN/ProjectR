@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using PJR;
 using UnityEditor;
 using UnityEngine;
 
@@ -46,7 +47,7 @@ namespace InfinityCode.UltimateEditorEnhancer.ProjectTools
 
                     GenericMenuEx menu = GenericMenuEx.Start();
 
-                    string itemFullPath = PJR.PathUtil.GetFullPath(item.path);
+                    string itemFullPath = PathUtil.GetFullPath(item.path);
 
                     menu.Add("Log", () => TortoiseGitUtil.SVNLog(TortoiseGitUtil.CombineWithMeta(itemFullPath)));
                     menu.Add("Commit", () => TortoiseGitUtil.SVNCommit(TortoiseGitUtil.CombineWithMeta(itemFullPath)));

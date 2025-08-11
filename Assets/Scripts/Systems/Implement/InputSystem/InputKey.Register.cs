@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-
 namespace PJR.Systems.Input
 {
     public enum KeyCategory

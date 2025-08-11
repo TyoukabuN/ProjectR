@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -85,21 +82,21 @@ namespace PJR.Timeline.Editor
             if (_initialized) return;
 
             // 获取HandleUtility类型
-            var handleUtilityType = typeof(UnityEditor.HandleUtility);
+            var handleUtilityType = typeof(HandleUtility);
         
             // 获取ApplyWireMaterial方法
             _applyWireMaterialMethod = handleUtilityType.GetMethod(
                 "ApplyWireMaterial",
                 BindingFlags.NonPublic | BindingFlags.Static,
                 null,
-                new[] { typeof(UnityEngine.Rendering.CompareFunction) },
+                new[] { typeof(CompareFunction) },
                 null
             );
 
             _initialized = true;
         }
         
-        public static bool ApplyWireMaterial(UnityEngine.Rendering.CompareFunction zTest)
+        public static bool ApplyWireMaterial(CompareFunction zTest)
         {
             Initialize();
 

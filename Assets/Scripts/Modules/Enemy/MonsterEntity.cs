@@ -1,8 +1,4 @@
 using PJR;
-using PJR.ScriptStates.Player;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using PJR.Systems;
 
 public partial class MonsterEntity : StateMachineEntity

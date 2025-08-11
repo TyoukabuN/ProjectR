@@ -5,6 +5,7 @@ using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PJR
 {
@@ -108,7 +109,7 @@ namespace PJR
         }
         void PingDescFile()
         {
-            var descFile = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(GetDescFileRelativePath());
+            var descFile = AssetDatabase.LoadAssetAtPath<Object>(GetDescFileRelativePath());
             if (descFile != null)
                 EditorGUIUtility.PingObject(descFile);
         }

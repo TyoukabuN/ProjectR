@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace PJR.ClassExtension
@@ -12,7 +10,7 @@ namespace PJR.ClassExtension
         {
             return obj.gameObject.AddComponent<T>();
         }
-        public static Component AddComponent(this Component obj, System.Type type)
+        public static Component AddComponent(this Component obj, Type type)
         {
             return obj.gameObject.AddComponent(type);
         }
@@ -22,9 +20,9 @@ namespace PJR.ClassExtension
         }
         public static Component TryGetComponent(this Component obj, string type)
         {
-            return obj.TryGetComponent(System.Type.GetType(type));
+            return obj.TryGetComponent(Type.GetType(type));
         }
-        public static Component TryGetComponent(this Component obj, System.Type type)
+        public static Component TryGetComponent(this Component obj, Type type)
         {
             Component component = obj.GetComponent(type);
             if (component == null)
@@ -38,9 +36,9 @@ namespace PJR.ClassExtension
         }
         public static Component TryGetComponent(this GameObject obj, string type)
         {
-            return obj.TryGetComponent(System.Type.GetType(type));
+            return obj.TryGetComponent(Type.GetType(type));
         }
-        public static Component TryGetComponent(this GameObject obj, System.Type type)
+        public static Component TryGetComponent(this GameObject obj, Type type)
         {
             Component component = obj.GetComponent(type);
             if (component == null)
@@ -56,9 +54,9 @@ namespace PJR.ClassExtension
         }
         public static Component TryGetComponent(this Transform obj, string type)
         {
-            return obj.TryGetComponent(System.Type.GetType(type));
+            return obj.TryGetComponent(Type.GetType(type));
         }
-        public static Component TryGetComponent(this Transform obj, System.Type type)
+        public static Component TryGetComponent(this Transform obj, Type type)
         {
             Component component = obj.GetComponent(type);
             if (component == null)

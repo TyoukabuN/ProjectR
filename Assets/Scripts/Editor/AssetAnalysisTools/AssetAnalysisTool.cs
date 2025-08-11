@@ -1,17 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Profiling;
-using System;
-using System.Reflection;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Security.Cryptography;
-using Unity.EditorCoroutines.Editor;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
+
 //
 
 public partial class AssetAnalysisTool : AssetAnalysisBase
@@ -726,8 +731,8 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                                 }
                             }
                         }
-                        string s = string.Format("{0:yyyyMMdd_HHmmss}", System.DateTime.Now);
-                        File.WriteAllText(Path.Combine(path_ResourceMemeryReportOutput.value, Path.Combine(reporttPath, "combine_" + s + ".csv")), csvStr, System.Text.Encoding.UTF8);
+                        string s = string.Format("{0:yyyyMMdd_HHmmss}", DateTime.Now);
+                        File.WriteAllText(Path.Combine(path_ResourceMemeryReportOutput.value, Path.Combine(reporttPath, "combine_" + s + ".csv")), csvStr, Encoding.UTF8);
 
                         //var explorer = path_ResourceMemeryReportOutput.value.Replace('/', '\\');
                         //System.Diagnostics.Process.Start("explorer.exe", explorer);
@@ -790,16 +795,16 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
             if (objectHandle == null || !objectHandle.Enabled.value || string.IsNullOrEmpty(objectHandle.assetPath))
                 continue;
 
-            var gobj = GameObject.Instantiate(objectHandle.value);
+            var gobj = Instantiate(objectHandle.value);
             yield return new EditorWaitForSeconds(1.2f * timeScale);
 
             //var camera = GameObject.FindObjectOfType<Camera>(true);
-            var camera = GameObject.FindObjectOfType<Camera>();
+            var camera = FindObjectOfType<Camera>();
             if (camera)
                 camera.clearFlags = CameraClearFlags.SolidColor;
-            var ParticleSystemRenderers = GameObject.FindObjectsOfType<ParticleSystemRenderer>();
-            var meshFilters = GameObject.FindObjectsOfType<MeshFilter>();
-            var skinnedMeshRenderers = GameObject.FindObjectsOfType<SkinnedMeshRenderer>();
+            var ParticleSystemRenderers = FindObjectsOfType<ParticleSystemRenderer>();
+            var meshFilters = FindObjectsOfType<MeshFilter>();
+            var skinnedMeshRenderers = FindObjectsOfType<SkinnedMeshRenderer>();
 
             SceneView.RepaintAll();
 
@@ -807,9 +812,9 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
 
             var line = new CSVLine(objectHandle.assetPath);
             line.SetValue(0, Path.GetFileNameWithoutExtension(objectHandle.assetPath));
-            line.SetValue(1, UnityEditor.UnityStats.batches.ToString());
-            line.SetValue(2, UnityEditor.UnityStats.triangles.ToString());
-            line.SetValue(3, UnityEditor.UnityStats.vertices.ToString());
+            line.SetValue(1, UnityStats.batches.ToString());
+            line.SetValue(2, UnityStats.triangles.ToString());
+            line.SetValue(3, UnityStats.vertices.ToString());
 
             int texCount = 0;
             int modelCount = 0;
@@ -869,7 +874,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
             line.SetValue(6, memoryCount.ToString());
             Debug.Log(line.ApplyLine());
 
-            GameObject.DestroyImmediate(gobj);
+            DestroyImmediate(gobj);
         }
         CSVReport.Output(true);
 
@@ -1135,7 +1140,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                 MethodInfo GetStorageMemorySizeLong;
                 Texture target = Selection.activeObject as Texture;
                 //var type = Types.GetType("UnityEditor.TextureUtil", "UnityEditor.dll");
-                var type = System.Reflection.Assembly.Load("UnityEditor.dll").GetType("UnityEditor.TextureUtil");
+                var type = Assembly.Load("UnityEditor.dll").GetType("UnityEditor.TextureUtil");
                 GetStorageMemorySizeLong = type.GetMethod("GetStorageMemorySizeLong", BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
 
                 CSVReport.Init(path_LookingForTheSameReportOutput.value, reportPreName.value + "重复文件");
@@ -1165,7 +1170,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                             SubMeshCount = 0;
                             if (pairs.Value.type == TYPE_TEXTURE)
                             {
-                                var asset = AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Texture)) as UnityEngine.Texture;
+                                var asset = AssetDatabase.LoadAssetAtPath(assetPath, typeof(Texture)) as Texture;
                                 memery = float.Parse(GetStorageMemorySizeLong.Invoke(null, new object[] { asset }).ToString()) / 1024f / 1024f;
                                 if (!sha1ToMemey.ContainsKey(pairs.Key)) sha1ToMemey[pairs.Key] = memery;
                             }
@@ -1282,7 +1287,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
             byte[] retVal = md5.ComputeHash(fs);
             fs.Close();
 
-            return System.BitConverter.ToString(retVal).Replace("-", "");
+            return BitConverter.ToString(retVal).Replace("-", "");
         }
         catch (Exception ex)
         {
@@ -1298,7 +1303,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
             byte[] retVal = md5.ComputeHash(fs);
             fs.Close();
 
-            return System.BitConverter.ToString(retVal).Replace("-", "");
+            return BitConverter.ToString(retVal).Replace("-", "");
         }
         catch (Exception ex)
         {
@@ -1324,7 +1329,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                         {
                             if (obj == null)
                                 continue;
-                            EditorGUILayout.ObjectField(obj, typeof(UnityEngine.Object), true);
+                            EditorGUILayout.ObjectField(obj, typeof(Object), true);
                         }
                         EditorGUILayout.EndVertical();
                     }//selected
@@ -1349,7 +1354,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                     float sizeKB = GetObjectMemorySize(obj, assetPath2SizeKB);
                     foreach (var pairs in assetPath2SizeKB)
                     {
-                        Debug.Log(string.Format("名字: {0}  大小: {1}KB", Path.GetFileName(pairs.Key), pairs.Value), AssetDatabase.LoadAssetAtPath(pairs.Key, typeof(UnityEngine.Object)));
+                        Debug.Log(string.Format("名字: {0}  大小: {1}KB", Path.GetFileName(pairs.Key), pairs.Value), AssetDatabase.LoadAssetAtPath(pairs.Key, typeof(Object)));
                     }
                     Debug.Log(string.Format("Path:{0}  总内存:{1}MB", path, sizeKB / 1048f));
 
@@ -1661,8 +1666,8 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
         EditorGUILayout.EndFadeGroup();
     }
 
-    public static UnityEngine.Object src;
-    public static UnityEngine.Object dst;
+    public static Object src;
+    public static Object dst;
     public static StringHandle partialPath_prefabReferenceDeduplication;
     public static List<SearchType> SearchTypes_Deduplication;
     public static List<SearchType> SearchTypes_SoureceDeduplication;
@@ -1908,7 +1913,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                 if (!EditorUtility.DisplayDialog("Tips", "请谨慎填写,否则会导致漫长的处理时间!", "继续", "重新填写"))
                     return;
 
-                System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+                Stopwatch sw = Stopwatch.StartNew();
                 int deleteCount = 0;
                 int modifyGUIDCount = 0;
 
@@ -2150,7 +2155,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
 
             if (GUILayout.Button("开始整理"))
             {
-                System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+                Stopwatch sw = Stopwatch.StartNew();
 
                 for (int pathIndex = 0; pathIndex < pathList_sourceNameReplace.Infos.Count; pathIndex++)
                 {
@@ -2422,7 +2427,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
 
             File.WriteAllBytes(savePathImage, nTex.EncodeToPNG());
             //Debug.Log("save   " + savePathImage);
-            UnityEngine.Object.DestroyImmediate(nTex);
+            DestroyImmediate(nTex);
 
             AssetDatabase.ImportAsset(savePathImage, ImportAssetOptions.ForceUpdate);
             TextureImporter import = null;
@@ -2512,7 +2517,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
     }
     public void Streaming_DelectMissingPrefab()
     {
-        var curScene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+        var curScene = EditorSceneManager.GetActiveScene();
         var rootGameObjects = curScene.GetRootGameObjects();
 
         bool isCancel = false;
@@ -2537,7 +2542,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                 }
                 if (!PrefabUtility.IsPrefabAssetMissing(gobj))
                     continue;
-                GameObject.DestroyImmediate(gobj);
+                DestroyImmediate(gobj);
             }
         }
         EditorUtility.ClearProgressBar();
@@ -2547,7 +2552,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
     /// </summary>
     public void Streaming_ClearMeshRenderersOfNavigationObject()
     {
-        var curScene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+        var curScene = EditorSceneManager.GetActiveScene();
         //使用GetRootGameObjects
         //是为了可以使用下面的rootGameObject.GetComponentsInChildren<Transform>(true);
         //T[] GetComponentsInChildren<T>(bool includeInactive); 可以获取隐藏的GameObject
@@ -2569,7 +2574,7 @@ public partial class AssetAnalysisTool : AssetAnalysisBase
                     var meshRenderer = meshRenderers[j];
                     if (!meshRenderer)
                         continue;
-                    GameObject.DestroyImmediate(meshRenderer);
+                    DestroyImmediate(meshRenderer);
                 }
             }
         }

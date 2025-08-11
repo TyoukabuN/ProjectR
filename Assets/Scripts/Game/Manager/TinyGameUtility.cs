@@ -1,12 +1,10 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.IO;
-//using AssetManagement;
 using UnityEngine.Animations;
+using Object = UnityEngine.Object;
+//using AssetManagement;
 #if UNITY_EDITOR
-using UnityEditor;
 #endif
 namespace PJR
 {
@@ -80,7 +78,7 @@ namespace PJR
                 Debug.LogError(e.ToString());
             }
         }
-        public static void Log(object message,UnityEngine.Object context)
+        public static void Log(object message,Object context)
         {
             if (!TinyGameManager.debug)
                 return;

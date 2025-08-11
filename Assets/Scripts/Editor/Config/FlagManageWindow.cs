@@ -1,11 +1,12 @@
-using Sirenix.OdinInspector.Editor;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
-using Sirenix.OdinInspector;
-using System.Linq;
-using System.IO;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
+using UnityEditor;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PJR.Editor
 {
@@ -39,7 +40,7 @@ namespace PJR.Editor
         public static void Editor_ConvertFlagDefineSetToStaticClass()
         {
             string scriptAssetPath = Helper.Editor_ConvertFlagDefineSetToStaticClass_GetAssetPath();
-            if (UnityEditor.EditorUtility.DisplayDialog("提示", $"生成Flag索引,可以让程序在代码里只用引用到策划配置的flag\n{scriptAssetPath}", "ok"))
+            if (EditorUtility.DisplayDialog("提示", $"生成Flag索引,可以让程序在代码里只用引用到策划配置的flag\n{scriptAssetPath}", "ok"))
             {
                 Helper.Editor_ConvertFlagDefineSetToStaticClass();
             }
@@ -240,7 +241,7 @@ namespace PJR.Editor
                     else
                     {
                         string assetPath = $"{FlagConfig.FlagConfigFileRoot}/{fileName}.asset";
-                        var asset = ScriptableObject.CreateInstance<FlagDefineSet>();
+                        var asset = CreateInstance<FlagDefineSet>();
                         asset.id = id;
                         asset.nameStr = nameStr;
                         asset.FlagDefines = new List<FlagDefine>
@@ -259,7 +260,7 @@ namespace PJR.Editor
                             var uniqueFileName = AssetDatabase.GenerateUniqueAssetPath(assetPath);
                             AssetDatabase.CreateAsset(asset, uniqueFileName);
 
-                            UnityEditor.EditorUtility.SetDirty(asset);
+                            EditorUtility.SetDirty(asset);
                             AssetDatabase.SaveAssets();
 
                             ShowNotification($"成功创建大类{nameStr}");
@@ -342,7 +343,7 @@ namespace PJR.Editor
                     else
                     {
                         string assetPath = $"{FlagConfig.FlagConfigFileRoot}/{fileName}.asset";
-                        var asset = ScriptableObject.CreateInstance<FlagDefineSet>();
+                        var asset = CreateInstance<FlagDefineSet>();
                         asset.id = id;
                         asset.nameStr = nameStr;
                         asset.FlagDefines = new List<FlagDefine>();
@@ -422,7 +423,7 @@ namespace PJR.Editor
                             nameStr = nameStr,
                             Key = Key,
                         });
-                        UnityEditor.EditorUtility.SetDirty(flagDefineSet);
+                        EditorUtility.SetDirty(flagDefineSet);
                         AssetDatabase.SaveAssets();
 
                         ShowNotification($"成功创建类型{nameStr}");
@@ -520,7 +521,7 @@ namespace PJR.Editor
             public static void Editor_ConvertFlagDefineSetToStaticClass_PingScriptAsset()
             {
                 string assetPath = Path.Combine(bitwiseGenScriptRoot, $"{className}.Gen{Extension}");
-                var asset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
+                var asset = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
                 if (asset == null)
                     return;
                 EditorGUIUtility.PingObject(asset);

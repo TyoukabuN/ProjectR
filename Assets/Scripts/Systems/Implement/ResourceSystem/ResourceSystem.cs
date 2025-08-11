@@ -1,11 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System;
-using System.IO;
-using YooAsset;
 using System.Diagnostics;
-using Cysharp.Threading.Tasks;
+using System.IO;
+using UnityEngine;
+using YooAsset;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -168,7 +167,7 @@ namespace PJR.Systems
                     }
                     else if (initOperation.Status == EOperationStatus.Processing)
                     {
-                        YooAsset.OperationSystem.Update(true);
+                        OperationSystem.Update(true);
                     }
                     else if (initOperation.Status == EOperationStatus.Succeed)
                     {
@@ -353,7 +352,7 @@ namespace PJR.Systems
                     }
                     else if (updatePackageVersionOperation.Status == EOperationStatus.Processing)
                     {
-                        YooAsset.OperationSystem.Update(true);
+                        OperationSystem.Update(true);
                     }
                     else if (updatePackageVersionOperation.Status == EOperationStatus.Succeed)
                     {
@@ -388,7 +387,7 @@ namespace PJR.Systems
                     }
                     else if (updatePackageManifestOperation.Status == EOperationStatus.Processing)
                     {
-                        YooAsset.OperationSystem.Update(true);
+                        OperationSystem.Update(true);
                     }
                     else if (updatePackageManifestOperation.Status == EOperationStatus.Succeed)
                     {

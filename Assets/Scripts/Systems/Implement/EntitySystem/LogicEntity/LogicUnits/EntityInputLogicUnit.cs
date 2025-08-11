@@ -1,6 +1,7 @@
-using UnityEngine;
-using PJR.Systems.Input;
 using PJR.Systems;
+using PJR.Systems.Input;
+using UnityEngine;
+using Object = System.Object;
 
 namespace PJR.LogicUnits
 { 
@@ -8,7 +9,7 @@ namespace PJR.LogicUnits
     {
         public InputHandle inputHandle;
 
-        public override bool OnInit(System.Object dependency)
+        public override bool OnInit(Object dependency)
         {
             if (!base.OnInit(dependency))
                 return false;

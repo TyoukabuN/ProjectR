@@ -1,18 +1,19 @@
 using System;
 using UnityEngine;
+using UnityEngine.Profiling;
 
-public struct ProfileScope : System.IDisposable
+public struct ProfileScope : IDisposable
 {
     public string name;
     public ProfileScope(string name) 
     {
         this.name = name;
-        UnityEngine.Profiling.Profiler.BeginSample(name);
+        Profiler.BeginSample(name);
     }
 
     public void Dispose()
     {
-        UnityEngine.Profiling.Profiler.EndSample();
+        Profiler.EndSample();
     }
 }
 

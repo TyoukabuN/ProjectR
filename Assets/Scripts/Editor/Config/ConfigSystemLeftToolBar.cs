@@ -1,10 +1,10 @@
-using InfinityCode.UltimateEditorEnhancer;
-using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using InfinityCode.UltimateEditorEnhancer;
 using PJR.Config;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 

@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 namespace PJR
 {
     public class EffectConfig : JsonConfig
     {
-        public class ConfigItem : System.Object
+        public class ConfigItem : Object
         {
             public int ID = -1;
             public string AssetName = string.Empty;
@@ -15,7 +16,7 @@ namespace PJR
 
             public override string ToString()
             {
-                var sb = new System.Text.StringBuilder();
+                var sb = new StringBuilder();
 
                 sb.AppendLine($"[ToString] {this.GetType().Name} = ");
                 sb.AppendLine($"{{");

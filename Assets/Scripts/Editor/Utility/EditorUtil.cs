@@ -1,12 +1,13 @@
-using InfinityCode.UltimateEditorEnhancer;
-using InfinityCode.UltimateEditorEnhancer.ProjectTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using InfinityCode.UltimateEditorEnhancer;
+using InfinityCode.UltimateEditorEnhancer.ProjectTools;
 using UnityEditor;
 using UnityEditor.Build.Player;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PJR.Editor
 {
@@ -34,7 +35,7 @@ namespace PJR.Editor
         }
         public static class Asset
         {
-            public static bool OpenScriptOfType(System.Type type)
+            public static bool OpenScriptOfType(Type type)
             {
                 var mono = MonoScriptFromType(type);
                 if (mono == null)
@@ -44,7 +45,7 @@ namespace PJR.Editor
                 return true;
             }
 
-            public static MonoScript MonoScriptFromType(System.Type targetType)
+            public static MonoScript MonoScriptFromType(Type targetType)
             {
                 if (targetType == null) return null;
                 var typeName = targetType.Name;
@@ -150,7 +151,7 @@ namespace PJR.Editor
 
         public static Texture2D GetIcon(string path)
         {
-            UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.Object));
+            Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(Object));
             if (obj != null)
             {
                 Texture2D icon = AssetPreview.GetMiniThumbnail(obj);
@@ -263,17 +264,17 @@ namespace PJR.Editor
             if (args.hyperLinkData.TryGetValue(String_Param_PingGUID, out string guid))
             {
                 var assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Object)));
+                EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath, typeof(Object)));
             }
             //直接传在args传assetPath可能会出问题，因为assetPath可能包含空格,@等特殊字符，导致参数解析失败
             //所以加了上面的传GUID
             else if (args.hyperLinkData.TryGetValue(String_Param_PingAssetPath, out string assetPath))
             {
-                EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Object)));
+                EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath, typeof(Object)));
             }
         }
 
-        public static void LogAssetLink(UnityEngine.Object asset) =>
+        public static void LogAssetLink(Object asset) =>
             LogAssetLink(AssetDatabase.GetAssetPath(asset));
 
         public static void LogAssetLink(string assetPath) => Debug.Log(GetAssetLink(assetPath));

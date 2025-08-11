@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using NPOI.SS.Formula.Functions;
-using static PJR.Timeline.Define;
 using PJR.Timeline.Pool;
 using UnityEditor;
-using UnityEngine;
+using UnityEngine.Pool;
+using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
@@ -45,7 +44,7 @@ namespace PJR.Timeline
 
             if (_clipRunners != null)
             {
-                UnityEngine.Pool.CollectionPool<List<ClipRunner>, ClipRunner>.Release(_clipRunners);
+                CollectionPool<List<ClipRunner>, ClipRunner>.Release(_clipRunners);
                 _clipRunners = null;
             }
             _track = null;
@@ -89,7 +88,7 @@ namespace PJR.Timeline
                 return false;
             }
 
-            _clipRunners = UnityEngine.Pool.CollectionPool<List<ClipRunner>, ClipRunner>.Get();
+            _clipRunners = CollectionPool<List<ClipRunner>, ClipRunner>.Get();
             for (int i = 0; i < _track.Clips.Count; i++)
             {
                 var clip = _track.Clips[i];
@@ -205,8 +204,8 @@ namespace PJR.Timeline
         #endregion
 
         #region Pool
-        public static TrackRunner Get() => ObjectPool<TrackRunner>.Get();
-        public override void Release() => ObjectPool<TrackRunner>.Release(this);
+        public static TrackRunner Get() => Pool.ObjectPool<TrackRunner>.Get();
+        public override void Release() => Pool.ObjectPool<TrackRunner>.Release(this);
         #endregion
     }
 }

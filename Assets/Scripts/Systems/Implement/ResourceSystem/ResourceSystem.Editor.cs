@@ -1,10 +1,8 @@
 #if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEditor;
 using UnityEngine;
 using YooAsset;
-using System;
 using Object = UnityEngine.Object;
 
 namespace PJR.Systems
@@ -34,13 +32,13 @@ namespace PJR.Systems
         public static bool Editor_TryGetAssetInfoByName(string assetName, out AssetInfo assetInfo)
         {
             CheckInit();
-            assetInfo = _editorAssetMgr.ConvertLocationToAssetInfo(assetName, typeof(UnityEngine.Object));
+            assetInfo = _editorAssetMgr.ConvertLocationToAssetInfo(assetName, typeof(Object));
             return assetInfo != null;
         }
         public static bool Editor_TryGetAssetInfoByGUID(string assetGUID, out AssetInfo assetInfo)
         {
             CheckInit();
-            assetInfo = _editorAssetMgr.ConvertAssetGUIDToAssetInfo(assetGUID, typeof(UnityEngine.Object));
+            assetInfo = _editorAssetMgr.ConvertAssetGUIDToAssetInfo(assetGUID, typeof(Object));
             return assetInfo != null;
         }
 

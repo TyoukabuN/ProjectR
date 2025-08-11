@@ -1,8 +1,8 @@
 using System;
+using BatchRename;
+using InfinityCode.UltimateEditorEnhancer;
 using UnityEditor;
 using UnityEngine;
-using InfinityCode.UltimateEditorEnhancer;
-using PJR.Systems;
 
 namespace PJR.Editor
 {
@@ -58,7 +58,7 @@ namespace PJR.Editor
             menu.AddItem(new GUIContent("Asset引用相关/Ping当前外部引用检查目录"), false, () => { AssetAnalysisSetting.PingRootForOutsideReferedCheck(); });
             menu.AddItem(new GUIContent("Asset引用相关/设置需要显示引用数的路径"), false, () => { AssetAnalysisSetting.GetAsset(); AssetAnalysisSetting.OpenAsset(); });
             //
-            menu.AddItem(new GUIContent("Asset相关工具/批量重命名窗口"), false, () => { BatchRename.BatchRenameWindow.Open(); });
+            menu.AddItem(new GUIContent("Asset相关工具/批量重命名窗口"), false, () => { BatchRenameWindow.Open(); });
             //
             menu.AddItem(new GUIContent("Debug/编译测试"), false, () => { EditorUtil.Build.BuildCurrentTargetCompiles(); });
             //

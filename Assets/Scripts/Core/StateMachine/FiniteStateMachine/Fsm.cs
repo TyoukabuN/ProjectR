@@ -8,46 +8,23 @@ using UnityEngine.Pool;
 
 namespace PJR.Core.StateMachine
 {
-
-}
-
-namespace PJR.Core.TypeExtension
-{
-    public static class CollectionExtension
-    {
-        public static void Release<T>(this List<T> self)
-        {
-            if(self == null)
-                return;
-            ListPool<T>.Release(self);
-        }        
-        public static void Release<TKey, TValue>(this Dictionary<TKey, TValue> self)
-        {
-            if(self == null)
-                return;
-            DictionaryPool<TKey, TValue>.Release(self);
-        }
-    }
-}
-
-namespace PJR.Core.StateMachine
-{
-    public class Fsm<TContext> : IFsm , IPoolableObject
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TContext">Fsm里的state,transition都可能用的一个数据引用</typeparam>
+    public class Fsm<TContext> : IFsm
     {
         public IFsmState CurrentState => _currentState;
         public Type CurrentStateType => _currentStateType;
         public bool AnyStateNode => (_states?.Count ?? 0) > 0;
         public TContext Context => _context;
-        public EStatus Status => _status;
-        public bool IsRunning => _status == EStatus.Running;
-        public bool IsFinish => _status == EStatus.Finish;
-        public bool IsReleased => _status == EStatus.Released;
         public float CurrentStateTime => TimeInfo.CurrentStateTime;
         public float CurrentUnscaleStateTime => TimeInfo.CurrentUnscaleStateTime;
         
         private List<FsmState<TContext>> _states;
         private FsmState<TContext> _currentState;
         private Type _currentStateType;
+        //todo:感觉不能用Type做key
         private Dictionary<Type, FsmState<TContext>> _type2stateMap;
         private TContext _context;
         private EStatus _status;
@@ -76,15 +53,19 @@ namespace PJR.Core.StateMachine
                 _type2stateMap[state.GetType()] = state;
             }
         }
-        
+        public void ConnectStatesWithOnFinish()
+        {
+            if (_states == null || _states.Count <= 1)
+                return;
+            for (var i = 0; i < _states.Count - 1; i++)
+                AddTransition(_states[i], _states[i + 1], OnFinish<TContext>.Get());
+        }
         public void Release() => GenerialPool<Fsm<TContext>>.Release(this);
-
-
         private void Reset()
         {
             _status = EStatus.None;
             TimeInfo = TimeInfo.Empty;
-            _states ??= ListPool<FsmState<TContext>>.Get();
+            _states = ListPool<FsmState<TContext>>.Get();
             _type2stateMap ??= DictionaryPool<Type, FsmState<TContext>>.Get();
         }
         public void Clear()
@@ -95,7 +76,7 @@ namespace PJR.Core.StateMachine
                     state?.Release();
             }
             //
-            _states?.Release();
+            _states.Release();
             _type2stateMap?.Release();
             //
             _states = null;
@@ -118,6 +99,18 @@ namespace PJR.Core.StateMachine
             return true;
         }
 
+        public bool AddAndConnectWithOnFinish(FsmState<TContext> state, OnFinish<TContext> transitionFromLastToThis)
+        {
+            var lastState = _states.Last();
+            if (!AddState(state))
+                return false;
+            if (lastState == null)
+                return false;
+            if (!AddTransition(lastState, state, transitionFromLastToThis))
+                return false;
+            return true;
+        }
+
         public bool AddTransition<TFrom, TTo>(IFsmTransition transition)
             => AddTransition(typeof(TFrom), typeof(TTo), (FsmTransition<TContext>)transition);
         public bool AddTransition(Type fromType , Type toType, FsmTransition<TContext> transition)
@@ -128,7 +121,13 @@ namespace PJR.Core.StateMachine
                 return false;
             if (!TryGetState(toType, out var toState))
                 return false;
-            if (!fromState.AddTransition(toType, transition))
+            return AddTransition(fromState, toState, transition);
+        }
+        public bool AddTransition(FsmState<TContext> fromState , FsmState<TContext> toState, FsmTransition<TContext> transition)
+        {
+            if (transition == null)
+                return false;
+            if (!fromState.AddTransition(transition))
                 return false;
             transition.OnInit(this, fromState, toState);
             return true;
@@ -143,6 +142,9 @@ namespace PJR.Core.StateMachine
                 ChangeState(willTransitionTo);
             
             TimeInfo.Update(updateContext);
+            
+            if(_currentState.IsFinish)
+                return;
             _currentState.TimeInfo.Update(updateContext);
             _currentState.OnUpate(updateContext);
         }
@@ -151,8 +153,6 @@ namespace PJR.Core.StateMachine
         {
             toState = null;
             if (_currentState == null)
-                return false;
-            if (_currentState.TransitionMap == null)
                 return false;
             
             using var passedTransitions = PooledList<FsmTransition<TContext>>.Get();
@@ -191,8 +191,7 @@ namespace PJR.Core.StateMachine
             return false;
         }
 
-        public bool ChangeState<T>() where T : FsmState<TContext> 
-            => ChangeState(typeof(T));
+        public bool ChangeState<T>() => ChangeState(typeof(T));
         public bool ChangeState(Type stateType)
         {
             if (stateType == null)
@@ -202,14 +201,18 @@ namespace PJR.Core.StateMachine
                 Debug.LogWarning($"没有找到对应类型的状态 [{stateType.GetType().Name}]");
                 return false;
             }
-
             return ChangeState(targetState);
         }
+        public bool ChangeState(int stateIndex)
+            => ChangeState(_states[stateIndex]);
         public bool ChangeState(FsmState<TContext> targetState)
         {
+            if (targetState == null)
+                return false;
+            
             if (_currentState != null)
             {
-                if (!_currentState.CanTransition(targetState.GetType()))
+                if (!_currentState.CanTransition(targetState))
                 {
                     Debug.LogWarning($"Can't change state from [{_currentState.GetType().Name}] to [{targetState.GetType().Name}]");
                     return false;
@@ -221,9 +224,11 @@ namespace PJR.Core.StateMachine
                 _currentState.OnExit();
                 _currentState.TimeInfo = TimeInfo.Empty;
             }
+            
             TimeInfo = TimeInfo.Empty;
             _currentState = targetState;
-            targetState?.OnEnter();
+            targetState.TimeInfo = TimeInfo.Empty;
+            targetState.OnEnter();
             return true;
         }
         
@@ -253,9 +258,7 @@ namespace PJR.Core.StateMachine
             return state;
         }
         public bool TryGetState<TState>(out FsmState<TContext> ret) where TState : FsmState<TContext>
-        {
-            return TryGetState(typeof(TState), out ret);
-        }
+            => TryGetState(typeof(TState), out ret);
         public bool TryGetState(Type type, out FsmState<TContext> ret)
         {
             ret = GetState(type);

@@ -1,17 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.IO;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
-using Sirenix.OdinInspector;
-using System.IO;
-using PJR;
 
 namespace PJR.Editor
 {
     public class AssetAnalysisSetting : ScriptableObject
     {
 #if UNITY_EDITOR
-        [UnityEditor.MenuItem("Assets/PJR/创建配置/编辑器配置")]
+        [MenuItem("Assets/PJR/创建配置/编辑器配置")]
         public static void CreateAsset()
         {
             CSConfigHelper.CreateScriptableObject<AssetAnalysisSetting>();
@@ -76,7 +73,7 @@ namespace PJR.Editor
         {
             if (_curAsset)
             {
-                UnityEditor.EditorUtility.SetDirty(_curAsset);
+                EditorUtility.SetDirty(_curAsset);
                 AssetDatabase.SaveAssets();
             }
         }
@@ -92,7 +89,7 @@ namespace PJR.Editor
         {
             if (_curAsset)
             {
-                UnityEditor.EditorUtility.OpenPropertyEditor(_curAsset);
+                EditorUtility.OpenPropertyEditor(_curAsset);
             }
         }
 

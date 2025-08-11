@@ -1,12 +1,12 @@
 #if UNITY_EDITOR
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using System.IO;
 using System.Linq;
 using PJR;
-using UnityEngine.WSA;
+using UnityEditor;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 public static class ModelImportUtil
 {
@@ -130,8 +130,8 @@ public static class ModelImportUtil
 
         if (File.Exists(exportPath))
         {
-            var actions = new List<System.Action>();
-            var bindings = UnityEditor.AnimationUtility.GetCurveBindings(newAnim);
+            var actions = new List<Action>();
+            var bindings = AnimationUtility.GetCurveBindings(newAnim);
             AnimationClip existingAnim = (AnimationClip)AssetDatabase.LoadAssetAtPath(
                     exportPath, typeof(AnimationClip));
 
@@ -139,8 +139,8 @@ public static class ModelImportUtil
 
             foreach (var binding in bindings)
             {
-                var curve = UnityEditor.AnimationUtility.GetEditorCurve(newAnim, binding);
-                UnityEditor.AnimationUtility.SetEditorCurve(existingAnim, binding, curve);
+                var curve = AnimationUtility.GetEditorCurve(newAnim, binding);
+                AnimationUtility.SetEditorCurve(existingAnim, binding, curve);
             }
 
             AssetDatabase.SaveAssets();

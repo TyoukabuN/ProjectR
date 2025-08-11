@@ -1,7 +1,5 @@
-using System;
 using UnityEditor;
 using UnityEngine;
-using static UnityEditor.EditorGUI;
 
 namespace PJR.Timeline.Editor
 {

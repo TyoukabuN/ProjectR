@@ -1,12 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using PJR;
+using UnityEngine;
+
 public class TestEventTrap : ITrapEvent
 {
     public void Recive(object obj)
     {
-        Debug.LogError(obj.ToString()+ "TestEventTrap·´Éä³É¹¦ÁË£¿");
+        Debug.LogError(obj.ToString()+ "TestEventTrapï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½Ë£ï¿½");
     }
 
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static PJR.Systems.ResourceSystem;
 
@@ -88,7 +87,7 @@ namespace PJR.Systems
 
                 gameObject = null;
 
-                resourceHandle = ResourceSystem.LoadAsset(effectName, typeof(GameObject));
+                resourceHandle = LoadAsset(effectName, typeof(GameObject));
                 if (resourceHandle == null)
                 {
                     Debug.LogError($"[MonoEffect.EffectHandler.Load] failed to load effect!  VisualEffectSystem.SpawnVEffect == false");

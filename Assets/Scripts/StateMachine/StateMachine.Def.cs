@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
 using PJR.Systems.Input;
-using System;
+using UnityEngine;
 
 namespace PJR.ScriptStates.Player
 {
@@ -24,7 +21,7 @@ namespace PJR.ScriptStates.Player
         {
             if (state.normalizeTime < canExitNormalizeTime)
                 return false;
-            return state.phase == EntityScriptState.Phase.End;
+            return state.phase == ScriptState.Phase.End;
         }
     }
     public class Trans_OnWalking : ScriptTransition<Trans_OnWalking>

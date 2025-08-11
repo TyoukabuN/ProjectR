@@ -1,16 +1,17 @@
-using InfinityCode.UltimateEditorEnhancer;
-using InfinityCode.UltimateEditorEnhancer.ProjectTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using InfinityCode.UltimateEditorEnhancer;
+using InfinityCode.UltimateEditorEnhancer.ProjectTools;
 using PJR;
+using PJR.ClassExtension;
 using UnityEditor;
 using UnityEngine;
 using static LS.LSEditor.DuplicateNamingMark.Report;
+using Object = UnityEngine.Object;
 using Resources = UnityEngine.Resources;
-using PJR.ClassExtension;
 
 namespace LS.LSEditor
 {
@@ -276,11 +277,11 @@ namespace LS.LSEditor
             }
         }
 
-        static bool NeedToNotify(string filePath, out Report req, out Report.FileNode fileNode)
+        static bool NeedToNotify(string filePath, out Report req, out FileNode fileNode)
         {
             return TryGetFileNode(filePath, out req, out fileNode, node => node.NeedToNodify);
         }
-        static bool TryGetFileNode(string filePath, out Report req, out Report.FileNode fileNode, Func<FileNode, bool> predicate = null)
+        static bool TryGetFileNode(string filePath, out Report req, out FileNode fileNode, Func<FileNode, bool> predicate = null)
         {
             req = null;
             fileNode = null;
@@ -631,9 +632,9 @@ namespace LS.LSEditor
                 public bool IsFolder;
 
                 private string _fileName;
-                private UnityEngine.Object _asset;
+                private Object _asset;
                 public string FileName => _fileName ??= Path.GetFileName(AssetPath);
-                public UnityEngine.Object Asset => _asset ??= AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(AssetPath);
+                public Object Asset => _asset ??= AssetDatabase.LoadAssetAtPath<Object>(AssetPath);
                 public Type AssetType => Asset.GetType();
 
                 /// <summary>
@@ -713,9 +714,9 @@ namespace LS.LSEditor
                     {
                         if(!HadDuplicatedNaming)
                             yield break;
-                        int index = Report.AllNotifyAssetTypes.FindIndex(item => item.IsTypeMatch(AssetType));
+                        int index = AllNotifyAssetTypes.FindIndex(item => item.IsTypeMatch(AssetType));
                         if(index >= 0)
-                            yield return Report.AllNotifyAssetTypes[index];
+                            yield return AllNotifyAssetTypes[index];
                         yield break;
                     }
 
@@ -922,7 +923,7 @@ namespace LS.LSEditor
 
             public static Texture2D GetIcon(string path)
             {
-                UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.Object));
+                Object obj = AssetDatabase.LoadAssetAtPath(path, typeof(Object));
                 if (obj != null)
                 {
                     Texture2D icon = AssetPreview.GetMiniThumbnail(obj);
@@ -1018,17 +1019,17 @@ namespace LS.LSEditor
                 if (args.hyperLinkData.TryGetValue(String_Param_PingGUID, out string guid))
                 {
                     var assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                    EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Object)));
+                    EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath, typeof(Object)));
                 }
                 //直接传在args传assetPath可能会出问题，因为assetPath可能包含空格,@等特殊字符，导致参数解析失败
                 //所以加了上面的传GUID
                 else if (args.hyperLinkData.TryGetValue(String_Param_PingAssetPath, out string assetPath))
                 {
-                    EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath, typeof(UnityEngine.Object)));
+                    EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath, typeof(Object)));
                 }
             }
 
-            public static void LogAssetLink(UnityEngine.Object asset) =>
+            public static void LogAssetLink(Object asset) =>
                 LogAssetLink(AssetDatabase.GetAssetPath(asset));
 
             public static void LogAssetLink(string assetPath) => Debug.Log(GetAssetLink(assetPath));

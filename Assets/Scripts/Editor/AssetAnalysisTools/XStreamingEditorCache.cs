@@ -1,10 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.Linq;
-using static XStreamingEditorCache;
-using System.Data.SqlTypes;
 
 [Serializable]
 public class XStreamingEditorCache : ScriptableObject
@@ -19,10 +15,10 @@ public class XStreamingEditorCache : ScriptableObject
             Value = value; 
         }
     }
-    public List<XStreamingEditorCache.KeyValuePair<string,string>> strings = new List<KeyValuePair<string, string>> ();
-    public List<XStreamingEditorCache.KeyValuePair<string, int>> intgers = new List<XStreamingEditorCache.KeyValuePair<string, int>>();
-    public List<XStreamingEditorCache.KeyValuePair<string, float>> floats = new List<KeyValuePair<string, float>>();
-    public List<XStreamingEditorCache.KeyValuePair<string, bool>> booleans = new List<KeyValuePair<string, bool>>();
+    public List<KeyValuePair<string,string>> strings = new List<KeyValuePair<string, string>> ();
+    public List<KeyValuePair<string, int>> intgers = new List<KeyValuePair<string, int>>();
+    public List<KeyValuePair<string, float>> floats = new List<KeyValuePair<string, float>>();
+    public List<KeyValuePair<string, bool>> booleans = new List<KeyValuePair<string, bool>>();
     private bool m_isChanged = false;
     public bool isChanged {
         get { 

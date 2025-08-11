@@ -7,7 +7,7 @@ namespace PJR.Systems
     {
         public static bool TryGetEffectConfig(int effectID)
         {
-            Debug.LogError($"[{nameof(EffectSystem.TryGetEffectConfig)}] failed to load effect!  effectID = {effectID} config == null");
+            Debug.LogError($"[{nameof(TryGetEffectConfig)}] failed to load effect!  effectID = {effectID} config == null");
             return false;
         }
 

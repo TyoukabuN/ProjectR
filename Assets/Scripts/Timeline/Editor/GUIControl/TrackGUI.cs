@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Styles = PJR.Timeline.Editor.Styles;
 using static PJR.Timeline.Editor.TimelineWindow;
 
 namespace PJR.Timeline.Editor
@@ -11,8 +9,8 @@ namespace PJR.Timeline.Editor
     public class TrackGUI
     {
         public List<Track> tracks => windowState.SequenceHandle.Sequence?.Tracks;
-        public WindowState windowState => TimelineWindow.instance.State;
-        public Rect position => TimelineWindow.instance.position;
+        public WindowState windowState => instance.State;
+        public Rect position => instance.position;
         public TrackGUI()
         {
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -67,7 +68,7 @@ namespace PJR.LogicUnits
         }
         public T AddLogicUnit<T>() where T : ILogicUnitType
         {
-            var unit = System.Activator.CreateInstance<T>();
+            var unit = Activator.CreateInstance<T>();
             if (unit == null)
             {
                 Debug.LogError($"Failure to create LogicUnit {nameof(T)}");

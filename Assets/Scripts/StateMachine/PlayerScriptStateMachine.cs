@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using PJR.Systems.Input;
-using PJR.ScriptStates;
-using PJR.ScriptStates.Player;
 using PJR.Systems;
 
 namespace PJR.ScriptStates.Player

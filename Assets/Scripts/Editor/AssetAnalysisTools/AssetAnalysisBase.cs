@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Profiling;
-using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
 
 public class AssetAnalysisBase : EditorWindow
 {
@@ -245,7 +248,7 @@ public class AssetAnalysisBase : EditorWindow
     {
         Texture target = Selection.activeObject as Texture;
         //var type = Types.GetType("UnityEditor.TextureUtil", "UnityEditor.dll");
-        var type = System.Reflection.Assembly.Load("UnityEditor.dll").GetType("UnityEditor.TextureUtil");
+        var type = Assembly.Load("UnityEditor.dll").GetType("UnityEditor.TextureUtil");
         GetStorageMemorySizeLong = type.GetMethod("GetStorageMemorySizeLong", BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
 
         GetAnimationClipStats = typeof(AnimationUtility).GetMethod("GetAnimationClipStats", BindingFlags.Static | BindingFlags.NonPublic);
@@ -365,7 +368,7 @@ public class AssetAnalysisBase : EditorWindow
         {
             cacheBook = new Dictionary<string, XStreamingEditorCache>();
             cacheQueue = new List<XStreamingEditorCache>();
-            dirtyCacheList = new Dictionary<XStreamingEditorCache, System.Diagnostics.Stopwatch>();
+            dirtyCacheList = new Dictionary<XStreamingEditorCache, Stopwatch>();
         }
 
         public virtual void DrawDefaultGUI(GUIContent label) { }
@@ -390,7 +393,7 @@ public class AssetAnalysisBase : EditorWindow
                 cache = AssetDatabase.LoadAssetAtPath(cacheFilePath, typeof(XStreamingEditorCache)) as XStreamingEditorCache;
                 if (cache == null)
                 {
-                    cache = ScriptableObject.CreateInstance<XStreamingEditorCache>();
+                    cache = CreateInstance<XStreamingEditorCache>();
                     var dir = Path.GetDirectoryName(cacheFilePath);
                     if (!Directory.Exists(dir))
                         Directory.CreateDirectory(dir);
@@ -404,7 +407,7 @@ public class AssetAnalysisBase : EditorWindow
             if (cacheQueue.Count <= 0 || cacheQueue[cacheQueue.Count - 1] != cache)
                 cacheQueue.Add(cache);
         }
-        public static Dictionary<XStreamingEditorCache, System.Diagnostics.Stopwatch> dirtyCacheList = new Dictionary<XStreamingEditorCache, System.Diagnostics.Stopwatch>();
+        public static Dictionary<XStreamingEditorCache, Stopwatch> dirtyCacheList = new Dictionary<XStreamingEditorCache, Stopwatch>();
         public static void SetCachaDirty(XStreamingEditorCache cache)
         {
             if (dirtyCacheList.ContainsKey(cache))
@@ -412,7 +415,7 @@ public class AssetAnalysisBase : EditorWindow
                 dirtyCacheList[cache].Restart();
                 return;
             }
-            dirtyCacheList[cache] = System.Diagnostics.Stopwatch.StartNew();
+            dirtyCacheList[cache] = Stopwatch.StartNew();
         }
         public static bool IsCacheDirty(XStreamingEditorCache cache)
         {
@@ -592,7 +595,7 @@ public class AssetAnalysisBase : EditorWindow
             this.m_AdditionRecordKey = additionKey;
             Update();
         }
-        public T ToEnum<T>() where T : System.Enum
+        public T ToEnum<T>() where T : Enum
         {
             return (T)(object)value;
         }
@@ -981,7 +984,7 @@ public class AssetAnalysisBase : EditorWindow
             return handle.value;
         }
     }
-    public class ObjectHandle<T> : ValueHandle where T : UnityEngine.Object
+    public class ObjectHandle<T> : ValueHandle where T : Object
     {
         protected T m_value;
         protected T m_DefaultValue = null;
@@ -1032,7 +1035,7 @@ public class AssetAnalysisBase : EditorWindow
     }
     public class ObjectHandleList
     {
-        public List<ObjectHandle<UnityEngine.Object>> Infos;
+        public List<ObjectHandle<Object>> Infos;
         public IntHandle InfosCount;
         public string label = string.Empty;
         public string editorPrefKey = string.Empty;
@@ -1050,9 +1053,9 @@ public class AssetAnalysisBase : EditorWindow
                 handle.InfosCount = new IntHandle(handle.editorPrefKey + "InfosCount", 0);
             if (handle.Infos == null)
             {
-                handle.Infos = new List<ObjectHandle<UnityEngine.Object>>();
+                handle.Infos = new List<ObjectHandle<Object>>();
                 for (int i = 0; i < handle.InfosCount.value; i++)
-                    handle.Infos.Add(new ObjectHandle<UnityEngine.Object>(handle.editorPrefKey + i.ToString(), null));
+                    handle.Infos.Add(new ObjectHandle<Object>(handle.editorPrefKey + i.ToString(), null));
             }
         }
         public void Save()
@@ -1084,7 +1087,7 @@ public class AssetAnalysisBase : EditorWindow
                 EditorGUILayout.LabelField(this.label);
                 if (GUILayout.Button("+", GUILayout.Width(20)))
                 {
-                    Infos.Add(new ObjectHandle<UnityEngine.Object>(handle.editorPrefKey + Infos.Count.ToString(), null));
+                    Infos.Add(new ObjectHandle<Object>(handle.editorPrefKey + Infos.Count.ToString(), null));
                     InfosCount.value = Infos.Count;
                 }
             }
@@ -1096,7 +1099,7 @@ public class AssetAnalysisBase : EditorWindow
                     break;
 
                 if (Infos[i] == null)
-                    Infos[i] = new ObjectHandle<UnityEngine.Object>(handle.editorPrefKey + Infos.Count.ToString(), null);
+                    Infos[i] = new ObjectHandle<Object>(handle.editorPrefKey + Infos.Count.ToString(), null);
 
                 EditorGUILayout.BeginHorizontal();
                 {
@@ -1104,7 +1107,7 @@ public class AssetAnalysisBase : EditorWindow
                     {
                         Infos[i].Enabled.value = EditorGUILayout.Toggle(Infos[i].Enabled.value, GUILayout.Width(12));
                         EditorGUILayout.LabelField(string.Format("[{0}]", i + 1), GUILayout.Width(30));
-                        Infos[i].value = EditorGUILayout.ObjectField(Infos[i].value, typeof(UnityEngine.Object), false) as UnityEngine.Object;
+                        Infos[i].value = EditorGUILayout.ObjectField(Infos[i].value, typeof(Object), false) as Object;
                         EditorGUILayout.EndHorizontal();
                     }
                     if (GUILayout.Button("-", GUILayout.Width(20)))
@@ -1467,11 +1470,11 @@ public class AssetAnalysisBase : EditorWindow
     }
 
     //获取对象所占内存KB
-    protected static float GetObjectMemorySize(UnityEngine.Object obj, Dictionary<string, float> cache = null, bool ignoreExist = false)
+    protected static float GetObjectMemorySize(Object obj, Dictionary<string, float> cache = null, bool ignoreExist = false)
     {
         if (GetStorageMemorySizeLong == null)
         {
-            var _type = System.Reflection.Assembly.Load("UnityEditor.dll").GetType("UnityEditor.TextureUtil");
+            var _type = Assembly.Load("UnityEditor.dll").GetType("UnityEditor.TextureUtil");
             GetStorageMemorySizeLong = _type.GetMethod("GetStorageMemorySizeLong", BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
         }
 
@@ -1578,7 +1581,7 @@ public class AssetAnalysisBase : EditorWindow
     /// <param name="fileNameExtension"></param>
     public static void SaveCurrentScene(bool saveAsWithEx = false, string fileNameExtension = "_streaming")
     {
-        var scene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+        var scene = EditorSceneManager.GetActiveScene();
         if (scene != null)
         {
             EditorSceneManager.MarkSceneDirty(scene);
@@ -1596,12 +1599,12 @@ public class AssetAnalysisBase : EditorWindow
             string newPath = Path.Combine(dir, fileName + fileNameExtension + ext);
             var res = EditorSceneManager.SaveScene(scene, newPath);
 
-            scene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+            scene = EditorSceneManager.GetActiveScene();
         }
     }
     public static void MarkSceneDirty()
     {
-        var scene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+        var scene = EditorSceneManager.GetActiveScene();
         if (scene != null)
         {
             EditorSceneManager.MarkSceneDirty(scene);
@@ -1609,7 +1612,7 @@ public class AssetAnalysisBase : EditorWindow
     }
     public static Scene GetActiveScene()
     {
-        return UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+        return EditorSceneManager.GetActiveScene();
     }
     public static bool CurrentActiveSceneIsStreamingScene()
     {
@@ -1624,7 +1627,7 @@ public class AssetAnalysisBase : EditorWindow
         var xscene = GameObject.Find("XScene");
         if (xscene == null)
         {
-            var curScene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
+            var curScene = EditorSceneManager.GetActiveScene();
             var rootGameObjects = curScene.GetRootGameObjects();
             if (rootGameObjects.Length >= 0)
                 xscene = rootGameObjects[0];
@@ -1643,7 +1646,7 @@ public class AssetAnalysisBase : EditorWindow
                 continue;
             if (gobj.transform == child)
                 continue;
-            GameObject.DestroyImmediate(child.gameObject);
+            DestroyImmediate(child.gameObject);
         }
     }
     public static string GetPorjectPath(string fullPath)
@@ -1658,7 +1661,7 @@ public class AssetAnalysisBase : EditorWindow
 
     protected static void OpenWebsite(string url)
     {
-        System.Diagnostics.Process.Start("explorer.exe", url);
+        Process.Start("explorer.exe", url);
         TextEditor textEditor = new TextEditor();
         textEditor.text = url;
         textEditor.OnFocus();

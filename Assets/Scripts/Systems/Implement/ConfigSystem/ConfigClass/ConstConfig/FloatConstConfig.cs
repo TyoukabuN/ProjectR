@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Sirenix.OdinInspector;
-
+using PJR.Editor;
 #if UNITY_EDITOR
 using UnityEditor;
-using Sirenix.Utilities.Editor;
 #endif
 
 namespace PJR
@@ -17,7 +12,7 @@ namespace PJR
         [MenuItem("Assets/PJR/创建配置/Float常数配置")]
         public static void CreateConstConfigAsset()
         {
-            PJR.Editor.CSConfigHelper.CreateListConfigAsset<FloatConstConfig, ConstConfigItem<float>>();
+            CSConfigHelper.CreateListConfigAsset<FloatConstConfig, ConstConfigItem<float>>();
         }
 
         //[OnInspectorGUI]

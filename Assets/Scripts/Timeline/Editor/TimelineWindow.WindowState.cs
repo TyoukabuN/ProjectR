@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using PJR.Editor;
-using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
-using Object = System.Object;
+using UnityEngine.Pool;
+using Object = UnityEngine.Object;
 
 namespace PJR.Timeline.Editor
 {
@@ -279,7 +279,7 @@ namespace PJR.Timeline.Editor
             private bool _isEmpty = false;
             public bool IsEmpty => _isEmpty;
             private ISequence _sequence;
-            public UnityEngine.Object Object => (UnityEngine.Object)_sequence;
+            public Object Object => (Object)_sequence;
             
             private float _time_test = 0;
             public float time {
@@ -300,7 +300,7 @@ namespace PJR.Timeline.Editor
 
             public static SequenceEditHandle Get(SequenceAsset sequenceAssetAsset)
             {
-                var temp = UnityEngine.Pool.GenericPool<SequenceEditHandle>.Get();
+                var temp = GenericPool<SequenceEditHandle>.Get();
                 temp._sequence = sequenceAssetAsset;
                 temp._isEmpty = false;
                 temp._time_test = 0;
@@ -311,7 +311,7 @@ namespace PJR.Timeline.Editor
                 _sequence = null;
                 _isEmpty = false;
                 _time_test = 0;
-                UnityEngine.Pool.GenericPool<SequenceEditHandle>.Release(this);
+                GenericPool<SequenceEditHandle>.Release(this);
             }
         }
     }

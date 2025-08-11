@@ -1,9 +1,11 @@
 #if UNITY_EDITOR
-using Sirenix.OdinInspector.Editor;
 using System;
+using System.Collections;
 using System.Linq;
+using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace PJR.Config
 {
@@ -57,22 +59,22 @@ namespace PJR.Config
             {
                 ClearUpEditor();
 
-                itemAsset = ScriptableObject.CreateInstance<TItemAsset>();
+                itemAsset = CreateInstance<TItemAsset>();
                 item = new TItem();
                 item.ID = config.Editor_GetNewID();
                 item.Name = "起码填个名字吧？";
                 itemAsset.item = item;
 
-                if (InheritsFrom(itemAsset.GetType(), typeof(UnityEngine.Object)))
+                if (InheritsFrom(itemAsset.GetType(), typeof(Object)))
                 {
-                    var unityObject = itemAsset as UnityEngine.Object;
+                    var unityObject = itemAsset as Object;
                     if (unityObject)
                         editor = CreateObjectEditor(unityObject);
                 }
                 else
                 {
-                    if (itemAsset is System.Collections.IList)
-                        propertyTree = PropertyTree.Create(itemAsset as System.Collections.IList);
+                    if (itemAsset is IList)
+                        propertyTree = PropertyTree.Create(itemAsset as IList);
                     else
                         propertyTree = PropertyTree.Create(itemAsset);
                 }
@@ -162,20 +164,20 @@ namespace PJR.Config
             {
                 ClearUpEditor();
 
-                itemAsset = ScriptableObject.CreateInstance<TItemAsset>();
+                itemAsset = CreateInstance<TItemAsset>();
                 itemAsset.ID = config.Editor_GetNewID();
                 itemAsset.Name = "起码填个名字吧？";
 
-                if (InheritsFrom(itemAsset.GetType(), typeof(UnityEngine.Object)))
+                if (InheritsFrom(itemAsset.GetType(), typeof(Object)))
                 {
-                    var unityObject = itemAsset as UnityEngine.Object;
+                    var unityObject = itemAsset as Object;
                     if (unityObject)
                         editor = CreateObjectEditor(unityObject);
                 }
                 else
                 {
-                    if (itemAsset is System.Collections.IList)
-                        propertyTree = PropertyTree.Create(itemAsset as System.Collections.IList);
+                    if (itemAsset is IList)
+                        propertyTree = PropertyTree.Create(itemAsset as IList);
                     else
                         propertyTree = PropertyTree.Create(itemAsset);
                 }
@@ -237,7 +239,7 @@ namespace PJR.Config
             ClearUpEditor();
         }
 
-        protected virtual UnityEditor.Editor CreateObjectEditor(UnityEngine.Object target)
+        protected virtual UnityEditor.Editor CreateObjectEditor(Object target)
         {
             return UnityEditor.Editor.CreateEditor(target);
         }

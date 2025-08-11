@@ -1,8 +1,7 @@
+using InfinityCode.UltimateEditorEnhancer;
+using InfinityCode.UltimateEditorEnhancer.ProjectTools;
 using UnityEditor;
 using UnityEngine;
-using System;
-using InfinityCode.UltimateEditorEnhancer.ProjectTools;
-using InfinityCode.UltimateEditorEnhancer;
 
 namespace PJR.Editor
 {

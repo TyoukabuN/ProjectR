@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using PJR.Timeline.Pool;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace PJR.Timeline
 {
@@ -53,7 +53,7 @@ namespace PJR.Timeline
                     return;
                 }
 
-                _trackRunners = UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Get();
+                _trackRunners = CollectionPool<List<TrackRunner>, TrackRunner>.Get();
                 for (int i = 0; i < _sequenceAsset.Tracks.Count; i++)
                 {
                     var track = _sequenceAsset.Tracks[i];
@@ -189,7 +189,7 @@ namespace PJR.Timeline
 
                 if (_trackRunners != null)
                 {
-                    UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Release(_trackRunners);
+                    CollectionPool<List<TrackRunner>, TrackRunner>.Release(_trackRunners);
                     _trackRunners = null;
                 }
 
@@ -203,8 +203,8 @@ namespace PJR.Timeline
 
             #region Pool
 
-            public static Runner Get() => ObjectPool<Runner>.Get();
-            public override void Release() => ObjectPool<Runner>.Release(this);
+            public static Runner Get() => Pool.ObjectPool<Runner>.Get();
+            public override void Release() => Pool.ObjectPool<Runner>.Release(this);
 
             #endregion
         }

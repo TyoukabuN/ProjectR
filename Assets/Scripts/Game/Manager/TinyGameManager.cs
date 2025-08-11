@@ -1,14 +1,9 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Cinemachine;
-using UnityEngine.Events;
-using System;
-using System.Linq;
-using DG.Tweening;
 using Sirenix.OdinInspector;
+using UnityEngine;
 #if UNITY_EDITOR
-using UnityEditor;
 #endif
 namespace PJR
 {

@@ -1,9 +1,8 @@
 using System;
+using PJR.Systems;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
-using Sirenix.OdinInspector;
-using PJR.Systems;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

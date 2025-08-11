@@ -1,8 +1,8 @@
-using Sirenix.OdinInspector;
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
+
 namespace PJR
 {
     public class ItemRepopHandler :MonoBehaviour
@@ -26,9 +26,9 @@ namespace PJR
     }
     public class ScriptTypeRestrictionAttribute : PropertyAttribute
     {
-        public System.Type allowedType;
+        public Type allowedType;
 
-        public ScriptTypeRestrictionAttribute(System.Type allowedType)
+        public ScriptTypeRestrictionAttribute(Type allowedType)
         {
             this.allowedType = allowedType;
         }

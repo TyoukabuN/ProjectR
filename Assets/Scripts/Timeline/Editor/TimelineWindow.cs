@@ -90,7 +90,7 @@ namespace PJR.Timeline.Editor
                 return;
 
             //trackView的背景，放这是不想它遮住时间尺刻度
-            EditorGUI.DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
+            DrawRect(trackRect, Styles.Instance.customSkin.colorSequenceBackground);
             Draw_Headers(); 
             TrackViewsGUI();
             Draw_OverlapGUI();
@@ -298,13 +298,13 @@ namespace PJR.Timeline.Editor
         #region Control buttons
         void Draw_DebugButton()
         {
-            EditorGUI.BeginChangeCheck();
+            BeginChangeCheck();
             var enabled = State.debugging;
             State.debugging = GUILayout.Toggle(enabled, Styles.debugContent, EditorStyles.toolbarButton);
         }
         void Draw_RepaintButton()
         {
-            EditorGUI.BeginChangeCheck();
+            BeginChangeCheck();
             if (GUILayout.Button(Styles.repaint, EditorStyles.toolbarButton))
             {
                 Repaint();
@@ -353,7 +353,7 @@ namespace PJR.Timeline.Editor
 
         void Draw_HeaderEditBar()
         {
-            using (new EditorGUI.DisabledScope(State.NonEditingSequence()))
+            using (new DisabledScope(State.NonEditingSequence()))
             { 
                 using (new GUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Width(State.currentTrackMenuAreaWidth)))
                 {
@@ -416,7 +416,7 @@ namespace PJR.Timeline.Editor
             var rulerNTrack = timelineRulerRect;
             rulerNTrack.yMax = rightTrackView.yMax;
     
-            EditorGUI.DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
+            DrawRect(timelineRulerRect, Styles.Instance.customSkin.colorSubSequenceBackground);
             GUIUtil.CheckWheelEvent(rulerNTrack, evt =>
             {
                 //UnityEngine.Debug.Log($"[evt.delta.y: {evt.delta.y}]");
@@ -601,7 +601,7 @@ namespace PJR.Timeline.Editor
                         Rect targetRect = new Rect(position) { width = pixelWidth };
                         var color = Color.Lerp(Color.red, Color.green, value);
                         //GUI.DrawTexture(targetRect,)
-                        EditorGUI.DrawRect(targetRect, color);
+                        DrawRect(targetRect, color);
                         break;
                     }
                 case EventType.MouseDown:

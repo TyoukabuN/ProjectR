@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using PJR;
+
 public class TrapManager : MonoSingleton<TrapManager>
 {
     public List<ITrap> trapList = new List<ITrap>();

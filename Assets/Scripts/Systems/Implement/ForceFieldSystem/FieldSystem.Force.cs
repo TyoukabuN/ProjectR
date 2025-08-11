@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using static PJR.Systems.ForceField;
 using Sirenix.OdinInspector;
-using PJR;
+using UnityEngine;
+using static PJR.Systems.ForceField;
 
 namespace PJR.Systems
 {

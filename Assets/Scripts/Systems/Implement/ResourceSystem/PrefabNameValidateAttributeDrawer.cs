@@ -1,13 +1,10 @@
 #if UNITY_EDITOR
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities.Editor;
-using Sirenix;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using System.IO;
 using PJR.Systems;
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
+using UnityEngine;
 
 namespace PJR
 {
@@ -67,7 +64,7 @@ namespace PJR
             var assetPath = AssetDatabase.GUIDToAssetPath(guid);
             if (string.IsNullOrEmpty(assetPath))
                 return;
-            EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath,typeof(UnityEngine.Object)));
+            EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath(assetPath,typeof(Object)));
 
         }
     }

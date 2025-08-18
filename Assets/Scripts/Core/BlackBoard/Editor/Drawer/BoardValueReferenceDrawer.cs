@@ -29,7 +29,9 @@ namespace PJR.BlackBoard.Editor.Drawers
             if (!(valueEntry.SmartValue?.Invalid ?? true))
             {
                 GUILayout.BeginHorizontal();
+                //画GetValueApproach,T和BoardValueReference<T>
                 CallNextDrawer(label);
+                //功能按钮
                 if(GUILayout.Button("...",GUIStyles.MiniRichTextButton,GUILayout.Width(22)))
                 {
                     var menu = new GenericMenu();

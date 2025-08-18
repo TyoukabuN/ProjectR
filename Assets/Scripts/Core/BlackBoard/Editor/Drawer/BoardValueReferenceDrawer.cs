@@ -59,43 +59,47 @@ namespace PJR.BlackBoard.Editor.Drawers
 
         private void SelectContextBoardValue()
         {
-            if (this.Property.FindObjectInChilds<CacheableValueBoard>(out var references))
+            if (Property.FindObjectInChilds<CacheableValueBoard>(out var references) && references.Valid)
             {
-                var menu = new GenericMenu();
-                for (var i =0; i <references.Count; i++)
+                using (references)
                 {
-                    var reference = references[i];
-                    var board = reference.Value;
-
-                    var keyValuePairs = board.FindKeyValuesOfType(valueEntry.SmartValue.ValueType);
-                    if (keyValuePairs == null)
-                        continue;
-
-                    for (var j = keyValuePairs.Length - 1; j >= 0; j--)
+                    var menu = new GenericMenu();
+                    for (var i = 0; i < references.Count; i++)
                     {
-                        var keyValuePair = keyValuePairs[j];
-                        var keyName = keyValuePair.Key;
-                        var valueType = keyValuePair.Value.ValueType;
+                        var reference = references[i];
+                        var board = reference.Value;
 
-                        GUIContent guiContent = null;
-                        LabelTextAttribute labelTextAttr = references[i].InspectorProperty.Attributes
-                            .FirstOrDefault(a => a is LabelTextAttribute) as LabelTextAttribute;
-                        if(labelTextAttr != null)
-                            guiContent = new GUIContent($"{labelTextAttr.Text}/{keyName}:[{valueType}]");    
-                        else
-                            guiContent = new GUIContent($"{references[i].InspectorProperty.Path}/{keyName}:[{valueType}]");    
-                        
-                        menu.AddItem(guiContent, false, () =>
+                        var keyValuePairs = board.FindKeyValuesOfType(valueEntry.SmartValue.ValueType);
+                        if (keyValuePairs == null)
+                            continue;
+
+                        for (var j = keyValuePairs.Length - 1; j >= 0; j--)
                         {
-                            var temp = BoardValueReference.GetGenericObject(valueType);
-                            temp.Key = keyValuePair.Key;
-                            temp.Board = board;
-                            valueEntry.SmartValue = temp;
-                        });
-                    }
-                }
+                            var keyValuePair = keyValuePairs[j];
+                            var keyName = keyValuePair.Key;
+                            var valueType = keyValuePair.Value.ValueType;
 
-                menu?.ShowAsContext();
+                            GUIContent guiContent = null;
+                            LabelTextAttribute labelTextAttr = references[i].InspectorProperty.Attributes
+                                .FirstOrDefault(a => a is LabelTextAttribute) as LabelTextAttribute;
+                            if (labelTextAttr != null)
+                                guiContent = new GUIContent($"{labelTextAttr.Text}/{keyName}:[{valueType}]");
+                            else
+                                guiContent =
+                                    new GUIContent($"{references[i].InspectorProperty.Path}/{keyName}:[{valueType}]");
+
+                            menu.AddItem(guiContent, false, () =>
+                            {
+                                var temp = BoardValueReference.GetGenericObject(valueType);
+                                temp.Key = keyValuePair.Key;
+                                temp.Board = board;
+                                valueEntry.SmartValue = temp;
+                            });
+                        }
+                    }
+
+                    menu?.ShowAsContext();
+                }
             }
             else
             {

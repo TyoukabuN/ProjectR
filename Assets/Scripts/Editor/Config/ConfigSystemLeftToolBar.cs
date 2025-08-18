@@ -72,10 +72,13 @@ namespace PJR.Editor
 
             if (!_hadMenuItemRequire)
             {
-                var menuItemTypes = TypeCache.GetMethodsWithAttribute<RequireConfigMenuItemAttribute>().Where(x => !x.IsAbstract);
-                foreach (var type in menuItemTypes)
+                var menuItemTypes = 
+                    TypeCache.GetMethodsWithAttribute<RequireConfigMenuItemAttribute>()
+                    .Where(x => !x.IsAbstract && x.IsStatic);
+                
+                foreach (var methodInfo in menuItemTypes)
                 {
-                    _shortcutRequire.Add(new ConfigMenuItemRequire(type, type.GetAttribute<RequireConfigMenuItemAttribute>()));
+                    _shortcutRequire.Add(new ConfigMenuItemRequire(methodInfo, methodInfo.GetAttribute<RequireConfigMenuItemAttribute>()));
                 }
                 _hadMenuItemRequire = true;
             }

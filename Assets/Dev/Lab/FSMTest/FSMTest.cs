@@ -13,7 +13,7 @@ public class FSMTest : MonoBehaviour
     public Transform target;
     
     //private IFsm _fsm;
-    private Fsm<FSMTestContext> _fsm;
+    private Fsm<Context> _fsm;
 
     [Button]
     public void DoAutoMoveFsmTest()
@@ -24,7 +24,7 @@ public class FSMTest : MonoBehaviour
             return;
         }
         _fsm?.Release();
-        _fsm = Fsm<FSMTestContext>.Get(new()
+        _fsm = Fsm<Context>.Get(new()
             {
                 owner = this,
                 target = target
@@ -52,15 +52,15 @@ public class FSMTest : MonoBehaviour
             return;
         }
         _fsm?.Release();
-        _fsm = Fsm<FSMTestContext>.Get(new()
+        _fsm = Fsm<Context>.Get(new()
             {
                 owner = this,
                 target = target
-            }, 
-            OnFinishTest.WaitForSecond<FSMTestContext>.Get(2),
-            OnFinishTest.WaitForSecond<FSMTestContext>.Get(3)
+            }
         );
-        _fsm.ConnectStatesWithOnFinish();
+
+        _fsm.SequentialExecute(OnFinishTest.WaitForSecond<Context>.Get(2), OnFinish<Context>.Get());
+        _fsm.SequentialExecute(OnFinishTest.WaitForSecond<Context>.Get(3), OnFinish<Context>.Get());
         _fsm.ChangeState(0);
     }
 
@@ -73,7 +73,7 @@ public class FSMTest : MonoBehaviour
         };
         _fsm?.Update(context);
     }
-    public class FSMTestContext
+    public class Context
     {
         public FSMTest owner;
         public Transform target;
@@ -81,7 +81,7 @@ public class FSMTest : MonoBehaviour
 
     public static class States
     {
-        public class Idle : SimpleTransitionFsmState<FSMTestContext>
+        public class Idle : SimpleTransitionFsmState<Context>
         {
             public override void OnEnter()
                 => Debug.Log($"Enter {GetType().Name}");
@@ -93,7 +93,7 @@ public class FSMTest : MonoBehaviour
             public override void Release() => GenerialPool<Idle>.Release(this);
         }
 
-        public class Forward : SimpleTransitionFsmState<FSMTestContext>
+        public class Forward : SimpleTransitionFsmState<Context>
         {
             public override void OnEnter()
                 => Debug.Log($"Enter {GetType().Name}");
@@ -105,7 +105,7 @@ public class FSMTest : MonoBehaviour
             public override void Release() => GenerialPool<Forward>.Release(this);
         }
 
-        public class Backward : SimpleTransitionFsmState<FSMTestContext>
+        public class Backward : SimpleTransitionFsmState<Context>
         {
             public override void OnEnter()
                 => Debug.Log($"Enter {GetType().Name}");
@@ -117,7 +117,7 @@ public class FSMTest : MonoBehaviour
             public override void Release() => GenerialPool<Backward>.Release(this);
         }
 
-        public class Left : SimpleTransitionFsmState<FSMTestContext>
+        public class Left : SimpleTransitionFsmState<Context>
         {
             public override void OnEnter()
                 => Debug.Log($"Enter {GetType().Name}");
@@ -129,7 +129,7 @@ public class FSMTest : MonoBehaviour
             public override void Release() => GenerialPool<Left>.Release(this);
         }
 
-        public class Right : SimpleTransitionFsmState<FSMTestContext>
+        public class Right : SimpleTransitionFsmState<Context>
         {
             public override void OnEnter()
                 => Debug.Log($"Enter {GetType().Name}");
@@ -143,7 +143,7 @@ public class FSMTest : MonoBehaviour
     }
     public static class Transitions
     {
-        public class OverOneSecond : FsmTransition<FSMTestContext>
+        public class OverOneSecond : FsmTransition<Context>
         {
             public override bool CanTransition()
             {
@@ -156,7 +156,7 @@ public class FSMTest : MonoBehaviour
 
     public static class OnFinishTest
     {
-        public class WaitForSecond<TContext> : SimpleTransitionFsmState<FSMTestContext>
+        public class WaitForSecond<TContext> : SimpleTransitionFsmState<Context>
         {
             private float _second = 1f;
             public override void OnUpate(IUpdateContext context)

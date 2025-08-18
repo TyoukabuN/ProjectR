@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using PJR.Editor;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -71,8 +72,8 @@ namespace PJR.Systems
         [InitializeOnLoadMethod]
         static void RegisterEditorEvent()
         {
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            EditorEventObserver.PlayModeStateChanged -= OnPlayModeStateChanged;
+            EditorEventObserver.PlayModeStateChanged += OnPlayModeStateChanged;
         }
         static void OnPlayModeStateChanged(PlayModeStateChange state)
         {

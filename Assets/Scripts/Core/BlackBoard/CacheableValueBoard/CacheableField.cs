@@ -7,6 +7,7 @@ using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Pool;
 #if UNITY_EDITOR
+using PJR.Core.Pooling;
 using Sirenix.OdinInspector.Editor;
 #endif
 
@@ -190,10 +191,10 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
             public InspectorProperty InspectorProperty;
             public T Value;
         }
-        public static bool FindObjectInChilds<T>(this InspectorProperty property,out List<InspectorPropertyRef<T>> foundProperty, bool includeSelf = true) where T : class
+        public static bool FindObjectInChilds<T>(this InspectorProperty property,out PooledList<InspectorPropertyRef<T>> foundPropertys, bool includeSelf = true) where T : class
         {
-            foundProperty = null;
-            var tempsList = ListPool<InspectorPropertyRef<T>>.Get();
+            foundPropertys = PooledList<InspectorPropertyRef<T>>.Invalid;
+            var tempsList = PooledList<InspectorPropertyRef<T>>.Get();
 
             #region Local Functions
             bool IsTypeMatch(InspectorProperty inspectorProperty) => inspectorProperty.ValueEntry.WeakSmartValue is T;
@@ -225,7 +226,7 @@ namespace PJR.Core.BlackBoard.CachedValueBoard
                 return false;
             }
           
-            foundProperty = tempsList;
+            foundPropertys = tempsList;
             return true;
         }
         

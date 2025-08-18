@@ -1,11 +1,13 @@
 #if UNITY_EDITOR
 using System;
 using System.IO;
+using PJR.Editor;
 using PJR.Systems;
 using UnityEditor;
 using UnityEditor.Build.Player;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.AI;
 using Object = UnityEngine.Object;
 
 namespace PJR
@@ -20,8 +22,8 @@ namespace PJR
         [InitializeOnLoadMethod]
         static void RegisterEvent()
         {
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            EditorEventObserver.PlayModeStateChanged -= OnPlayModeStateChanged;
+            EditorEventObserver.PlayModeStateChanged += OnPlayModeStateChanged;
         }
 
         static void OnPlayModeStateChanged(PlayModeStateChange state)

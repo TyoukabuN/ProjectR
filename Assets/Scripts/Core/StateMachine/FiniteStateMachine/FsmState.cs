@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using PJR.Core.TypeExtension;
 using UnityEngine.Pool;
 
@@ -72,6 +73,11 @@ namespace PJR.Core.StateMachine
         {
             if (_transitions == null)
                 return false;
+            var transitionType = transition.GetType();
+            // 限制只能存在一个OnFinish
+            if (transition.IsUnique && _transitions.Any(x => transitionType.IsInstanceOfType(x)))
+                return false;
+
             _transitions.Add(transition);
             return true;
         }

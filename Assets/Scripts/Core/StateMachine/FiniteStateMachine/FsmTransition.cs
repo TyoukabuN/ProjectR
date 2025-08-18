@@ -2,6 +2,7 @@ namespace PJR.Core.StateMachine
 {
     public abstract class FsmTransition<TContext> : IFsmTransition
     {
+        public virtual bool IsUnique => false;
         public Fsm<TContext> Fsm => _fsm;
         public FsmState<TContext> From => _from;
         public FsmState<TContext> To => _to;

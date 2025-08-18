@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using PJR.Core;
 using PJR.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -17,8 +18,8 @@ namespace PJR.Timeline.Editor
         {
             public WindowState()
             {
-                AssetProcessor.OnWillSaveAssetsCall -= OnWillSaveAssetsCall;
-                AssetProcessor.OnWillSaveAssetsCall += OnWillSaveAssetsCall;
+                AssetModificationEventHandle.OnWillSaveAssetsCall -= OnWillSaveAssetsCall;
+                AssetModificationEventHandle.OnWillSaveAssetsCall += OnWillSaveAssetsCall;
                 Undo.undoRedoPerformed -= OnUndoRedoPerformed;
                 Undo.undoRedoPerformed += OnUndoRedoPerformed;
             }

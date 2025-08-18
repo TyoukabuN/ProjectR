@@ -87,11 +87,11 @@ namespace PJR.Core.StateMachine
         {
             if (state == null)
                 return false;
-            if (_type2stateMap.Any(x => x.Key == state.GetType()))
-            {
-                Debug.Log($"Already exist state with same type: {state.GetType().Name}");
-                return false;
-            }
+            // if (_type2stateMap.Any(x => x.Key == state.GetType()))
+            // {
+            //     Debug.Log($"Already exist state with same type: {state.GetType().Name}");
+            //     return false;
+            // }
             
             _states.Add(state);
             _type2stateMap[state.GetType()] = state;
@@ -99,7 +99,7 @@ namespace PJR.Core.StateMachine
             return true;
         }
 
-        public bool AddAndConnectWithOnFinish(FsmState<TContext> state, OnFinish<TContext> transitionFromLastToThis)
+        public bool SequentialExecute(FsmState<TContext> state, OnFinish<TContext> transitionFromLastToThis)
         {
             var lastState = _states.Last();
             if (!AddState(state))
@@ -176,7 +176,7 @@ namespace PJR.Core.StateMachine
         
         private bool CheckTransition_Recursion(FsmState<TContext> from,List<FsmTransition<TContext>> passedTransitions)
         {
-            if (from == null)
+            if (from?.Transitions == null)
                 return false;
             foreach (var transition in from.Transitions)
             {

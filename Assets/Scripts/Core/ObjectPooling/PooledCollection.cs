@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using PJR.Core.TypeExtension;
 using UnityEngine.Pool;
 
 namespace PJR.Core.Pooling
@@ -17,6 +18,13 @@ namespace PJR.Core.Pooling
             _valid = false,
             _list = null,
         };
+        public static PooledList<T> Get()
+        {
+            var temp = new PooledList<T>();
+            temp._valid = true;
+            temp._list = ListPool<T>.Get();
+            return temp;
+        }
         public bool Valid => _valid && _list != null;
         public bool AnyItem => _valid && _list.Count > 0;
         public int Count => _list?.Count ?? 0;
@@ -27,13 +35,18 @@ namespace PJR.Core.Pooling
         public T First => AnyItem ? _list[0] : default;
         public T Last => AnyItem ? _list[^1] : default;
 
-        public static PooledList<T> Get()
+        public T this[int index]
         {
-            var temp = new PooledList<T>();
-            temp._valid = true;
-            temp._list = ListPool<T>.Get();
-            return temp;
+            get
+            {
+                if (!Valid)
+                    return default;
+                if (!_list.WithinRange(index))
+                    return default;
+                return _list[index];
+            }
         }
+
         public void Add(T item)
         {
             if (!_valid)

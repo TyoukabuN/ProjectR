@@ -24,6 +24,10 @@ namespace PJR.Core.StateMachine
     }
     public interface IFsmTransition : IPoolableObject
     {
+        /// <summary>
+        /// 状态只能包含一个这样类型的Transition
+        /// </summary>
+        public bool IsUnique { get; }
         public bool CanTransition();
         public void OnTransition(){}
     }

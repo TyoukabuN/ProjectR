@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 798772132}
   - component: {fileID: 798772133}
   m_Layer: 0
-  m_Name: AffixTest
+  m_Name: ParameterBlockTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -164,7 +164,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 798772131}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c5cb2be1042f1f43bfdfdf01a333a4c, type: 3}
+  m_Script: {fileID: 11500000, guid: 78da53eb98d2d8e4b90e1313968c09ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -176,78 +176,27 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: TestTypeValuePair
+    - Name: Block
       Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataTypeValuePair, PJR.Dev.Runtime
-    - Name: _dataType
-      Entry: 3
-      Data: 0
-    - Name: _dataValue
+      Data: 0|PropertyBlockTest+TestProp+Persistent, PJR.Lab.Editor
+    - Name: _propertyBlock
       Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime
-    - Name: _valueType
-      Entry: 3
-      Data: 0
-    - Name: _floatValue
-      Entry: 4
-      Data: 0
+      Data: 1|PropertyBlockTest+PropertyBlock+Persistent, PJR.Lab.Editor
+    - Name: _floatBlock
+      Entry: 7
+      Data: PJR.Core.DataContext.ValueTypeChunk8`1[[System.Single, mscorlib]], PJR.Lab.Editor
     - Name: 
       Entry: 8
       Data: 
+    - Name: _intBlock
+      Entry: 7
+      Data: PJR.Core.DataContext.ValueTypeChunk8`1[[System.Int32, mscorlib]], PJR.Lab.Editor
     - Name: 
       Entry: 8
       Data: 
-    - Name: TestValue
+    - Name: _boolBlock
       Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime
-    - Name: _valueType
-      Entry: 3
-      Data: 0
-    - Name: _floatValue
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: Package1
-      Entry: 7
-      Data: 0|PJR.Dev.Game.DataContext.PersistentDataPackage, PJR.Dev.Runtime
-    - Name: _dataMap
-      Entry: 7
-      Data: 1|System.Collections.Generic.Dictionary`2[[PJR.Dev.Game.DataContext.DataType,
-        PJR.Dev.Runtime],[PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime]],
-        mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 2|System.Collections.Generic.EnumEqualityComparer`1[[PJR.Dev.Game.DataContext.DataType,
-        PJR.Dev.Runtime]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1000
-    - Name: $v
-      Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime
-    - Name: _valueType
-      Entry: 3
-      Data: 0
-    - Name: _floatValue
-      Entry: 4
-      Data: 100
+      Data: PJR.Core.DataContext.ValueTypeChunk4`1[[System.Boolean, mscorlib]], PJR.Lab.Editor
     - Name: 
       Entry: 8
       Data: 
@@ -255,183 +204,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 2000
-    - Name: $v
-      Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime
-    - Name: _valueType
-      Entry: 3
-      Data: 0
-    - Name: _floatValue
-      Entry: 4
-      Data: 10
-    - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 3000
-    - Name: $v
-      Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime
-    - Name: _valueType
-      Entry: 3
-      Data: 0
-    - Name: _floatValue
-      Entry: 4
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: Package2
-      Entry: 7
-      Data: 3|PJR.Dev.Game.DataContext.PersistentDataPackage, PJR.Dev.Runtime
-    - Name: _dataMap
-      Entry: 7
-      Data: 4|System.Collections.Generic.Dictionary`2[[PJR.Dev.Game.DataContext.DataType,
-        PJR.Dev.Runtime],[PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime]],
-        mscorlib
-    - Name: comparer
-      Entry: 9
-      Data: 2
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1000
-    - Name: $v
-      Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime
-    - Name: _valueType
-      Entry: 3
-      Data: 0
-    - Name: _floatValue
-      Entry: 4
-      Data: 200
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 2000
-    - Name: $v
-      Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime
-    - Name: _valueType
-      Entry: 3
-      Data: 0
-    - Name: _floatValue
-      Entry: 4
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 3000
-    - Name: $v
-      Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime
-    - Name: _valueType
-      Entry: 3
-      Data: 0
-    - Name: _floatValue
-      Entry: 4
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: TempPackage
-      Entry: 7
-      Data: 5|PJR.Dev.Game.DataContext.TempDataPackage, PJR.Dev.Runtime
-    - Name: _dataMap
-      Entry: 7
-      Data: 6|System.Collections.Generic.Dictionary`2[[PJR.Dev.Game.DataContext.DataType,
-        PJR.Dev.Runtime],[PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime]],
-        mscorlib
-    - Name: comparer
-      Entry: 9
-      Data: 2
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1000
-    - Name: $v
-      Entry: 7
-      Data: PJR.Dev.Game.DataContext.DataValue, PJR.Dev.Runtime
-    - Name: _valueType
-      Entry: 3
-      Data: 0
-    - Name: _floatValue
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
+    - Name: temp1
+      Entry: 6
       Data: 

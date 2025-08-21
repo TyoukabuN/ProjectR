@@ -47,26 +47,30 @@ namespace PJR.Core.Pooling
             }
         }
 
+        public PooledList(List<T> list)
+        {
+            _list = list;
+            _valid = true;
+        }
         public void Add(T item)
         {
-            if (!_valid)
+            if (!Valid)
                 return;
             _list.Add(item);
         }
         public void Remove(T item)
         {
-            if (!_valid)
+            if (!Valid)
                 return;
             _list.Remove(item);
         }
         public void RemoveAt(int index)
         {
-            if (!_valid)
+            if (!Valid)
                 return;
             _list.RemoveAt(index);
         }
-        public static implicit operator List<T>(PooledList<T> pooledList)
-            => pooledList._list;
+
         public void Dispose()
         {
             if(_list != null)
@@ -77,12 +81,24 @@ namespace PJR.Core.Pooling
             if(_list != null)
                 ListPool<T>.Release(_list);
         }
+        
+        public override bool Equals(object other)
+        {
+            if (!this.Valid)
+                return other == null;
+            return other != null && this._list.Equals(other);
+        }
+        
+        public static implicit operator List<T>(PooledList<T> pooledList)
+            => pooledList._list;
+        public static implicit operator PooledList<T>(List<T> pooledList)
+            => new(pooledList);
 
         public List<T>.Enumerator GetEnumerator() => _list.GetEnumerator();
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => (IEnumerator<T>) _list.GetEnumerator();
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => _list.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => (IEnumerator) _list.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
 
     }
 

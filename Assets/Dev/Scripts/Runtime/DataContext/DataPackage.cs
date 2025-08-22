@@ -4,6 +4,7 @@ using PJR.ClassExtension;
 using PJR.Core.Pooling;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace PJR.Dev.Game.DataContext
 {
@@ -66,6 +67,8 @@ namespace PJR.Dev.Game.DataContext
             }
             if (!this.Valid || !other.Valid)
                 return;
+            if (other.DataMap == null)
+                return;
             foreach (var pair in other.DataMap)
                 Add(pair.Key, pair.Value);
         }
@@ -101,9 +104,65 @@ namespace PJR.Dev.Game.DataContext
         {
             if (!this.Valid || !other.Valid)
                 return;
+            if (other.DataMap == null)
+                return;
             foreach (var pair in other.DataMap)
                 Editor_Add(pair.Key, pair.Value);
         }
 #endif
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DataPackageGroup : IDataPackage
+    {
+        public bool Valid => _dataPackages != null;
+        public bool IsTemp => true;
+        
+        private List<IDataPackage> _dataPackages;
+
+        public static DataPackageGroup Get()
+        {
+            var temp = GenericPool<DataPackageGroup>.Get();
+            temp._dataPackages ??= ListPool<IDataPackage>.Get();
+            return temp;
+        }
+
+        public void Dispose()
+        {
+            if (_dataPackages != null)
+            {
+                foreach (var dataPackage in _dataPackages)
+                    dataPackage?.Dispose();
+                ListPool<IDataPackage>.Release(_dataPackages);
+                _dataPackages = null;
+            }
+        }
+
+
+        public Dictionary<DataType, DataValue> DataMap => null;
+        public DataValue GetData(DataType dataType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetData(DataType dataType, out DataValue value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TempDataPackage GetTemplate()
+        {
+            var temp = TempDataPackage.Get();
+            if (!Valid)
+                return temp;
+            foreach (var dataPackage in _dataPackages)
+            {
+                if(dataPackage != null)
+                    temp.Add(dataPackage); 
+            }
+            return temp;
+        }
     }
 }

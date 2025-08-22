@@ -2,16 +2,16 @@ using System;
 
 namespace LS.Game.DataContext
 {
-    public interface IValueTypeChunk
+    public interface IValueChunk
     {
         public Type ValueType { get; }
         public int ValueCount { get; }
     }
 
     [Serializable]
-    public struct ValueTypeChunk1<T> : IValueTypeChunk where T : struct
+    public struct ValueChunk1<T> : IValueChunk 
     {
-        public static ValueTypeChunk1<T> Empty => new();
+        public static ValueChunk1<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 1;
 
@@ -36,9 +36,9 @@ namespace LS.Game.DataContext
         }
     }
     [Serializable]
-    public struct ValueTypeChunk2<T> : IValueTypeChunk where T : struct
+    public struct ValueChunk2<T> : IValueChunk 
     {
-        public static ValueTypeChunk2<T> Empty => new();
+        public static ValueChunk2<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 2;
         private T _value0;
@@ -65,9 +65,9 @@ namespace LS.Game.DataContext
         }
     }
     [Serializable]
-    public struct ValueTypeChunk3<T> : IValueTypeChunk where T : struct
+    public struct ValueChunk3<T> : IValueChunk 
     {
-        public static ValueTypeChunk3<T> Empty => new();
+        public static ValueChunk3<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 3;
         private T _value0;
@@ -97,9 +97,9 @@ namespace LS.Game.DataContext
         }
     }
     [Serializable]
-    public struct ValueTypeChunk4<T> : IValueTypeChunk where T : struct
+    public struct ValueChunk4<T> : IValueChunk 
     {
-        public static ValueTypeChunk4<T> Empty => new();
+        public static ValueChunk4<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 4;
         private T _value0;
@@ -132,9 +132,9 @@ namespace LS.Game.DataContext
         }
     }
     [Serializable]
-    public struct ValueTypeChunk5<T> : IValueTypeChunk where T : struct
+    public struct ValueChunk5<T> : IValueChunk 
     {
-        public static ValueTypeChunk5<T> Empty => new();
+        public static ValueChunk5<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 5;
         private T _value0;
@@ -170,9 +170,9 @@ namespace LS.Game.DataContext
         }
     }
     [Serializable]
-    public struct ValueTypeChunk6<T> : IValueTypeChunk where T : struct
+    public struct ValueChunk6<T> : IValueChunk 
     {
-        public static ValueTypeChunk6<T> Empty => new();
+        public static ValueChunk6<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 6;
         private T _value0;
@@ -211,9 +211,9 @@ namespace LS.Game.DataContext
         }
     }
     [Serializable]
-    public struct ValueTypeChunk7<T> : IValueTypeChunk where T : struct
+    public struct ValueChunk7<T> : IValueChunk 
     {
-        public static ValueTypeChunk7<T> Empty => new();
+        public static ValueChunk7<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 7;
         private T _value0;
@@ -255,9 +255,9 @@ namespace LS.Game.DataContext
         }
     }
     [Serializable]
-    public struct ValueTypeChunk8<T> : IValueTypeChunk where T : struct
+    public struct ValueChunk8<T> : IValueChunk 
     {
-        public static ValueTypeChunk8<T> Empty => new();
+        public static ValueChunk8<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 8;
         private T _value0;

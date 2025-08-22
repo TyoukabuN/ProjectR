@@ -31,6 +31,7 @@ namespace LS.Game.DataContext
                 temp.FloatBlock = other.FloatBlock;
                 temp.IntBlock = other.IntBlock;
                 temp.BoolBlock = other.BoolBlock;
+                temp.StringBlock = other.StringBlock;
                 return temp;
             }
 
@@ -41,27 +42,33 @@ namespace LS.Game.DataContext
 
         public abstract bool IsTemp { get; }
 
-        public ValueTypeChunk8<float> FloatBlock
+        public ValueChunk8<float> FloatBlock
         {
             get => _floatBlock;
             protected set => _floatBlock = value;
         }
 
-        public ValueTypeChunk8<int> IntBlock
+        public ValueChunk8<int> IntBlock
         {
             get => _intBlock;
             protected set => _intBlock = value;
         }
 
-        public ValueTypeChunk4<bool> BoolBlock
+        public ValueChunk4<bool> BoolBlock
         {
             get => _boolBlock;
             protected set => _boolBlock = value;
         }
+        public ValueChunk4<string> StringBlock
+        {
+            get => _stringBlock;
+            protected set => _stringBlock = value;
+        }
 
-        [SerializeField] private ValueTypeChunk8<float> _floatBlock;
-        [SerializeField] private ValueTypeChunk8<int> _intBlock;
-        [SerializeField] private ValueTypeChunk4<bool> _boolBlock;
+        [SerializeField] private ValueChunk8<float> _floatBlock;
+        [SerializeField] private ValueChunk8<int> _intBlock;
+        [SerializeField] private ValueChunk4<bool> _boolBlock;
+        [SerializeField] private ValueChunk4<string> _stringBlock;
 
         public bool CanModify(string logStr = null)
         {
@@ -78,6 +85,7 @@ namespace LS.Game.DataContext
         public float GetFloat(int index) => _floatBlock.Get(index);
         public int GetInt(int index) => _intBlock.Get(index);
         public bool GetBool(int index) => _boolBlock.Get(index);
+        public string GetString(int index) => _stringBlock.Get(index);
 
         public bool SetFloat(int index, float value, bool force = false)
         {
@@ -102,6 +110,15 @@ namespace LS.Game.DataContext
             _boolBlock.Set(index, value);
             return true;
         }
+        
+        public bool SetString(int index, string value, bool force = false)
+        {
+            if (!force && !CanModify(AttemptModifyNonTemplateString))
+                return false;
+            _stringBlock.Set(index, value);
+            return true;
+        }
+
 
         public bool Set<T>(int index, T value, bool force = false)
         {
@@ -111,6 +128,8 @@ namespace LS.Game.DataContext
                 return SetInt(index, intValue, force);
             if (value is bool boolValue)
                 return SetBool(index, boolValue, force);
+            if (value is string stringValue)
+                return SetString(index, stringValue, force);
             return false;
         }
 
@@ -121,15 +140,17 @@ namespace LS.Game.DataContext
             this.FloatBlock = other.FloatBlock;
             this.IntBlock = other.IntBlock;
             this.BoolBlock = other.BoolBlock;
+            this.StringBlock = other.StringBlock;
         }
 
         public void Reset(bool force = false)
         {
             if (!force && !CanModify(AttemptModifyNonTemplateString))
                 return;
-            FloatBlock = ValueTypeChunk8<float>.Empty;
-            IntBlock = ValueTypeChunk8<int>.Empty;
-            BoolBlock = ValueTypeChunk4<bool>.Empty;
+            FloatBlock = ValueChunk8<float>.Empty;
+            IntBlock = ValueChunk8<int>.Empty;
+            BoolBlock = ValueChunk4<bool>.Empty;
+            StringBlock = ValueChunk4<string>.Empty;
         }
 
         void IDisposable.Dispose() => Release();

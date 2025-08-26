@@ -19,6 +19,14 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: ParameterBlockTest
+    path: Assets/Dev/Lab/ParameterBlockTest/ParameterBlockTest.unity
+  - name: AffixTest
+    path: Assets/Dev/Lab/ParameterBlockTest/AffixTest.unity
+  - name: AffixTest
+    path: Assets/Dev/Lab/AffixTest/AffixTest.unity
+  - name: NonGCBlackBoard
+    path: Assets/Dev/Lab/NonCGBlackBoard/Src/NonGCBlackBoard.unity
   - name: FSMTest
     path: Assets/Dev/Lab/FSMTest/FSMTest.unity
   - name: SimpleGameProgressScene
@@ -36,8 +44,6 @@ MonoBehaviour:
   - name: Empty
     path: Assets/Dev/Lab/NonCGBlackBoard/Src/Empty.unity
   - name: NonGCBlackBoard
-    path: Assets/Dev/Lab/NonCGBlackBoard/Src/NonGCBlackBoard.unity
-  - name: NonGCBlackBoard
     path: Assets/Dev/Lab/NonCGBlackBoard/NonGCBlackBoard.unity
   - name: NonCGBlackBoard
     path: Assets/Dev/Lab/NonCGBlackBoard/NonCGBlackBoard.unity
@@ -51,10 +57,4 @@ MonoBehaviour:
     path: Assets/Dev/Lab/Scenes/JobSystemTest.unity
   - name: PolyFewDemo
     path: Assets/PolyFew/demo/PolyFewDemo.unity
-  - name: GameEntry_KccTest
-    path: Assets/Scenes/GameEntry_KccTest.unity
-  - name: StressTest
-    path: Assets/Plugins/KinematicCharacterController/Examples/Scenes/StressTest.unity
-  - name: CharacterPlayground
-    path: Assets/Plugins/KinematicCharacterController/Examples/Scenes/CharacterPlayground.unity
   _notes: []

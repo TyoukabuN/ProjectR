@@ -1,6 +1,7 @@
 using System;
+using UnityEngine;
 
-namespace LS.Game.DataContext
+namespace PJR.Dev.Game.DataContext
 {
     public interface IValueChunk
     {
@@ -15,7 +16,7 @@ namespace LS.Game.DataContext
         public Type ValueType => typeof(T);
         public int ValueCount => 1;
 
-        private T _value0;
+        [SerializeField] private T _value0;
         
         public T Get(int index)
         {
@@ -41,8 +42,8 @@ namespace LS.Game.DataContext
         public static ValueChunk2<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 2;
-        private T _value0;
-        private T _value1;
+        [SerializeField] private T _value0;
+        [SerializeField] private T _value1;
         
         public T Get(int index)
         {
@@ -70,9 +71,9 @@ namespace LS.Game.DataContext
         public static ValueChunk3<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 3;
-        private T _value0;
-        private T _value1;
-        private T _value2;
+        [SerializeField] private T _value0;
+        [SerializeField] private T _value1;
+        [SerializeField] private T _value2;
         
         public T Get(int index)
         {
@@ -102,10 +103,10 @@ namespace LS.Game.DataContext
         public static ValueChunk4<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 4;
-        private T _value0;
-        private T _value1;
-        private T _value2;
-        private T _value3;
+        [SerializeField] private T _value0;
+        [SerializeField] private T _value1;
+        [SerializeField] private T _value2;
+        [SerializeField] private T _value3;
         
         public T Get(int index)
         {
@@ -137,11 +138,11 @@ namespace LS.Game.DataContext
         public static ValueChunk5<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 5;
-        private T _value0;
-        private T _value1;
-        private T _value2;
-        private T _value3;
-        private T _value4;
+        [SerializeField] private T _value0;
+        [SerializeField] private T _value1;
+        [SerializeField] private T _value2;
+        [SerializeField] private T _value3;
+        [SerializeField] private T _value4;
         
         public T Get(int index)
         {
@@ -175,12 +176,12 @@ namespace LS.Game.DataContext
         public static ValueChunk6<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 6;
-        private T _value0;
-        private T _value1;
-        private T _value2;
-        private T _value3;
-        private T _value4;
-        private T _value5;
+        [SerializeField] private T _value0;
+        [SerializeField] private T _value1;
+        [SerializeField] private T _value2;
+        [SerializeField] private T _value3;
+        [SerializeField] private T _value4;
+        [SerializeField] private T _value5;
         
         public T Get(int index)
         {
@@ -216,13 +217,13 @@ namespace LS.Game.DataContext
         public static ValueChunk7<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 7;
-        private T _value0;
-        private T _value1;
-        private T _value2;
-        private T _value3;
-        private T _value4;
-        private T _value5;
-        private T _value6;
+        [SerializeField] private T _value0;
+        [SerializeField] private T _value1;
+        [SerializeField] private T _value2;
+        [SerializeField] private T _value3;
+        [SerializeField] private T _value4;
+        [SerializeField] private T _value5;
+        [SerializeField] private T _value6;
         
         public T Get(int index)
         {
@@ -260,14 +261,14 @@ namespace LS.Game.DataContext
         public static ValueChunk8<T> Empty => new();
         public Type ValueType => typeof(T);
         public int ValueCount => 8;
-        private T _value0;
-        private T _value1;
-        private T _value2;
-        private T _value3;
-        private T _value4;
-        private T _value5;
-        private T _value6;
-        private T _value7;
+        [SerializeField] private T _value0;
+        [SerializeField] private T _value1;
+        [SerializeField] private T _value2;
+        [SerializeField] private T _value3;
+        [SerializeField] private T _value4;
+        [SerializeField] private T _value5;
+        [SerializeField] private T _value6;
+        [SerializeField] private T _value7;
         
         public T Get(int index)
         {

@@ -2,12 +2,11 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace LS.Game.DataContext
+namespace PJR.Dev.Game.DataContext
 {
     /// <summary>
     /// 实现了如果从<see cref="PropertyBlock"/>获取数据
     /// </summary>
-    [Serializable]
     public abstract partial class EffectProperty : IEffectProperty
     {
         public virtual bool IsTemp => PropertyBlock?.IsTemp ?? true;

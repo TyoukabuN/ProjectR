@@ -1,4 +1,4 @@
-namespace LS.Game.DataContext
+namespace PJR.Dev.Game.DataContext
 {
     public interface ITemporary
     {

@@ -178,25 +178,103 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Block
       Entry: 7
-      Data: 0|PropertyBlockTest+TestProp+Persistent, PJR.Lab.Editor
+      Data: 0|TestProp, PJR.Lab.Editor
     - Name: _propertyBlock
       Entry: 7
-      Data: 1|PropertyBlockTest+PropertyBlock+Persistent, PJR.Lab.Editor
+      Data: 1|LS.Game.DataContext.PropertyBlock+Persistent, PJR.Lab.Editor
     - Name: _floatBlock
       Entry: 7
-      Data: PJR.Core.DataContext.ValueTypeChunk8`1[[System.Single, mscorlib]], PJR.Lab.Editor
+      Data: LS.Game.DataContext.ValueChunk8`1[[System.Single, mscorlib]], PJR.Lab.Editor
+    - Name: _value0
+      Entry: 4
+      Data: 889988
+    - Name: _value1
+      Entry: 4
+      Data: 8.89988E+07
+    - Name: _value2
+      Entry: 4
+      Data: 0
+    - Name: _value3
+      Entry: 4
+      Data: 0
+    - Name: _value4
+      Entry: 4
+      Data: 0
+    - Name: _value5
+      Entry: 4
+      Data: 0
+    - Name: _value6
+      Entry: 4
+      Data: 0
+    - Name: _value7
+      Entry: 4
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: _intBlock
       Entry: 7
-      Data: PJR.Core.DataContext.ValueTypeChunk8`1[[System.Int32, mscorlib]], PJR.Lab.Editor
+      Data: LS.Game.DataContext.ValueChunk8`1[[System.Int32, mscorlib]], PJR.Lab.Editor
+    - Name: _value0
+      Entry: 3
+      Data: 0
+    - Name: _value1
+      Entry: 3
+      Data: 0
+    - Name: _value2
+      Entry: 3
+      Data: 0
+    - Name: _value3
+      Entry: 3
+      Data: 0
+    - Name: _value4
+      Entry: 3
+      Data: 0
+    - Name: _value5
+      Entry: 3
+      Data: 0
+    - Name: _value6
+      Entry: 3
+      Data: 0
+    - Name: _value7
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: _boolBlock
       Entry: 7
-      Data: PJR.Core.DataContext.ValueTypeChunk4`1[[System.Boolean, mscorlib]], PJR.Lab.Editor
+      Data: LS.Game.DataContext.ValueChunk4`1[[System.Boolean, mscorlib]], PJR.Lab.Editor
+    - Name: _value0
+      Entry: 5
+      Data: false
+    - Name: _value1
+      Entry: 5
+      Data: false
+    - Name: _value2
+      Entry: 5
+      Data: false
+    - Name: _value3
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _stringBlock
+      Entry: 7
+      Data: LS.Game.DataContext.ValueChunk4`1[[System.String, mscorlib]], PJR.Lab.Editor
+    - Name: _value0
+      Entry: 6
+      Data: 
+    - Name: _value1
+      Entry: 6
+      Data: 
+    - Name: _value2
+      Entry: 6
+      Data: 
+    - Name: _value3
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 

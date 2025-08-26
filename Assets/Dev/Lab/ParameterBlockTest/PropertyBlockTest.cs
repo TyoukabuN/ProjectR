@@ -1,5 +1,5 @@
 using System;
-using LS.Game.DataContext;
+using PJR.Dev.Game.DataContext;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEditor;
@@ -9,9 +9,9 @@ using UnityEngine.Profiling;
 
 public partial class PropertyBlockTest : SerializedMonoBehaviour
 {
-    [NonSerialized, OdinSerialize] public TestProp.Persistent Block;
+    [NonSerialized, OdinSerialize] public TestProp Block;
 
-    public TestProp.Temp temp1;
+    public TestProp temp1;
 
     private bool _runtimeTest = false;
 
@@ -32,13 +32,13 @@ public partial class PropertyBlockTest : SerializedMonoBehaviour
         if (_runtimeTest)
         {
             Profiler.BeginSample("PropertyBlockTest");
-            using (var temp = TestProp.Temp.Get())
+            using (var temp = TestProp.GetTemp())
             {
                 temp.Attack = 100;
                 temp.CD = 2;
                 temp1?.Release();
 
-                temp1 = TestProp.Temp.Get(temp.PropertyBlock);
+                temp1 = TestProp.GetTemp(temp.PropertyBlock);
             }
 
             Profiler.EndSample();
@@ -54,15 +54,15 @@ public partial class PropertyBlockTest : SerializedMonoBehaviour
             return;
         }
 
-        using var temp = TestProp.Temp.Get();
+        using var temp = TestProp.GetTemp();
         temp.Attack = 200;
         temp.CD = 1;
         temp1?.Release();
-        temp1 = TestProp.Temp.Get(temp.PropertyBlock);
+        temp1 = TestProp.GetTemp(temp.PropertyBlock);
     }
 }
 
-public abstract class TestProp : LogicProperty
+public class TestProp : EffectProperty<TestProp>
 {
     [LabelText("攻击力"), ShowInInspector, DisableIf("@!AllowToModify")]
     public float Attack
@@ -76,43 +76,5 @@ public abstract class TestProp : LogicProperty
     {
         get => PropertyBlock?.GetFloat(1) ?? 0f;
         set => Set(1, value);
-    }
-
-    public class Persistent : TestProp
-    {
-        public override bool IsTemp => false;
-        public override PropertyBlock PropertyBlock => _propertyBlock;
-
-        [SerializeField, ShowIf("@IsPropertyBlockNull")]
-        private PropertyBlock.Persistent _propertyBlock = new();
-    }
-
-    public class Temp : TestProp
-    {
-        public override bool IsTemp => true;
-        public override PropertyBlock PropertyBlock => _propertyBlock;
-        [ShowIf("@false")] private PropertyBlock.Temp _propertyBlock;
-
-        public static Temp Get()
-        {
-            var temp = GenericPool<Temp>.Get();
-            temp._propertyBlock = PropertyBlock.Temp.Get();
-            return temp;
-        }
-
-        public static Temp Get(PropertyBlock propertyBlock)
-        {
-            var temp = GenericPool<Temp>.Get();
-            temp._propertyBlock = PropertyBlock.Temp.Get(propertyBlock);
-            return temp;
-        }
-
-        public override void Release()
-        {
-            //todo: release的方式，时机再想想
-            // _propertyBlock?.Release();
-            // _propertyBlock = null;
-            GenericPool<Temp>.Release(this);
-        }
     }
 }

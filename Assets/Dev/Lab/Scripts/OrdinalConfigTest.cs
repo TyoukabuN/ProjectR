@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
-using UnityEngine;
-using PJR.Config;
 using Sirenix.OdinInspector;
-using UnityEditor;
+using UnityEngine;
 
 public class OrdinalConfigTest : MonoBehaviour
 {

@@ -9,10 +9,10 @@ namespace PJR.Config
         public static AvatarConfig Instance => _instance ??= new AvatarConfig();
 
 #if UNITY_EDITOR
+        public override void Editor_OpenMenuEditorWindow()
+            => MenuEditorWindow.OpenWindow();
         public override void Editor_OpenItemCreateWindow(Action<AvatarConfigItemAsset> onFinish, string directory = null)
-        {
-            ItemCreateWindow.OpenWindow();
-        }
+            =>ItemCreateWindow.OpenWindow();
 
         public class ItemCreateWindow : OrdinalConfigItemCreateWindow<AvatarConfig, AvatarConfigAsset, AvatarConfigItemAsset>
         {

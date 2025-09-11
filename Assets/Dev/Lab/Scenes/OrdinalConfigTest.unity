@@ -167,6 +167,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d7e61c3ac863564c8ea85abcf60a850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AvatarConfigId: 1
-  TestConfigA: 0
+  AvatarConfigId: 2
   ClassName: 

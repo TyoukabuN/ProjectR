@@ -106,8 +106,9 @@ namespace PJR.Config
                 else 
                     Editor_DrawCreateConfigBtn();
 
-                Editor_DrawCorrectConfigBtn();
                 Editor_DrawRefreshConfigBtn();
+                Editor_EditScriptBtn();
+                Editor_DrawMoreButton();
 
                 SirenixEditorGUI.EndHorizontalToolbar();
             }
@@ -314,6 +315,15 @@ namespace PJR.Config
                     menuItem.Icon = null;
             }
         }
+        
+        /// <summary>
+        /// 右键点击配置窗口的Item的时候会调用
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <param name="menuItem"></param>
+        protected virtual void OnAddMenuItemRightClick(GenericMenu menu, OdinMenuItem menuItem)
+        {
+        }
 
         protected void OnMenuItemRightClick(OdinMenuItem menuItem)
         {
@@ -325,22 +335,26 @@ namespace PJR.Config
                 FolderMenuItem folderMenuItem = (FolderMenuItem)menuItem.Value;
                 rightClickMenu.AddDisabledItem(new GUIContent("文件夹"));
                 rightClickMenu.AddItem(new GUIContent("Ping"), false, () => { PingAsset(folderMenuItem.Asset); });
-                rightClickMenu.AddItem(new GUIContent("创建配置"), false, () => { Editor_OnCreateConfig(menuItem.Value as FolderMenuItem); });
+                rightClickMenu.AddItem(new GUIContent("创建配置"), false,
+                    () => { Editor_OnCreateConfig(menuItem.Value as FolderMenuItem); });
+                OnAddMenuItemRightClick(rightClickMenu, menuItem);
             }
             else if (menuItem.Value is TItemAsset)
             {
                 var assetItem = (TItemAsset)menuItem.Value;
                 rightClickMenu.AddDisabledItem(new GUIContent("ItemAsset"));
+                rightClickMenu.AddItem(new GUIContent("浮动Properties"), false, () => { EditorUtility.OpenPropertyEditor((Object)menuItem.Value); });
                 rightClickMenu.AddItem(new GUIContent("Ping"), false, () => { PingAsset((Object)menuItem.Value); });
                 rightClickMenu.AddItem(new GUIContent("复制一份"), false, () =>
                 {
-                    var errCode =_config.Editor_CopyItemAsset(assetItem, out var copy);
-                    if(!string.IsNullOrEmpty(errCode))
+                    var errCode = _config.Editor_CopyItemAsset(assetItem, out var copy);
+                    if (!string.IsNullOrEmpty(errCode))
                         Debug.LogError($"[复制失败] {errCode}");
                 });
                 rightClickMenu.AddItem(new GUIContent("删除"), false, () =>
                 {
-                    if (EditorUtility.DisplayDialog("提示", "您确定要删除这个ItemAsset? \n这是一个不可撤销的操作!\n你只能通过版本管理工具还原!", "确定", "取消"))
+                    if (EditorUtility.DisplayDialog("提示", "您确定要删除这个ItemAsset? \n这是一个不可撤销的操作!\n你只能通过版本管理工具还原!", "确定",
+                            "取消"))
                     {
                         if (_config.Editor_ContainItemAsset(assetItem))
                             _config.Editor_RemoveItem(assetItem.ID);
@@ -348,7 +362,9 @@ namespace PJR.Config
                             _config.Editor_RemoveItem(assetItem);
                     }
                 });
+                OnAddMenuItemRightClick(rightClickMenu, menuItem);
             }
+
             rightClickMenu.ShowAsContext();
         }
 
@@ -389,6 +405,48 @@ namespace PJR.Config
             {
                 _config?.Editor_CorrectConfig();
             }
+        }
+        
+        protected void Editor_EditScriptBtn()
+        {
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("编辑脚本")))
+            {
+                var menu = new GenericMenu();
+                menu.AddItem(new GUIContent($"编辑<{typeof(TItemAsset).Name}>"), false,
+                    () => { _config.Editor_OpenItermAssetScript(); });
+                menu.AddItem(new GUIContent($"编辑<{typeof(TConfig).Name}>"), false,
+                    () => { _config.Editor_OpenConfigScript(); });
+                OnAddEditScriptMenu(menu);
+                menu.ShowAsContext();
+            }
+        }
+
+        protected void Editor_DrawMoreButton()
+        {
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("...")))
+            {
+                var menu = new GenericMenu();
+                menu.AddItem(new GUIContent("配置矫错"), false, () => { _config?.Editor_CorrectConfig(); });
+                menu.AddItem(new GUIContent("清除所有Item"), false, () => { _config?.Editor_DeleteAllItemAssets(); });
+                OnAddMoreMenuContext(menu);
+                menu.ShowAsContext();
+            }
+        }
+
+        /// <summary>
+        /// 当点击配置窗口右上角的[编辑脚本]按钮的时候会调用
+        /// </summary>
+        /// <param name="menu"></param>
+        protected virtual void OnAddEditScriptMenu(GenericMenu menu) 
+        {
+        }
+        
+        /// <summary>
+        /// 当点击配置窗口右上角的[...]按钮的时候会调用
+        /// </summary>
+        /// <param name="menu"></param>
+        protected virtual void OnAddMoreMenuContext(GenericMenu menu) 
+        {
         }
 
         protected virtual void Editor_OnCreateConfig() => Editor_OnCreateConfig(null, null);

@@ -197,7 +197,9 @@ namespace PJR.Config
                 return errorCode;
             }
 
-            string assetPath = Path.Combine(directory, $"{ItemFileNamePrefix}_{itemAsset.ID}.asset");
+            string timeStamp = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff"); 
+            string assetPath = Path.Combine(directory, $"{ItemFileNamePrefix}_{timeStamp}.asset");
+            assetPath = AssetDatabase.GenerateUniqueAssetPath(assetPath);
 
             AssetDatabase.CreateAsset(itemAsset, assetPath);
 
@@ -222,13 +224,15 @@ namespace PJR.Config
         /// <param name="id">要复制的配置id</param>
         /// <param name="copy">复制后的配置</param>
         /// <returns>返回错误信息,返回值为空的时候表示成功</returns>
-        public virtual string Editor_CopyItemAsset(int id, out TItemAsset copy)
+        public virtual string Editor_CopyItemAsset(int id, out TItemAsset copy, bool muteAsk = false)
         {
             var itemAsset = GetConfig(id);
-            return Editor_CopyItemAsset(itemAsset, $"{itemAsset.Editor_LabelName}(CopyFrom:[ID:{itemAsset.ID}])", out copy);
+            return Editor_CopyItemAsset(itemAsset, $"{itemAsset.Editor_LabelName}(CopyFrom:[ID:{itemAsset.ID}])",
+                out copy, muteAsk);
         }
 
-        public virtual string Editor_CopyItemAsset(TItemAsset itemAsset, out TItemAsset copy)=> Editor_CopyItemAsset(itemAsset, itemAsset.name, out copy);
+        public virtual string Editor_CopyItemAsset(TItemAsset itemAsset, out TItemAsset copy, bool muteAsk = false) =>
+            Editor_CopyItemAsset(itemAsset, itemAsset.name, out copy, muteAsk);
 
         /// <summary>
         /// 复制一份配置
@@ -236,23 +240,44 @@ namespace PJR.Config
         /// <param name="itemAsset"></param>
         /// <param name="copy">复制后的配置</param>
         /// <returns>返回错误信息,返回值为空的时候表示成功</returns>
-        public virtual string Editor_CopyItemAsset(TItemAsset itemAsset, string name, out TItemAsset copy)
+        public virtual string Editor_CopyItemAsset(TItemAsset itemAsset, string name, out TItemAsset copy,bool muteAsk)
         {
             copy = null;
+            if (!muteAsk && !EditorUtility.DisplayDialog("提示", "您确定要复制一份这个ItemAsset?", "确定", "取消"))
+                return "用户取消";
             if (itemAsset == null)
                 return "目标Asset == null";
             string sourcePath = AssetDatabase.GetAssetPath(itemAsset);
             if (string.IsNullOrEmpty(sourcePath))
                 return $"找不到原{typeof(TItemAsset).Name}的路径";
 
-            int newId = Editor_GetNewID();
-            string destPath = Path.Combine(ItemAssetRoot, $"{ItemFileNamePrefix}_{newId}.asset");
+            string timeStamp = DateTime.Now.ToString("yyyyMMdd_HHmmss_fff"); 
+            string copyName = $"{ItemFileNamePrefix}_{timeStamp}.asset";
+            string sourceDirectory = Path.GetDirectoryName(sourcePath);
+            string copyError = string.Empty;
+            //先尝试放到与源文件同一目录下
+            string destPath = Path.Combine(sourceDirectory, copyName);
+            destPath = AssetDatabase.GenerateUniqueAssetPath(destPath);
+            
             if (!AssetDatabase.CopyAsset(sourcePath, destPath))
-                return "通过AssetDatabase.CopyAsset复制失败";
-
-            copy = (TItemAsset)AssetDatabase.LoadAssetAtPath(destPath,typeof(TItemAsset));
+                copyError = "通过AssetDatabase.CopyAsset复制到源文件目录下失败";
+            else
+                copy = (TItemAsset)AssetDatabase.LoadAssetAtPath(destPath,typeof(TItemAsset));
+            
+            //再尝试复制到配置的ItemAsset的默认目录下
             if (copy == null)
-                return "copy == null";
+            {
+                destPath = Path.Combine(ItemAssetRoot, copyName);
+                destPath = AssetDatabase.GenerateUniqueAssetPath(destPath);
+                //
+                if (!AssetDatabase.CopyAsset(sourcePath, destPath))
+                    copyError = "通过AssetDatabase.CopyAsset复制失败";
+                else
+                    copy = (TItemAsset)AssetDatabase.LoadAssetAtPath(destPath,typeof(TItemAsset));
+            }
+
+            if (copy == null)
+                return copyError;
 
             copy.ID = Editor_GetNewID();
             copy.Name = name;
@@ -355,10 +380,13 @@ namespace PJR.Config
         /// </summary>
         /// <param name="id"></param>
         /// <returns>返回错误信息 ErrorCode</returns>
-        public virtual string Editor_RemoveItem(int id)
+        public virtual string Editor_RemoveItem(int id, bool muteDialog = false)
         {
             if (!CheckValid())
                 return $"{ConfigName}配置初始化失败";
+            if (!muteDialog)
+                if(!EditorUtility.DisplayDialog("Tips", "确定要删除配置?", "确定", "取消"))
+                    return "用户取消";
             var itemAsset = Editor_GetItemAsset(id);
             if (itemAsset == null)
                 return $"没有对应ID:{id}配置";
@@ -487,6 +515,14 @@ namespace PJR.Config
             var configAsset = Editor_Asset;
             if (configAsset == null)
                 throw new Exception("Find not Config asset!");
+            //清理ItemAssets里Null的ItemAsset
+            for (var i = 0; i < configAsset.itemAssets.Count; i++)
+            {
+                var itemAsset = configAsset.itemAssets[i];
+                if (itemAsset == null)
+                    configAsset.itemAssets.RemoveAt(i--);
+            }
+            
             var itemAssets = Editor_GetAllConfigItemAsset_FromItemAssetRoot();
             if (itemAssets == null)
             {
@@ -529,6 +565,60 @@ namespace PJR.Config
 
             EditorApplication.delayCall += Editor_RefreshConfig;
         }
+        
+        public void Editor_DeleteAllItemAssets()
+        {
+            if (!EditorUtility.DisplayDialog("Tips", "确定要清空配置?", "清空", "取消"))
+                return;
+            
+            if (Editor_Asset == null)
+                return;
+            foreach (var itemAsset in Editor_Asset.itemAssets)
+            {
+                if(itemAsset == null)
+                    continue;
+                string assetPath = AssetDatabase.GetAssetPath(itemAsset);
+                if(string.IsNullOrEmpty(assetPath))
+                    continue;
+                AssetDatabase.DeleteAsset(assetPath);
+            }
+            Editor_Asset.itemAssets = new List<TItemAsset>();
+            Editor_MaskAssetDirty(true);
+        }
+
+        public bool Editor_OpenConfigScript() => Editor_OpenScriptOfType(GetType());
+        public bool Editor_OpenConfigAssetScript() => Editor_OpenScriptOfType(typeof(TAsset));
+        public bool Editor_OpenItermAssetScript() => Editor_OpenScriptOfType(typeof(TItemAsset));
+        public static bool Editor_OpenScriptOfType(System.Type type)
+        {
+            var mono = Editor_MonoScriptFromType(type);
+            if (mono != null)
+            {
+                AssetDatabase.OpenAsset(mono);
+                return true;
+            }
+
+            Debug.LogError($"Can't open script of type '{0}', because a script with the same name does not exist.{type.Name}");
+            Debug.LogError("这个正常运作的前提条件是存在与类名相同的脚本, 毕竟本质逻辑是打开同名脚本");
+            return false;
+        }
+        
+        private static MonoScript Editor_MonoScriptFromType(System.Type targetType)
+        {
+            if (targetType == null) return null;
+            var typeName = targetType.Name;
+            if (targetType.IsGenericType)
+            {
+                targetType = targetType.GetGenericTypeDefinition();
+                typeName = typeName.Substring(0, typeName.IndexOf('`'));
+            }
+
+            return AssetDatabase.FindAssets(string.Format("{0} t:MonoScript", typeName))
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<MonoScript>)
+                .FirstOrDefault(m => m != null && m.GetClass() == targetType);
+        }
+
 
         /// <summary>
         /// TItemAsset是不是合法的

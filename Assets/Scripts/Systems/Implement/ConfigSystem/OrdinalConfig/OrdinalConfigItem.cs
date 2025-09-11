@@ -27,12 +27,10 @@ namespace PJR.Config
         {
             return ID.CompareTo(other.ID);
         }
-
-#if UNITY_EDITOR
         public virtual string Editor_LabelName => Name;
         [NonSerialized, HideIf("@true")]
         public bool Editing = false;
         public virtual bool Editable => Editing;
-#endif
+        public virtual bool IsHideDefaultNameField => false;
     }
 }

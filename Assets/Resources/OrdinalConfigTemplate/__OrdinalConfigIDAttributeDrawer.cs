@@ -3,13 +3,14 @@ using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+using EDisplayOption = PJR.Config.OrdinalConfigIDAttribute.EDisplayOption;
 
 namespace PJR.Config
 {
     public class __OrdinalConfigIDAttributeDrawer : OdinAttributeDrawer<__OrdinalConfigIDAttribute, int>
     {
         private bool _enablePropTreeGroup = false;
-
+        
         protected override void DrawPropertyLayout(GUIContent label)
         {
             CallNextDrawer(label);
@@ -32,70 +33,49 @@ namespace PJR.Config
                 GUILayout.Label($"[找不到id对应配置]");
 
 
-            if (GUILayout.Button("更多", GUILayout.Width(48)))
+            if (GUILayout.Button("...", GUILayout.Width(24)))
             {
                 ShowMoreMenu(itemAsset);
             }
 
-            if (GUILayout.Button("新建", GUILayout.Width(48)))
-            {
-                __OrdinalConfig.Instance.Editor_OpenItemCreateWindow((config) =>
-                {
-                    ValueEntry.SmartValue = config.ID;
-                    ValueEntry.ApplyChanges();
-                });
-            }
+            if(Attribute.DisplayOption.HasFlag(EDisplayOption.CreateButton))
+                if (GUILayout.Button("新建", GUILayout.Width(48)))
+                    Create();
+            
+            if(Attribute.DisplayOption.HasFlag(EDisplayOption.CopyButton))
+                if (GUILayout.Button("复制", GUILayout.Width(48)))
+                    Copy(itemAsset);
 
-            if (GUILayout.Button("复制", GUILayout.Width(48)))
-            {
-                if (itemAsset != null)
-                {
-                    var errCode = __OrdinalConfig.Instance.Editor_CopyItemAsset(itemAsset, out var copy);
-                    if (string.IsNullOrEmpty(errCode))
-                    {
-                        ValueEntry.SmartValue = copy.ID;
-                        ValueEntry.ApplyChanges();
-                    }
-                    else
-                    {
-                        EditorUtility.DisplayDialog("Tips", errCode, "OK");
-                    }
-                }
-            }
-
-            if (GUILayout.Button("选择", GUILayout.Width(48)))
-            {
-                __OrdinalConfig.Selector.Show((config) =>
-                {
-                    ValueEntry.SmartValue = config.ID;
-                    ValueEntry.ApplyChanges();
-                });
-            }
+            if(Attribute.DisplayOption.HasFlag(EDisplayOption.SelectButton))
+                if (GUILayout.Button("选择", GUILayout.Width(48)))
+                    Select();
 
             EditorGUILayout.EndHorizontal();
-            if (itemAsset != null)
-            {
-                var key = UniqueDrawerKey.Create(this.Property, this);
-                _enablePropTreeGroup = SirenixEditorGUI.Foldout(_enablePropTreeGroup, "详细");
-                if (_enablePropTreeGroup)
+            
+            if(Attribute.DisplayOption.HasFlag(EDisplayOption.Detail))
+                if (itemAsset != null)
                 {
-                    var propertyTree = __OrdinalConfig.Instance.Editor_GetPropertyTreeByID(itemAsset.ID);
-                    if (propertyTree != null)
+                    var key = UniqueDrawerKey.Create(this.Property, this);
+                    _enablePropTreeGroup = SirenixEditorGUI.Foldout(_enablePropTreeGroup, "详细");
+                    if (_enablePropTreeGroup)
                     {
-                        propertyTree.BeginDraw(true);
-                        propertyTree.DrawProperties();
-                        if (propertyTree.ApplyChanges())
+                        var propertyTree = __OrdinalConfig.Instance.Editor_GetPropertyTreeByID(itemAsset.ID);
+                        if (propertyTree != null)
                         {
-                            propertyTree.DelayAction(() =>
+                            propertyTree.BeginDraw(true);
+                            propertyTree.DrawProperties();
+                            if (propertyTree.ApplyChanges())
                             {
-                                __OrdinalConfig.Instance.Editor_MaskItemAssetDirty(itemAsset.ID, false);
-                            });
-                        }
+                                propertyTree.DelayAction(() =>
+                                {
+                                    __OrdinalConfig.Instance.Editor_MaskItemAssetDirty(itemAsset.ID, false);
+                                });
+                            }
 
-                        propertyTree.EndDraw();
+                            propertyTree.EndDraw();
+                        }
                     }
                 }
-            }
 
             SirenixEditorGUI.EndBox();
         }
@@ -104,9 +84,47 @@ namespace PJR.Config
         {
             __OrdinalConfig.Instance.Editor_ShowMoreMenu(menu =>
             {
+                if (!Attribute.DisplayOption.HasFlag(EDisplayOption.SelectButton))
+                    menu.AddItem(new GUIContent("选择"), false, Select);
+                if (!Attribute.DisplayOption.HasFlag(EDisplayOption.CreateButton))
+                    menu.AddItem(new GUIContent("新建"), false, Create);
+                if (item != null && !Attribute.DisplayOption.HasFlag(EDisplayOption.CopyButton))
+                    menu.AddItem(new GUIContent("复制"), false, () => { Copy(item); });
                 if (item != null)
-                    menu.AddItem(new GUIContent("删除"), false,
-                        () => { __OrdinalConfig.Instance.Editor_RemoveItem(item.ID); });
+                    menu.AddItem(new GUIContent("删除"), false, () => { __OrdinalConfig.Instance.Editor_RemoveItem(item.ID); });
+            });
+        }
+
+        protected void Create()
+        {
+            __OrdinalConfig.Instance.Editor_OpenItemCreateWindow((config) =>
+            {
+                ValueEntry.SmartValue = config.ID;
+                ValueEntry.ApplyChanges();
+            });
+        }
+        protected void Copy(__OrdinalConfigItemAsset itemAsset)
+        {
+            if (itemAsset != null)
+            {
+                var errCode = __OrdinalConfig.Instance.Editor_CopyItemAsset(itemAsset, out var copy);
+                if (string.IsNullOrEmpty(errCode))
+                {
+                    ValueEntry.SmartValue = copy.ID;
+                    ValueEntry.ApplyChanges();
+                }
+                else
+                {
+                    EditorUtility.DisplayDialog("Tips", errCode, "OK");
+                }
+            }
+        }
+        protected void Select()
+        {
+            __OrdinalConfig.Selector.Show((config) =>
+            {
+                ValueEntry.SmartValue = config.ID;
+                ValueEntry.ApplyChanges();
             });
         }
     }

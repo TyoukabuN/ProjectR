@@ -1,41 +1,101 @@
 #if UNITY_EDITOR
-using PJR.Config;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+using EDisplayOption = PJR.Config.OrdinalConfigIDAttribute.EDisplayOption;
 
-public class AvatarConfigIDAttributeDrawer : OdinAttributeDrawer<AvatarConfigIDAttribute, int>
+namespace PJR.Config
 {
-    private bool _enablePropTreeGroup = false;
-    protected override void DrawPropertyLayout(GUIContent label)
+    public class AvatarConfigIDAttributeDrawer : OdinAttributeDrawer<AvatarConfigIDAttribute, int>
     {
-        CallNextDrawer(label);
-        int id = ValueEntry.SmartValue;
-        SirenixEditorGUI.BeginBox();
-        var itemAsset = AvatarConfig.Instance.GetConfig(id);
-        EditorGUILayout.BeginHorizontal();
-        if (itemAsset != null)
+        private bool _enablePropTreeGroup = false;
+        
+        protected override void DrawPropertyLayout(GUIContent label)
         {
-            if (GUILayout.Button(itemAsset.Editor_LabelName))
+            CallNextDrawer(label);
+            int id = ValueEntry.SmartValue;
+            SirenixEditorGUI.BeginBox();
+            var itemAsset = AvatarConfig.Instance.GetConfig(id);
+            EditorGUILayout.BeginHorizontal();
+            if (itemAsset != null)
             {
-                if (AvatarConfig.Instance.Editor_GetItemAsset(id) is { } a)
+                if (GUILayout.Button(itemAsset.Editor_LabelName))
                 {
-                    if (Event.current.control) OdinEditorWindow.InspectObject(a);
-                    else EditorGUIUtility.PingObject(a);
+                    if (AvatarConfig.Instance.Editor_GetItemAsset(id) is { } a)
+                    {
+                        if (Event.current.control) OdinEditorWindow.InspectObject(a);
+                        else EditorGUIUtility.PingObject(a);
+                    }
                 }
             }
+            else
+                GUILayout.Label($"[找不到id对应配置]");
+
+
+            if (GUILayout.Button("...", GUILayout.Width(24)))
+            {
+                ShowMoreMenu(itemAsset);
+            }
+
+            if(Attribute.DisplayOption.HasFlag(EDisplayOption.CreateButton))
+                if (GUILayout.Button("新建", GUILayout.Width(48)))
+                    Create();
+            
+            if(Attribute.DisplayOption.HasFlag(EDisplayOption.CopyButton))
+                if (GUILayout.Button("复制", GUILayout.Width(48)))
+                    Copy(itemAsset);
+
+            if(Attribute.DisplayOption.HasFlag(EDisplayOption.SelectButton))
+                if (GUILayout.Button("选择", GUILayout.Width(48)))
+                    Select();
+
+            EditorGUILayout.EndHorizontal();
+            
+            if(Attribute.DisplayOption.HasFlag(EDisplayOption.Detail))
+                if (itemAsset != null)
+                {
+                    var key = UniqueDrawerKey.Create(this.Property, this);
+                    _enablePropTreeGroup = SirenixEditorGUI.Foldout(_enablePropTreeGroup, "详细");
+                    if (_enablePropTreeGroup)
+                    {
+                        var propertyTree = AvatarConfig.Instance.Editor_GetPropertyTreeByID(itemAsset.ID);
+                        if (propertyTree != null)
+                        {
+                            propertyTree.BeginDraw(true);
+                            propertyTree.DrawProperties();
+                            if (propertyTree.ApplyChanges())
+                            {
+                                propertyTree.DelayAction(() =>
+                                {
+                                    AvatarConfig.Instance.Editor_MaskItemAssetDirty(itemAsset.ID, false);
+                                });
+                            }
+
+                            propertyTree.EndDraw();
+                        }
+                    }
+                }
+
+            SirenixEditorGUI.EndBox();
         }
-        else
-            GUILayout.Label($"[找不到id对应配置]");
 
-
-        if (GUILayout.Button("更多", GUILayout.Width(48)))
+        public void ShowMoreMenu(AvatarConfigItemAsset item)
         {
-            ShowMoreMenu(itemAsset);
+            AvatarConfig.Instance.Editor_ShowMoreMenu(menu =>
+            {
+                if (!Attribute.DisplayOption.HasFlag(EDisplayOption.SelectButton))
+                    menu.AddItem(new GUIContent("选择"), false, Select);
+                if (!Attribute.DisplayOption.HasFlag(EDisplayOption.CreateButton))
+                    menu.AddItem(new GUIContent("新建"), false, Create);
+                if (item != null && !Attribute.DisplayOption.HasFlag(EDisplayOption.CopyButton))
+                    menu.AddItem(new GUIContent("复制"), false, () => { Copy(item); });
+                if (item != null)
+                    menu.AddItem(new GUIContent("删除"), false, () => { AvatarConfig.Instance.Editor_RemoveItem(item.ID); });
+            });
         }
 
-        if (GUILayout.Button("新建", GUILayout.Width(48)))
+        protected void Create()
         {
             AvatarConfig.Instance.Editor_OpenItemCreateWindow((config) =>
             {
@@ -43,8 +103,7 @@ public class AvatarConfigIDAttributeDrawer : OdinAttributeDrawer<AvatarConfigIDA
                 ValueEntry.ApplyChanges();
             });
         }
-
-        if (GUILayout.Button("复制", GUILayout.Width(48)))
+        protected void Copy(AvatarConfigItemAsset itemAsset)
         {
             if (itemAsset != null)
             {
@@ -60,8 +119,7 @@ public class AvatarConfigIDAttributeDrawer : OdinAttributeDrawer<AvatarConfigIDA
                 }
             }
         }
-
-        if (GUILayout.Button("选择", GUILayout.Width(48)))
+        protected void Select()
         {
             AvatarConfig.Selector.Show((config) =>
             {
@@ -69,42 +127,6 @@ public class AvatarConfigIDAttributeDrawer : OdinAttributeDrawer<AvatarConfigIDA
                 ValueEntry.ApplyChanges();
             });
         }
-
-        EditorGUILayout.EndHorizontal();
-        if (itemAsset != null)
-        {
-            var key = UniqueDrawerKey.Create(this.Property, this);
-            _enablePropTreeGroup = SirenixEditorGUI.Foldout(_enablePropTreeGroup, "详细");
-            if (_enablePropTreeGroup)
-            {
-                var propertyTree = AvatarConfig.Instance.Editor_GetPropertyTreeByID(itemAsset.ID);
-                if (propertyTree != null)
-                {
-                    propertyTree.BeginDraw(true);
-                    propertyTree.DrawProperties();
-                    if (propertyTree.ApplyChanges())
-                    {
-                        propertyTree.DelayAction(() =>
-                        {
-                            AvatarConfig.Instance.Editor_MaskItemAssetDirty(itemAsset.ID, false);
-                        });
-                    }
-
-                    propertyTree.EndDraw();
-                }
-            }
-        }
-
-        SirenixEditorGUI.EndBox();
-    }
-
-    public void ShowMoreMenu(AvatarConfigItemAsset item)
-    {
-        AvatarConfig.Instance.Editor_ShowMoreMenu(menu =>
-        {
-            if (item != null)
-                menu.AddItem(new GUIContent("删除"), false, () => { AvatarConfig.Instance.Editor_RemoveItem(item.ID); });
-        });
     }
 }
 #endif

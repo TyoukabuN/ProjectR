@@ -12,17 +12,15 @@ namespace PJR.Config
         public override int ID { get => item?.ID ?? -1; set => item.ID = value; }
         public override string Name { get => item?.Name; set => item.Name = value; }
         public override bool Valid => item?.Valid ?? false;
-#if UNITY_EDITOR
         public override string Editor_LabelName => item?.Name;
         public override bool Editable => item?.Editable ?? false;
-#endif
     }
 
     public abstract class OrdinalConfigItemAssetTemplate : OrdinalConfigItemAsset
     {
         [SerializeField, DisableIf("@true")]
         protected int _id;
-        [SerializeField]
+        [SerializeField, HideIf("@IsHideDefaultNameField")]
         protected string _name; 
         public override int ID { get => _id; set => _id = value; }
         public override string Name { get => _name; set => _name = value; }
@@ -38,10 +36,9 @@ namespace PJR.Config
         {
             return ID.CompareTo(other.ID);
         }
-#if UNITY_EDITOR
         public virtual string Editor_LabelName => Name;
         public virtual bool Editable => false;
-#endif
+        public virtual bool IsHideDefaultNameField => false;
     }
 
     public interface IOrdinalConfigItem: IComparable<IOrdinalConfigItem>
@@ -49,10 +46,11 @@ namespace PJR.Config
         public int ID { get; set; }
         public string Name { get; set; }
         public bool Valid { get; }
-
-#if UNITY_EDITOR
         public string Editor_LabelName { get; }
+        /// <summary>
+        /// 可以用于强制配置id自增
+        /// </summary>
         public bool Editable { get; }
-#endif
+        public bool IsHideDefaultNameField { get; }
     }
 }

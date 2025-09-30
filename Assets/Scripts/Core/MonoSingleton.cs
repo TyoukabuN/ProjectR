@@ -7,7 +7,7 @@ namespace PJR
     {
         protected static T _instance = null;
         public static T inst => instance;
-
+        public static T Instance => instance;
         public static T instance
         {
             get

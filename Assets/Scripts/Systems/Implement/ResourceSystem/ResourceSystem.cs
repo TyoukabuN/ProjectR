@@ -82,7 +82,7 @@ namespace PJR.Systems
             LoadResDesc();
             yield return InitializePackage();
             yield return UpdatePackageAsync(PackageName);
-        }
+        }                       
 
         public void InitializeSync(bool force = false)
         {

@@ -54,7 +54,7 @@ namespace PJR.Systems
         }
         public static Object EditotLoadAssetByGUID(string assetGUID, Type type)
         {
-            GetGUIDInfo(assetGUID, out assetGUID, out string subAssetName);
+            GetGuidInfo(assetGUID, out assetGUID, out string subAssetName);
             var assetInfo = _editorAssetMgr.ConvertAssetGUIDToAssetInfo(assetGUID, type);
             return AssetDatabase.LoadAssetAtPath(assetInfo.AssetPath, type);
         }

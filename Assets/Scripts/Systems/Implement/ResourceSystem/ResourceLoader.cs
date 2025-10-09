@@ -32,12 +32,11 @@ namespace PJR.Systems
             public bool isDone => State == LoaderState.Done;
             public bool isReleased => State == LoaderState.Released;
 
-            public ResourceLoader(string assetFullName, Type assetType)
+            public ResourceLoader(string assetName, Type assetType)
             {
-                this.AssetFullName = assetFullName;
-                this.AssetType = assetType;
-                //
-                AssetName = Path.GetFileName(assetFullName);
+                AssetFullName = assetName;
+                AssetName = Path.GetFileName(assetName);
+                AssetType = assetType;
             }
 
             public virtual Object GetRawAsset()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using YooAsset;
 using Object = UnityEngine.Object;
 
@@ -22,16 +23,23 @@ namespace PJR.Systems
         /// <param name="assetGUID"></param>
         /// <param name="guid"></param>
         /// <param name="subAssetName"></param>
-        public static void GetGUIDInfo(string assetGUID, out string guid, out string subAssetName)
+        public static bool GetGuidInfo(string assetGuid, out string guid, out string subAssetName)
         {
-            guid = assetGUID;
+            guid = assetGuid;
             subAssetName = null;
-            Match match = new Regex(GuidPattern).Match(assetGUID);
-            if (match.Success)
-            {
-                guid = match.Groups["guid"].Value;
-                subAssetName = match.Groups["subAsset"].Value;
-            }
+            Match match = new Regex(GuidPattern).Match(assetGuid);
+            if (!match.Success)
+                return false;
+            guid = match.Groups["guid"].Value;
+            subAssetName = match.Groups["subAsset"].Value;
+            return true;
+        }
+        public static void GetGuidInfo(string assetGuid, out string guid)
+            => GetGuidInfo(assetGuid, out guid, out _);
+        public static string GetPureGuid(string assetGUID)
+        {
+            GetGuidInfo(assetGUID, out var guid, out _);
+            return guid;
         }
 
         /// <summary>
@@ -62,14 +70,14 @@ namespace PJR.Systems
         {
             if (!IsValid())
                 return null;
-            GetGUIDInfo(assetGUID, out assetGUID, out var subAssetName);
+            GetGuidInfo(assetGUID, out assetGUID, out var subAssetName);
             return YooAssets.GetAssetInfoByGUID(assetGUID);
         }
         public static AssetInfo GetAssetInfoByGUID(string assetGUID, Type type)
         {
             if (!IsValid())
                 return null;
-            GetGUIDInfo(assetGUID, out assetGUID, out var subAssetName);
+            GetGuidInfo(assetGUID, out assetGUID, out var subAssetName);
             return YooAssets.GetAssetInfoByGUID(assetGUID, type);
         }
 
@@ -122,9 +130,7 @@ namespace PJR.Systems
             string assetName = Path.GetFileName(assetFullName);
 
             if (!instance.assetFullName2Loader.TryGetValue(assetFullName, out var loader))
-            {
                 instance.assetFullName2Loader.TryGetValue(assetFullName, out loader);
-            }
 
             if (loader == null)
             {
@@ -145,7 +151,7 @@ namespace PJR.Systems
                     else
 #endif
                     {
-                        loader = new YooAssetHandleWrapper(assetFullName, assetType);
+                        loader = YooAssetHandleWrapper.LoadAsset(assetFullName, assetType);
                     }
                 }
                 instance.assetFullName2Loader[assetFullName] = loader;
@@ -175,12 +181,44 @@ namespace PJR.Systems
         /// <param name="assetName"></param>
         /// <param name="loader"></param>
         /// <returns>loader != null并且loader.isDone返回true</returns>
-        public static bool TryGetAssetByFullName(string assetNameFullName, out ResourceLoader loader)
+        public static bool TryGetAssetByFullName(string assetNameWithExtension, out ResourceLoader loader)
         {
-            if (instance.assetName2Loader.TryGetValue(assetNameFullName, out loader) && loader.isDone)
+            if (instance.assetName2Loader.TryGetValue(assetNameWithExtension, out loader) && loader.isDone)
                 return true;
             return false;
         }
+        
+        
+        /// <summary>
+        /// 根据AssetReference异步加载资源子对象
+        /// </summary>
+        /// <param name="assetReference">只用到里面的assetReference.AssetGUID</param>
+        /// <returns></returns>
+        public static SubAssetsHandle LoadSubAssetsByGuid(object obj, string assetGuid, Type type, out string subAssetName)
+        {
+            subAssetName = null;
+            if (!IsValid())
+                return null;
+            if (string.IsNullOrEmpty(assetGuid))
+                return null;
+
+            GetGuidInfo(assetGuid, out assetGuid, out subAssetName);
+            AssetInfo assetInfo = YooAssets.GetAssetInfoByGUID(assetGuid, type);
+            
+            // if (EditorMode)
+            //     return LoadSubAssetWaitForComplete(assetInfo);
+
+            var handle = YooAssets.LoadSubAssetsAsync(assetInfo);
+            //CacheHandle(obj, handle, assetGuid);
+            return handle;
+        }
+        public static SubAssetsHandle LoadSubAssetsByGuid(object obj, string assetGuid, Type type)
+            => LoadSubAssetsByGuid(obj, assetGuid, type, out _);
+        public static SubAssetsHandle LoadSubAssets(object obj, AssetReference assetReference, Type type, out string subAssetName)
+            => LoadSubAssetsByGuid(obj, assetReference.AssetGUID, type, out subAssetName);
+        public static SubAssetsHandle LoadSubAssets(object obj, AssetReference assetReference, Type type)
+            => LoadSubAssets(obj, assetReference, type, out _);
+
         #endregion
 
     }

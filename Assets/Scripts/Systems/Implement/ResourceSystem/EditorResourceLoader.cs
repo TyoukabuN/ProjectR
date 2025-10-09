@@ -10,7 +10,7 @@ namespace PJR.Systems
     {
         public class EditorResourceLoader : ResourceLoader
         {
-            public EditorResourceLoader(string assetFullName, Type assetType) : base(assetFullName, assetType)
+            public EditorResourceLoader(string assetName, Type assetType) : base(assetName, assetType)
             {
                 IsEditor = true;
             }
@@ -31,7 +31,7 @@ namespace PJR.Systems
 
         public class EditorResourceLoader<T> : ResourceLoader where T : Type
         {
-            public EditorResourceLoader(T assetType, string assetFullName) : base(assetFullName, assetType)
+            public EditorResourceLoader(T assetType, string assetName) : base(assetName, assetType)
             {
                 IsEditor = true;
             }

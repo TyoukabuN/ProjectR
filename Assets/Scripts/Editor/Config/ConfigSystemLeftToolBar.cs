@@ -6,6 +6,7 @@ using InfinityCode.UltimateEditorEnhancer;
 using PJR.Config;
 using Sirenix.Utilities;
 using UnityEditor;
+using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 namespace PJR.Editor
@@ -20,6 +21,8 @@ namespace PJR.Editor
         {
             ToolbarManager.AddLeftToolbar("ConfigMenu", OnGUI);
         }
+        
+        private static readonly string _tooltip = "左键点击:显示完整菜单 ,快捷键 Alt+Q";
 
         private static void DrawIcon()
         {
@@ -49,6 +52,14 @@ namespace PJR.Editor
         private static void OnGUI()
         {
             DrawIcon();
+        }
+        
+        public const string ShortcutId = "ConfigSystem/ShowContextMenu";
+        
+        [Shortcut(ShortcutId, KeyCode.Q, ShortcutModifiers.Alt)]
+        public static void ShowContextMenu_ShortCut(ShortcutArguments args)
+        {
+            ShowContextMenu();
         }
 
         private static void ShowContextMenu()
@@ -88,7 +99,9 @@ namespace PJR.Editor
 
         public interface IConfigMenuItemRequire : IComparable<IConfigMenuItemRequire>
         {
+            public string MenuName { get; }
             public void Add2GenericMenu(GenericMenu menu);
+            public void Add2GenericMenu(GenericMenu menu, string menuName);
             public int Order { get; }
         }
 
@@ -105,10 +118,8 @@ namespace PJR.Editor
                 _methodInfo = methodInfo;
                 _requireAttribute = requireAttribute;
             }
-            public void Add2GenericMenu(GenericMenu menu)
-            {
-                menu.AddItem(FinalMenuName, false, InvoleMethod);
-            }
+            public void Add2GenericMenu(GenericMenu menu) => menu.AddItem(MenuName, false, InvoleMethod);
+            public void Add2GenericMenu(GenericMenu menu, string menuName) => menu.AddItem(menuName, false, InvoleMethod);
             public void InvoleMethod()
             {
                 _methodInfo?.Invoke(null, null);

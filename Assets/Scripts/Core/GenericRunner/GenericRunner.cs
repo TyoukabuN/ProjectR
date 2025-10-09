@@ -22,7 +22,7 @@ namespace PJR.Core
         private enum EState
         {
             /// <summary>
-            /// 刚Get出来
+            /// 刚Get出来时被赋予
             /// </summary>
             None,
             /// <summary>

@@ -37,7 +37,7 @@ namespace PJR.Config
             return ID.CompareTo(other.ID);
         }
         public virtual string Editor_LabelName => Name;
-        public virtual bool Editable => false;
+        public virtual bool Editable => true;
         public virtual bool IsHideDefaultNameField => false;
     }
 

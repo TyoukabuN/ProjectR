@@ -18,8 +18,6 @@ namespace PJR.Config
         where TItemAsset : OrdinalConfigItemAsset<TItem>
         where TItem : OrdinalConfigItem
     {
-
-       
     }
 
     public abstract class OrdinalConfigMenuEditorWindow<TConfig, TAsset, TItemAsset> : OdinMenuEditorWindow
@@ -91,7 +89,7 @@ namespace PJR.Config
                 GUILayout.FlexibleSpace();
 
                 Editor_OnDrawToolbarButton();
-
+                Editor_DrawOpenDocumentBtn();
                 //创建配置按钮
                 if (_hierarchyType == (int)HierarchyType.PathBase)
                 {
@@ -384,6 +382,16 @@ namespace PJR.Config
 
         protected virtual void Editor_OnDrawToolbarButton()
         {
+        }
+        protected void Editor_DrawOpenDocumentBtn()
+        {
+            if (_config == null)
+                return;
+            string docUrl = _config.DocUrl;
+            if (string.IsNullOrEmpty(docUrl))
+                return;
+            if (SirenixEditorGUI.ToolbarButton(new GUIContent("文档")))
+                _config.Editor_Menu_Doc();
         }
         protected virtual void Editor_DrawCreateConfigBtn()
         {

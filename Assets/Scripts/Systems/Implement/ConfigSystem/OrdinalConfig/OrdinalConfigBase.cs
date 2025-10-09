@@ -432,15 +432,15 @@ namespace PJR.Config
             }
         }
 
-        protected virtual string docUrl => null;
+        public virtual string DocUrl => null;
         public virtual void Editor_Menu_Doc()
         {
-            if (string.IsNullOrEmpty(docUrl))
+            if (string.IsNullOrEmpty(DocUrl))
             {
-                Debug.LogError($"docUrl为空,你可能需要重写下{this.GetType().Name}.{nameof(docUrl)}");
+                Debug.LogError($"docUrl为空,你可能需要重写下{this.GetType().Name}.{nameof(DocUrl)}");
                 return;
             }
-            Application.OpenURL(docUrl);
+            Application.OpenURL(DocUrl);
         }
 
         public virtual void Editor_OpenMenuEditorWindow()

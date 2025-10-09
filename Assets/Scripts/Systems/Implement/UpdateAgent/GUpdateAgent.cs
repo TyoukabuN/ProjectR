@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using PJR;
 using UnityEngine;
 
-namespace Systems
+namespace PJR.Systems
 {
     public class GUpdateAgent : MonoSingleton<GUpdateAgent>
     {

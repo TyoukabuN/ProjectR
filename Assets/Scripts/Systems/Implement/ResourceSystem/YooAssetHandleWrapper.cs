@@ -14,15 +14,15 @@ namespace PJR.Systems
             private SubAssetsHandle subAssetsHandle = null;
 
             private List<AssetHandle> assetHandles = new List<AssetHandle>();
-            private YooAssetHandleWrapper(string assetName, Type assetType) : base(assetName, assetType)
+            private YooAssetHandleWrapper(string assetPath, Type assetType) : base(assetPath, assetType)
             {
             }
 
-            public static YooAssetHandleWrapper LoadAsset(string assetName, Type assetType)
+            public static YooAssetHandleWrapper LoadAsset(string assetPath, Type assetType)
             {
-                assetName = Path.GetFileName(assetName);
-                var handle = new YooAssetHandleWrapper(assetName, assetType);
-                handle.assetHandle = instance.Package.LoadAssetAsync(Path.GetFileName(assetName), assetType);
+                AssetInfo assetInfo = YooAssets.GetAssetInfo(assetPath);
+                var handle = new YooAssetHandleWrapper(assetInfo.AssetPath, assetType);
+                handle.assetHandle = instance.Package.LoadAssetAsync(Path.GetFileName(assetPath), assetType);
                 return handle;
             }
             public static YooAssetHandleWrapper LoadAssetByGuid(string assetGuid, Type assetType)
@@ -49,7 +49,6 @@ namespace PJR.Systems
                 handle.subAssetsHandle = instance.Package.LoadSubAssetsAsync(assetInfo);
                 return handle;
             }
-            
 
             public override void Update()
             {
@@ -90,7 +89,7 @@ namespace PJR.Systems
         }
         public class YooAssetHandleWrapper<T> : ResourceLoader where T : Type
         {
-            public YooAssetHandleWrapper(T assetType, string assetName) : base(assetName, assetType)
+            public YooAssetHandleWrapper(T assetType, string assetPath) : base(assetPath, assetType)
             {
             }
         }

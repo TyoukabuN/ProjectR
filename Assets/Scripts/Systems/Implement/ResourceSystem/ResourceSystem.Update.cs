@@ -96,7 +96,7 @@ namespace PJR.Systems
                 return;
             if(!ignoreAllLoaders) 
                 allLoaders.Remove(loader);
-            assetFullName2Loader.Remove(loader.AssetFullName);
+            assetFullName2Loader.Remove(loader.AssetPath);
             assetName2Loader.Remove(loader.AssetName);
             updatingLoaders.Remove(loader);
             needUpdatingLoaders.Remove(loader);

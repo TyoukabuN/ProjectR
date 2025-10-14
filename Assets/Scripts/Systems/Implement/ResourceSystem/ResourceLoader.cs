@@ -2,17 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using PJR.Core;
 using Object = UnityEngine.Object;
 
 namespace PJR.Systems
 {
     public partial class ResourceSystem
     {
-        public class ResourceLoader : AsyncLoader
+        public abstract class ResourceLoader<T> : ResourceLoader where T : ResourceLoader
+        {
+            protected ResourceLoader(string assetPath, Type assetType) : base(assetPath, assetType)
+            {
+            }
+        }
+
+        public abstract class ResourceLoader : AsyncLoader
         {
             public bool IsEditor { get; protected set; } = false;
             public string AssetName { get; protected set; }
-            public string AssetFullName { get; protected set; }
+            public string AssetPath { get; protected set; }
             public Object AssetObject { get; protected set; }
             public Type AssetType { get; protected set; }
 
@@ -32,13 +40,12 @@ namespace PJR.Systems
             public bool isDone => State == LoaderState.Done;
             public bool isReleased => State == LoaderState.Released;
 
-            public ResourceLoader(string assetName, Type assetType)
+            public ResourceLoader(string assetPath, Type assetType)
             {
-                AssetFullName = assetName;
-                AssetName = Path.GetFileName(assetName);
+                AssetPath = assetPath;
+                AssetName = Path.GetFileName(assetPath);
                 AssetType = assetType;
             }
-
             public virtual Object GetRawAsset()
             {
                 //TODO:加个实例化，加引用计数
@@ -78,7 +85,7 @@ namespace PJR.Systems
                     return false;
                 return true;
             }
-
+     
             public override void Release()
             {
                 this.State = LoaderState.Released;

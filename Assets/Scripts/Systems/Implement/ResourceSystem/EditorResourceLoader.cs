@@ -10,7 +10,7 @@ namespace PJR.Systems
     {
         public class EditorResourceLoader : ResourceLoader
         {
-            public EditorResourceLoader(string assetName, Type assetType) : base(assetName, assetType)
+            public EditorResourceLoader(string assetPath, Type assetType) : base(assetPath, assetType)
             {
                 IsEditor = true;
             }
@@ -18,11 +18,11 @@ namespace PJR.Systems
             {
                 if (isDone)
                     return;
-                string assetPath = EditorAssetMgr.ConvertLocationToAssetPath(AssetFullName);
+                string assetPath = EditorAssetMgr.ConvertLocationToAssetPath(AssetPath);
                 AssetObject = AssetDatabase.LoadAssetAtPath(assetPath, AssetType);
                 if (AssetObject == null)
                 {
-                    error = $"[EditorResourceLoader] Find not asset \"{AssetName}\": \n [type]: {AssetType.FullName} \n [fullName]:{AssetFullName} ";
+                    error = $"[EditorResourceLoader] Find not asset \"{AssetName}\": \n [type]: {AssetType.FullName} \n [fullName]:{AssetPath} ";
                     LogSystem.LogError(error);
                 }
                 State = LoaderState.Done;
@@ -31,7 +31,7 @@ namespace PJR.Systems
 
         public class EditorResourceLoader<T> : ResourceLoader where T : Type
         {
-            public EditorResourceLoader(T assetType, string assetName) : base(assetName, assetType)
+            public EditorResourceLoader(T assetType, string assetPath) : base(assetPath, assetType)
             {
                 IsEditor = true;
             }

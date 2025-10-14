@@ -19,6 +19,8 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: ResourceTest
+    path: Assets/Dev/Lab/ResourceTest/ResourceTest.unity
   - name: ParameterBlockTest
     path: Assets/Dev/Lab/ParameterBlockTest/ParameterBlockTest.unity
   - name: AffixTest
@@ -55,6 +57,4 @@ MonoBehaviour:
     path: Assets/Dev/Lab/Scenes/CShaderTest.unity
   - name: JobSystemTest
     path: Assets/Dev/Lab/Scenes/JobSystemTest.unity
-  - name: PolyFewDemo
-    path: Assets/PolyFew/demo/PolyFewDemo.unity
   _notes: []

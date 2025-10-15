@@ -23,9 +23,9 @@ namespace PJR.Timeline
         string GetClipName();
         string GetClipInfo();
         public ClipRunner GetRunner();
-        public ClipRunner GetPreviewRunner();
         public Color GetClipColor();
 #if UNITY_EDITOR
+        public ClipRunner GetPreviewRunner();
         public ClipRunner Editor_GetPreviewRunner();
         public void GetContextMenu(GenericMenu menu){}
 #endif
@@ -147,10 +147,10 @@ namespace PJR.Timeline
             return false;
         }
         public abstract ClipRunner GetRunner();
-        public virtual ClipRunner GetPreviewRunner() => GetRunner();
         public virtual Color GetClipColor() => Color.green;
 
 #if UNITY_EDITOR
+        public virtual ClipRunner GetPreviewRunner() => GetRunner();
         public virtual void GetContextMenu(GenericMenu menu){}
         public virtual ClipRunner Editor_GetPreviewRunner() => null;
 #endif

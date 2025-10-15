@@ -19,9 +19,9 @@ namespace PJR.Timeline
             return $"[播放动画] {animationClip?.name ?? string.Empty}";
         }
         public override ClipRunner GetRunner()=> Runner.Get(this);
-        public override ClipRunner GetPreviewRunner()=> PreviewRunner.Get(this);
 
 #if UNITY_EDITOR
+        public override ClipRunner GetPreviewRunner()=> PreviewRunner.Get(this);
         public override void GetContextMenu(GenericMenu menu)
         {
             menu.AddDisabledItem(new GUIContent("播放动画"));

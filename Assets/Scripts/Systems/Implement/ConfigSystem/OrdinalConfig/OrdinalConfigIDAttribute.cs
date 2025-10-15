@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System;
 using System.Diagnostics;
 
@@ -29,4 +28,3 @@ namespace PJR.Config
         }
     }
 }
-#endif

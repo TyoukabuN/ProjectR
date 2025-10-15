@@ -1,5 +1,5 @@
-using PJR.Editor;
 #if UNITY_EDITOR
+using PJR.Editor;
 using UnityEditor;
 #endif
 

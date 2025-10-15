@@ -1,6 +1,9 @@
-﻿using Sirenix.OdinInspector.Editor;
+﻿#if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEngine;
+
+using Sirenix.OdinInspector.Editor;
 
 namespace PJR.Dev.Game.DataContext
 {
@@ -71,3 +74,4 @@ namespace PJR.Dev.Game.DataContext
         }
     }
 }
+#endif

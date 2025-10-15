@@ -1,6 +1,7 @@
-using PJR.Editor;
 using UnityEngine;
+
 #if UNITY_EDITOR
+using PJR.Editor;
 using UnityEditor;
 #endif
 

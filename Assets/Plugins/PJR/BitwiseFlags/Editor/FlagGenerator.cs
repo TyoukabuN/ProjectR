@@ -3,13 +3,11 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using System.Net;
 using System.Text;
-using System.Collections.Generic;
 
 public class FlagGenerator : EditorWindow
 {
-    [MenuItem("LS_Tool/Flag生成")]
+    [MenuItem("PJR/配置/Tools/Flag/Flag生成")]
     public static void ShowWindow()
     {
         EditorWindow myself = GetWindow<FlagGenerator>(false, "Flag Generator", true);

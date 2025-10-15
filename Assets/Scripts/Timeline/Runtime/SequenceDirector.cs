@@ -84,8 +84,10 @@ namespace PJR.Timeline
         [NonSerialized] private PreviewSequenceHandle _previewSequenceHandle;
         public ISequenceHandle GetHandle()
         {
+#if UNITY_EDITOR
             if (!EditorApplication.isPlaying)
                 return GetPreviewHandle();
+#endif
             return GetRuntimeHandle();
         }
 

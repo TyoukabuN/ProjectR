@@ -1,9 +1,14 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
+using YooAsset;
+
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEngine;
-using YooAsset;
+#endif
 
 /// <summary>
 /// 资源文件查询服务类

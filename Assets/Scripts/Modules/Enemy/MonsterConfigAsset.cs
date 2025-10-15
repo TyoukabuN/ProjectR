@@ -1,5 +1,8 @@
-using PJR.Editor;
 using UnityEditor;
+
+#if UNITY_EDITOR
+using PJR.Editor;
+#endif
 
 namespace PJR
 {

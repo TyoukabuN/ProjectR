@@ -1,8 +1,12 @@
 using System.Collections.Generic;
-using PJR.Editor;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using PJR.Editor;
+#endif
+
 
 namespace PJR
 {

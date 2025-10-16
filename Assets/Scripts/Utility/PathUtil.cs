@@ -1,27 +1,23 @@
+using System.IO;
 using UnityEngine;
 
 namespace PJR
 {
-    public static class PathUtil 
+    public static class PathDefine
     {
         /// <summary>
-        /// 项目内配置根目录
+        /// PlayerBuild的根目录
         /// </summary>
-        public const string ConfigRoot = "Assets/__LS/Config";
+        public static string PlayerBuildRoot = Application.dataPath + "/../.playerBuilds";
+        
         /// <summary>
-        /// 项目内json配置文件根目录
+        /// 默认的debug用的PlayerBuild目录
         /// </summary>
-        public const string JsonConfigRoot = ConfigRoot + "/json";
-        /// <summary>
-        /// 配置源文件路径
-        /// </summary>
-        public static string RawConfigRoot = Application.dataPath + "/../../LS_Config";
-        /// <summary>
-        /// xlxs转json batch文件
-        /// </summary>
-        public static string Xlsx2JsonBatch = RawConfigRoot + "/xlsx2json.bat";
+        public static string DefaultDebugBuildDirectory = Application.dataPath + "/../.playerBuilds/.defaultDebugBuild";
+    }
 
-
+    public static class PathUtil 
+    {
         /// <summary>
         /// 资源描述文件的路径
         /// </summary>
@@ -61,6 +57,14 @@ namespace PJR
         public static string RegularPath(string path)
         {
             return path.Replace('\\', '/').Replace("\\", "/");
+        }
+        /// <summary>
+        /// 将目录分割符换成主要目录分隔符
+        /// 即系统文件资源管理器用的目录分隔符
+        /// </summary>
+        public static string ReplaceToDirectorySeparatorChar(string path)
+        {
+            return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
         }
     }
 }

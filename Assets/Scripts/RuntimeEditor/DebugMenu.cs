@@ -138,6 +138,30 @@ namespace PJR
 
             EditorUtility.ClearProgressBar();
         }
+
+        
+        private const string TempScriptCompilationForDefaultBuild = "Temp/ScriptCompilationForDefaultBuild";
+
+        public static void UpdateExistPlayerBuildDLL()
+        {
+            var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+            var settings = new ScriptCompilationSettings
+            {
+                group = BuildPipeline.GetBuildTargetGroup(buildTarget),
+                target = buildTarget,
+                options = ScriptCompilationOptions.None
+            };
+            
+            string output = Path.Combine(TempScriptCompilationForDefaultBuild, buildTarget.ToString());
+            if(!Directory.Exists(output))
+                Directory.CreateDirectory(output);
+            
+            EditorUtility.DisplayProgressBar("Compiling Player Scripts", "Build Target: " + settings.target + " (" + settings.group + ")", 0.1f);
+
+            var result = PlayerBuildInterface.CompilePlayerScripts(settings, output);
+
+            EditorUtility.ClearProgressBar();
+        }
     }
 }
 #endif

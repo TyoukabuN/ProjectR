@@ -21,7 +21,8 @@ namespace PJR.Systems
 
         public static string GetJsonPath(string jsonFileName)
         {
-            return Path.Combine(PathUtil.JsonConfigRoot,jsonFileName);
+            return string.Empty;
+            //return Path.Combine(PathUtil.JsonConfigRoot,jsonFileName);
         }
 //        public static string LoadJsonConfig(string jsonFileName)
 //        {

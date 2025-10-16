@@ -17,12 +17,18 @@ namespace PJR.Systems
         }
         static void RegisterEvent()
         {
-            SetDefaultLogFile();
+            SetCurrentLogFile();
             if (CMDUtility.IsBatchMode)
             {
-                SetDefaultLogFile(NAME_cmdLogFile);
+                SetCurrentLogFile(NAME_cmdLogFile);
                 Log("///////////////////////////////////////////////////");
                 Log("////////////////////[BatchMode]////////////////////");
+                Log("///////////////////////////////////////////////////");
+            }
+            else
+            {
+                Log("///////////////////////////////////////////////////");
+                Log("////////////////////[Enter Application]////////////");
                 Log("///////////////////////////////////////////////////");
             }
             Application.logMessageReceived -= OnLogMessageReceived;

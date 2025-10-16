@@ -19,6 +19,10 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: ReleasedUnitTestScene
+    path: Assets/Dev/Scenes/ReleasedUnitTestScene.unity
+  - name: ABTest
+    path: Assets/Dev/Lab/Scenes/ABTest.unity
   - name: ResourceTest
     path: Assets/Dev/Lab/ResourceTest/ResourceTest.unity
   - name: ParameterBlockTest
@@ -53,8 +57,4 @@ MonoBehaviour:
     path: Assets/Dev/Lab/Scenes/TimelineTest.unity
   - name: OrdinalConfigTest
     path: Assets/Dev/Lab/Scenes/OrdinalConfigTest.unity
-  - name: CShaderTest
-    path: Assets/Dev/Lab/Scenes/CShaderTest.unity
-  - name: JobSystemTest
-    path: Assets/Dev/Lab/Scenes/JobSystemTest.unity
   _notes: []

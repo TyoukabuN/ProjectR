@@ -9,11 +9,12 @@ namespace PJR.Systems
     {
         public static string PATH_logFile = Application.persistentDataPath;
 
-        private static string defaultLogFileName = NAME_logFile;
-        public static string DefaultLogFileName => defaultLogFileName;
+        private static string currentLogFileName;
+        public static string DefaultLogFileName => currentLogFileName;
 
-        public const string NAME_logFile = "log.log";
-        public const string NAME_logFilePrev = "log-prev.log";
+        public const string NAME_logFile = "log-editor.log";
+        public const string NAME_logFile_releaase = "log-release.log";
+        public const string NAME_logFilePrev = "log-editor-prev.log";
         public const string NAME_cmdLogFile = "cmd.log";
 
         public const string FORMAT_COMMON_LOG = "";
@@ -114,7 +115,7 @@ namespace PJR.Systems
         /// <param name="content"></param>
         static void AppendLog(string content,string logFileName = null)
         {
-            logFileName = string.IsNullOrEmpty(logFileName) ? defaultLogFileName : logFileName;
+            logFileName = string.IsNullOrEmpty(logFileName) ? currentLogFileName : logFileName;
 
             if (!Directory.Exists(PATH_logFile))
                 return;
@@ -129,18 +130,23 @@ namespace PJR.Systems
         /// 设置默认的log文件名
         /// </summary>
         /// <param name="logFileName">不填的话默认NAME_logFile</param>
-        public static void SetDefaultLogFile(string logFileName = null)
+        public static void SetCurrentLogFile(string logFileName = null)
         {
-            logFileName = string.IsNullOrEmpty(logFileName) ? NAME_logFile : logFileName;
             if (string.IsNullOrEmpty(logFileName))
-                return;
-            defaultLogFileName = logFileName;
+            {
+#if UNITY_EDITOR
+                logFileName = NAME_logFile;
+#else
+                logFileName = NAME_logFile_releaase;
+#endif
+            }
+            currentLogFileName = logFileName;
         }
 
 
         public static void ClearLog(string logFileName = null)
         {
-            logFileName = string.IsNullOrEmpty(logFileName) ? defaultLogFileName : logFileName;
+            logFileName = string.IsNullOrEmpty(logFileName) ? currentLogFileName : logFileName;
             if (!Directory.Exists(PATH_logFile))
                 return;
             File.WriteAllText(GetOutputSpaceFile(logFileName), string.Empty);

@@ -27,6 +27,7 @@ namespace PJR.Editor
         {
             public string FolderDescription;
             public MenuItemDescription[] LeftClickMenuDescription;
+            public bool IsObsolete;
         }
 
         public struct MenuItemDescription
@@ -48,8 +49,17 @@ namespace PJR.Editor
             var folderInfo = JsonConvert.DeserializeObject<FolderInfoWithMenu>(asset.text);
             bool anyLeftClickMenuDesc = folderInfo.LeftClickMenuDescription?.Length > 0;
 
-            var labelRect = GUIUtil.GetLabelRect(item, folderInfo.FolderDescription);
-            GUI.Label(labelRect, folderInfo.FolderDescription, anyLeftClickMenuDesc ? Label_ModdleRight_Green : Label_ModdleRight_Gray);
+            Rect labelRect;
+            string labelText = folderInfo.FolderDescription;
+            if (folderInfo.IsObsolete)
+            {
+                labelText = $"[Obsoleted]{folderInfo.FolderDescription}";
+                GUI.Label(GUIUtil.GetLabelRect(item, labelText), labelText, labelModdleRightYellow);
+                return;
+            }
+
+            labelRect = GUIUtil.GetLabelRect(item, labelText);
+            GUI.Label(labelRect, labelText, anyLeftClickMenuDesc ? Label_ModdleRight_Green : Label_ModdleRight_Gray);
 
             ButtonEvent button = GUILayoutUtils.Button(labelRect, TempContent.Get(string.Empty, String_HadLefClickMenu),
                 GUIStyle.none);
@@ -93,7 +103,7 @@ namespace PJR.Editor
         {
             get
             {
-                m_Label_ModdleRight_Gray = new GUIStyle(EditorStyles.label);
+                m_Label_ModdleRight_Gray ??= new GUIStyle(EditorStyles.label);
                 m_Label_ModdleRight_Gray.alignment = TextAnchor.MiddleRight;
                 m_Label_ModdleRight_Gray.normal.textColor = Color.gray;
                 return m_Label_ModdleRight_Gray;
@@ -104,11 +114,25 @@ namespace PJR.Editor
         {
             get
             {
-                m_Label_ModdleRight_Green = new GUIStyle(EditorStyles.label);
+                m_Label_ModdleRight_Green ??= new GUIStyle(EditorStyles.label);
                 m_Label_ModdleRight_Green.alignment = TextAnchor.MiddleRight;
                 m_Label_ModdleRight_Green.normal.textColor = m_Label_ModdleRight_Green.hover.textColor;
                 m_Label_ModdleRight_Green.hover.textColor = Color.green;
                 return m_Label_ModdleRight_Green;
+            }
+        }
+        
+        
+        private static GUIStyle m_Label_ModdleRight_Yellow;
+        public static GUIStyle labelModdleRightYellow
+        {
+            get
+            {
+                m_Label_ModdleRight_Yellow ??= new GUIStyle(EditorStyles.label);
+                m_Label_ModdleRight_Yellow.alignment = TextAnchor.MiddleRight;
+                m_Label_ModdleRight_Yellow.normal.textColor = m_Label_ModdleRight_Yellow.hover.textColor;
+                m_Label_ModdleRight_Yellow.hover.textColor = Color.yellow;
+                return m_Label_ModdleRight_Yellow;
             }
         }
     }

@@ -7,7 +7,7 @@ namespace PJR.Systems
     public partial class ResourceSystem
     {
         private List<string> dones = new List<string>();
-        public override void OnUpdate(float deltaTime)
+        protected override void OnUpdate(float deltaTime)
         {
             if (assetFullName2Loader.Count <= 0)
                 return;

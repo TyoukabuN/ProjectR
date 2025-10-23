@@ -6,6 +6,6 @@ public class UnitTestEntry : MonoBehaviour
 {
     void Start()
     {
-        LogSystem.Log("UnitTest 123");        
+        LogSystem.Log("UnitTest 123 321");        
     }
 }

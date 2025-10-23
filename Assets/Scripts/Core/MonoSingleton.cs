@@ -23,7 +23,7 @@ namespace PJR
                         _instance = gobj.AddComponent<T>();
                         gobj.name = $"[{_instance.Name}]";
                     }
-                    _instance.OnInstantiated();
+                    _instance.Instantiated();
                 }
                 return _instance;
             }
@@ -38,17 +38,25 @@ namespace PJR
 
     }
 
+    
+    /// <summary>
+    /// 没带On是外部条用接口，带On的内部实现接口
+    /// </summary>
     public abstract class MonoSingleton : MonoBehaviour
     {
         public virtual string Name { get; }
-        /// <summary>
-        /// invoked before awake
-        /// </summary>
-        public virtual void OnInstantiated() { }
-        public abstract IEnumerator Initialize();
-        public virtual void Clear() { }
 
-        public virtual void OnUpdate(float deltaTime) { }
+        //for external invoke
+        public void Instantiated() => OnInstantiated();
+        public void Clear() => OnClear();
+        public void Update(float deltaTime) => OnUpdate(deltaTime);
+        public abstract IEnumerator Initialize();
+        
+        //for internal override
+        protected virtual void OnInstantiated() { }
+        protected virtual void OnClear() { }
+        protected virtual void OnUpdate(float deltaTime) { }
+        
         //unity messages
         public virtual void LateUpdate() { }
         public virtual void OnDisable() { }

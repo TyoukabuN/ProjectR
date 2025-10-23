@@ -19,7 +19,7 @@ namespace PJR
         }
         public LogicEntity GetEntity(int key){ return entities[key]; }
 
-        public override void Clear()
+        protected override void OnClear()
         {
             entities.Clear();
         }

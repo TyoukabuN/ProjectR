@@ -14,7 +14,7 @@ namespace PJR.Systems
             return true;
         }
 
-        public override void OnUpdate(float f)
+        protected override void OnUpdate(float f)
         {
             foreach (var pair in id2LogicEntity) 
             {

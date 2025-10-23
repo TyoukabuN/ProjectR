@@ -34,9 +34,9 @@ namespace PJR
         {
             return type2systemInstance.TryGetValue(typeof(SystemType),out instance);
         }
-        public override void Clear()
+        protected override void OnClear()
         {
-            systemInstances?.ForEach(instance => instance.Clear());
+            systemInstances?.ForEach(singleton => singleton?.Clear());
         }
         void Update() 
         {
@@ -49,7 +49,7 @@ namespace PJR
                 Profiler.BeginSample($"[SysUpdate]{sysInstance.Name}");
 #endif
 
-                sysInstance.OnUpdate(Time.deltaTime);
+                sysInstance.Update(Time.deltaTime);
 
 #if UNITY_EDITOR
                 Profiler.EndSample();

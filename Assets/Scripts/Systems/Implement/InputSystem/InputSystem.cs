@@ -139,7 +139,7 @@ namespace PJR.Systems
         }
 
 
-        public override void OnUpdate(float f)
+        protected override void OnUpdate(float f)
         {
         }
     }

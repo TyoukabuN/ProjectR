@@ -15,10 +15,8 @@ namespace PJR.Systems
         /// <summary>
         /// 实例化系统实例后调用，在Awake之前
         /// </summary>
-        public override void OnInstantiated()
+        protected override void OnInstantiated()
         {
-            base.OnInstantiated();
-
             gameObject.transform.position = Position;
 
             SystemHandler.instance.RegisterSystem(_instance);

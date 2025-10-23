@@ -145,7 +145,7 @@ namespace PJR.Systems
             instance._onActiveSceneChangedCallbacks.Add(callback);
         }
 
-        public override void Clear()
+        protected override void OnClear()
         {
             _onSceneLoadedCallbacks?.ForEach(action => SceneManager.sceneLoaded -= action);
             _onSceneUnloadedCallbacks?.ForEach(action => SceneManager.sceneUnloaded -= action);

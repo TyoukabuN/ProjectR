@@ -22,5 +22,4 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   itemAssets:
-  - {fileID: 11400000, guid: de61a1099383d8d4aa3a389f5f021cb6, type: 2}
   - {fileID: 11400000, guid: 2553cdfb9c9b28941a5466b133a7c3f2, type: 2}

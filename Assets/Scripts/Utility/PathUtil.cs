@@ -66,5 +66,22 @@ namespace PJR
         {
             return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
         }
+
+        public static bool CreateDirectoryIfNoExist(string directory)
+        {
+            if (string.IsNullOrEmpty(directory))
+                return false;
+            if (Directory.Exists(directory))
+                return true;
+            try
+            {
+                Directory.CreateDirectory(directory);
+            }catch (System.Exception e)
+            {
+                Debug.LogError(e);
+                return false;
+            }
+            return true;
+        }
     }
 }

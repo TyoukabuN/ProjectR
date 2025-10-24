@@ -80,9 +80,12 @@ namespace YooAsset.Editor
             string[] splits = assetPath.Split('/');
             if (splits.Length > 0)
             {
-                if (Path.HasExtension(splits[0]))
-                    throw new Exception($"Not found root directory : {assetPath}");
-                string bundleName = $"{data.CollectPath}/{splits[0]}";
+                // if (Path.HasExtension(splits[0]))
+                //     throw new Exception($"Not found root directory : {assetPath}");
+                // string bundleName = $"{data.CollectPath}/{splits[0]}";
+                string bundleName = data.CollectPath;
+                if (!Path.HasExtension(splits[0]))
+                    bundleName = $"{data.CollectPath}/{splits[0]}";
                 PackRuleResult result = new PackRuleResult(bundleName, DefaultPackRule.AssetBundleFileExtension);
                 return result;
             }

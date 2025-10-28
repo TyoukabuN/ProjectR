@@ -32,9 +32,17 @@ MonoBehaviour:
       - CollectPath: Assets/Art/Avatar
         CollectorGUID: eb6f4acc880b0c34bbbcd93daf101d5b
         CollectorType: 0
-        AddressRuleName: AddressByGroupAndFileNameWithExt
+        AddressRuleName: AddressByGroupAndFileName
         PackRuleName: PackTopDirectory
         FilterRuleName: CollectPrefab
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Art/DuplicateInSameGroup
+        CollectorGUID: a15b11abc03ac8544b5f66062e35f202
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
     - GroupName: Env
@@ -57,6 +65,19 @@ MonoBehaviour:
         CollectorType: 0
         AddressRuleName: AddressByFileNameWithExt
         PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: DuplicateTest
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Art/DuplicateInAnthorGroup
+        CollectorGUID: 4ca2cadb6f0e64a448dba851c4410766
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackDirectory
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 

@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<root Version="v2.0.0">
-  <Common ShowPackageView="False" ShowEditorAlias="True" UniqueBundleName="False" />
-  <Package PackageName="test" PackageDesc="" AutoAddressable="False" LocationToLower="False" IncludeAssetGUID="False" IgnoreDefaultType="True">
-  </Package>
-</root>

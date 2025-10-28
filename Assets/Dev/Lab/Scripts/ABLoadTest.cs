@@ -14,11 +14,22 @@ public class ABLoadTest : MonoBehaviour
 {
     public string resUrl = "https://192.168.10.50/ls/StandaloneWindows64/Art";
     public string assetName = string.Empty;
-    public ResourcePackage package = null;
+    private ResourcePackage package = null;
 
     public GameObject gobj = null;
 
-    [Button()]
+    [Button]
+    public void LoadAssetByName()
+    {
+        if(gobj != null)
+            DestroyImmediate(gobj);
+        gobj = null;
+        var loader = ResourceSystem.LoadAsset<GameObject>(assetName, (loader) =>
+        {
+            gobj = loader.GetInstantiate<GameObject>();
+        });
+    }
+
     public void Gen()
     { 
         var gobj = new GameObject();
@@ -40,30 +51,20 @@ public class ABLoadTest : MonoBehaviour
         GC.Collect();
     }
 
-    [Button("Destroy")]
     public void Destroy()
     {
         package = null;
         YooAssets.Destroy();
     }
 
-    [Button("InitializePackage")]
     public void InitializePackage()
     {
         package = null;
         StartCoroutine(EInitializePackage());
     }
 
-    [Button("LoadAsset")]
-    public void LoadAsset()
-    {
-        var loader = ResourceSystem.LoadAsset<GameObject>(assetName, (loader) =>
-        {
-            loader.GetInstantiate<GameObject>();
-        });
-    }
 
-    [Button()]
+
     public void RegisterEvent()
     {
         //if (!CMDUtility.IsBatchMode)
@@ -83,7 +84,6 @@ public class ABLoadTest : MonoBehaviour
             LogSystem.LogError(stackTrace);
     }
 
-    [Button()]
     public void Debug1()
     {
         Debug.Log("123");

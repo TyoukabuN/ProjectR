@@ -20,11 +20,11 @@ MonoBehaviour:
     PackageDesc: 
     EnableAddressable: 1
     LocationToLower: 0
-    IncludeAssetGUID: 0
+    IncludeAssetGUID: 1
     AutoCollectShaders: 1
     IgnoreRuleName: NormalIgnoreRule
     Groups:
-    - GroupName: avatar
+    - GroupName: Avatar
       GroupDesc: "\u6A21\u578B"
       AssetTags: 
       ActiveRuleName: EnableGroup
@@ -34,16 +34,29 @@ MonoBehaviour:
         CollectorType: 0
         AddressRuleName: AddressByGroupAndFileNameWithExt
         PackRuleName: PackTopDirectory
-        FilterRuleName: CollectAll
+        FilterRuleName: CollectPrefab
         AssetTags: 
         UserData: 
-    - GroupName: env
+    - GroupName: Env
       GroupDesc: "\u573A\u666F"
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors: []
-    - GroupName: ui
-      GroupDesc: "ui\u8D44\u6E90"
+    - GroupName: UI
+      GroupDesc: "UI\u8D44\u6E90"
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors: []
+    - GroupName: DevResource
+      GroupDesc: "Dev\u8D44\u6E90"
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Dev/Prefabs
+        CollectorGUID: 7283fa9b5ce4fe840afe825b4c802fd8
+        CollectorType: 0
+        AddressRuleName: AddressByFileNameWithExt
+        PackRuleName: PackTopDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 

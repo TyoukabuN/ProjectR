@@ -19,6 +19,8 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: ABLoadTest
+    path: Assets/Dev/Lab/ABLoadTest/ABLoadTest.unity
   - name: ReleasedUnitTestScene
     path: Assets/Dev/Scenes/ReleasedUnitTestScene.unity
   - name: ABTest
@@ -55,6 +57,4 @@ MonoBehaviour:
     path: Assets/Dev/Lab/NonCGBlackBoard/NonCGBlackBoard.unity
   - name: TimelineTest
     path: Assets/Dev/Lab/Scenes/TimelineTest.unity
-  - name: OrdinalConfigTest
-    path: Assets/Dev/Lab/Scenes/OrdinalConfigTest.unity
   _notes: []

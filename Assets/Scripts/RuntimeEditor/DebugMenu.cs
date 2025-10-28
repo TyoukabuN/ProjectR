@@ -87,11 +87,8 @@ namespace PJR
             //Clear Scene
             foreach (var gobj in scene.GetRootGameObjects())
             {
-                if (gobj.name.IndexOf("Test") == 0)
-                {
-                    //DontDestroyOnLoad(gobj);
+                if (gobj.name.IndexOf("Test", StringComparison.Ordinal) == 0)
                     continue;
-                }
                 DestroyImmediate(gobj);
             }
 

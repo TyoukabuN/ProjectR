@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEditor;
 
@@ -45,6 +46,10 @@ namespace YooAsset.Editor
                 UnityEngine.Debug.LogWarning($"Cannot pack default asset : {assetInfo.AssetPath}");
                 return true;
             }
+            
+            // 忽略特殊描述文件
+            if (Path.GetFileName(assetInfo.AssetPath).StartsWith("__"))
+                return true;
 
             return DefaultIgnoreRule.IgnoreFileExtensions.Contains(assetInfo.FileExtension);
         }

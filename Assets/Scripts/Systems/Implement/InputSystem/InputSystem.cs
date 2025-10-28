@@ -13,6 +13,7 @@ namespace PJR.Systems
 {
     public partial class InputSystem : MonoSingletonSystem<InputSystem>
     {
+        
         public static string assetPath = "Assets/Dev/Prefabs/SystemAssets/InputSystem/InputAction.inputactions";
 
         [SerializeField]

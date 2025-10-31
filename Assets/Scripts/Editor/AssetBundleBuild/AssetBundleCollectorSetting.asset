@@ -27,7 +27,7 @@ MonoBehaviour:
     - GroupName: Avatar
       GroupDesc: "\u6A21\u578B"
       AssetTags: 
-      ActiveRuleName: EnableGroup
+      ActiveRuleName: DisableGroup
       Collectors:
       - CollectPath: Assets/Art/Avatar
         CollectorGUID: eb6f4acc880b0c34bbbcd93daf101d5b

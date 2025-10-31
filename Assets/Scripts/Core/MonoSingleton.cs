@@ -1,4 +1,5 @@
 using System.Collections;
+using PJR.Core;
 using UnityEngine;
 
 namespace PJR
@@ -49,6 +50,7 @@ namespace PJR
         //for external invoke
         public void Instantiated() => OnInstantiated();
         public void Clear() => OnClear();
+        public void Update() => Update(Time.deltaTime);
         public void Update(float deltaTime) => OnUpdate(deltaTime);
         public abstract IEnumerator Initialize();
         
@@ -62,4 +64,6 @@ namespace PJR
         public virtual void OnDisable() { }
         public virtual void OnDestroy() { }
     }
+
+
 }

@@ -11,6 +11,15 @@ namespace PJR
         private const string _name = "Systems";
         public override string Name => _name;
 
+        public float DeltaTime
+        {
+            get
+            {
+                //todo:后面加个管理事件类
+                return Time.deltaTime;
+            }
+        }
+
         public static List<MonoSingleton> systemInstances = new List<MonoSingleton>();
         public static Dictionary<Type,MonoSingleton> type2systemInstance = new Dictionary<Type, MonoSingleton>();
         public void RegisterSystem(MonoSingleton systemInstance)
@@ -49,7 +58,7 @@ namespace PJR
                 Profiler.BeginSample($"[SysUpdate]{sysInstance.Name}");
 #endif
 
-                sysInstance.Update(Time.deltaTime);
+                sysInstance.Update(DeltaTime);
 
 #if UNITY_EDITOR
                 Profiler.EndSample();

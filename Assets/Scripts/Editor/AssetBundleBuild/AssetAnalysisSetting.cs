@@ -54,7 +54,7 @@ namespace PJR.Editor
         }
 
 
-        public const string assetPath = "Assets/Scripts/Editor/AssetBundleBuild/AssetAnalysisSetting.asset";
+        public const string assetPath = "Assets/Resources/AssetAnalysisSetting.asset";
         private static AssetAnalysisSetting _curAsset = null;
         public static AssetAnalysisSetting GetAsset()
         {

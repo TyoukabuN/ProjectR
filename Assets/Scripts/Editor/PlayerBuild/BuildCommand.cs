@@ -251,7 +251,7 @@ public static class BuildCommand
     /// <summary>
     /// 创建加密类实例
     /// </summary>
-    private static IEncryptionServices CreateEncryptionInstance(string PackageName, EBuildPipeline BuildPipeline)
+    public static IEncryptionServices CreateEncryptionInstance(string PackageName, EBuildPipeline BuildPipeline)
     {
         var encyptionClassName = AssetBundleBuilderSetting.GetPackageEncyptionClassName(PackageName, BuildPipeline);
         var encryptionClassTypes = EditorTools.GetAssignableTypes(typeof(IEncryptionServices));
@@ -562,6 +562,7 @@ public static class BuildCommand
         public static AssetBundleBuildArgs LoadFromEditorPref(string PackageName, EBuildPipeline BuildPipeline)
         {
             AssetBundleBuildArgs temp = Default;
+            try { temp.BuildOutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot(); } catch { }
             try { temp.BuildTarget = EditorUserBuildSettings.activeBuildTarget; } catch { }
             try { temp.BuildMode = AssetBundleBuilderSetting.GetPackageBuildMode(PackageName, BuildPipeline); } catch { }
             try { temp.FileNameStyle = AssetBundleBuilderSetting.GetPackageFileNameStyle(PackageName, BuildPipeline); } catch { }

@@ -212,7 +212,7 @@ namespace YooAsset.Editor
         /// <summary>
         /// 创建资源收集类
         /// </summary>
-        private CollectAssetInfo CreateCollectAssetInfo(CollectCommand command, AssetBundleCollectorGroup group, AssetInfo assetInfo)
+        public CollectAssetInfo CreateCollectAssetInfo(CollectCommand command, AssetBundleCollectorGroup group, AssetInfo assetInfo)
         {
             string address = GetAddress(command, group, assetInfo);
             string bundleName = GetBundleName(command, group, assetInfo);
@@ -228,7 +228,7 @@ namespace YooAsset.Editor
             return collectAssetInfo;
         }
 
-        private bool IsCollectAsset(AssetBundleCollectorGroup group, AssetInfo assetInfo)
+        public bool IsCollectAsset(AssetBundleCollectorGroup group, AssetInfo assetInfo)
         {
             // 根据规则设置过滤资源文件
             IFilterRule filterRuleInstance = AssetBundleCollectorSettingData.GetFilterRuleInstance(FilterRuleName);

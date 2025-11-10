@@ -11,7 +11,6 @@ using YooAsset.Editor;
 public class DeAddressExisting : SerializedMonoBehaviour
 {
     private ErrorReport _report;
-    private AssetRenameOperationGroup _renameGroup;
 
     [Button]
     public void Test()
@@ -75,7 +74,7 @@ public class DeAddressExisting : SerializedMonoBehaviour
             return;
         }
 
-        _renameGroup = new AssetRenameOperationGroup();
+        var assetPaths = new List<string>();
         foreach (var pair in _report.AddressToCollectAssetInfos)
         {
             var collectAssetInfoList = pair.Value;
@@ -92,24 +91,17 @@ public class DeAddressExisting : SerializedMonoBehaviour
                 string guid = AssetDatabase.AssetPathToGUID(assetPath);
                 if (string.IsNullOrEmpty(guid))
                     continue;
-                var fileName = Path.GetFileNameWithoutExtension(assetPath);
-                var snipedGuid = guid.Substring(0, 8);
-                var extension = Path.GetExtension(assetPath);
-                var newAssetName = $"{fileName}_{snipedGuid}{extension}";
-                _renameGroup.Add(guid, newAssetName);
+                assetPaths.Add(assetPath);
+                // var fileName = Path.GetFileNameWithoutExtension(assetPath);
+                // var snipedGuid = guid.Substring(0, 8);
+                // var extension = Path.GetExtension(assetPath);
+                // var newAssetName = $"{fileName}_{snipedGuid}{extension}";
+                // _renameGroup.Add(guid, newAssetName);
             }
-            
-            _renameGroup.Perform();
         }
+        
+        BatchRenameWindow.OpenForGuidExtension(assetPaths);
     }
-
-    [Button]
-    public void UndoRename()
-    {
-        if(_renameGroup != null)
-            _renameGroup.Undo();
-    }
-
 
     public class ErrorReport
     {

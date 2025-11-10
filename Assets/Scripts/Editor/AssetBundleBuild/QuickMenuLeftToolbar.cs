@@ -53,14 +53,15 @@ namespace PJR.Editor
             GenericMenu menu = new GenericMenu();
             menu.AddItem(new GUIContent("Asset引用相关/显示资产被引用数"), AssetAnalysisSetting.ShowAssetRefCount, () => { AssetAnalysisSetting.ShowAssetRefCount = !AssetAnalysisSetting.ShowAssetRefCount; });
             menu.AddItem(new GUIContent("Asset引用相关/显示是否被外部引用"), AssetAnalysisSetting.ShowIsReferedByOutside, () => { AssetAnalysisSetting.ShowIsReferedByOutside = !AssetAnalysisSetting.ShowIsReferedByOutside; });
-            menu.AddItem(new GUIContent("Asset引用相关/刷新引用"), false, () => { AssetAnalysisSetting.RefreshReferenceData(); });
-            menu.AddItem(new GUIContent("Asset引用相关/刷新引用[并清理缓存]"), false, () => { AssetAnalysisSetting.ClearCacheAndRefreshReferenceData(); });
-            menu.AddItem(new GUIContent("Asset引用相关/Ping当前外部引用检查目录"), false, () => { AssetAnalysisSetting.PingRootForOutsideReferedCheck(); });
+            menu.AddItem(new GUIContent("Asset引用相关/刷新引用"), false, AssetAnalysisSetting.RefreshReferenceData);
+            menu.AddItem(new GUIContent("Asset引用相关/刷新引用[并清理缓存]"), false, AssetAnalysisSetting.ClearCacheAndRefreshReferenceData);
+            menu.AddItem(new GUIContent("Asset引用相关/Ping当前外部引用检查目录"), false, AssetAnalysisSetting.PingRootForOutsideReferedCheck);
             menu.AddItem(new GUIContent("Asset引用相关/设置需要显示引用数的路径"), false, () => { AssetAnalysisSetting.GetAsset(); AssetAnalysisSetting.OpenAsset(); });
             //
-            menu.AddItem(new GUIContent("Asset相关工具/批量重命名窗口"), false, () => { BatchRenameWindow.Open(); });
+            menu.AddItem(new GUIContent("Asset相关工具/批量重命名窗口"), false, BatchRenameWindow.Open);
+            menu.AddItem(new GUIContent("Asset相关工具/检查AB收集资源中的Address重复"), false, CorrectAssetTools.AssetsAddressDeduplication);
             //
-            menu.AddItem(new GUIContent("Debug/编译测试"), false, () => { EditorUtil.Build.BuildCurrentTargetCompiles(); });
+            menu.AddItem(new GUIContent("Debug/编译测试"), false, EditorUtil.Build.BuildCurrentTargetCompiles);
             //
             menu.AddItem(new GUIContent("编辑菜单脚本"), false, () => { EditorUtil.Asset.OpenScriptOfType(typeof(QuickMenuLeftToolbar)); });
             menu.AddItem(new GUIContent("文档"), false, () => {

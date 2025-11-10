@@ -1,24 +1,46 @@
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.Serialization;
 using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using CharacterType = BatchRename.Methed.CharacterType;
-using StripFrom = BatchRename.Methed.StripFrom;
-using ChangeCaseMethod = BatchRename.Methed.ChangeCaseMethod;
-using AssetInfo = BatchRename.Methed.AssetInfo;
+using CharacterType = BatchRename.Util.CharacterType;
+using StripFrom = BatchRename.Util.StripFrom;
+using ChangeCaseMethod = BatchRename.Util.ChangeCaseMethod;
+using AssetInfo = BatchRename.Util.AssetInfo;
+using Object = UnityEngine.Object;
+
 namespace BatchRename
 { 
     public class BatchRenameWindow : OdinEditorWindow
     {
+        public enum EAssetGainApproach
+        {
+            [LabelText("选中Assets")]
+            SelectedAssets = 0,
+            [LabelText("指定Assets")]
+            SpecificAssets = 1,
+        }
+        
         public static BatchRenameWindow instance;
 
+        [LabelText("Asset获取方法"),ShowInInspector]
+        public EAssetGainApproach AssetGainApproach = EAssetGainApproach.SelectedAssets;
+        [ShowInInspector, HideReferenceObjectPicker, HideLabel]
+        public BatchOperationGroup BatchOpGroup;
+        
+        [LabelText("指定Assets")]
+        [ShowInInspector ,AssetsOnly, ShowIf("@AssetGainApproach == EAssetGainApproach.SpecificAssets")]
+        public List<Object> SpecificAssets; 
+        
+        private List<string> _selectedGUIDs = new List<string>();
+        private int _activeMainSelected = -1;
+        
+        
+        
         [MenuItem("Assets/BatchRename")]
         public static void Open()
         {
@@ -26,11 +48,27 @@ namespace BatchRename
             instance.OnRegisterEvent(true);
         }
 
-
-        [ShowInInspector, HideReferenceObjectPicker, HideLabel]
-        private BatchOperationGroup _batchOpGroup;
-        private List<string> _selectedGUIDs = new List<string>();
-        private int activeMainSelected = -1;
+        public static void OpenForGuidExtension(List<string> assetPaths)
+        {
+            if (assetPaths is not { Count : > 0 })
+                return;
+            instance = GetWindow<BatchRenameWindow>("批量重命名");
+            instance.OnRegisterEvent(true);
+            
+            instance.BatchOpGroup = new(new BatchOperationWrap(ERenameType.AddGuidExtension));
+            instance.AssetGainApproach = EAssetGainApproach.SpecificAssets;
+            instance.SpecificAssets = new List<Object>();
+            for (var i = 0; i < assetPaths.Count; i++)
+            {
+                var asset = AssetDatabase.LoadAssetAtPath<Object>(assetPaths[i]);
+                if (asset == null)
+                {
+                    Debug.LogError($"没有找到Asset: {assetPaths[i]}");
+                    continue;
+                }
+                instance.SpecificAssets.Add(asset);
+            }
+        }
 
         void OnRegisterEvent(bool enable)
         {
@@ -43,7 +81,7 @@ namespace BatchRename
         {
             base.OnEnable();
             OnRegisterEvent(true);
-            _batchOpGroup ??= new BatchOperationGroup();
+            BatchOpGroup ??= new BatchOperationGroup();
         }
         protected override void OnDestroy()
         {
@@ -58,8 +96,7 @@ namespace BatchRename
             base.OnImGUI();
 
             EditorGUILayout.BeginScrollView(_scrollViewPos);
-            EditorGUILayout.LabelField($"重命名对象数: {_selectedGUIDs?.Count ?? 0}");
-            AssetRenameTool_DrawSelectedAssets(_batchOpGroup.OnDrawSelectObject);
+            AssetRenameTool_DrawSelectedAssets(BatchOpGroup.OnDrawSelectObject);
             EditorGUILayout.EndScrollView();
 
             GUILayout.FlexibleSpace();
@@ -67,7 +104,7 @@ namespace BatchRename
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("OK"))
             {
-                renameOperationGroup = _batchOpGroup.Perform(_selectedGUIDs);
+                renameOperationGroup = BatchOpGroup.Perform(GetAssetGuids());
             }
             AssetRenameTool_DrawUndo();
             EditorGUILayout.EndHorizontal();
@@ -75,7 +112,7 @@ namespace BatchRename
 
         public void AssetRenameTool_OnSelectionChange()
         {
-            activeMainSelected = 0;
+            _activeMainSelected = 0;
             _selectedGUIDs = _selectedGUIDs ?? new List<string>();
             _selectedGUIDs.Clear();
             foreach (var guids in Selection.assetGUIDs)
@@ -112,16 +149,39 @@ namespace BatchRename
             }
         }
 
+        public List<string> GetAssetGuids()
+        {
+            if(AssetGainApproach == EAssetGainApproach.SelectedAssets)
+                return _selectedGUIDs;
+            if (AssetGainApproach == EAssetGainApproach.SpecificAssets)
+            {
+                var guids = new List<string>();
+                for (var i = 0; i < SpecificAssets.Count; i++)
+                {
+                    var assetInfo = new AssetInfo(SpecificAssets[i]);
+                    guids.Add(assetInfo.guid);
+                }
+
+                return guids;
+            }
+            return null;
+        }
+
         public void AssetRenameTool_DrawSelectedAssets(Action<int, string> OnDrawItem = null)
         {
-            if (_selectedGUIDs != null)
+            if (AssetGainApproach != EAssetGainApproach.SelectedAssets)
+                return;
+            EditorGUILayout.LabelField($"选中对象数: {_selectedGUIDs?.Count ?? 0}");
+
+            var guids = GetAssetGuids();
+            if (guids != null)
             {
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                 {
-                    for (int i = 0; i < _selectedGUIDs.Count; i++)
+                    for (int i = 0; i < guids.Count; i++)
                     {
-                        string guid = _selectedGUIDs[i];
-                        string assetPath = AssetDatabase.GUIDToAssetPath(_selectedGUIDs[i]);
+                        string guid = guids[i];
+                        string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
                         if (string.IsNullOrEmpty(assetPath))
                             continue;
                         string fileName = Path.GetFileName(assetPath);
@@ -151,11 +211,17 @@ namespace BatchRename
         private List<BatchOperationWrap> _batchOps;
         public BatchOperationGroup()
         {
-            _batchOps = _batchOps ?? new List<BatchOperationWrap>();
+            _batchOps ??= new List<BatchOperationWrap>();
             if (_batchOps.Count <= 0)
             {
                 _batchOps.Add(new BatchOperationWrap(ERenameType.FindAndReplace));
             }
+        }
+        public BatchOperationGroup(BatchOperationWrap opWrap)
+        {
+            _batchOps ??= new List<BatchOperationWrap>();
+            _batchOps.Clear();
+            _batchOps.Add(opWrap);
         }
         public AssetRenameOperationGroup Perform(List<string> guids) 
         {
@@ -164,7 +230,7 @@ namespace BatchRename
             var group = new AssetRenameOperationGroup();
             try
             {
-                Methed.ForEachGUID(guids, (index, info) =>
+                Util.ForEachGUID(guids, (index, info) =>
                 {
                     var replace = info.fileName;
                     for (int i = 0; i < _batchOps.Count; i++)
@@ -198,6 +264,9 @@ namespace BatchRename
         }
     }
 
+    /// <summary>
+    /// 为了仿blender中的重名工具的结构
+    /// </summary>
     [Serializable]
     public class BatchOperationWrap
     {
@@ -220,6 +289,8 @@ namespace BatchRename
                         _op = new StripCharactersOp();
                     else if (RenameType == ERenameType.ChangeCase)
                         _op = new ChangeCaseOp();
+                    else if (RenameType == ERenameType.AddGuidExtension)
+                        _op = new AddGuidExtensionOp();
                     else
                         throw new InvalidOperationException();
                 }    
@@ -273,11 +344,11 @@ namespace BatchRename
 
         public override AssetRenameOperationGroup Perform(List<string> guids) 
         {
-            return Methed.FindAndReplace(guids, Find, UseRegex, Replace, CaseSensitive);
+            return Util.FindAndReplace(guids, Find, UseRegex, Replace, CaseSensitive);
         }
         public override string Perform(AssetInfo info) 
         {
-            return Methed.FindAndReplace(info, Find, UseRegex, Replace,false, CaseSensitive);
+            return Util.FindAndReplace(info, Find, UseRegex, Replace,false, CaseSensitive);
         }
     }
     public class SetNameOp : BatchOperation
@@ -293,27 +364,27 @@ namespace BatchRename
         public override AssetRenameOperationGroup Perform(List<string> guids) 
         {
             if (SetNameMethod == ESetNameMethod.New)
-                return Methed.NewName(guids, Name);
+                return Util.NewName(guids, Name);
             else if (SetNameMethod == ESetNameMethod.Prefix)
-                return Methed.Prefix(guids, Name, IgnoreContains);
+                return Util.Prefix(guids, Name, IgnoreContains);
             else if (SetNameMethod == ESetNameMethod.Suffix)
-                return Methed.Suffix(guids, Name, IgnoreContains);
+                return Util.Suffix(guids, Name, IgnoreContains);
             return null;
         }
         public override string Perform(AssetInfo info)
         {
             if (SetNameMethod == ESetNameMethod.New)
-                return Methed.NewName(info, Name);
+                return Util.NewName(info, Name);
             else if (SetNameMethod == ESetNameMethod.Prefix)
-                return Methed.Prefix(info, Name, IgnoreContains);
+                return Util.Prefix(info, Name, IgnoreContains);
             else if (SetNameMethod == ESetNameMethod.Suffix)
-                return Methed.Suffix(info, Name, IgnoreContains);
+                return Util.Suffix(info, Name, IgnoreContains);
             return null;
         }
         public override string Perform(AssetInfo info ,int index)
         {
             if (SetNameMethod == ESetNameMethod.New)
-                return Methed.NewName(info, index, Name);
+                return Util.NewName(info, index, Name);
             else
                 return Perform(info);
         }
@@ -326,10 +397,10 @@ namespace BatchRename
         [EnumToggleButtons, LabelText("从哪里开始")]
         public StripFrom StripFrom = StripFrom.Start;
         public override AssetRenameOperationGroup Perform(List<string> guids) {
-            return Methed.StripCharacters(guids, CharacterType, StripFrom);
+            return Util.StripCharacters(guids, CharacterType, StripFrom);
         }
         public override string Perform(AssetInfo info) {
-            return Methed.StripCharacters(info, CharacterType, StripFrom);
+            return Util.StripCharacters(info, CharacterType, StripFrom);
         }
     }
     public class ChangeCaseOp : BatchOperation
@@ -338,11 +409,40 @@ namespace BatchRename
         [EnumToggleButtons, LabelText("转换成")]
         public ChangeCaseMethod ChangeCaseMethod = ChangeCaseMethod.UpperCase;
         public override AssetRenameOperationGroup Perform(List<string> guids) {
-            return Methed.ChangeCase(guids, ChangeCaseMethod);
+            return Util.ChangeCase(guids, ChangeCaseMethod);
         }
         public override string Perform(AssetInfo info)
         {
-            return Methed.ChangeCase(info, ChangeCaseMethod, CultureInfo.InvariantCulture);
+            return Util.ChangeCase(info, ChangeCaseMethod, CultureInfo.InvariantCulture);
+        }
+    }
+    
+    /// <summary>
+    /// 为asset的名字添加特定位数的guid后缀
+    /// </summary>
+    public class AddGuidExtensionOp : BatchOperation
+    {
+        public override ERenameType RenameType  =>  ERenameType.AddGuidExtension;
+        [LabelText("Guid后缀位数")]
+        public int GuidCharacterCount = 8;
+        
+        public override AssetRenameOperationGroup Perform(List<string> guids) 
+        {
+            return Util.Suffix(
+                guids, 
+                info => info.guid.Substring(0, GuidCharacterCount),
+                "_",
+                true);
+        }
+        public override string Perform(AssetInfo info)
+        {
+            if (string.IsNullOrEmpty(info.guid))
+                return null;
+            return Util.Suffix(
+                info, 
+                info.guid.Substring(0, GuidCharacterCount), 
+                "_",
+                true);
         }
     }
 
@@ -356,6 +456,8 @@ namespace BatchRename
         StripCharacters = 2,
         [LabelText("改变大小写")]
         ChangeCase = 3,
+        [LabelText("添加guid后缀")]
+        AddGuidExtension = 4,
     }
     public enum ESetNameMethod
     {
@@ -564,7 +666,7 @@ namespace BatchRename
         }
     }
 
-    public static class Methed
+    public static class Util
     {
         public struct AssetInfo
         {
@@ -577,6 +679,14 @@ namespace BatchRename
             {
                 this.guid = guid;
                 assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                extension = Path.GetExtension(assetPath);
+                fileName = Path.GetFileName(assetPath);
+                fileNameWithoutExtension = Path.GetFileNameWithoutExtension(assetPath);
+            }
+            public AssetInfo(Object obj)
+            {
+                assetPath = AssetDatabase.GetAssetPath(obj);
+                guid = AssetDatabase.AssetPathToGUID(assetPath);
                 extension = Path.GetExtension(assetPath);
                 fileName = Path.GetFileName(assetPath);
                 fileNameWithoutExtension = Path.GetFileNameWithoutExtension(assetPath);
@@ -684,11 +794,46 @@ namespace BatchRename
 
             return renameOperationGroup;
         }
+
+        public static AssetRenameOperationGroup Suffix(List<string> guids, Func<AssetInfo, string> getSuffix,
+            bool checkContains)
+            => Suffix(guids, getSuffix, null, checkContains);
+
+        /// <summary>
+        /// 设置后缀
+        /// </summary>
+        /// <param name="guids">目标Asset GUIDs</param>
+        /// <param name="getSuffix">后缀文本的获取方法</param>
+        /// <param name="paddingChar">后缀的分隔符</param>
+        /// <param name="checkContains">检测是否已包含,已包含就不添加了</param>
+        /// <returns></returns>
+        public static AssetRenameOperationGroup Suffix(List<string> guids, Func<AssetInfo,string> getSuffix, string paddingChar, bool checkContains)
+        {
+            var renameOperationGroup = new AssetRenameOperationGroup();
+
+            if (guids == null || guids.Count <= 0)
+                return null;
+            if (getSuffix == null)
+                return null;
+            ForEachGUID(guids, info =>
+            {
+                renameOperationGroup.Add(info.guid, Suffix(info, getSuffix.Invoke(info), paddingChar, checkContains));
+            });
+            renameOperationGroup.Perform();
+
+            return renameOperationGroup;
+        }
+
         public static string Suffix(AssetInfo info, string suffix, bool checkContains)
+            => Suffix(info, suffix, null, checkContains);
+
+        public static string Suffix(AssetInfo info, string suffix, string paddingChar, bool checkContains)
         {
             if (checkContains && info.fileNameWithoutExtension.EndsWith(suffix))
                 return null;
-            return $"{info.fileNameWithoutExtension}{suffix}{info.extension}";
+            if(string.IsNullOrEmpty(paddingChar))
+                return $"{info.fileNameWithoutExtension}{suffix}{info.extension}";
+            return $"{info.fileNameWithoutExtension}{paddingChar}{suffix}{info.extension}";
         }
 
         /// <summary>

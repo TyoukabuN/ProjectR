@@ -274,7 +274,7 @@ public static class BuildCommand
     /// 获取打包版本号
     /// </summary>
     /// <returns></returns>
-    private static string GetDefaultBuildVersion()
+    public static string GetDefaultBuildVersion()
     {
         //int totalSecond = DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
         //return DateTime.Now.ToString("yyyy-MM-dd") + "-" + totalSecond;

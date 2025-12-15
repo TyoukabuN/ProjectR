@@ -6,6 +6,10 @@
 # Custom
 /[Aa]ssets/Art/CLazy
 .playerBuilds/
+.idea/
+.vscode/
+UIElementsSchema/
+*.log
 
 #
 /[Ll]ibrary/

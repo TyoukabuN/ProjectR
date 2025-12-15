@@ -19,10 +19,14 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
-  - name: ABLoadTest
-    path: Assets/Dev/Lab/ABLoadTest/ABLoadTest.unity
+  - name: Scene_NetcodeTest
+    path: Assets/Dev/NetcodeTest/Scene_NetcodeTest.unity
   - name: ReleasedUnitTestScene
     path: Assets/Dev/Scenes/ReleasedUnitTestScene.unity
+  - name: Scene_NetcodeTest
+    path: Assets/Dev/Lab/NetcodeTest/Scene_NetcodeTest.unity
+  - name: ABLoadTest
+    path: Assets/Dev/Lab/ABLoadTest/ABLoadTest.unity
   - name: ABTest
     path: Assets/Dev/Lab/Scenes/ABTest.unity
   - name: ResourceTest
@@ -53,8 +57,4 @@ MonoBehaviour:
     path: Assets/Dev/Lab/NonCGBlackBoard/Src/Empty.unity
   - name: NonGCBlackBoard
     path: Assets/Dev/Lab/NonCGBlackBoard/NonGCBlackBoard.unity
-  - name: NonCGBlackBoard
-    path: Assets/Dev/Lab/NonCGBlackBoard/NonCGBlackBoard.unity
-  - name: TimelineTest
-    path: Assets/Dev/Lab/Scenes/TimelineTest.unity
   _notes: []

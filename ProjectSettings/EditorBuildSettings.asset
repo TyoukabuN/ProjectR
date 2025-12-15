@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Dev/NetcodeTest/Scene_NetcodeTest.unity
+    guid: 62ccb7a57d96ed443ac6407e99fe7a2b
+  - enabled: 0
     path: Assets/Dev/Scenes/ReleasedUnitTestScene.unity
     guid: 591cebccb2a8c114684d803dd643718e
   m_configObjects:

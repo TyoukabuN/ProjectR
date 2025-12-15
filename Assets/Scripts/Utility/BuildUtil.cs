@@ -3,6 +3,8 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEditor.Build.Player;
 using UnityEditor.Build.Reporting;
@@ -26,7 +28,7 @@ namespace PJR.Build
         }
     }
 
-    public struct PlayerBuildInfo
+    public struct PlayerBuildName
     {
         public const string BinaryFileExtension = ".exe";
         /// <summary>
@@ -48,7 +50,7 @@ namespace PJR.Build
 
         /// <param name="binaryFileName">player的exe文件的名字，不包括后缀的.exe</param>
         /// <param name="buildName">这次build的名字，也就是build所在文件夹的位置</param>
-        public PlayerBuildInfo(string binaryFileName, string buildName)
+        public PlayerBuildName(string binaryFileName, string buildName)
         {
             BinaryFileName = binaryFileName;
             BuildName = buildName;
@@ -69,6 +71,10 @@ namespace PJR.Build
             );
         }
         
+        public BuildPlayerOptions GetBuildPlayerOptions_Debug()
+        {
+            return GetBuildPlayerOptions_Debug(BuildUtil.GetCurrentBuildSettingsScenes());
+        }
         public BuildPlayerOptions GetBuildPlayerOptions_Debug(string[] scenes)
         {
             return GetBuildPlayerOptions(
@@ -76,10 +82,16 @@ namespace PJR.Build
                 BuildOptions.Development | BuildOptions.AllowDebugging
             );
         }
-        
+        public BuildPlayerOptions GetBuildPlayerOptions_Release()
+        {
+            return GetBuildPlayerOptions_Release(BuildUtil.GetCurrentBuildSettingsScenes());
+        }
         public BuildPlayerOptions GetBuildPlayerOptions_Release(string[] scenes)
         {
-            return GetBuildPlayerOptions(scenes, BuildOptions.AllowDebugging);
+            return GetBuildPlayerOptions(
+                scenes, 
+                BuildOptions.AllowDebugging
+            );
         }
         
         /// <summary>
@@ -214,12 +226,13 @@ namespace PJR.Build
             GenericMenu menu = new GenericMenu();
             //
             menu.AddItem(new GUIContent("Open .playerBuilds"), false, OpenPlayerBuildsPath);
+            menu.AddItem(new GUIContent("Build Debug Player(Custom Name)"), false, BuildPlayerWithName);
             menu.AddSeparator(string.Empty);
             //
             menu.AddItem(new GUIContent("UnitTest/Build"), false, BuildUnitTestPlayer);
             menu.AddItem(new GUIContent("UnitTest/Update DLL"), false, UpdateUnitTestPlayerDLL);
             menu.AddItem(new GUIContent("UnitTest/Clear And Build"), false, ClearAndBuildUnitTestPlayer);
-            menu.AddItem(new GUIContent("UnitTest/Clear"), false, ClearUnitTestPlayer);
+            menu.AddItem(new GUIContent("UnitTest/Clear"), false, ClearUnitTestPlayerFolder);
             //
             menu.ShowAsContext();
         }
@@ -231,6 +244,10 @@ namespace PJR.Build
             for (var i = 0; i < EditorBuildSettings.scenes.Length; i++)
             {
                 var editorBuildSettingsScene = EditorBuildSettings.scenes[i];
+                if (editorBuildSettingsScene == null)
+                    continue;
+                if(!editorBuildSettingsScene.enabled)
+                    continue;
                 if(string.IsNullOrEmpty(editorBuildSettingsScene.path))
                     continue;
                 scenelist.Add(editorBuildSettingsScene.path);
@@ -251,34 +268,187 @@ namespace PJR.Build
                 Debug.LogWarning($"路径不存在: {path}");
         }
         
-        public static string BuildUnitTestPlayerPath => Path.Combine(PathDefine.PlayerBuildRoot, "UnitTestBuild");
+        public static string BuildUnitTestPlayerPath => GetFullPlayerBuildPath("UnitTestBuild");
+        public static string GetFullPlayerBuildPath(string playerBuildName) => Path.Combine(PathDefine.PlayerBuildRoot, playerBuildName);
+        
         public static void BuildUnitTestPlayer()
         {
-            var bpInfo = new PlayerBuildInfo("UnitTest","UnitTestBuild");
+            var bpInfo = new PlayerBuildName("UnitTest","UnitTestBuild");
             var bpOptions = bpInfo.GetBuildPlayerOptions_UnitTest();
             
             if(!bpOptions.BuildPlayer())
                 return;
             OpenPath(bpInfo.BuildPath);
         }
+        
+        public static void BuildPlayerWithName()
+        {
+            var dialog = new BuildPlayerInfoDialog(dialog =>
+            {
+                var playerName = dialog.GetPlayerBuildInfo();
+                if(dialog.ClearPreBuild)
+                    ClearPlayerBuildFolderByName(playerName.BuildName);
+                playerName.GetBuildPlayerOptions_Debug().BuildPlayer();
+            });
+            dialog.Show();
+        }
+
+
+        public abstract class MiniDialog
+        {
+            private OdinEditorWindow _window;     
+            protected OdinEditorWindow Window => _window; 
+            public void Show()
+            {
+                var w = OdinEditorWindow.InspectObject(this);
+                _window = w;
+            }
+            
+            [OnInspectorGUI]
+            protected void InspectorGUI()
+            {
+                OnInspectorGUI();
+                DrawButtonGUI();
+            }
+            protected virtual void OnInspectorGUI()
+            {
+            }
+            protected void DrawButtonGUI()
+            {
+                GUILayout.FlexibleSpace();
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("确定"))
+                    Confirm();
+                if (GUILayout.Button("取消"))
+                    Cancel();
+                GUILayout.EndHorizontal();
+            }
+            protected void Confirm()
+            {
+                if (!OnConfirm())
+                    return;
+                CloseWindow();
+            }
+            protected void Cancel()
+            {
+                OnCancel();
+                CloseWindow();
+            }
+            protected void CloseWindow()
+            {
+                _window?.Close();
+                _window = null;
+            }
+            protected virtual bool OnConfirm() => true;
+            protected virtual void OnCancel()
+            {
+            }
+        }
+
+        public class BuildPlayerInfoDialog : MiniDialog
+        {
+            public enum EBuildNameFormat
+            {
+                [LabelText("默认")]
+                Default = 0,
+                [LabelText("自定义构建名名字")]
+                CustomBuildName,
+                [LabelText("使用时间戳作为构建名")]
+                UsingTimeStampAsBuildName
+            }
+            
+            [LabelText("执行文件名")]
+            [OnValueChanged(nameof(BinaryFileNameChanged))]
+            public string BinaryFileName;
+            [LabelText("构建名(文件夹名)"), DisableIf("@!CustomBuildName")]
+            public string BuildName;
+
+            [LabelText("构建名格式")]
+            [OnValueChanged(nameof(BinaryFileNameChanged))]
+            public EBuildNameFormat BuildNameFormat = 0;
+
+            [LabelText("自定义构建名名字")]
+            public bool CustomBuildName => BuildNameFormat == EBuildNameFormat.CustomBuildName;
+            [LabelText("使用时间戳作为构建吗")]
+            public bool UsingTimeStampAsBuildName => BuildNameFormat == EBuildNameFormat.UsingTimeStampAsBuildName;
+            [LabelText("清理之前的构建")]
+            public bool ClearPreBuild = false;
+
+            private Action<BuildPlayerInfoDialog> _onConfirm;
+            public BuildPlayerInfoDialog(Action<BuildPlayerInfoDialog> onConfirm)
+            {
+                _onConfirm = onConfirm;
+            }
+            public string GetBuildName()
+            {
+                string buildName = string.Empty;
+                if(BuildNameFormat == EBuildNameFormat.Default)
+                    buildName = $"Build_{BinaryFileName}";
+                else if(BuildNameFormat == EBuildNameFormat.CustomBuildName)
+                    buildName = BuildName;
+                else if (BuildNameFormat == EBuildNameFormat.UsingTimeStampAsBuildName)
+                    buildName = $"Build_{DateTime.Now:yyyyMMdd_HHmmss_fff}";
+                
+                return buildName;
+            }
+            public PlayerBuildName GetPlayerBuildInfo()
+            {
+                return new PlayerBuildName(BinaryFileName,GetBuildName());
+            }
+
+            protected override bool OnConfirm()
+            {
+                if (string.IsNullOrEmpty(BinaryFileName))
+                {
+                    Window.ShowNotification(new GUIContent("请输入执行文件名"));
+                    return false;
+                }
+                if (string.IsNullOrEmpty(GetBuildName()))
+                {
+                    Window.ShowNotification(new GUIContent("构建名无效"));
+                    return false;
+                }
+                _onConfirm?.Invoke(this);
+                return true;
+            }
+         
+            private void BinaryFileNameChanged()
+            {
+                if(BuildNameFormat == EBuildNameFormat.Default)
+                    BuildName = $"Build_{BinaryFileName}";
+                else if(BuildNameFormat == EBuildNameFormat.CustomBuildName)
+                    BuildName = BuildName;
+                else if (BuildNameFormat == EBuildNameFormat.UsingTimeStampAsBuildName)
+                {
+                }
+            }
+        }
 
         public static void UpdateUnitTestPlayerDLL()
         {
-            var bpInfo = new PlayerBuildInfo("UnitTest","UnitTestBuild");
+            var bpInfo = new PlayerBuildName("UnitTest","UnitTestBuild");
             bpInfo.TryUpdateDLL();
         }
 
-        public static void ClearUnitTestPlayer()
+        public static void ClearUnitTestPlayerFolder() => ClearPlayerBuildFolderByPath(BuildUnitTestPlayerPath);
+        public static void ClearPlayerBuildFolderByName(string name)
         {
-            if (!Directory.Exists(BuildUnitTestPlayerPath))
+            if (string.IsNullOrEmpty(name))
+                return;
+            string path = GetFullPlayerBuildPath(name);
+            ClearPlayerBuildFolderByPath(path);
+        }
+        public static void ClearPlayerBuildFolderByPath(string path)
+        {
+            if (!Directory.Exists(path))
                 return; 
-            Directory.Delete(BuildUnitTestPlayerPath, true);
-            Debug.Log("[ClearUnitTestPlayer] [Done]");
+            Directory.Delete(path, true);
+            Debug.Log($"[ClearPlayer][Done] {path}");
         }
 
         public static void ClearAndBuildUnitTestPlayer()
         {
-            ClearUnitTestPlayer();
+            ClearUnitTestPlayerFolder();
             BuildUnitTestPlayer();
         }
 

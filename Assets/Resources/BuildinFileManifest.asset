@@ -13,12 +13,63 @@ MonoBehaviour:
   m_Name: BuildinFileManifest
   m_EditorClassIdentifier: 
   BuildinFiles:
+  - PackageName: art
+    FileName: 2681db3a2ba0614bca806d1b9a528dc6.bundle
+    FileCRC32: d7f51c54
+  - PackageName: art
+    FileName: 32c938b602f29a381ba069239f5c6e02.bundle
+    FileCRC32: 4a9da82b
+  - PackageName: art
+    FileName: 4d149a762e418501f820294bfc9ae0ba.bundle
+    FileCRC32: 20ffd61e
+  - PackageName: art
+    FileName: 51ff078ed83e4e8faf36417d60a7bb13.bundle
+    FileCRC32: 979eacdc
+  - PackageName: art
+    FileName: 75389514d59327c6c777897944ee82f7.bundle
+    FileCRC32: 9d6c0aa4
+  - PackageName: art
+    FileName: 7b8ef195c7aa1eb033a7641578e5cd31.bundle
+    FileCRC32: fd974ebb
+  - PackageName: art
+    FileName: 99210d7e47a8b3c4c5acebda358cd45c.bundle
+    FileCRC32: 1ecdf612
+  - PackageName: art
+    FileName: b391882b4cc528b1be2eaa84f084b809.bundle
+    FileCRC32: 11c55037
+  - PackageName: art
+    FileName: c45f20d117244a2a4bd9fce82ca9824f.bundle
+    FileCRC32: 781644ae
+  - PackageName: art
+    FileName: f162594887d778e9e496290e6d67d555.bundle
+    FileCRC32: 729d774f
   - PackageName: Default
-    FileName: b4c92a879a54d26f4ec0f558a46903f0.bundle
-    FileCRC32: deec0c8c
+    FileName: 2681db3a2ba0614bca806d1b9a528dc6.bundle
+    FileCRC32: d7f51c54
   - PackageName: Default
-    FileName: c6d9b30f9f9f93e9e8c86a713b4c626d.bundle
-    FileCRC32: 91daff36
+    FileName: 32c938b602f29a381ba069239f5c6e02.bundle
+    FileCRC32: 4a9da82b
   - PackageName: Default
-    FileName: cdaba43a62540704b30bdd8924d1aa86.bundle
-    FileCRC32: 6dc92025
+    FileName: 4d149a762e418501f820294bfc9ae0ba.bundle
+    FileCRC32: 20ffd61e
+  - PackageName: Default
+    FileName: 51ff078ed83e4e8faf36417d60a7bb13.bundle
+    FileCRC32: 979eacdc
+  - PackageName: Default
+    FileName: 75389514d59327c6c777897944ee82f7.bundle
+    FileCRC32: 9d6c0aa4
+  - PackageName: Default
+    FileName: 7b8ef195c7aa1eb033a7641578e5cd31.bundle
+    FileCRC32: fd974ebb
+  - PackageName: Default
+    FileName: 99210d7e47a8b3c4c5acebda358cd45c.bundle
+    FileCRC32: 1ecdf612
+  - PackageName: Default
+    FileName: b391882b4cc528b1be2eaa84f084b809.bundle
+    FileCRC32: 11c55037
+  - PackageName: Default
+    FileName: c45f20d117244a2a4bd9fce82ca9824f.bundle
+    FileCRC32: 781644ae
+  - PackageName: Default
+    FileName: f162594887d778e9e496290e6d67d555.bundle
+    FileCRC32: 729d774f

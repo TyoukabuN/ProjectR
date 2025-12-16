@@ -21,16 +21,6 @@ namespace PJR.Dev.Lab.NetcodeTest
         
         void Update()
         {
-            if (m_NetworkManager?.IsHost ?? false)
-            {
-                if (NetworkManager.Singleton != null)
-                {
-                    Debug.Log(
-                        $"Listening={NetworkManager.Singleton.IsListening}, " +
-                        $"ConnectedClients={NetworkManager.Singleton.ConnectedClients.Count}"
-                    );
-                }
-            }
         }
 
         void OnGUI()
@@ -77,7 +67,11 @@ namespace PJR.Dev.Lab.NetcodeTest
         }
         bool OnNetworkObjectOnValidatableCallback()
         {
+#if UNITY_EDITOR
             return !ParrelSync.ClonesManager.IsClone();
+#else
+            return true;
+#endif
         }
 
         void StatusLabels()
@@ -109,6 +103,7 @@ namespace PJR.Dev.Lab.NetcodeTest
         }
     }
     
+    #if UNITY_EDITOR
     static class TestStaticSetup
     {
         [InitializeOnLoadMethod]
@@ -116,10 +111,11 @@ namespace PJR.Dev.Lab.NetcodeTest
         { 
             if (ParrelSync.ClonesManager.IsClone())
             {
-                NetworkObject.BAN_NETWORKOBJECT_VALIDATE = true;
-                Debug.LogWarning(
-                    $"setting {nameof(NetworkObject.BAN_NETWORKOBJECT_VALIDATE)} to true in a clone project ");
+                // NetworkObject.BAN_NETWORKOBJECT_VALIDATE = true;
+                // Debug.LogWarning(
+                //     $"setting {nameof(NetworkObject.BAN_NETWORKOBJECT_VALIDATE)} to true in a clone project ");
             }
         }
     }
+    #endif
 }

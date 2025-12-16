@@ -375,7 +375,12 @@ namespace PJR.Build
             public bool ClearPreBuild = false;
 
             private Action<BuildPlayerInfoDialog> _onConfirm;
-            public BuildPlayerInfoDialog(Action<BuildPlayerInfoDialog> onConfirm)
+
+            public BuildPlayerInfoDialog()
+            {
+                BinaryFileName = Application.productName;
+            }
+            public BuildPlayerInfoDialog(Action<BuildPlayerInfoDialog> onConfirm):this()
             {
                 _onConfirm = onConfirm;
             }

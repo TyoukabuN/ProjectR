@@ -54,8 +54,8 @@ MonoBehaviour:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 964396dae34b7fd4885e2e30a6089c3f, type: 2}
     TickRate: 30
-    ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
+    ClientConnectionBufferTimeout: 100
+    ConnectionApproval: 1
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30
@@ -69,8 +69,8 @@ MonoBehaviour:
     SpawnTimeout: 10
     EnableNetworkLogs: 1
     OldPrefabList: []
-  RunInBackground: 1
-  LogLevel: 1
+  RunInBackground: 0
+  LogLevel: 0
 --- !u!114 &7454473690836590599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,12 +87,12 @@ MonoBehaviour:
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
-  m_ConnectTimeoutMS: 1000
+  m_ConnectTimeoutMS: 10000
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 127.0.0.1
-    Port: 7777
+    Address: 192.168.10.10
+    Port: 7788
     ServerListenAddress: 192.168.10.10
   DebugSimulator:
     PacketDelayMS: 0

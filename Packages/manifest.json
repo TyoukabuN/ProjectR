@@ -13,7 +13,7 @@
     "com.unity.inputsystem": "1.7.0",
     "com.unity.mathematics": "1.2.1",
     "com.unity.multiplayer.tools": "1.1.1",
-    "com.unity.netcode.gameobjects": "1.14.1",
+    "com.unity.netcode.gameobjects": "file:../LocalPackages/com.unity.netcode.gameobjects@1.14.1",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.physics": "0.51.1-preview.21",
     "com.unity.postprocessing": "3.2.2",

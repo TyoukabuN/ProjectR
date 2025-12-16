@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 
 namespace PJR.Dev.Lab.NetcodeTest
@@ -16,6 +17,20 @@ namespace PJR.Dev.Lab.NetcodeTest
         {
             m_NetworkManager ??= GetComponent<NetworkManager>();
             return m_NetworkManager != null;
+        }
+        
+        void Update()
+        {
+            if (m_NetworkManager?.IsHost ?? false)
+            {
+                if (NetworkManager.Singleton != null)
+                {
+                    Debug.Log(
+                        $"Listening={NetworkManager.Singleton.IsListening}, " +
+                        $"ConnectedClients={NetworkManager.Singleton.ConnectedClients.Count}"
+                    );
+                }
+            }
         }
 
         void OnGUI()
@@ -37,9 +52,32 @@ namespace PJR.Dev.Lab.NetcodeTest
 
         void StartButtons()
         {
-            if (GUILayout.Button("Host")) m_NetworkManager.StartHost();
-            if (GUILayout.Button("Client")) m_NetworkManager.StartClient();
-            if (GUILayout.Button("Server")) m_NetworkManager.StartServer();
+            if (GUILayout.Button("Host"))
+            {
+                RegisterNonClientNetworkManagerCallback();
+                m_NetworkManager.StartHost();
+            }
+            if (GUILayout.Button("Client")) 
+                m_NetworkManager.StartClient();
+            if (GUILayout.Button("Server"))
+            {
+                RegisterNonClientNetworkManagerCallback();
+                m_NetworkManager.StartServer();
+            }
+        }
+
+        void RegisterNonClientNetworkManagerCallback()
+        {
+            m_NetworkManager.ConnectionApprovalCallback = OnConnectionApprovalCallback;
+        }
+        void OnConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+        {
+            response.Approved = true;
+            response.CreatePlayerObject = true;
+        }
+        bool OnNetworkObjectOnValidatableCallback()
+        {
+            return !ParrelSync.ClonesManager.IsClone();
         }
 
         void StatusLabels()
@@ -67,6 +105,20 @@ namespace PJR.Dev.Lab.NetcodeTest
                     var player = playerObject.GetComponent<HelloWorldPlayer>();
                     player.Move();
                 }
+            }
+        }
+    }
+    
+    static class TestStaticSetup
+    {
+        [InitializeOnLoadMethod]
+        private static void OnInitializeOnLoadMethod()
+        { 
+            if (ParrelSync.ClonesManager.IsClone())
+            {
+                NetworkObject.BAN_NETWORKOBJECT_VALIDATE = true;
+                Debug.LogWarning(
+                    $"setting {nameof(NetworkObject.BAN_NETWORKOBJECT_VALIDATE)} to true in a clone project ");
             }
         }
     }

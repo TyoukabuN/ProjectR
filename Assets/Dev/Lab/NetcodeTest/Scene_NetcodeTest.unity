@@ -461,10 +461,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7454473690836590648, guid: 9e98a7b96b60c8748b36fee8f040cdc4, type: 3}
-      propertyPath: NetworkConfig.EnableSceneManagement
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7454473690836590649, guid: 9e98a7b96b60c8748b36fee8f040cdc4, type: 3}
       propertyPath: m_RootOrder
       value: 0

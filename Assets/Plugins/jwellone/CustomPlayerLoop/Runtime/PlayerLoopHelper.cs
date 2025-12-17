@@ -15,7 +15,7 @@ namespace jwellone
 		private static CustomPlayerLoopSettings _settings = null;
 		private static Action _onSettingProcess { get; set; } = OnSetting;
 
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+		//[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
 		static void OnAfterSceneLoad()
 		{
 			_onSettingProcess?.Invoke();

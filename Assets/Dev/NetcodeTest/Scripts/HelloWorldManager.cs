@@ -35,6 +35,8 @@ namespace PJR.Dev.Lab.NetcodeTest
                 StatusLabels();
 
                 SubmitNewPosition();
+                
+                DisconnectButton();
             }
 
             GUILayout.EndArea();
@@ -101,6 +103,15 @@ namespace PJR.Dev.Lab.NetcodeTest
                 }
             }
         }
+        void DisconnectButton()
+        {
+            if (!m_NetworkManager.IsClient)
+                return;
+            if (GUILayout.Button("Disconnect"))
+            {
+                m_NetworkManager.Shutdown();
+            }
+        }
     }
     
     #if UNITY_EDITOR
@@ -111,9 +122,9 @@ namespace PJR.Dev.Lab.NetcodeTest
         { 
             if (ParrelSync.ClonesManager.IsClone())
             {
-                // NetworkObject.BAN_NETWORKOBJECT_VALIDATE = true;
-                // Debug.LogWarning(
-                //     $"setting {nameof(NetworkObject.BAN_NETWORKOBJECT_VALIDATE)} to true in a clone project ");
+                NetworkObject.BAN_NETWORKOBJECT_VALIDATE = true;
+                Debug.LogWarning(
+                    $"setting {nameof(NetworkObject.BAN_NETWORKOBJECT_VALIDATE)} to true in a clone project ");
             }
         }
     }

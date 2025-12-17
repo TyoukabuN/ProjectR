@@ -112,7 +112,7 @@ namespace PJR.Build
         public BuildPlayerOptions GetBuildPlayerOptions(string[] scenes, BuildOptions options)
         {
             if(scenes is not {Length: > 0})
-                throw new System.ArgumentException("scenes is empty");
+                throw new System.ArgumentException("要构建的Player的Scenes列表为空！");
             
             var buildTarget = EditorUserBuildSettings.activeBuildTarget;
             var buildOptions = new BuildPlayerOptions
@@ -250,6 +250,12 @@ namespace PJR.Build
                     continue;
                 if(string.IsNullOrEmpty(editorBuildSettingsScene.path))
                     continue;
+                string guid = AssetDatabase.AssetPathToGUID(editorBuildSettingsScene.path);
+                if (string.IsNullOrEmpty(guid))
+                {
+                    Debug.LogWarning($"无效场景路径：{editorBuildSettingsScene.path}");
+                    continue;
+                }
                 scenelist.Add(editorBuildSettingsScene.path);
             }
             return scenelist.ToArray();

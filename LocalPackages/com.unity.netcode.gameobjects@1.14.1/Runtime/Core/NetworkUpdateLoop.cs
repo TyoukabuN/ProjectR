@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
@@ -289,13 +290,15 @@ namespace Unity.Netcode
             }
         }
 
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Initialize()
         {
+            Debug.LogWarning("NetworkUpdateLoop Initialize");
             UnregisterLoopSystems();
             RegisterLoopSystems();
         }
-
+ 
         private enum LoopSystemPosition
         {
             After,

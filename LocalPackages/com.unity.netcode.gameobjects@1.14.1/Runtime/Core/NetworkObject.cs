@@ -105,8 +105,8 @@ namespace Unity.Netcode
 
         internal void OnValidate()
         {
-            if (BAN_NETWORKOBJECT_VALIDATE)
-                return;
+            // if (BAN_NETWORKOBJECT_VALIDATE)
+            //     return;
             
             // do NOT regenerate GlobalObjectIdHash for NetworkPrefabs while Editor is in PlayMode
             if (EditorApplication.isPlaying && !string.IsNullOrEmpty(gameObject.scene.name))

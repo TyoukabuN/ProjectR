@@ -22,7 +22,7 @@ namespace YooAsset
                 Debug.LogError(e);
             }
         }
-        static AssetDeleteResult OnWillDeleteAsset(string assetPath)
+        static AssetDeleteResult OnWillDeleteAsset(string assetPath, RemoveAssetOptions options)
         {
             try
             {

@@ -9,23 +9,28 @@ namespace PJR.Core.PlayerLoopAgent
         public class Node
         {
             public PlayerLoopTree Tree { get; private set; }
-            public Node Parent { get; private set; }
+            public Node Parent
+            {
+                get => _parent;
+                set => _parent = value;
+            }
+
             public List<Node> SubNodes = new(64);
             public PlayerLoopSystem PlayerLoopSystem;
 
-            public Node(PlayerLoopTree tree, PlayerLoopSystem playerLoopSystem)
+            private Node _parent;
+
+            public Node(PlayerLoopSystem playerLoopSystem)
             {
-                Tree = tree;
                 PlayerLoopSystem = playerLoopSystem;
             }
-
-            public Node(PlayerLoopTree tree, Type type) : this(tree, type, null)
+            public Node(PlayerLoopTree tree, PlayerLoopSystem playerLoopSystem): this(playerLoopSystem)
             {
+                SetTree(tree);
             }
-
             public Node(PlayerLoopTree tree, Type type, PlayerLoopSystem.UpdateFunction updateDelegate)
             {
-                Tree = tree;
+                SetTree(tree);
                 PlayerLoopSystem = new()
                 {
                     type = type,
@@ -33,10 +38,32 @@ namespace PJR.Core.PlayerLoopAgent
                 };
             }
 
-            public void SetParent(Node parent, int index = int.MaxValue)
+            public void SetTree(PlayerLoopTree newTree)
             {
-                Parent = parent;
-                parent.OnSetParent(this, index);
+                if (Tree == newTree)
+                    return;
+                
+                if(Tree != null)
+                    Tree.RemoveNode(this);
+                
+                Tree = newTree;
+                if (newTree != null)
+                    newTree.OnAddNode(this);
+            }
+
+            public void SetParent(Node newParent, int index = int.MaxValue)
+            {
+                if(Parent == newParent)
+                    return;
+                if(Parent != null)
+                    Parent.RemoveChild(this);
+                
+                Parent = newParent;
+                if (newParent != null)
+                {
+                    newParent.OnSetParent(this, index);
+                    SetTree(newParent.Tree);
+                }
             }
 
             private void OnSetParent(Node chlid, int index)
@@ -45,11 +72,9 @@ namespace PJR.Core.PlayerLoopAgent
                     SubNodes.Add(chlid);
                 else
                     SubNodes.Insert(index, chlid);
-                Tree.AddNode(chlid);
             }
 
             public void AddChild(Node node) => node.SetParent(this);
-
             /// <summary>
             /// 注意这里会无视掉<see crefILocatedAgentnt.AgentLocation"/>,
             /// 除非你使用<see cref="PlayerLoopTree.AddNode(IAgent)"/>来添加
@@ -66,6 +91,13 @@ namespace PJR.Core.PlayerLoopAgent
             {
                 var node = new Node(Tree, system);
                 node.SetParent(this);
+            }
+
+            public void RemoveChild(Node node)
+            {
+                if (node == null)
+                    return;
+                SubNodes?.Remove(node);
             }
         }
     }

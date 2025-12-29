@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.LowLevel;
 
 namespace PJR.Core.PlayerLoopAgent
@@ -30,11 +32,29 @@ namespace PJR.Core.PlayerLoopAgent
             }
         }
 
-        public void AddNode(Node node)
+        private void OnAddNode(Node node)
         {
-            if (!Nodes.Contains(node))
+            if (Nodes.Contains(node))
                 return;
             Nodes.Add(node);
+        }
+        public bool AnyNodeWithType(Type type, out Node node)
+        {
+            node = Nodes.FirstOrDefault(item => item.PlayerLoopSystem.type == type);
+            return node != null;
+        }
+
+        public void RemoveNode(Node node)
+        {
+            if (node == null)
+                return;
+            if (!Nodes.Contains(node))
+                return;
+            Nodes.Remove(node);
+            node.SetTree(null);
+            //如果parent是这树里的，让parent从subNodes中移除node
+            if(node.Parent?.Tree == this)
+                node.SetParent(null);
         }
 
         public void SetPlayerLoop()
@@ -98,6 +118,12 @@ namespace PJR.Core.PlayerLoopAgent
                 return null;
             if (!TryGetAnchorLocation(location, out Node parent, out int anchorNodeIndex))
                 return null;
+            //默认PlayerLoopSystem的类型唯一
+            if (AnyNodeWithType(system.type, out var exist))
+            {
+                Debug.LogWarning($"[存在重复PlayerLoopSystem] type:{system.type.FullName}");
+                RemoveNode(exist);
+            }
             var node = new Node(this, system);
             node.SetParent(parent, anchorNodeIndex);
             return node;
@@ -163,16 +189,18 @@ namespace PJR.Core.PlayerLoopAgent
             return tree;
         }
 
-        private static void AddNodeRecursion(PlayerLoopTree tree, Node parentNode, PlayerLoopSystem sys)
+        private static Node AddNodeRecursion(PlayerLoopTree tree, Node parentNode, PlayerLoopSystem sys)
         {
             var node = new Node(tree, sys);
             node.SetParent(parentNode);
 
             if (sys.subSystemList is not { Length: > 0 })
-                return;
+                return node;
 
             for (int i = 0; i < sys.subSystemList.Length; i++)
                 AddNodeRecursion(tree, node, sys.subSystemList[i]);
+
+            return node;
         }
     }
 }

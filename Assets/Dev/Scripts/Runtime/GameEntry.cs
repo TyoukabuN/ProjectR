@@ -2,6 +2,7 @@ using PJR;
 using System.Collections;
 using UnityEngine;
 using PJR.Systems;
+using PJR.Systems.PlayerLoopUpdateAgent;
 using Sirenix.OdinInspector;
 
 public class GameEntry : MonoBehaviour
@@ -22,6 +23,7 @@ public class GameEntry : MonoBehaviour
 
     IEnumerator InitSystems()
     {
+        yield return PlayerLoopUpdateAgentSystem.instance.Initialize();
         yield return ResourceSystem.instance.Initialize();
         yield return InputSystem.instance.Initialize();
         yield return SceneSystem.instance.Initialize();

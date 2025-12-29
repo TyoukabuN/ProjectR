@@ -13,8 +13,12 @@ namespace PJR.Systems.PlayerLoopUpdateAgent
         {
             public struct Initialization : ILocatedAgent
             {
-                public AgentLocation AgentLocation => new(typeof(UnityEngine.PlayerLoop.Initialization), null, AgentLocation.EOrder.After);
-                public PlayerLoopSystem GetPlayerLoopSystem() =>new()
+                public AgentLocation AgentLocation => new(
+                    typeof(UnityEngine.PlayerLoop.Initialization),
+                    null,
+                    AgentLocation.EOrder.After);
+
+                public PlayerLoopSystem GetPlayerLoopSystem() => new()
                 {
                     type = typeof(Initialization),
                     updateDelegate = () => Internal_OnPlayerLoopPhase(EAgentUpdatePhase.Initialization),
@@ -23,8 +27,12 @@ namespace PJR.Systems.PlayerLoopUpdateAgent
 
             public struct EarlyUpdate : ILocatedAgent
             {
-                public AgentLocation AgentLocation => new(typeof(UnityEngine.PlayerLoop.EarlyUpdate), null, AgentLocation.EOrder.After);
-                public PlayerLoopSystem GetPlayerLoopSystem() =>new()
+                public AgentLocation AgentLocation => new(
+                    typeof(UnityEngine.PlayerLoop.EarlyUpdate),
+                    typeof(UnityEngine.PlayerLoop.EarlyUpdate.ScriptRunDelayedStartupFrame),
+                    AgentLocation.EOrder.Before);
+
+                public PlayerLoopSystem GetPlayerLoopSystem() => new()
                 {
                     type = typeof(EarlyUpdate),
                     updateDelegate = () => Internal_OnPlayerLoopPhase(EAgentUpdatePhase.EarlyUpdate),
@@ -33,8 +41,12 @@ namespace PJR.Systems.PlayerLoopUpdateAgent
 
             public struct FixedUpdate : ILocatedAgent
             {
-                public AgentLocation AgentLocation => new(typeof(UnityEngine.PlayerLoop.FixedUpdate), null, AgentLocation.EOrder.After);
-                public PlayerLoopSystem GetPlayerLoopSystem() =>new()
+                public AgentLocation AgentLocation => new(
+                    typeof(UnityEngine.PlayerLoop.FixedUpdate),
+                    typeof(UnityEngine.PlayerLoop.FixedUpdate.ScriptRunBehaviourFixedUpdate),
+                    AgentLocation.EOrder.Before);
+
+                public PlayerLoopSystem GetPlayerLoopSystem() => new()
                 {
                     type = typeof(FixedUpdate),
                     updateDelegate = () => Internal_OnPlayerLoopPhase(EAgentUpdatePhase.FixedUpdate),
@@ -43,10 +55,12 @@ namespace PJR.Systems.PlayerLoopUpdateAgent
 
             public struct PreUpdate : ILocatedAgent
             {
-                public AgentLocation AgentLocation => new(typeof(UnityEngine.PlayerLoop.PreUpdate), null, AgentLocation.EOrder.After);
-                public PlayerLoopSystem.UpdateFunction GetUpdateFunction() =>
-                    () => Internal_OnPlayerLoopPhase(EAgentUpdatePhase.PreUpdate);
-                public PlayerLoopSystem GetPlayerLoopSystem() =>new()
+                public AgentLocation AgentLocation => new(
+                    typeof(UnityEngine.PlayerLoop.PreUpdate),
+                    typeof(UnityEngine.PlayerLoop.PreUpdate.PhysicsUpdate),
+                    AgentLocation.EOrder.Before);
+
+                public PlayerLoopSystem GetPlayerLoopSystem() => new()
                 {
                     type = typeof(FixedUpdate),
                     updateDelegate = () => Internal_OnPlayerLoopPhase(EAgentUpdatePhase.FixedUpdate),
@@ -55,8 +69,12 @@ namespace PJR.Systems.PlayerLoopUpdateAgent
 
             public struct Update : ILocatedAgent
             {
-                public AgentLocation AgentLocation => new(typeof(UnityEngine.PlayerLoop.Update), null, AgentLocation.EOrder.After);
-                public PlayerLoopSystem GetPlayerLoopSystem() =>new()
+                public AgentLocation AgentLocation => new(
+                    typeof(UnityEngine.PlayerLoop.Update),
+                    typeof(UnityEngine.PlayerLoop.Update.ScriptRunBehaviourUpdate),
+                    AgentLocation.EOrder.Before);
+
+                public PlayerLoopSystem GetPlayerLoopSystem() => new()
                 {
                     type = typeof(Update),
                     updateDelegate = () => Internal_OnPlayerLoopPhase(EAgentUpdatePhase.Update),
@@ -65,8 +83,12 @@ namespace PJR.Systems.PlayerLoopUpdateAgent
 
             public struct PreLateUpdate : ILocatedAgent
             {
-                public AgentLocation AgentLocation => new(typeof(UnityEngine.PlayerLoop.PreLateUpdate), null, AgentLocation.EOrder.After);
-                public PlayerLoopSystem GetPlayerLoopSystem() =>new()
+                public AgentLocation AgentLocation => new(
+                    typeof(UnityEngine.PlayerLoop.PreLateUpdate),
+                    typeof(UnityEngine.PlayerLoop.PreLateUpdate.ScriptRunBehaviourLateUpdate),
+                    AgentLocation.EOrder.Before);
+
+                public PlayerLoopSystem GetPlayerLoopSystem() => new()
                 {
                     type = typeof(PreLateUpdate),
                     updateDelegate = () => Internal_OnPlayerLoopPhase(EAgentUpdatePhase.PreLateUpdate),
@@ -75,8 +97,12 @@ namespace PJR.Systems.PlayerLoopUpdateAgent
 
             public struct PostScriptLateUpdate : ILocatedAgent
             {
-                public AgentLocation AgentLocation => new(typeof(UnityEngine.PlayerLoop.PostLateUpdate), null, AgentLocation.EOrder.After);
-                public PlayerLoopSystem GetPlayerLoopSystem() =>new()
+                public AgentLocation AgentLocation => new(
+                    typeof(UnityEngine.PlayerLoop.PreLateUpdate),
+                    typeof(UnityEngine.PlayerLoop.PreLateUpdate.ScriptRunBehaviourLateUpdate),
+                    AgentLocation.EOrder.After);
+
+                public PlayerLoopSystem GetPlayerLoopSystem() => new()
                 {
                     type = typeof(PostScriptLateUpdate),
                     updateDelegate = () => Internal_OnPlayerLoopPhase(EAgentUpdatePhase.PostScriptLateUpdate),
@@ -85,8 +111,12 @@ namespace PJR.Systems.PlayerLoopUpdateAgent
 
             public struct PostLateUpdate : ILocatedAgent
             {
-                public AgentLocation AgentLocation => new(typeof(UnityEngine.PlayerLoop.PostLateUpdate), null, AgentLocation.EOrder.After);
-                public PlayerLoopSystem GetPlayerLoopSystem() =>new()
+                public AgentLocation AgentLocation => new(
+                    typeof(UnityEngine.PlayerLoop.PostLateUpdate),
+                    typeof(UnityEngine.PlayerLoop.PostLateUpdate.PlayerSendFrameComplete),
+                    AgentLocation.EOrder.After);
+
+                public PlayerLoopSystem GetPlayerLoopSystem() => new()
                 {
                     type = typeof(PostLateUpdate),
                     updateDelegate = () => Internal_OnPlayerLoopPhase(EAgentUpdatePhase.PostLateUpdate),

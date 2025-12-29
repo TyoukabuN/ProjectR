@@ -19,12 +19,14 @@ MonoBehaviour:
   _quickAccessItems: []
   _projectFolderIcons: []
   _sceneHistory:
+  - name: PlayerloopUpdateScene
+    path: Assets/Dev/Lab/PlayerloopUpdate/PlayerloopUpdateScene.unity
+  - name: Scene_NetcodeTest
+    path: Assets/Dev/NetcodeTest/Scene_NetcodeTest.unity
   - name: Bootstrap
     path: Assets/Samples/Netcode for GameObjects/1.5.2/Bootstrap/Scenes/Bootstrap.unity
   - name: Bootstrap
     path: Assets/Samples/Netcode for GameObjects/1.14.1/Bootstrap/Scenes/Bootstrap.unity
-  - name: Scene_NetcodeTest
-    path: Assets/Dev/NetcodeTest/Scene_NetcodeTest.unity
   - name: ReleasedUnitTestScene
     path: Assets/Dev/Scenes/ReleasedUnitTestScene.unity
   - name: Scene_NetcodeTest
@@ -55,6 +57,4 @@ MonoBehaviour:
     path: Assets/Dev/Lab/Common/CommonTest.unity
   - name: IndexedString
     path: Assets/Dev/Lab/IndexedString/IndexedString.unity
-  - name: TimelineTest
-    path: Assets/Dev/Lab/TimelineLab/TimelineTest.unity
   _notes: []

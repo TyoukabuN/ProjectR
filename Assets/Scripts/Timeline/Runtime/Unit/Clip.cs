@@ -9,27 +9,6 @@ using UnityEditor;
 
 namespace PJR.Timeline
 {
-    public interface IClip
-    {
-        EFrameRate FrameRateType { get; set; }
-        bool Mute { get; set; }
-        string Description { get; set; }
-        double start { get; set; }
-        double end { get; set; }
-        double duration { get; }
-        int TotalFrame { get; }
-        int StartFrame { get; set;}
-        int EndFrame { get; set;}
-        string GetClipName();
-        string GetClipInfo();
-        public ClipRunner GetRunner();
-        public Color GetClipColor();
-#if UNITY_EDITOR
-        public ClipRunner GetPreviewRunner();
-        public ClipRunner Editor_GetPreviewRunner();
-        public void GetContextMenu(GenericMenu menu){}
-#endif
-    }
     public interface ISequenceUnit
     {
         public SequenceAsset sequenceAsset
@@ -150,9 +129,8 @@ namespace PJR.Timeline
         public virtual Color GetClipColor() => Color.green;
 
 #if UNITY_EDITOR
-        public virtual ClipRunner GetPreviewRunner() => GetRunner();
+        public abstract ClipRunner Editor_GetPreviewRunner();
         public virtual void GetContextMenu(GenericMenu menu){}
-        public virtual ClipRunner Editor_GetPreviewRunner() => null;
 #endif
 
         #region ISequenceUnit Impl

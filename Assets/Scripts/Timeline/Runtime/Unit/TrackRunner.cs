@@ -98,7 +98,7 @@ namespace PJR.Timeline
 
 #if UNITY_EDITOR
                 if(!EditorApplication.isPlaying)
-                    clipRunner =clip.GetPreviewRunner();
+                    clipRunner =clip.Editor_GetPreviewRunner();
                 else
 #endif
                     clipRunner =clip.GetRunner();

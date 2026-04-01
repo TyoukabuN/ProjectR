@@ -10,15 +10,13 @@ namespace PJR.Timeline
             {
                 get
                 {
-                    if (!Valid || _director._runner == null)
-                        return 0;
-                    return _director._runner.TotalTime;
+                    if (!Valid) return 0;
+                    return _director.Runner?.TotalTime ?? 0;
                 }
                 set
                 {
-                    if (!Valid || _director._runner == null)
-                        return;
-                    Runner.TotalTime = value;   
+                    if (!Valid || _director.Runner == null) return;
+                    _director.Runner.TotalTime = value;
                 }
             }
             public static PreviewSequenceHandle Get(SequenceDirector director)
@@ -37,9 +35,8 @@ namespace PJR.Timeline
 
             public bool IsPlaying()
             {
-                if (!Valid || _director._runner == null)
-                    return false;
-                return _director._runner.IsRunning;
+                if (!Valid) return false;
+                return _director.Runner?.IsRunning ?? false;
             }
             public void Play()
             {
@@ -66,12 +63,8 @@ namespace PJR.Timeline
             /// </summary>
             public void SeekTo(float seekTime)
             {
-                if (!Valid)
-                    return;
-                _director.EnsureRunnerReady();
-                time = seekTime;
-                _director._runner.runnerState = ERunnerState.Running;
-                _director.ManualUpdate(0, true);
+                if (!Valid) return;
+                _director.SeekTo(seekTime);
             }
         }
     }

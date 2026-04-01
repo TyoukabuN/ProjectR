@@ -68,6 +68,21 @@ namespace PJR.Timeline
                 _runner.OnStart();
         }
 
+        /// <summary>
+        /// 跳转到指定时间并强制刷新，不改变播放状态
+        /// </summary>
+        public void SeekTo(float seekTime)
+        {
+            EnsureRunnerReady();
+            if (_runner == null) return;
+            _runner.TotalTime = seekTime;
+            var prevState = _runner.runnerState;
+            _runner.runnerState = ERunnerState.Running;
+            _runner.OnUpdate(0, true);
+            if (prevState != ERunnerState.Running)
+                _runner.runnerState = prevState;
+        }
+
         [NonSerialized] private RuntimeSequenceHandle _sequenceHandle;
         [NonSerialized] private PreviewSequenceHandle _previewSequenceHandle;
         public ISequenceHandle GetHandle()

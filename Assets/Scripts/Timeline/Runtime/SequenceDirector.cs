@@ -68,7 +68,7 @@ namespace PJR.Timeline
                 _runner.OnStart();
         }
 
-        [NonSerialized] private SequenceHandle _sequenceHandle;
+        [NonSerialized] private RuntimeSequenceHandle _sequenceHandle;
         [NonSerialized] private PreviewSequenceHandle _previewSequenceHandle;
         public ISequenceHandle GetHandle()
         {
@@ -107,7 +107,7 @@ namespace PJR.Timeline
             _previewSequenceHandle?.Release();
             _previewSequenceHandle = null;
             if (_sequenceHandle == null)
-                _sequenceHandle = SequenceHandle.Get(this);
+                _sequenceHandle = RuntimeSequenceHandle.Get(this);
             return _sequenceHandle;
         }
 

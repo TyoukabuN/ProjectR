@@ -8,7 +8,7 @@ using UnityEditor;
 
 namespace PJR.Timeline
 {
-    public class Track : SerializedScriptableObject, ITrack, ISequenceUnit
+    public class Track : SerializedScriptableObject, ITrack
     {
         [OdinSerialize]
         private List<Clip> _clips;
@@ -34,7 +34,6 @@ namespace PJR.Timeline
             EditorUtility.SetDirty(this);
         }
 #endif
-        #region ISequenceUnit Impl
         [OdinSerialize, HideInInspector]
         private SequenceAsset _sequenceAsset;
         public SequenceAsset sequenceAsset
@@ -42,12 +41,6 @@ namespace PJR.Timeline
             get => _sequenceAsset;
             set => _sequenceAsset = value;
         }
-        Track ISequenceUnit.Track
-        {
-            get => this;
-            set { }
-        }
-        #endregion
     }
     
     public interface ITrack

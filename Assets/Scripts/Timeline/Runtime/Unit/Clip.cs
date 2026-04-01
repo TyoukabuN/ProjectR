@@ -9,16 +9,7 @@ using UnityEditor;
 
 namespace PJR.Timeline
 {
-    public interface ISequenceUnit
-    {
-        public SequenceAsset sequenceAsset
-        {
-            get;
-            set;
-        }
-       public Track Track { get; set; }
-    }
-    public abstract class Clip : SerializedScriptableObject,ISequenceUnit, IClip
+    public abstract class Clip : SerializedScriptableObject, IClip
     {
         [SerializeField,DisableIf("@true")]
         protected EFrameRate _frameRateType = 0;
@@ -133,8 +124,6 @@ namespace PJR.Timeline
         public virtual void GetContextMenu(GenericMenu menu){}
 #endif
 
-        #region ISequenceUnit Impl
-
         [OdinSerialize, HideInInspector]
         private SequenceAsset _sequenceAsset;
         [OdinSerialize, HideInInspector]
@@ -150,7 +139,6 @@ namespace PJR.Timeline
             get => _track;
             set => _track = value;
         }
-        #endregion
         
 #if UNITY_EDITOR
         public void Editor_MarkDirty()

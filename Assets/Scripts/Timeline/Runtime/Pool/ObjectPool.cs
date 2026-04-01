@@ -1,3 +1,5 @@
+using PJR.Core;
+
 namespace PJR.Timeline.Pool
 {
     /// <summary>
@@ -34,7 +36,7 @@ namespace PJR.Timeline.Pool
             pool.Release(toRelease);
         }
     }
-    public abstract class PoolableObject 
+    public abstract class PoolableObject : IReleasable
     {
         public bool IsReleased = false;
         public abstract void Clear();
@@ -46,5 +48,17 @@ namespace PJR.Timeline.Pool
             return Equals(lhs, rhs);
         }
         public static bool operator !=(PoolableObject obj, object nullCheck) => !(obj == nullCheck);
+
+        private bool Equals(PoolableObject other)
+        {
+            return IsReleased == other.IsReleased;
+        }
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((PoolableObject)obj);
+        }
     }
 }

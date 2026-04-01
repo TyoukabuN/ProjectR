@@ -17,17 +17,15 @@ namespace PJR.Timeline
         private List<Track> _tracks;
         public EFrameRate FrameRateType { get => frameRateType; set => frameRateType = value; }
         public double FrameRate => FrameRateType.FPS();
-        public List<Track> Tracks
-        {
-            get => _tracks??=new List<Track>(); 
-            set => _tracks = value;
-        }
+
+        // ISequence 接口实现：只读接口列表
+        IReadOnlyList<ITrack> ISequence.Tracks => _tracks as IReadOnlyList<ITrack> ?? (_tracks ??= new List<Track>());
         
         public bool Valid
         {
             get
             {
-                if (Tracks == null || Tracks.Count <= 0)
+                if (_tracks == null || _tracks.Count <= 0)
                     return false;
                 return true;
             }
@@ -66,13 +64,25 @@ namespace PJR.Timeline
 
             return maxFrame;
         }
+        public void Editor_AddTrack(Track track)
+        {
+            _tracks ??= new List<Track>();
+            _tracks.Add(track);
+        }
+        public bool Editor_RemoveTrack(Track track)
+        {
+            if (_tracks == null) return false;
+            return _tracks.Remove(track);
+        }
+        public bool Editor_ContainsTrack(Track track) => _tracks?.Contains(track) ?? false;
+        public List<Track> Editor_Tracks => _tracks ??= new List<Track>();
 #endif
     }
     public interface ISequence
     {
         public bool RuntimeTempInstance { get; }
         public EFrameRate FrameRateType { get; set; }
-        public List<Track> Tracks { get; set; }
+        public IReadOnlyList<ITrack> Tracks { get; }
         public bool Valid { get;}
         public SequenceRunner GetRunner(GameObject gameObject);
     }

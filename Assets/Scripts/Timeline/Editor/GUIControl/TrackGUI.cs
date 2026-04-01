@@ -8,7 +8,7 @@ namespace PJR.Timeline.Editor
 {
     public class TrackGUI
     {
-        public List<Track> tracks => windowState.SequenceHandle.Sequence?.Tracks;
+        public IReadOnlyList<ITrack> tracks => windowState.SequenceHandle.Sequence?.Tracks;
         public WindowState windowState => instance.State;
         public Rect position => instance.position;
         public TrackGUI()
@@ -104,7 +104,7 @@ namespace PJR.Timeline.Editor
         }
 
         private Dictionary<IClip, TrackDrawer> clip2clipGUI;
-        public TrackDrawer GetClipGUI(Clip clip)
+        public TrackDrawer GetClipGUI(IClip clip)
         {
             TrackDrawer trackDrawerObj = null;
             if (clip == null)
@@ -117,8 +117,8 @@ namespace PJR.Timeline.Editor
             {
                 if(TryGetBindingClipGUI(clip, out var bindingClipGUI))
                     trackDrawerObj = bindingClipGUI;
-                else
-                    trackDrawerObj = new DefaultTrackDrawer(clip);
+                else if (clip is Clip concreteClip)
+                    trackDrawerObj = new DefaultTrackDrawer(concreteClip);
 
                 clip2clipGUI[clip] = trackDrawerObj;
             }

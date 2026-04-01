@@ -12,10 +12,15 @@ namespace PJR.Timeline
     {
         [OdinSerialize]
         private List<Clip> _clips;
+
+        // ITrack 接口实现：只读接口列表
+        IReadOnlyList<IClip> ITrack.Clips => _clips as IReadOnlyList<IClip> ?? _clips;
+
+        // 内部/Editor 用：具体类型访问
         public List<Clip> Clips
         {
             get => _clips;
-            set=> _clips = value;
+            set => _clips = value;
         }
         public Clip Clip => _clips?.Count > 0 ? _clips[0] : null;
         
@@ -47,6 +52,6 @@ namespace PJR.Timeline
     
     public interface ITrack
     {
-        public List<Clip> Clips { get; }
+        public IReadOnlyList<IClip> Clips { get; }
     }
 }

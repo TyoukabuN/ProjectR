@@ -10,14 +10,12 @@ namespace PJR.Timeline
         public bool RuntimeTempInstance => true;
         public Define.EFrameRate FrameRateType { get; set; }
 
-        public List<Track> Tracks
-        {
-            get => null;
-            set { }
-        }
+        // ISequence.Tracks 显式实现
+        IReadOnlyList<ITrack> ISequence.Tracks => null;
 
         private List<Clip> _clips;
-        public List<Clip> Clips => _clips;
+        // ITrack.Clips 显式实现
+        IReadOnlyList<IClip> ITrack.Clips => _clips;
         
         public bool Valid => (_clips?.Count ?? 0) > 0;
 

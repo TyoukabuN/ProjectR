@@ -23,13 +23,13 @@ namespace PJR.Timeline
         {
             if(sequenceAsset == null)
                 return false;
-            var tracks = sequenceAsset.Tracks;
+            var tracks = ((ISequence)sequenceAsset).Tracks;
             if (tracks == null || tracks.Count <= 0)
                 return false;
             return true;
         }
 
-        public static bool IsValid(this Track track)
+        public static bool IsValid(this ITrack track)
         {
             return true;
         }

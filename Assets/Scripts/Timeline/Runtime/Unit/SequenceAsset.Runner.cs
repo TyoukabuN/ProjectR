@@ -47,10 +47,11 @@ namespace PJR.Timeline
                     return;
                 }
 
+                var tracks = ((ISequence)_sequenceAsset).Tracks;
                 _trackRunners = CollectionPool<List<TrackRunner>, TrackRunner>.Get();
-                for (int i = 0; i < _sequenceAsset.Tracks.Count; i++)
+                for (int i = 0; i < tracks.Count; i++)
                 {
-                    var track = _sequenceAsset.Tracks[i];
+                    var track = tracks[i];
                     if (!track.IsValid())
                         continue;
                     var trackRunner = TrackRunner.Get();

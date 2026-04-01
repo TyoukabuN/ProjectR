@@ -39,7 +39,7 @@ namespace PJR.Timeline
             AssetDatabase.AddObjectToAsset(track, sequenceAssetAsset);
             AssetDatabase.AddObjectToAsset(clipScriptableObject, sequenceAssetAsset);
 
-            sequenceAssetAsset.Tracks.Add(track);
+            sequenceAssetAsset.Editor_AddTrack(track);
             if(sequenceAssetAsset != null)
                 EditorUtility.SetDirty(sequenceAssetAsset);
             AssetDatabase.SaveAssets();
@@ -53,8 +53,8 @@ namespace PJR.Timeline
             if (track.sequenceAsset == null)
                 return false;
             //移除内部引用
-            if (track.sequenceAsset.Tracks?.Contains(track) ?? false)
-                track.sequenceAsset.Tracks.Remove(track);
+            if (track.sequenceAsset.Editor_ContainsTrack(track))
+                track.sequenceAsset.Editor_RemoveTrack(track);
             //删除ClipAsset
             foreach (var clip in track.Clips)
                 if (AssetDatabase.Contains(clip) && AssetDatabase.Contains(clip))

@@ -18,12 +18,6 @@ namespace PJR.Timeline
             public List<TrackRunner> trackRunner => _trackRunners;
             public double FrameUpdateFrequency => _secondPerFrame;
 
-            public float TotalTime
-            {
-                get => _totalTime;
-                set => _totalTime = value;
-            }
-
             List<TrackRunner> _trackRunners;
 
             float _totalTime = 0f;
@@ -90,12 +84,6 @@ namespace PJR.Timeline
                 OnUpdate(_updateContext);
             }
 
-            public override void Pause()
-            {
-                if (IsPaused)
-                    return;
-            }
-            
             protected void OnUpdate(Define.UpdateContext context, bool force = false)
             {
                 if (runnerState == ERunnerState.Running || force)

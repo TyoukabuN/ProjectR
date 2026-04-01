@@ -4,9 +4,9 @@ namespace PJR.Timeline
 {
     public partial class SequenceDirector
     {
-        public class PreviewSequenceHandle : SequenceHandle
+        public class PreviewSequenceHandle : SequenceHandle, ISequencePlayableHandle
         {
-            public override float time
+            public new float time
             {
                 get
                 {
@@ -35,47 +35,43 @@ namespace PJR.Timeline
             public double ToGlobalTime(double t) => t;
             public double ToLocalTime(double t) => t;
 
-            public override bool IsPlaying()
+            public bool IsPlaying()
             {
                 if (!Valid || _director._runner == null)
                     return false;
                 return _director._runner.IsRunning;
             }
-            public override void Play()
+            public void Play()
             {
                 if (!Valid) 
                     return;
-                if (_director._runner == null)
-                    _director._runner = _director.GetRunner();
-                
-                if (_director._runner != null)
-                {
-                    if (_director._runner.runnerState == ERunnerState.None)
-                    {
-                        _director._runner.OnStart();
-                    }
-                    else if (_director._runner.runnerState == ERunnerState.Paused)
-                    {
-                        _director._runner.runnerState = ERunnerState.Running;
-                    }
-                    else if (_director._runner.runnerState == ERunnerState.Diposed)
-                    {
-                        _director._runner.Release();
-                        _director._runner = null;
-                    }
-                }
+                _director.EnsureRunnerReady();
+                _director.Play();
             }
-            public override void Pause()
+            public void Pause()
             {
-                if (!Valid || _director._runner == null) 
+                if (!Valid) 
                     return;
-                _director._runner.runnerState = ERunnerState.Paused;
+                _director.EnsureRunnerReady();
+                _director.Pause();
             }
-            public override void Stop()
+            public void Stop()
             {
                 if (!Valid)
                     return;
                 _director.Stop();
+            }
+            /// <summary>
+            /// 跳转到指定时间并强制刷新，不改变播放状态
+            /// </summary>
+            public void SeekTo(float seekTime)
+            {
+                if (!Valid)
+                    return;
+                _director.EnsureRunnerReady();
+                time = seekTime;
+                _director._runner.runnerState = ERunnerState.Running;
+                _director.ManualUpdate(0, true);
             }
         }
     }

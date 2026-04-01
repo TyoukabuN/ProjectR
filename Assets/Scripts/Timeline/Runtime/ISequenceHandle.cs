@@ -3,11 +3,11 @@ using UnityEngine;
 namespace PJR.Timeline
 {
     /// <summary>
-    /// 可以直接用来控制播放
+    /// 序列只读访问接口，编辑器和运行时通用
     /// </summary>
     public interface ISequenceHandle
     {
-        float time { get; set; }
+        float time { get; }      // 只读，不允许外部直接设置时间
         bool Valid { get; }
         ISequence Sequence { get; }
         SequenceAsset SequenceAsset { get; }
@@ -17,13 +17,22 @@ namespace PJR.Timeline
         void Release();
     }
 
+    /// <summary>
+    /// 可控播放接口，仅 PreviewSequenceHandle 实现
+    /// 运行时播放控制请直接调用 SequenceDirector 的方法
+    /// </summary>
     public interface ISequencePlayableHandle : ISequenceHandle
     {
+        new float time { get; set; }  // 可读写，覆盖只读版本
         SequenceDirector Director { get; }
         SequenceRunner Runner { get; }
         bool IsPlaying();
         void Play();
         void Pause();
         void Stop();
+        /// <summary>
+        /// 跳转到指定时间并强制刷新一帧，封装了 Runner 的 force update 细节
+        /// </summary>
+        void SeekTo(float time);
     }
 }

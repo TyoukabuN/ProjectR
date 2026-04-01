@@ -5,7 +5,11 @@ namespace PJR.Timeline
 {
     public partial class SequenceDirector
     {
-        public class SequenceHandle : PoolableObject, ISequencePlayableHandle
+        /// <summary>
+        /// 运行时只读访问 Handle，不实现播放控制
+        /// 运行时的 Play/Pause/Stop 请直接调用 SequenceDirector 的方法
+        /// </summary>
+        public class SequenceHandle : PoolableObject, ISequenceHandle
         {
             public virtual float time
             {
@@ -14,10 +18,6 @@ namespace PJR.Timeline
                     if (!Valid || _director._runner == null)
                         return 0;
                     return _director._runner.TotalTime;
-                }
-                set
-                {
-                    //runtime就不改了
                 }
             }
             public bool Valid => Director != null;
@@ -40,24 +40,8 @@ namespace PJR.Timeline
                 _director = null;
             }
             public override void Release() => ObjectPool<SequenceHandle>.Release(this);
-            public virtual  double ToGlobalTime(double t) => t;
+            public virtual double ToGlobalTime(double t) => t;
             public virtual double ToLocalTime(double t) => t;
-
-            public virtual bool IsPlaying()
-            {
-                if (!Valid || _director._runner == null)
-                    return false;
-                return _director._runner.IsRunning;
-            }
-            public virtual void Play()
-            {
-            }
-            public virtual void Pause()
-            {
-            }
-            public virtual void Stop()
-            {
-            }
         }
     }
 }

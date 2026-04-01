@@ -29,14 +29,13 @@ namespace PJR.Timeline
                 else if (clip.animationClip == null)
                     AsFailure("clip.animationClip == null");
                 _animator = context.gameObject?.GetComponent<Animator>();
-                if (_animancer == null)
+                if (_animator == null)
                     AsFailure("animator == null");
                 
-                EditModeSampleAnimation(clip.animationClip, _animator);
-                //clip.animationClip.EditModePlay(_animator);
-
                 if(IsFailure)
                     return;
+
+                EditModeSampleAnimation(clip.animationClip, _animator);
                 //_animancer.runInEditMode = true;
 
                 //animancerState = animancer.Layers[0].GetOrCreateState(clip.animationClip);

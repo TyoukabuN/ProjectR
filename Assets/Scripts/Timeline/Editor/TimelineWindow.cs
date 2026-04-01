@@ -155,18 +155,16 @@ namespace PJR.Timeline.Editor
                     int f = State.PixelRoundToFrame(px);
                     if(State.debugging)
                         Debug.Log($"[px:{px}] [f:{f}]");
+                    State.SeekTo((float)State.FromFrames(f));
                     State.Pause();
-                    State.Time = (float)State.FromFrames(f);
-                    State.ManualUpdateDirector(0, true);
                 },
                 rt =>
                 {
                     float px = Event.current.mousePosition.x - rt.x;
                     int f = State.PixelRoundToFrame(px);
+                    State.SeekTo((float)State.FromFrames(f));
                     State.Pause();
-                    State.Time = (float)State.FromFrames(f);
                     State.RefreshWindow(true);
-                    State.ManualUpdateDirector(0, true);
                 },
                 rt =>
                 {
@@ -373,13 +371,16 @@ namespace PJR.Timeline.Editor
             int tFrame = State.ToFrames(State.SequenceHandle.time);
             
             if (State.IsPlaying)
+            {
+                EditorGUILayout.LabelField(tFrame.ToString(), EditorStyles.toolbarTextField, GUILayout.Width(80));
                 return;
+            }
             
             BeginChangeCheck();
-            tFrame = EditorGUILayout.IntField(tFrame);
+            tFrame = EditorGUILayout.IntField(tFrame, GUILayout.Width(80));
 
             if(EndChangeCheck())
-                State.Time = (float)State.FromFrames(tFrame);
+                State.SeekTo((float)State.FromFrames(tFrame));
         }
 
         void Draw_AddTrackButton()

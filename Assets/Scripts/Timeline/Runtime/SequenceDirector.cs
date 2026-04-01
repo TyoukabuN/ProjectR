@@ -10,19 +10,6 @@ namespace PJR.Timeline
     /// </summary>
     public partial class SequenceDirector : SerializedMonoBehaviour, ISequenceHolder
     {
-        public enum EState
-        {
-            None,
-            WaitingForStart,
-            Running,
-            Paused,
-            Failure,
-            Done,
-        }
-        [NonSerialized]
-        private EState _state = EState.None;
-        public EState State => _state;
-        
         public bool PlayOnAwake = false;
         
         [SerializeField]
@@ -35,6 +22,12 @@ namespace PJR.Timeline
 
         [NonSerialized] protected SequenceRunner _runner;
         public SequenceRunner Runner => _runner;
+
+        /// <summary>
+        /// 直接透传 Runner 的状态，不再维护单独的 EState
+        /// </summary>
+        public ERunnerState State => _runner?.runnerState ?? ERunnerState.None;
+
         void Start()
         {
             if (PlayOnAwake)
@@ -48,36 +41,31 @@ namespace PJR.Timeline
 
         public void ManualUpdate(float deltaTime, bool force = false)
         {
-            if (_runner != null)
+            if (_runner == null)
+                return;
+
+            if (_runner.runnerState == ERunnerState.None)
+                _runner.OnStart();
+
+            if (_runner.runnerState == ERunnerState.Running || force)
+                _runner.OnUpdate(deltaTime, force);
+
+            if (_runner.runnerState == ERunnerState.Diposed)
             {
-                if (_runner.runnerState == ERunnerState.None)
-                {
-                    _runner.OnStart();
-                    _state = EState.Running;
-                }
-                else if(_runner.runnerState == ERunnerState.Diposed)
-                {
-                    _runner.Release();
-                    _runner = null;
-                    _state = EState.Done;
-                }
-                else if(_runner.runnerState == ERunnerState.Paused)
-                {
-                    _state = EState.Paused;
-                }
-                else if(_runner.runnerState == ERunnerState.Failure)
-                {
-                    _state = EState.Failure;
-                }
-                else if(_runner.runnerState == ERunnerState.Done)
-                {
-                    _state = EState.Done;
-                }
-                else //_sequenceRunner.State == SequenceRunner.EState.Running
-                {
-                    _runner.OnUpdate(deltaTime, force);
-                }
+                _runner.Release();
+                _runner = null;
             }
+        }
+
+        /// <summary>
+        /// 确保 Runner 已就绪（初始化并 OnStart），由 Director 统一负责而非 Handle
+        /// </summary>
+        public void EnsureRunnerReady()
+        {
+            if (_runner == null)
+                _runner = GetRunner();
+            if (_runner != null && _runner.runnerState == ERunnerState.None)
+                _runner.OnStart();
         }
 
         [NonSerialized] private SequenceHandle _sequenceHandle;
@@ -102,7 +90,6 @@ namespace PJR.Timeline
         /// <summary>
         /// 获取EditMode下用的Handle
         /// </summary>
-        /// <returns></returns>
         private ISequenceHandle GetPreviewHandle()
         {
             _sequenceHandle?.Release();
@@ -115,7 +102,6 @@ namespace PJR.Timeline
         /// <summary>
         /// 获取Runtime(PlayMode)下用的Handle
         /// </summary>
-        /// <returns></returns>
         private ISequenceHandle GetRuntimeHandle()
         {
             _previewSequenceHandle?.Release();
@@ -142,10 +128,7 @@ namespace PJR.Timeline
         
         public void Pause()
         {
-            if (_runner == null || !_runner.IsRunning)
-                return;
-            _runner.Pause();
-            _state = EState.Paused;
+            _runner?.Pause();
         }
 
         public void Play()

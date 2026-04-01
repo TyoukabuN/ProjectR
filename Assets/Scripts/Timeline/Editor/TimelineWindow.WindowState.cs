@@ -240,15 +240,6 @@ namespace PJR.Timeline.Editor
 
             private ISequencePlayableHandle _sequencePlayableHandle;
             public ISequencePlayableHandle SequencePlayableHandle => _sequencePlayableHandle;
-            public float Time
-            {
-                set
-                {
-                    if (_sequencePlayableHandle == null)
-                        return;
-                    _sequencePlayableHandle.time = value;
-                }
-            }
             public bool IsPlaying => _sequencePlayableHandle?.IsPlaying() ?? false;
             public void Play()
             {
@@ -268,9 +259,19 @@ namespace PJR.Timeline.Editor
                 _sequencePlayableHandle?.Stop();
                 SequenceHandle = null;
             }
-            public void ManualUpdateDirector(float deltaTime, bool force = false)
+            /// <summary>
+            /// 跳转到指定时间并强制刷新一帧，Editor 层不再直接操作 Runner
+            /// </summary>
+            public void SeekTo(float time)
             {
-                SequencePlayableHandle?.Runner?.OnUpdate(deltaTime,force);
+                _sequencePlayableHandle?.SeekTo(time);
+            }
+            /// <summary>
+            /// 播放时的帧 tick，不强制刷新时只做时间推进
+            /// </summary>
+            public void ManualUpdateDirector(float deltaTime)
+            {
+                SequencePlayableHandle?.Runner?.OnUpdate(deltaTime, false);
             }
         }
         
@@ -283,10 +284,7 @@ namespace PJR.Timeline.Editor
             public Object Object => (Object)_sequence;
             
             private float _time_test = 0;
-            public float time {
-                get => _time_test;
-                set => _time_test = value;
-            }
+            public float time => _time_test;
             public bool Valid => Sequence != null && Sequence != null;
 
             public ISequence Sequence

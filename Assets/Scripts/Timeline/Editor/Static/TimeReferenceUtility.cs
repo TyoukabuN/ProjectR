@@ -60,7 +60,7 @@ namespace PJR.Timeline.Editor
                     state.SequenceHandle.ToLocalTime(newTime) : newTime;
             }
         
-            return state.SequenceHandle.time;
+            return state.SequenceHandle.Time;
         }
     }
 }

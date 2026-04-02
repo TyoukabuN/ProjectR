@@ -7,20 +7,6 @@ namespace PJR.Timeline
     /// </summary>
     public class RuntimeSequenceHandle : SequenceDirector.SequenceHandle, ISequencePlayableHandle
     {
-        public new float time
-        {
-            get
-            {
-                if (!Valid) return 0;
-                return _director.Runner?.TotalTime ?? 0;
-            }
-            set
-            {
-                if (!Valid || _director.Runner == null) return;
-                _director.Runner.TotalTime = value;
-            }
-        }
-       
         public static RuntimeSequenceHandle Get(SequenceDirector director)
         {
             var temp = ObjectPool<RuntimeSequenceHandle>.Get();

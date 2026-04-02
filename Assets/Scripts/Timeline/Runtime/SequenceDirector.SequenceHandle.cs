@@ -11,16 +11,21 @@ namespace PJR.Timeline
         /// </summary>
         public abstract class SequenceHandle : PoolableObject, ISequencePlayableHandle
         {
-            public virtual float time
+            public float time
             {
                 get
                 {
                     if (!Valid) return 0;
                     return _director.Runner?.TotalTime ?? 0;
                 }
+                set
+                {
+                    if (!Valid || _director.Runner == null) return;
+                    _director.Runner.TotalTime = value;
+                }
             }
 
-            float ISequencePlayableHandle.time { get; set; }
+            float ISequenceHandle.Time { get; set; }
             public bool Valid => Director != null;
             public ISequence Sequence => Director?.SequenceAsset;
             public SequenceAsset SequenceAsset => (SequenceAsset)Director?.SequenceAsset;
@@ -72,6 +77,10 @@ namespace PJR.Timeline
             public override void Clear()
             {
                 _director = null;
+                ClearInternal();
+            }
+            protected virtual void ClearInternal()
+            {
             }
             public virtual double ToGlobalTime(double t) => t;
             public virtual double ToLocalTime(double t) => t;

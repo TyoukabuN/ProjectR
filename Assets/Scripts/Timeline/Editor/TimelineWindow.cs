@@ -126,7 +126,7 @@ namespace PJR.Timeline.Editor
             rect.ToOrigin();
             Handles.BeginGUI();
             
-            float posX = State.TimeToPixel(State.SequenceHandle.time);
+            float posX = State.TimeToPixel(State.SequenceHandle.Time);
             float minY = 12f;
             Handles.DrawLine(new Vector3(posX, rect.height), new Vector3(posX, minY),0);
             
@@ -136,7 +136,7 @@ namespace PJR.Timeline.Editor
                 var labelWidth = 50f;
                 var originX = posX;
                 var rectLabel = Rect.MinMaxRect(originX - labelWidth / 2, 0, originX + labelWidth / 2, Const.timelineRulerHeight);
-                string cursorLabel = State.ToFrames(State.SequenceHandle.time).ToString();
+                string cursorLabel = State.ToFrames(State.SequenceHandle.Time).ToString();
                 Graphics.ShadowLabel(rectLabel, cursorLabel, Styles.editingRulerClipFrameLabel, Color.white,
                     Color.black, 14);
             }
@@ -368,7 +368,7 @@ namespace PJR.Timeline.Editor
             //这里先处理以<帧>为单位的的时间修改,后面有需求再加秒
             if (State.SequenceHandle == null)
                 return;
-            int tFrame = State.ToFrames(State.SequenceHandle.time);
+            int tFrame = State.ToFrames(State.SequenceHandle.Time);
             
             if (State.IsPlaying)
             {

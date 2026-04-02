@@ -7,7 +7,7 @@ namespace PJR.Timeline
     /// </summary>
     public interface ISequenceHandle
     {
-        float time { get; }      // 只读，不允许外部直接设置时间
+        float Time { get; set; }     // 只读，不允许外部直接设置时间
         bool Valid { get; }
         ISequence Sequence { get; }
         SequenceAsset SequenceAsset { get; }
@@ -23,7 +23,6 @@ namespace PJR.Timeline
     /// </summary>
     public interface ISequencePlayableHandle : ISequenceHandle
     {
-        new float time { get; set; }  // 可读写，覆盖只读版本
         SequenceDirector Director { get; }
         bool IsPlaying();
         void Play();

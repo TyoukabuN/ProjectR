@@ -60,7 +60,7 @@ namespace PJR.Timeline
         /// <summary>
         /// 确保 Runner 已就绪（初始化并 OnStart），由 Director 统一负责而非 Handle
         /// </summary>
-        public void EnsureRunnerReady()
+        private void EnsureRunnerReady()
         {
             if (_runner == null)
                 _runner = GetRunner();
@@ -105,7 +105,7 @@ namespace PJR.Timeline
         /// <summary>
         /// 获取EditMode下用的Handle
         /// </summary>
-        private ISequenceHandle GetPreviewHandle()
+        private ISequencePlayableHandle GetPreviewHandle()
         {
             _sequenceHandle?.Release();
             _sequenceHandle = null;
@@ -117,7 +117,7 @@ namespace PJR.Timeline
         /// <summary>
         /// 获取Runtime(PlayMode)下用的Handle
         /// </summary>
-        private ISequenceHandle GetRuntimeHandle()
+        private ISequencePlayableHandle GetRuntimeHandle()
         {
             _previewSequenceHandle?.Release();
             _previewSequenceHandle = null;
@@ -143,20 +143,17 @@ namespace PJR.Timeline
         
         public void Pause()
         {
+            EnsureRunnerReady();
             _runner?.Pause();
         }
 
         public void Play()
         {
-            if (_runner == null)
-            {
-                GetRunner();
-                return;
-            }
+            EnsureRunnerReady();
 
             if (_runner.IsRunning)
                 return;
-            if (_runner.runnerState >= ERunnerState.Done)
+            if (_runner.runnerState >= ERunnerState.Failure)
                 return;
             _runner.runnerState = ERunnerState.Running;
         }

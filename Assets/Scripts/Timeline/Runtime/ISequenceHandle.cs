@@ -25,7 +25,6 @@ namespace PJR.Timeline
     {
         new float time { get; set; }  // 可读写，覆盖只读版本
         SequenceDirector Director { get; }
-        SequenceRunner Runner { get; }
         bool IsPlaying();
         void Play();
         void Pause();
@@ -34,5 +33,6 @@ namespace PJR.Timeline
         /// 跳转到指定时间并强制刷新一帧，封装了 Runner 的 force update 细节
         /// </summary>
         void SeekTo(float time);
+        void ManualUpdate(float deltaTime, bool force = false);
     }
 }

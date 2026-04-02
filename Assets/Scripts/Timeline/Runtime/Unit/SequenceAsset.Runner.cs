@@ -15,13 +15,10 @@ namespace PJR.Timeline
         }
         public class Runner : SequenceRunner
         {
-            public List<TrackRunner> trackRunner => _trackRunners;
             public double FrameUpdateFrequency => _secondPerFrame;
 
             List<TrackRunner> _trackRunners;
 
-            float _totalTime = 0f;
-            float _unscaleTotalTime = 0f;
             float _secondPerFrame = 0f;
             float _frameUpdateCounter = 0f;
             
@@ -68,7 +65,7 @@ namespace PJR.Timeline
                 _secondPerFrame = GetSecondPerFrame_Float();
                 runnerState = ERunnerState.None;
 
-                _updateContext = new Define.UpdateContext();
+                _updateContext = new UpdateContext();
                 _updateContext.totalTime = 0;
                 _updateContext.frameChanged = true;
                 _updateContext.gameObject = _gameObject;
@@ -82,10 +79,51 @@ namespace PJR.Timeline
                 runnerState = ERunnerState.Running;
 
                 ForEachTrackRunner(StartTrackRunner);
-                OnUpdate(_updateContext);
+                OnUpdateInternal(_updateContext);
             }
+            
+            public float _remainDeltaTime;
 
-            protected void OnUpdate(Define.UpdateContext context, bool force = false)
+            public override void OnUpdate(float deltaTime, bool force = false)
+            {
+                if (!IsRunning && !force)
+                    return;
+                if (_trackRunners == null)
+                {
+                    runnerState = ERunnerState.Done;
+                    return;
+                }
+
+                float scaledDeltaTime = deltaTime * (float)GetTimeScale();
+                _remainDeltaTime += scaledDeltaTime;
+                TotalTime += scaledDeltaTime;
+
+                //以deltaTime间隔更新
+                var context = UpdateContext(scaledDeltaTime, deltaTime);
+                context.updateIntervalType = IntervalType.Second;
+                OnUpdateInternal(context, force);
+                if (!IsRunning && !force)
+                    return;
+
+                int frameUpdateRound = 0;
+                //以帧间隔更新
+                while (_remainDeltaTime >= FrameUpdateFrequency)
+                {
+                    _remainDeltaTime -= (float)FrameUpdateFrequency;
+                    context = UpdateContext(1);
+                    OnUpdateInternal(context, force);
+                    if (!IsRunning)
+                        break;
+                    frameUpdateRound++;
+                }
+            }
+            
+            /// <summary>
+            /// 更新一帧
+            /// </summary>
+            /// <param name="context"></param>
+            /// <param name="force"></param>
+            protected void OnUpdateInternal(UpdateContext context, bool force = false)
             {
                 if (runnerState == ERunnerState.Running || force)
                 {
@@ -115,41 +153,7 @@ namespace PJR.Timeline
                 }
             }
 
-            public float _remainDeltaTime;
-
-            public override void OnUpdate(float deltaTime, bool force = false)
-            {
-                if (!IsRunning && !force)
-                    return;
-                if (_trackRunners == null)
-                {
-                    runnerState = ERunnerState.Done;
-                    return;
-                }
-
-                float scaledDeltaTime = deltaTime * (float)GetTimeScale();
-                _remainDeltaTime += scaledDeltaTime;
-                TotalTime += scaledDeltaTime;
-
-                //以deltaTime间隔更新
-                var context = UpdateContext(scaledDeltaTime, deltaTime);
-                context.updateIntervalType = Define.IntervalType.Second;
-                OnUpdate(context, force);
-                if (!IsRunning && !force)
-                    return;
-
-                int frameUpdateRound = 0;
-                //以帧间隔更新
-                while (_remainDeltaTime >= FrameUpdateFrequency)
-                {
-                    _remainDeltaTime -= (float)FrameUpdateFrequency;
-                    context = UpdateContext(1);
-                    OnUpdate(context, force);
-                    if (!IsRunning)
-                        break;
-                    frameUpdateRound++;
-                }
-            }
+            
             double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequenceAsset?.FrameRateType ?? Define.EFrameRate.Game);
             float GetSecondPerFrame_Float() => (float)GetSecondPerFrame();
             void StartTrackRunner(TrackRunner clipHandle) => clipHandle?.OnStart();

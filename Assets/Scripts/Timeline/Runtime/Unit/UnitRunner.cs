@@ -1,12 +1,13 @@
 using System;
 using PJR.Timeline.Pool;
+using UnityEngine;
 
 namespace PJR.Timeline
 {
     /// <summary>
-    /// Runner 公共基类：统一状态机、状态变更回调、错误记录
+    /// Runner 公共基类：统一状态机、状态变更回调、错误记录、时间字段
     /// </summary>
-    public abstract class BaseRunner : PoolableObject
+    public abstract class UnitRunner : PoolableObject
     {
         private ERunnerState _runnerState;
 
@@ -32,7 +33,7 @@ namespace PJR.Timeline
 
         public Action<ERunnerState, ERunnerState> OnStateChanged;
 
-        protected virtual void Internal_OnStateChanged(ERunnerState oldState, ERunnerState newState)
+        private void Internal_OnStateChanged(ERunnerState oldState, ERunnerState newState)
         {
             OnStateChanged?.Invoke(oldState, newState);
             if (newState == ERunnerState.Done)
@@ -40,7 +41,6 @@ namespace PJR.Timeline
         }
 
         protected virtual void Internal_OnDone() { }
-
         // 错误记录
         private string _error;
         public string Error => _error;
@@ -51,8 +51,24 @@ namespace PJR.Timeline
             _error = error;
             runnerState = ERunnerState.Failure;
             if (!string.IsNullOrEmpty(error))
-                UnityEngine.Debug.LogError($"Runner Failure: {error}");
+                Debug.LogError($"Runner Failure: {error}");
         }
+
+        // 时间计数
+        public float TotalTime
+        {
+            get => _totalTime;
+            set => _totalTime = value;
+        }
+
+        public float UnscaleTotalTime
+        {
+            get => _unscaleTotalTime;
+            set => _unscaleTotalTime = value;
+        }
+
+        private float _totalTime;
+        private float _unscaleTotalTime;
 
         public override void Clear()
         {
@@ -61,6 +77,8 @@ namespace PJR.Timeline
             runnerState = ERunnerState.Diposed;
             _error = null;
             OnStateChanged = null;
+            _totalTime = 0f;
+            _unscaleTotalTime = 0f;
         }
     }
 }

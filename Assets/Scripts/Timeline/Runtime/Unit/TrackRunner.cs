@@ -7,7 +7,7 @@ using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public class TrackRunner : BaseRunner, IErrorRecorder
+    public class TrackRunner : UnitRunner, IErrorRecorder
     {
         public List<ClipRunner> clipRunners => _clipRunners;
 
@@ -16,8 +16,6 @@ namespace PJR.Timeline
         private ISequence _sequence;
         Clip2ClipHandleFunc _clip2ClipHandle;
 
-        public double totalTime = 0f;
-        double _timeCounter = 0f;
         public bool Invalid => runnerState >= ERunnerState.Diposed || AnyError;
 
         public TrackRunner()
@@ -38,8 +36,6 @@ namespace PJR.Timeline
             _sequence = null;
             _clip2ClipHandle = null;
 
-            totalTime = 0f;
-            _timeCounter = 0f;
             base.Clear();
         }
 
@@ -105,7 +101,7 @@ namespace PJR.Timeline
             runnerState = ERunnerState.Running;
         }
 
-        public virtual void OnUpdate(UpdateContext context)
+        public void OnUpdate(UpdateContext context)
         {
             if (runnerState >= ERunnerState.Done)
                 return;
@@ -134,7 +130,12 @@ namespace PJR.Timeline
                     if (clipRunner.WaitingForStart)
                         clipRunner.OnStart(context);
                     if (clipRunner.Running)
-                        clipRunner.OnUpdate(context);
+                    {
+                        if(context.updateIntervalType == IntervalType.Frame)
+                            clipRunner.OnFrameUpdate(context);
+                        if(context.updateIntervalType == IntervalType.Second)
+                            clipRunner.OnDeltaUpdate(context);
+                    }
                 }
 
                 if(clipRunner.runnerState < ERunnerState.Done)
@@ -144,10 +145,6 @@ namespace PJR.Timeline
             runnerState = allDone ? ERunnerState.Done : runnerState;
         }
         
-        protected override void Internal_OnStateChanged(ERunnerState oldRunnerState, ERunnerState newRunnerState)
-        {
-            base.Internal_OnStateChanged(oldRunnerState, newRunnerState);
-        }
         protected override void Internal_OnDone()
         {
         }

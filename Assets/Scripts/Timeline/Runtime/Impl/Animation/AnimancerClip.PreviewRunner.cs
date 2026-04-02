@@ -3,6 +3,7 @@ using System;
 using Animancer;
 using UnityEditor;
 using UnityEngine;
+using Define = PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
@@ -20,7 +21,7 @@ namespace PJR.Timeline
         
             public static ClipRunner Get(AnimancerClip clip)=> Pool.ObjectPool<PreviewRunner>.Get()?.Reset(clip);
         
-            public override void OnStart(Define.UpdateContext context)
+            public override void OnStart(UpdateContext context)
             {
                 base.OnStart(context);
                 _animancer = context.gameObject?.GetComponent<AnimancerComponent>();
@@ -36,27 +37,16 @@ namespace PJR.Timeline
                     return;
 
                 EditModeSampleAnimation(clip.animationClip, _animator);
-                //_animancer.runInEditMode = true;
-
-                //animancerState = animancer.Layers[0].GetOrCreateState(clip.animationClip);
-                // if (animancerState != null)
-                // {
-                //     animancer.Layers[0].Play(animancerState);
-                // }
-                // animancer.Playable.UpdateMode = DirectorUpdateMode.Manual;
             }
-            public override void OnUpdate(Define.UpdateContext context)
+            public override void OnFrameUpdate(UpdateContext context)
             {
-                //Debug.Log($"[AnimancerClip.PreviewRunner.OnUpdate] GetLocalSecond:{GetLocalSecond()}");
-                var time = GetLocalSecond();
-                //clip.animationClip.EditModeSampleAnimation(_animator,time);
-                //animancerState.Time = GetLocalSecond();
-                // animancer.Playable.UpdateMode = DirectorUpdateMode.Manual;
-                // animancer.Evaluate((float)context.deltaTime);
+            }
 
+            public override void OnDeltaUpdate(UpdateContext context)
+            {
+                var time = GetLocalSecond();
                 EditModeSampleAnimation(clip.animationClip, _animator, time);
             }
-            
             private static bool ShouldEditModeSample(AnimationClip clip, Component component)
             {
                 return

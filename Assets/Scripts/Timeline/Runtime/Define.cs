@@ -14,6 +14,7 @@ namespace PJR.Timeline
         Failure,
         Diposed,
     }
+    
     public static class Define
     {
         public enum EFrameRate
@@ -70,30 +71,6 @@ namespace PJR.Timeline
         public const double MaxFrameRate = 1000.0;
         public const double DefaultFrameRate = 60.0;
 
-        public enum IntervalType
-        {
-            Second = 0,
-            Frame,
-        }
-        public struct UpdateContext
-        {
-            public double timeScale;
-            public double totalTime;
-            public int totalFrame;
-
-            public double unscaledDeltaTime;
-            public double deltaTime;
-
-            public bool frameChanged;
-
-            /// <summary>
-            /// 不用更新间隔类型，所更新字段不一样
-            /// </summary>
-            public IntervalType updateIntervalType;
-
-            public GameObject gameObject;
-        }
-
         public const string Label_NonEditingSequenceTip = "没有选中任何Sequence asset";
 
         public const string ErrCode_TrackRuner_TrackIsNull = "[TrackRuner] Track is null";
@@ -108,7 +85,32 @@ namespace PJR.Timeline
         
        
     }
-    
+
+    public struct UpdateContext
+    {
+        public double timeScale;
+        public double totalTime;
+        public int totalFrame;
+
+        public double unscaledDeltaTime;
+        public double deltaTime;
+
+        public bool frameChanged;
+
+        /// <summary>
+        /// 不用更新间隔类型，所更新字段不一样
+        /// </summary>
+        public IntervalType updateIntervalType;
+
+        public GameObject gameObject;
+    }
+
+    public enum IntervalType
+    {
+        Second = 0,
+        Frame,
+    }
+
     public enum TimeReferenceMode
     {
         Local = 0,

@@ -4,7 +4,7 @@ using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public abstract class ClipRunner : BaseRunner
+    public abstract class ClipRunner : UnitRunner
     {
         public bool Running => IsRunning;
         public bool Done => IsDone;
@@ -14,7 +14,16 @@ namespace PJR.Timeline
 
         public virtual void OnInit() { runnerState = ERunnerState.None; }
         public virtual void OnStart(UpdateContext context) { runnerState = ERunnerState.Running; }
-        public abstract void OnUpdate(UpdateContext context);
+        /// <summary>
+        /// 以帧间隔更新
+        /// </summary>
+        /// <param name="context"></param>
+        public abstract void OnFrameUpdate(UpdateContext context);
+        /// <summary>
+        /// 以deltaTime间隔更新
+        /// </summary>
+        /// <param name="context"></param>
+        public abstract void OnDeltaUpdate(UpdateContext context);
         public virtual void OnEnd() { runnerState = ERunnerState.Done; }
         public virtual void OnDispose() { runnerState = ERunnerState.Diposed; }
 

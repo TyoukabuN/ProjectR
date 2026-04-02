@@ -16,7 +16,7 @@ namespace PJR.Timeline
         
             public static ClipRunner Get(AnimancerClip clip)=> Pool.ObjectPool<Runner>.Get()?.Reset(clip);
         
-            public override void OnStart(Define.UpdateContext context)
+            public override void OnStart(UpdateContext context)
             {
                 base.OnStart(context);
                 Debug.Log("Clip Start!");
@@ -34,11 +34,13 @@ namespace PJR.Timeline
                     animancer.Layers[0].Play(animancerState);
                 }
             }
-            public override void OnUpdate(Define.UpdateContext context)
+            public override void OnFrameUpdate(UpdateContext context)
+            {
+            }
+            public override void OnDeltaUpdate(UpdateContext context)
             {
                 if (animancerState == null)
                     return;
-                //Debug.Log($"[AnimancerClip.Runner.OnUpdate] GetLocalSecond:{GetLocalSecond()}");
                 animancerState.Time = GetLocalSecond();
             }
             public override void OnEnd()

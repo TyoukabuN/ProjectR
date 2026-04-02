@@ -4,27 +4,12 @@ using UnityEngine;
 
 namespace PJR.Timeline
 {
-    public abstract class SequenceRunner : BaseRunner
+    public abstract class SequenceRunner : UnitRunner
     {
         protected abstract ISequence sequence { get; }
 
         protected GameObject _gameObject;
 
-        public float TotalTime
-        {
-            get => _totalTime;
-            set => _totalTime = value;
-        }
-
-        public float UnscaleTotalTime
-        {
-            get => _unscaleTotalTime;
-            set => _unscaleTotalTime = value;
-        }
-
-        float _totalTime = 0f;
-        float _unscaleTotalTime = 0f;
-        
         public abstract void OnStart();
         public abstract void OnUpdate(float deltaTime, bool force = false);
 
@@ -35,23 +20,23 @@ namespace PJR.Timeline
             runnerState = ERunnerState.Paused;
         }
         
-        protected Define.UpdateContext _updateContext;
+        protected UpdateContext _updateContext;
 
-        protected Define.UpdateContext UpdateContext(double scaledDeltaTime, double unscaledDeltaTime)
+        protected UpdateContext UpdateContext(double scaledDeltaTime, double unscaledDeltaTime)
         {
             _updateContext.timeScale = GetTimeScale();
-            _updateContext.totalTime = _totalTime;
+            _updateContext.totalTime = TotalTime;
 
             _updateContext.unscaledDeltaTime = unscaledDeltaTime;
             _updateContext.deltaTime = scaledDeltaTime;
 
-            _updateContext.updateIntervalType = Define.IntervalType.Second;
+            _updateContext.updateIntervalType = IntervalType.Second;
             _updateContext.gameObject = _gameObject;
 
             return _updateContext;
         }
 
-        protected Define.UpdateContext UpdateContext(int frame)
+        protected UpdateContext UpdateContext(int frame)
         {
             if (frame > 0)
             {
@@ -59,7 +44,7 @@ namespace PJR.Timeline
                 _updateContext.totalFrame += frame;
             }
 
-            _updateContext.updateIntervalType = Define.IntervalType.Frame;
+            _updateContext.updateIntervalType = IntervalType.Frame;
 
             return _updateContext;
         }
@@ -71,8 +56,6 @@ namespace PJR.Timeline
         public override void Clear()
         {
             base.Clear();
-            _totalTime = 0f;
-            _unscaleTotalTime = 0f;
             _gameObject = null;
         }
 

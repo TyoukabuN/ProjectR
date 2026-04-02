@@ -26,8 +26,6 @@ namespace PJR.Timeline.Editor
         {
             if (EditorApplication.isPlaying)
                 return;
-            if (State.SequencePlayableHandle?.Director?.Runner == null)
-                return;
             if (_lastUpdateTime == null)
                 _lastUpdateTime = (float)EditorApplication.timeSinceStartup;
             float currentTime = (float)EditorApplication.timeSinceStartup;

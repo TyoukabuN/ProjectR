@@ -40,7 +40,7 @@ namespace PJR.Timeline
                 OnUpdate(context);
             }
             
-            void OnUpdate(Define.UpdateContext context)
+            void OnUpdate(UpdateContext context)
             {
                 if (IsDone)
                     return;

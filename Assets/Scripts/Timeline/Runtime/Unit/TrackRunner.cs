@@ -7,21 +7,8 @@ using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public class TrackRunner : PoolableObject, IErrorRecorder
+    public class TrackRunner : BaseRunner, IErrorRecorder
     {
-        ERunnerState _runnerState = 0;
-        public ERunnerState runnerState
-        {
-            get => _runnerState;
-            private set
-            {
-                if (_runnerState == value)
-                    return;
-                Internal_OnStateChanged(_runnerState, value);
-                _runnerState = value;
-            }
-        }
-        
         public List<ClipRunner> clipRunners => _clipRunners;
 
         List<ClipRunner> _clipRunners;
@@ -31,9 +18,9 @@ namespace PJR.Timeline
 
         public double totalTime = 0f;
         double _timeCounter = 0f;
-        public bool Invalid => _runnerState >= ERunnerState.Diposed || !string.IsNullOrEmpty(Error);
+        public bool Invalid => runnerState >= ERunnerState.Diposed || AnyError;
 
-        public TrackRunner() 
+        public TrackRunner()
         {
             Clear();
             runnerState = ERunnerState.None;
@@ -53,7 +40,7 @@ namespace PJR.Timeline
 
             totalTime = 0f;
             _timeCounter = 0f;
-            runnerState = ERunnerState.Diposed;
+            base.Clear();
         }
 
         public virtual bool Reset(ISequence sequence, ITrack track) => Reset(sequence, track, Global.Clip2ClipHandleFunc);
@@ -65,26 +52,22 @@ namespace PJR.Timeline
 
             if (_track == null)
             {
-                runnerState = ERunnerState.Failure;
-                _error = ErrCode_TrackRuner_TrackIsNull;
+                AsFailure(ErrCode_TrackRuner_TrackIsNull);
                 return false;
             }
             if (_clip2ClipHandle == null)
             {
-                runnerState = ERunnerState.Failure;
-                _error = ErrCode_TrackRuner_Clip2ClipHandle;
+                AsFailure(ErrCode_TrackRuner_Clip2ClipHandle);
                 return false;
             }
             if (_track.Clips == null)
             {
-                runnerState = ERunnerState.Failure;
-                _error = ErrCode_TrackRuner_ClipsIsNull;
+                AsFailure(ErrCode_TrackRuner_ClipsIsNull);
                 return false;
             }
             if (_track.Clips.Count <= 0)
             {
-                runnerState = ERunnerState.Failure;
-                _error = ErrCode_TrackRuner_NoneClip;
+                AsFailure(ErrCode_TrackRuner_NoneClip);
                 return false;
             }
 
@@ -124,7 +107,7 @@ namespace PJR.Timeline
 
         public virtual void OnUpdate(UpdateContext context)
         {
-            if (_runnerState >= ERunnerState.Done)
+            if (runnerState >= ERunnerState.Done)
                 return;
             if (clipRunners == null)
             {
@@ -154,21 +137,18 @@ namespace PJR.Timeline
                         clipRunner.OnUpdate(context);
                 }
 
-                if(clipRunner.State < ClipRunner.EState.Done)
+                if(clipRunner.runnerState < ERunnerState.Done)
                     allDone = false;
             }
 
-            runnerState = allDone ? ERunnerState.Done : _runnerState;
+            runnerState = allDone ? ERunnerState.Done : runnerState;
         }
         
-        public Action<ERunnerState, ERunnerState> OnStateChanged;
-        private void Internal_OnStateChanged(ERunnerState oldRunnerState, ERunnerState newRunnerState)
+        protected override void Internal_OnStateChanged(ERunnerState oldRunnerState, ERunnerState newRunnerState)
         {
-            OnStateChanged?.Invoke(oldRunnerState, newRunnerState);
-            if (newRunnerState == ERunnerState.Done)
-                Internal_OnDone();
+            base.Internal_OnStateChanged(oldRunnerState, newRunnerState);
         }
-        private void Internal_OnDone()
+        protected override void Internal_OnDone()
         {
         }
 
@@ -191,16 +171,15 @@ namespace PJR.Timeline
         {
             if (clipHandle == null)
                 return false;
-            if (clipHandle.State >= ClipRunner.EState.Done)
+            if (clipHandle.runnerState >= ERunnerState.Done)
                 return false;
             return true;
         }
         double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.FrameRateType ?? EFrameRate.Game);
 
         #region IErrorRecorder Impl
-        string _error;
-        public string Error => _error;
-        public bool AnyError => !string.IsNullOrEmpty(Error);
+        string IErrorRecorder.Error => base.Error;
+        bool IErrorRecorder.AnyError => base.AnyError;
         #endregion
 
         #region Pool

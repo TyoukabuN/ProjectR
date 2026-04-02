@@ -4,30 +4,11 @@ using UnityEngine;
 
 namespace PJR.Timeline
 {
-    public abstract class SequenceRunner : PoolableObject
+    public abstract class SequenceRunner : BaseRunner
     {
         protected abstract ISequence sequence { get; }
 
         protected GameObject _gameObject;
-        public virtual ERunnerState runnerState
-        {
-            get => RunnerState;
-            set
-            {
-                if (RunnerState == value)
-                    return;
-                Internal_OnStateChanged(RunnerState, value);
-                RunnerState = value;
-                if (RunnerState == ERunnerState.Done)
-                    Internal_OnDone();
-            }
-        }
-        
-        protected ERunnerState RunnerState;
-        public bool IsRunning => runnerState == ERunnerState.Running;
-        public bool IsPaused => runnerState == ERunnerState.Paused;
-        public bool IsDone => runnerState == ERunnerState.Done;
-        public bool IsDisposed => runnerState == ERunnerState.Diposed;
 
         public float TotalTime
         {
@@ -43,13 +24,10 @@ namespace PJR.Timeline
 
         float _totalTime = 0f;
         float _unscaleTotalTime = 0f;
-        public Action<ERunnerState, ERunnerState> OnStateChanged;
         
         public abstract void OnStart();
         public abstract void OnUpdate(float deltaTime, bool force = false);
-        protected virtual void Internal_OnStateChanged(ERunnerState oldRunnerState, ERunnerState newRunnerState) 
-            => OnStateChanged?.Invoke(oldRunnerState, newRunnerState);
-        protected virtual void Internal_OnDone() => Clear();
+
         public virtual void Pause()
         {
             if (IsPaused)
@@ -89,16 +67,15 @@ namespace PJR.Timeline
         protected double GetTimeScale() => Time.timeScale;
         double GetSecondPerFrame() => Utility.GetSecondPerFrame(sequence?.FrameRateType ?? Define.EFrameRate.Game);
         float GetSecondPerFrame_Float() => (float)GetSecondPerFrame();
+
         public override void Clear()
         {
-            if (RunnerState == ERunnerState.Diposed)
-                return;
-            runnerState = ERunnerState.Diposed;
+            base.Clear();
             _totalTime = 0f;
             _unscaleTotalTime = 0f;
             _gameObject = null;
-            OnStateChanged = null;
         }
+
         public abstract override void Release();
     }
 }

@@ -105,7 +105,7 @@ namespace PJR.Timeline
                             allDone = false;
                     }
 
-                    runnerState = allDone ? ERunnerState.Done : RunnerState;
+                    runnerState = allDone ? ERunnerState.Done : runnerState;
                 }
                 else if (runnerState == ERunnerState.Paused)
                 {
@@ -170,10 +170,6 @@ namespace PJR.Timeline
 
             public override void Clear()
             {
-                base.Clear();
-                
-                if (RunnerState == ERunnerState.Diposed)
-                    return;
                 ForEachTrackRunner(ClearTrackRunner);
 
                 if (_trackRunners != null)
@@ -187,6 +183,7 @@ namespace PJR.Timeline
                 _frameUpdateCounter = 0f;
                 _remainDeltaTime = 0f;
                 _updateContext = default;
+                base.Clear();
             }
 
 

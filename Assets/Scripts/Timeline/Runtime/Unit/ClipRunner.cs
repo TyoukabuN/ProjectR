@@ -4,56 +4,28 @@ using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public abstract class ClipRunner : PoolableObject
+    public abstract class ClipRunner : BaseRunner
     {
-        public enum EState
-        {
-            None = 0,
-            Running,
-            Done,
-            Failure,
-            Diposed,
-        }
-        EState _state = 0;
-        public EState State
-        {
-            get => _state;
-            protected set
-            {
-                if (_state == value)
-                    return;
-                Internal_OnStateChanged(_state, value);
-                _state = value;
-            }
-        }
-        
-        public string error;
-        public bool WaitingForStart => State == EState.None;
-        public bool Running => State == EState.Running;
-        public bool Done => State == EState.Done;
-        public bool IsFailure => State == EState.Failure;
+        public bool Running => IsRunning;
+        public bool Done => IsDone;
 
         public abstract Type ClipType { get; }
-        public abstract Clip Clip {get;}
+        public abstract Clip Clip { get; }
 
-        public void AsFailure(string error = null)
-        {
-            State = EState.Failure; this.error = error;
-            Debug.LogError($"ClipRunner Failure: {error}");
-        }
-        public virtual void OnInit() { State = EState.None; }
-        public virtual void OnStart(UpdateContext context) { State = EState.Running; }
+        public virtual void OnInit() { runnerState = ERunnerState.None; }
+        public virtual void OnStart(UpdateContext context) { runnerState = ERunnerState.Running; }
         public abstract void OnUpdate(UpdateContext context);
-        public virtual void OnEnd() { State = EState.Done; }
-        public virtual void OnDispose() { State = EState.Diposed; }
+        public virtual void OnEnd() { runnerState = ERunnerState.Done; }
+        public virtual void OnDispose() { runnerState = ERunnerState.Diposed; }
 
         public override void Clear()
         {
-            State = EState.Diposed;
             error = string.Empty;
             updateContext = null;
+            base.Clear();
         }
 
+        public string error;
         public TrackRunner trackRunner;
 
         public UpdateContext? updateContext;
@@ -68,17 +40,10 @@ namespace PJR.Timeline
                 return 0;
             return (float)updateContext.Value.totalTime - (float)Clip.start;
         }
-        
-        public Action<EState, EState> OnStateChanged;
-        protected void Internal_OnStateChanged(EState oldState, EState newState)
+
+        protected override void Internal_OnDone()
         {
-            OnStateChanged?.Invoke(oldState, newState);
-            if (newState == EState.Done)
-                Internal_OnDone();
-        }
-        protected void Internal_OnDone()
-        {
-            Debug.Log("Sequence Done");
+            UnityEngine.Debug.Log("Sequence Done");
         }
     }
 
@@ -87,13 +52,12 @@ namespace PJR.Timeline
         public override Clip Clip => clip;
         protected TClip _clip;
         public TClip clip => _clip;
-        public ClipRunner(TClip clip)=>Reset(clip);
+        public ClipRunner(TClip clip) => Reset(clip);
         public ClipRunner Reset(TClip clip)
         {
             if (clip == null || clip.GetType() != ClipType)
             {
-                State = EState.Failure;
-                error = clip == null ? ErrCode_ClipRunner_ClipIsNull : ErrCode_ClipRunner_ClipTypeNotMatched;
+                AsFailure(clip == null ? ErrCode_ClipRunner_ClipIsNull : ErrCode_ClipRunner_ClipTypeNotMatched);
                 return this;
             }
             _clip = clip;

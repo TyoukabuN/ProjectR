@@ -284,7 +284,12 @@ namespace PJR.Timeline.Editor
             public Object Object => (Object)_sequence;
             
             private float _time_test = 0;
-            public float Time => _time_test;
+            public float Time
+            {
+                set => _time_test = value;
+                get => _time_test;
+            }
+
             public bool Valid => Sequence != null && Sequence != null;
 
             public ISequence Sequence

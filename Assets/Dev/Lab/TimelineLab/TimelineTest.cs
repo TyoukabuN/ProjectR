@@ -54,12 +54,12 @@ public class TimelineTest : MonoBehaviour
             {
                 Profiler.BeginSample("SequenceStart");
                 runner.OnStart();
-                runner.OnUpdate(Time.unscaledDeltaTime);
+                //runner.OnUpdate(new UpdateContext(Time.unscaledDeltaTime));
                 Profiler.EndSample();
             }
             else
             {
-                runner.OnUpdate(Time.unscaledDeltaTime);
+                //runner.OnUpdate(Time.unscaledDeltaTime);
             }
         }
     }

@@ -39,7 +39,7 @@ namespace PJR.Timeline
             ManualUpdate(Time.deltaTime);
         }
 
-        public void ManualUpdate(float deltaTime, bool force = false)
+        public void ManualUpdate(float deltaTime)
         {
             if (_runner == null)
                 return;
@@ -47,8 +47,8 @@ namespace PJR.Timeline
             if (_runner.runnerState == ERunnerState.None)
                 _runner.OnStart();
 
-            if (_runner.runnerState == ERunnerState.Running || force)
-                _runner.OnUpdate(deltaTime, force);
+            if (_runner.runnerState == ERunnerState.Running)
+                _runner.DriveUpdate(deltaTime);
 
             if (_runner.runnerState == ERunnerState.Diposed)
             {
@@ -74,13 +74,16 @@ namespace PJR.Timeline
         public void SeekTo(float seekTime)
         {
             EnsureRunnerReady();
-            if (_runner == null) return;
-            _runner.TotalTime = seekTime;
+            if (_runner == null)
+                return;
+
             var prevState = _runner.runnerState;
-            _runner.runnerState = ERunnerState.Running;
-            _runner.OnUpdate(0, true);
+            _runner.TotalTime = seekTime;
+            _runner.Play();
+            _runner.DriveUpdate(0);
+
             if (prevState != ERunnerState.Running)
-                _runner.runnerState = prevState;
+                _runner.SetRunnerStateRecursive(prevState);
         }
 
         [NonSerialized] private RuntimeSequenceHandle _sequenceHandle;
@@ -150,12 +153,7 @@ namespace PJR.Timeline
         public void Play()
         {
             EnsureRunnerReady();
-
-            if (_runner.IsRunning)
-                return;
-            if (_runner.runnerState >= ERunnerState.Failure)
-                return;
-            _runner.runnerState = ERunnerState.Running;
+            _runner?.Play();
         }
         public void Replay()
         {

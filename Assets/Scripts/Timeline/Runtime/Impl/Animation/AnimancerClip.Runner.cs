@@ -34,23 +34,23 @@ namespace PJR.Timeline
                     animancer.Layers[0].Play(animancerState);
                 }
             }
-            public override void OnFrameUpdate(UpdateContext context)
+            protected override void OnFrameUpdate(UpdateContext context)
             {
             }
-            public override void OnDeltaUpdate(UpdateContext context)
+            protected override void OnDeltaUpdate(UpdateContext context)
             {
                 if (animancerState == null)
                     return;
                 animancerState.Time = GetLocalSecond();
             }
-            public override void OnEnd()
+            public override void End()
             {
-                base.OnEnd();
+                base.End();
                 Clear();
             }
-            public override void Clear()
+            protected override void OnClear()
             {
-                base.Clear();
+                base.OnClear();
                 if (animancerState != null)
                     animancerState.IsPlaying = false;
             }

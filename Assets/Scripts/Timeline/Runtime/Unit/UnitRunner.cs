@@ -70,15 +70,66 @@ namespace PJR.Timeline
         private float _totalTime;
         private float _unscaleTotalTime;
 
-        public override void Clear()
+        // SubRunner 抽象接口
+        protected virtual void ForeachSubRunner(Action<UnitRunner> action) { }
+
+        /// <summary>
+        /// 将当前 Runner 及所有子 Runner 设为 Running 状态
+        /// </summary>
+        public void Play()
+        {
+            if (IsRunning)
+                return;
+            if (runnerState >= ERunnerState.Failure)
+                return;
+            runnerState = ERunnerState.Running;
+            ForeachSubRunner(sub => sub.OnPlay());
+        }
+
+        protected abstract void OnPlay();
+
+        /// <summary>
+        /// 将当前 Runner 及所有子 Runner 设为 Paused 状态
+        /// </summary>
+        public void Pause()
+        {
+            if (IsPaused)
+                return;
+            runnerState = ERunnerState.Paused;
+            ForeachSubRunner(sub => sub.OnPause());
+        }
+
+        protected abstract void OnPause();
+
+        public void SetRunnerStateRecursive(ERunnerState state)
+        {
+            runnerState = state;
+            ForeachSubRunner(sub => sub.SetRunnerStateRecursive(state));
+        }
+
+        public void ResetStateRecursive()
+        {
+            SetRunnerStateRecursive(ERunnerState.None);
+        }
+
+        public sealed override void Clear()
         {
             if (runnerState == ERunnerState.Diposed)
                 return;
+            // 1. 先递归清理子Runner
+            ForeachSubRunner(sub => sub.Clear());
+            // 2. 子类清理自身字段
+            OnClear();
+            // 3. 基类收尾
             runnerState = ERunnerState.Diposed;
             _error = null;
             OnStateChanged = null;
             _totalTime = 0f;
             _unscaleTotalTime = 0f;
         }
+
+        protected virtual void OnClear() { }
+
+        public virtual void OnUpdate(UpdateContext context) { }
     }
 }

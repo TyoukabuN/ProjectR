@@ -115,4 +115,4 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  frameRateType: 0
+  frameRateType: 2

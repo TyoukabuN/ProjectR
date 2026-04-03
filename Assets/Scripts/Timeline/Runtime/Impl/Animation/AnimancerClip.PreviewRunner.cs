@@ -3,7 +3,6 @@ using System;
 using Animancer;
 using UnityEditor;
 using UnityEngine;
-using Define = PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
@@ -16,7 +15,7 @@ namespace PJR.Timeline
             private Animator _animator;
             private AnimancerState _animancerState;
         
-            public PreviewRunner() : base(null){}
+            public PreviewRunner() : base(){}
             public PreviewRunner(AnimancerClip clip) : base(clip) { }
         
             public static ClipRunner Get(AnimancerClip clip)=> Pool.ObjectPool<PreviewRunner>.Get()?.Reset(clip);
@@ -38,11 +37,10 @@ namespace PJR.Timeline
 
                 EditModeSampleAnimation(clip.animationClip, _animator);
             }
-            public override void OnFrameUpdate(UpdateContext context)
+            protected override void OnFrameUpdate(UpdateContext context)
             {
             }
-
-            public override void OnDeltaUpdate(UpdateContext context)
+            protected override void OnDeltaUpdate(UpdateContext context)
             {
                 var time = GetLocalSecond();
                 EditModeSampleAnimation(clip.animationClip, _animator, time);
@@ -64,14 +62,12 @@ namespace PJR.Timeline
                 clip.SampleAnimation(component.gameObject, time);
             }
 
-            public override void OnEnd()
+            public override void End()
             {
-                base.OnEnd();
-                Clear();
             }
-            public override void Clear()
+            protected override void OnClear()
             {
-                base.Clear();
+                base.OnClear();
                 if (_animancerState != null)
                     _animancerState.IsPlaying = false;
                 _animator?.Rebind();

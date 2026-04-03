@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using PJR.Timeline.Pool;
 using UnityEditor;
 using UnityEngine.Pool;
 using static PJR.Timeline.Define;
@@ -23,10 +22,8 @@ namespace PJR.Timeline
             Clear();
             runnerState = ERunnerState.None;
         }
-        public override void Clear()
+        protected override void OnClear()
         {
-            ForEachClipRunner(ClearClipRunner);
-
             if (_clipRunners != null)
             {
                 CollectionPool<List<ClipRunner>, ClipRunner>.Release(_clipRunners);
@@ -35,8 +32,6 @@ namespace PJR.Timeline
             _track = null;
             _sequence = null;
             _clip2ClipHandle = null;
-
-            base.Clear();
         }
 
         public virtual bool Reset(ISequence sequence, ITrack track) => Reset(sequence, track, Global.Clip2ClipHandleFunc);
@@ -101,7 +96,7 @@ namespace PJR.Timeline
             runnerState = ERunnerState.Running;
         }
 
-        public void OnUpdate(UpdateContext context)
+        public override void OnUpdate(UpdateContext context)
         {
             if (runnerState >= ERunnerState.Done)
                 return;
@@ -123,19 +118,14 @@ namespace PJR.Timeline
                 if (clipRunner.Clip.OutOfRange(context.totalTime, _sequence.FrameRateType.SPF()))
                 {
                     if (clipRunner.Running)
-                        clipRunner.OnEnd();
+                        clipRunner.End();
                 }
                 else
                 { 
                     if (clipRunner.WaitingForStart)
                         clipRunner.OnStart(context);
                     if (clipRunner.Running)
-                    {
-                        if(context.updateIntervalType == IntervalType.Frame)
-                            clipRunner.OnFrameUpdate(context);
-                        if(context.updateIntervalType == IntervalType.Second)
-                            clipRunner.OnDeltaUpdate(context);
-                    }
+                        clipRunner.OnUpdate(context);
                 }
 
                 if(clipRunner.runnerState < ERunnerState.Done)
@@ -147,6 +137,21 @@ namespace PJR.Timeline
         
         protected override void Internal_OnDone()
         {
+        }
+
+        protected override void OnPlay()
+        {
+            runnerState = ERunnerState.Running;
+        }
+
+        protected override void OnPause()
+        {
+            runnerState = ERunnerState.Paused;
+        }
+
+        protected override void ForeachSubRunner(Action<UnitRunner> action)
+        {
+            ForEachClipRunner(r => action?.Invoke(r));
         }
 
         void ClearClipRunner(ClipRunner clipHandle) => clipHandle?.Clear();

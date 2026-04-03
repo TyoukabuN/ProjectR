@@ -271,7 +271,7 @@ namespace PJR.Timeline.Editor
             /// </summary>
             public void ManualUpdateDirector(float deltaTime)
             {
-                SequencePlayableHandle?.ManualUpdate(deltaTime, false);
+                SequencePlayableHandle?.ManualUpdate(deltaTime);
             }
         }
         

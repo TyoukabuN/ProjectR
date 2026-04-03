@@ -20,9 +20,11 @@ namespace PJR.Timeline
             List<TrackRunner> _trackRunners;
 
             float _secondPerFrame = 0f;
-            float _frameUpdateCounter = 0f;
-            
-            protected GameObject _gameObject;
+
+            SecondTimeDriver _secondDriver;
+            FrameTimeDriver _frameDriver;
+            int _totalFrame;
+
             protected SequenceAsset _sequenceAsset;
 
             protected override ISequence sequence => _sequenceAsset;
@@ -65,10 +67,9 @@ namespace PJR.Timeline
                 _secondPerFrame = GetSecondPerFrame_Float();
                 runnerState = ERunnerState.None;
 
-                _updateContext = new UpdateContext();
-                _updateContext.totalTime = 0;
-                _updateContext.frameChanged = true;
-                _updateContext.gameObject = _gameObject;
+                _totalFrame = 0;
+                _secondDriver = new SecondTimeDriver();
+                _frameDriver = new FrameTimeDriver(_secondPerFrame);
             }
 
             public override void OnStart()
@@ -79,14 +80,21 @@ namespace PJR.Timeline
                 runnerState = ERunnerState.Running;
 
                 ForEachTrackRunner(StartTrackRunner);
-                OnUpdateInternal(_updateContext);
+                var initCtx = new UpdateContext
+                {
+                    timeScale = GetTimeScale(),
+                    totalTime = 0,
+                    totalFrame = 0,
+                    frameChanged = true,
+                    updateIntervalType = IntervalType.Second,
+                    gameObject = _gameObject,
+                };
+                OnUpdateInternal(initCtx);
             }
             
-            public float _remainDeltaTime;
-
-            public override void OnUpdate(float deltaTime, bool force = false)
+            protected override void OnDriveUpdate(float deltaTime)
             {
-                if (!IsRunning && !force)
+                if (!IsRunning)
                     return;
                 if (_trackRunners == null)
                 {
@@ -95,62 +103,59 @@ namespace PJR.Timeline
                 }
 
                 float scaledDeltaTime = deltaTime * (float)GetTimeScale();
-                _remainDeltaTime += scaledDeltaTime;
                 TotalTime += scaledDeltaTime;
 
-                //以deltaTime间隔更新
-                var context = UpdateContext(scaledDeltaTime, deltaTime);
-                context.updateIntervalType = IntervalType.Second;
-                OnUpdateInternal(context, force);
-                if (!IsRunning && !force)
+                var shared = new TimeDriverContext
+                {
+                    timeScale = GetTimeScale(),
+                    totalTime = TotalTime,
+                    totalFrame = _totalFrame,
+                    gameObject = _gameObject,
+                };
+
+                // 以 deltaTime 间隔更新
+                _secondDriver.Drive(deltaTime, shared, OnUpdateInternal);
+
+                if (!IsRunning)
                     return;
 
-                int frameUpdateRound = 0;
-                //以帧间隔更新
-                while (_remainDeltaTime >= FrameUpdateFrequency)
-                {
-                    _remainDeltaTime -= (float)FrameUpdateFrequency;
-                    context = UpdateContext(1);
-                    OnUpdateInternal(context, force);
-                    if (!IsRunning)
-                        break;
-                    frameUpdateRound++;
-                }
+                // 以帧间隔更新
+                _frameDriver.Drive(deltaTime, shared, OnFrameUpdateInternal);
             }
             
+            void OnFrameUpdateInternal(UpdateContext context)
+            {
+                _totalFrame++;
+                context.totalFrame = _totalFrame;
+                OnUpdateInternal(context);
+            }
+
             /// <summary>
             /// 更新一帧
             /// </summary>
             /// <param name="context"></param>
-            /// <param name="force"></param>
-            protected void OnUpdateInternal(UpdateContext context, bool force = false)
+            protected void OnUpdateInternal(UpdateContext context)
             {
-                if (runnerState == ERunnerState.Running || force)
-                {
-                    if (_trackRunners == null)
-                    {
-                        runnerState = ERunnerState.Done;
-                        return;
-                    }
+                if (runnerState != ERunnerState.Running)
+                    return;
 
-                    bool allDone = true;
-                    for (int i = 0; i < _trackRunners.Count; i++)
-                    {
-                        var trackRunner = _trackRunners[i];
-                        trackRunner.OnUpdate(context);
-
-                        if (trackRunner.runnerState < ERunnerState.Done)
-                            allDone = false;
-                    }
-
-                    runnerState = allDone ? ERunnerState.Done : runnerState;
-                }
-                else if (runnerState == ERunnerState.Paused)
+                if (_trackRunners == null)
                 {
+                    runnerState = ERunnerState.Done;
+                    return;
                 }
-                else if (runnerState == ERunnerState.Done)
+
+                bool allDone = true;
+                for (int i = 0; i < _trackRunners.Count; i++)
                 {
+                    var trackRunner = _trackRunners[i];
+                    trackRunner.OnUpdate(context);
+
+                    if (trackRunner.runnerState < ERunnerState.Done)
+                        allDone = false;
                 }
+
+                runnerState = allDone ? ERunnerState.Done : runnerState;
             }
 
             
@@ -158,6 +163,21 @@ namespace PJR.Timeline
             float GetSecondPerFrame_Float() => (float)GetSecondPerFrame();
             void StartTrackRunner(TrackRunner clipHandle) => clipHandle?.OnStart();
             void ClearTrackRunner(TrackRunner clipHandle) => clipHandle?.Clear();
+
+            protected override void OnPlay()
+            {
+                runnerState = ERunnerState.Running;
+            }
+
+            protected override void OnPause()
+            {
+                runnerState = ERunnerState.Paused;
+            }
+
+            protected override void ForeachSubRunner(Action<UnitRunner> action)
+            {
+                ForEachTrackRunner(r => action?.Invoke(r));
+            }
 
             void ForEachTrackRunner(Action<TrackRunner> func)
             {
@@ -172,9 +192,9 @@ namespace PJR.Timeline
                 }
             }
 
-            public override void Clear()
+            protected override void OnClear()
             {
-                ForEachTrackRunner(ClearTrackRunner);
+                base.OnClear();
 
                 if (_trackRunners != null)
                 {
@@ -184,10 +204,9 @@ namespace PJR.Timeline
 
                 _sequenceAsset = null;
                 _secondPerFrame = 0;
-                _frameUpdateCounter = 0f;
-                _remainDeltaTime = 0f;
-                _updateContext = default;
-                base.Clear();
+                _totalFrame = 0;
+                _secondDriver = null;
+                _frameDriver = null;
             }
 
 

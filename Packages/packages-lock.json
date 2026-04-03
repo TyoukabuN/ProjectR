@@ -112,6 +112,15 @@
         "com.unity.testtools.codecoverage": "1.2.4"
       }
     },
+    "com.unity.ide.ai": {
+      "version": "https://github.com/JupiterTheWarlock/unity-ide-ai.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.9"
+      },
+      "hash": "ce795612113d3c8fce7163951476b0f99b2e2a62"
+    },
     "com.unity.ide.rider": {
       "version": "3.0.24",
       "depth": 1,

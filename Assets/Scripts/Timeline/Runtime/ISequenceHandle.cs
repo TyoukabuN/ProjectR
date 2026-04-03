@@ -29,9 +29,9 @@ namespace PJR.Timeline
         void Pause();
         void Stop();
         /// <summary>
-        /// 跳转到指定时间并强制刷新一帧，封装了 Runner 的 force update 细节
+        /// 跳转到指定时间并强制刷新一帧
         /// </summary>
         void SeekTo(float time);
-        void ManualUpdate(float deltaTime, bool force = false);
+        void ManualUpdate(float deltaTime);
     }
 }

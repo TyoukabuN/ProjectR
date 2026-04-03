@@ -9,14 +9,16 @@ namespace PJR.Timeline
         {
             private TrackRunner _trackRunner;
             private RuntimeTemplateSequence _templateSequence;
+            private SecondTimeDriver _secondDriver;
             protected override ISequence sequence => _templateSequence;
 
-            public override void Clear()
+            protected override void OnClear()
             {
-                base.Clear();
-                _trackRunner?.Release();;
+                base.OnClear();
+                _trackRunner?.Release();
                 _trackRunner = null;
                 _templateSequence = null;
+                _secondDriver = null;
             }
 
             public override void OnStart()
@@ -25,22 +27,39 @@ namespace PJR.Timeline
                     return;
                 Debug.Log("RuntimeTemplateSequence.Runner.OnStart");
                 runnerState = ERunnerState.Running;
-
             }
 
-            public float _remainDeltaTime;
+            protected override void OnPlay()
+            {
+                runnerState = ERunnerState.Running;
+            }
 
-            public override void OnUpdate(float deltaTime, bool force = false)
+            protected override void OnPause()
+            {
+                runnerState = ERunnerState.Paused;
+            }
+
+            protected override void ForeachSubRunner(System.Action<UnitRunner> action)
+            {
+                if (_trackRunner != null)
+                    action?.Invoke(_trackRunner);
+            }
+
+            protected override void OnDriveUpdate(float deltaTime)
             {
                 float scaledDeltaTime = deltaTime * (float)GetTimeScale();
-                _remainDeltaTime += scaledDeltaTime;
                 TotalTime += scaledDeltaTime;
-                
-                var context = UpdateContext(scaledDeltaTime, deltaTime);
-                OnUpdate(context);
+
+                var shared = new TimeDriverContext
+                {
+                    timeScale = GetTimeScale(),
+                    totalTime = TotalTime,
+                    gameObject = _gameObject,
+                };
+                _secondDriver.Drive(deltaTime, shared, OnUpdateInternal);
             }
             
-            void OnUpdate(UpdateContext context)
+            void OnUpdateInternal(UpdateContext context)
             {
                 if (IsDone)
                     return;
@@ -70,6 +89,7 @@ namespace PJR.Timeline
                 
                 _trackRunner = trackRunner;
                 runnerState = ERunnerState.None;
+                _secondDriver = new SecondTimeDriver();
             }
             #region Pool
 

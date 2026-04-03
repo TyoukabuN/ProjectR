@@ -18,20 +18,47 @@ namespace PJR.Timeline
         /// 以帧间隔更新
         /// </summary>
         /// <param name="context"></param>
-        public abstract void OnFrameUpdate(UpdateContext context);
+        protected abstract void OnFrameUpdate(UpdateContext context);
         /// <summary>
         /// 以deltaTime间隔更新
         /// </summary>
         /// <param name="context"></param>
-        public abstract void OnDeltaUpdate(UpdateContext context);
-        public virtual void OnEnd() { runnerState = ERunnerState.Done; }
-        public virtual void OnDispose() { runnerState = ERunnerState.Diposed; }
+        protected abstract void OnDeltaUpdate(UpdateContext context);
+        public override void OnUpdate(UpdateContext context)
+        {
+            if (context.updateIntervalType == IntervalType.Frame)
+                OnFrameUpdate(context);
+            else
+                OnDeltaUpdate(context);
+        }
 
-        public override void Clear()
+        public virtual void End() 
+        { 
+            runnerState = ERunnerState.Done; 
+            OnEnd();
+        }
+        public virtual void Dispose() 
+        { 
+            runnerState = ERunnerState.Diposed; 
+            Dispose();
+        }
+        protected override void OnPlay()
+        {
+            runnerState = ERunnerState.Running;
+        }
+
+        protected override void OnPause()
+        {
+            runnerState = ERunnerState.Paused;
+        }
+
+        protected virtual void OnEnd(){}
+        protected virtual void OnDispose(){}
+
+        protected override void OnClear()
         {
             error = string.Empty;
             updateContext = null;
-            base.Clear();
         }
 
         public string error;
@@ -61,7 +88,13 @@ namespace PJR.Timeline
         public override Clip Clip => clip;
         protected TClip _clip;
         public TClip clip => _clip;
+        public ClipRunner() => Reset();
         public ClipRunner(TClip clip) => Reset(clip);
+        public ClipRunner Reset()
+        {
+            _clip = null;
+            return this;
+        }
         public ClipRunner Reset(TClip clip)
         {
             if (clip == null || clip.GetType() != ClipType)
@@ -73,9 +106,9 @@ namespace PJR.Timeline
             return this;
         }
 
-        public override void Clear()
+        protected override void OnClear()
         {
-            base.Clear();
+            base.OnClear();
             _clip = null;
         }
     }

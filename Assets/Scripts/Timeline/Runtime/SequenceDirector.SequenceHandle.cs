@@ -70,9 +70,9 @@ namespace PJR.Timeline
                 if (!Valid) return;
                 _director.SeekTo(seekTime);
             }
-            public virtual void ManualUpdate(float deltaTime, bool force = false)
+            public virtual void ManualUpdate(float deltaTime)
             {
-                Director?.ManualUpdate(deltaTime, force);
+                Director?.ManualUpdate(deltaTime);
             }
             public override void Clear()
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using PJR.Timeline.Pool;
 using UnityEngine;
 
@@ -131,5 +132,34 @@ namespace PJR.Timeline
         protected virtual void OnClear() { }
 
         public virtual void OnUpdate(UpdateContext context) { }
+    }
+
+    /// <summary>
+    /// 持有单一类型子Runner列表的中间基类，封装通用的ForeachSubRunner、ClearSubRunner逻辑
+    /// </summary>
+    public abstract class UnitRunner<TSubRunner> : UnitRunner
+        where TSubRunner : UnitRunner
+    {
+        protected List<TSubRunner> _subRunners;
+
+        protected override void ForeachSubRunner(Action<UnitRunner> action)
+        {
+            ForeachSubRunner(r => action?.Invoke(r));
+        }
+
+        protected void ForeachSubRunner(Action<TSubRunner> action)
+        {
+            if (_subRunners == null || action == null)
+                return;
+            for (int i = 0; i < _subRunners.Count; i++)
+            {
+                var sub = _subRunners[i];
+                if (sub == null)
+                    continue;
+                action.Invoke(sub);
+            }
+        }
+
+        protected void ClearSubRunner(TSubRunner sub) => sub?.Clear();
     }
 }

@@ -6,11 +6,9 @@ using static PJR.Timeline.Define;
 
 namespace PJR.Timeline
 {
-    public class TrackRunner : UnitRunner, IErrorRecorder
+    public class TrackRunner : UnitRunner<ClipRunner>, IErrorRecorder
     {
-        public List<ClipRunner> clipRunners => _clipRunners;
-
-        List<ClipRunner> _clipRunners;
+        public List<ClipRunner> clipRunners => _subRunners;
         private ITrack _track;
         private ISequence _sequence;
         Clip2ClipHandleFunc _clip2ClipHandle;
@@ -24,10 +22,10 @@ namespace PJR.Timeline
         }
         protected override void OnClear()
         {
-            if (_clipRunners != null)
+            if (_subRunners != null)
             {
-                CollectionPool<List<ClipRunner>, ClipRunner>.Release(_clipRunners);
-                _clipRunners = null;
+                CollectionPool<List<ClipRunner>, ClipRunner>.Release(_subRunners);
+                _subRunners = null;
             }
             _track = null;
             _sequence = null;
@@ -62,7 +60,7 @@ namespace PJR.Timeline
                 return false;
             }
 
-            _clipRunners = CollectionPool<List<ClipRunner>, ClipRunner>.Get();
+            _subRunners = CollectionPool<List<ClipRunner>, ClipRunner>.Get();
             for (int i = 0; i < _track.Clips.Count; i++)
             {
                 var clip = _track.Clips[i];
@@ -79,10 +77,10 @@ namespace PJR.Timeline
                 
                 if (clipRunner == null)
                     continue;
-                _clipRunners.Add(clipRunner);
+                _subRunners.Add(clipRunner);
             }
 
-            ForEachClipRunner(InitClipRunner);
+            ForeachSubRunner(InitClipRunner);
 
             runnerState = ERunnerState.None;
             return true;
@@ -100,16 +98,16 @@ namespace PJR.Timeline
         {
             if (runnerState >= ERunnerState.Done)
                 return;
-            if (clipRunners == null)
+            if (_subRunners == null)
             {
                 runnerState = ERunnerState.Done;
                 return;
             }
 
             bool allDone = true;
-            for (int i = 0; i < clipRunners.Count; i++)
+            for (int i = 0; i < _subRunners.Count; i++)
             {
-                var clipRunner = clipRunners[i];
+                var clipRunner = _subRunners[i];
                 if (!IsClipRunnerUpdatable(clipRunner))
                     continue;
 
@@ -149,25 +147,7 @@ namespace PJR.Timeline
             runnerState = ERunnerState.Paused;
         }
 
-        protected override void ForeachSubRunner(Action<UnitRunner> action)
-        {
-            ForEachClipRunner(r => action?.Invoke(r));
-        }
-
-        void ClearClipRunner(ClipRunner clipHandle) => clipHandle?.Clear();
         void InitClipRunner(ClipRunner clipHandle) => clipHandle?.OnInit();
-        void ForEachClipRunner(Action<ClipRunner> func)
-        {
-            if (clipRunners == null || func == null)
-                return;
-            for (int i = 0; i < clipRunners.Count; i++)
-            {
-                var clipHandle = clipRunners[i];
-                if(clipHandle == null)
-                    continue;
-                func.Invoke(clipHandle);
-            }
-        }
 
         public bool IsClipRunnerUpdatable(ClipRunner clipHandle)
         {

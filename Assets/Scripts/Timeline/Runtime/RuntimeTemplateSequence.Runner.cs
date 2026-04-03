@@ -1,4 +1,5 @@
 ﻿using PJR.Timeline.Pool;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PJR.Timeline
@@ -7,16 +8,19 @@ namespace PJR.Timeline
     {
         public class Runner : SequenceRunner
         {
-            private TrackRunner _trackRunner;
             private RuntimeTemplateSequence _templateSequence;
             private SecondTimeDriver _secondDriver;
-            protected override ISequence sequence => _templateSequence;
+
+            private TrackRunner TrackRunner => (_subRunners != null && _subRunners.Count > 0) ? _subRunners[0] : null;
 
             protected override void OnClear()
             {
                 base.OnClear();
-                _trackRunner?.Release();
-                _trackRunner = null;
+                if (_subRunners != null)
+                {
+                    UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Release(_subRunners);
+                    _subRunners = null;
+                }
                 _templateSequence = null;
                 _secondDriver = null;
             }
@@ -41,8 +45,9 @@ namespace PJR.Timeline
 
             protected override void ForeachSubRunner(System.Action<UnitRunner> action)
             {
-                if (_trackRunner != null)
-                    action?.Invoke(_trackRunner);
+                var trackRunner = TrackRunner;
+                if (trackRunner != null)
+                    action?.Invoke(trackRunner);
             }
 
             protected override void OnDriveUpdate(float deltaTime)
@@ -63,15 +68,16 @@ namespace PJR.Timeline
             {
                 if (IsDone)
                     return;
-                
-                if (_trackRunner == null)
+
+                var trackRunner = TrackRunner;
+                if (trackRunner == null)
                 {
                     runnerState = ERunnerState.Done;
                     return;
                 }
 
-                _trackRunner.OnUpdate(context);
-                if (_trackRunner.runnerState == ERunnerState.Done)
+                trackRunner.OnUpdate(context);
+                if (trackRunner.runnerState == ERunnerState.Done)
                     runnerState = ERunnerState.Done;
             }
 
@@ -79,15 +85,17 @@ namespace PJR.Timeline
             {
                 _gameObject = gameObject;
                 _templateSequence = templateSequence;
-                var trackRunner = TrackRunner.Get();
+                Sequence = templateSequence;
+                var trackRunner = Pool.ObjectPool<TrackRunner>.Get();
                 trackRunner.Reset(templateSequence, templateSequence);
                 if (trackRunner.Invalid)
                 {
                     trackRunner.Release();
                     return;
                 }
-                
-                _trackRunner = trackRunner;
+
+                _subRunners = UnityEngine.Pool.CollectionPool<List<TrackRunner>, TrackRunner>.Get();
+                _subRunners.Add(trackRunner);
                 runnerState = ERunnerState.None;
                 _secondDriver = new SecondTimeDriver();
             }

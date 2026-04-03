@@ -10,7 +10,6 @@ namespace PJR.Timeline
     {
         public List<ClipRunner> clipRunners => _subRunners;
         private ITrack _track;
-        private ISequence _sequence;
         Clip2ClipHandleFunc _clip2ClipHandle;
 
         public bool Invalid => runnerState >= ERunnerState.Diposed || AnyError;
@@ -28,14 +27,13 @@ namespace PJR.Timeline
                 _subRunners = null;
             }
             _track = null;
-            _sequence = null;
             _clip2ClipHandle = null;
         }
 
         public virtual bool Reset(ISequence sequence, ITrack track) => Reset(sequence, track, Global.Clip2ClipHandleFunc);
         public virtual bool Reset(ISequence sequence, ITrack track, Clip2ClipHandleFunc clip2ClipHandle)
         {
-            _sequence = sequence;
+            Sequence = sequence;
             _track = track;
             _clip2ClipHandle = clip2ClipHandle;
 
@@ -113,7 +111,7 @@ namespace PJR.Timeline
 
                 clipRunner.SetUpdateContext(context);
                 
-                if (clipRunner.Clip.OutOfRange(context.totalTime, _sequence.FrameRateType.SPF()))
+                if (clipRunner.Clip.OutOfRange(context.totalTime, Sequence.FrameRateType.SPF()))
                 {
                     if (clipRunner.Running)
                         clipRunner.End();
@@ -140,11 +138,13 @@ namespace PJR.Timeline
         protected override void OnPlay()
         {
             runnerState = ERunnerState.Running;
+            ForeachSubRunner(sub => sub.Play());
         }
 
         protected override void OnPause()
         {
             runnerState = ERunnerState.Paused;
+            ForeachSubRunner(sub => sub.Pause());
         }
 
         void InitClipRunner(ClipRunner clipHandle) => clipHandle?.OnInit();
@@ -157,7 +157,7 @@ namespace PJR.Timeline
                 return false;
             return true;
         }
-        double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequence?.FrameRateType ?? EFrameRate.Game);
+        double GetSecondPerFrame() => Utility.GetSecondPerFrame(Sequence?.FrameRateType ?? EFrameRate.Game);
 
         #region IErrorRecorder Impl
         string IErrorRecorder.Error => base.Error;

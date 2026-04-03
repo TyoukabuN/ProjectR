@@ -17,8 +17,6 @@ namespace PJR.Timeline
         {
             public double FrameUpdateFrequency => _secondPerFrame;
 
-            List<TrackRunner> _trackRunners;
-
             float _secondPerFrame = 0f;
 
             SecondTimeDriver _secondDriver;
@@ -27,12 +25,11 @@ namespace PJR.Timeline
 
             protected SequenceAsset _sequenceAsset;
 
-            protected override ISequence sequence => _sequenceAsset;
-
             public void Reset(GameObject gameObject, SequenceAsset sequenceAsset)
             {
                 _gameObject = gameObject;
                 _sequenceAsset = sequenceAsset;
+                Sequence = sequenceAsset;
 
                 if (_sequenceAsset == null)
                 {
@@ -47,7 +44,7 @@ namespace PJR.Timeline
                 }
 
                 var tracks = ((ISequence)_sequenceAsset).Tracks;
-                _trackRunners = CollectionPool<List<TrackRunner>, TrackRunner>.Get();
+                _subRunners = CollectionPool<List<TrackRunner>, TrackRunner>.Get();
                 for (int i = 0; i < tracks.Count; i++)
                 {
                     var track = tracks[i];
@@ -61,7 +58,7 @@ namespace PJR.Timeline
                         continue;
                     }
 
-                    _trackRunners.Add(trackRunner);
+                    _subRunners.Add(trackRunner);
                 }
 
                 _secondPerFrame = GetSecondPerFrame_Float();
@@ -96,7 +93,7 @@ namespace PJR.Timeline
             {
                 if (!IsRunning)
                     return;
-                if (_trackRunners == null)
+                if (_subRunners == null)
                 {
                     runnerState = ERunnerState.Done;
                     return;
@@ -139,16 +136,16 @@ namespace PJR.Timeline
                 if (runnerState != ERunnerState.Running)
                     return;
 
-                if (_trackRunners == null)
+                if (_subRunners == null)
                 {
                     runnerState = ERunnerState.Done;
                     return;
                 }
 
                 bool allDone = true;
-                for (int i = 0; i < _trackRunners.Count; i++)
+                for (int i = 0; i < _subRunners.Count; i++)
                 {
-                    var trackRunner = _trackRunners[i];
+                    var trackRunner = _subRunners[i];
                     trackRunner.OnUpdate(context);
 
                     if (trackRunner.runnerState < ERunnerState.Done)
@@ -159,10 +156,7 @@ namespace PJR.Timeline
             }
 
             
-            double GetSecondPerFrame() => Utility.GetSecondPerFrame(_sequenceAsset?.FrameRateType ?? Define.EFrameRate.Game);
-            float GetSecondPerFrame_Float() => (float)GetSecondPerFrame();
-            void StartTrackRunner(TrackRunner clipHandle) => clipHandle?.OnStart();
-            void ClearTrackRunner(TrackRunner clipHandle) => clipHandle?.Clear();
+            void StartTrackRunner(TrackRunner trackHandle) => trackHandle?.OnStart();
 
             protected override void OnPlay()
             {
@@ -174,32 +168,16 @@ namespace PJR.Timeline
                 runnerState = ERunnerState.Paused;
             }
 
-            protected override void ForeachSubRunner(Action<UnitRunner> action)
-            {
-                ForEachTrackRunner(r => action?.Invoke(r));
-            }
-
-            void ForEachTrackRunner(Action<TrackRunner> func)
-            {
-                if (_trackRunners == null || func == null)
-                    return;
-                for (int i = 0; i < _trackRunners.Count; i++)
-                {
-                    var clipHandle = _trackRunners[i];
-                    if (clipHandle == null)
-                        continue;
-                    func.Invoke(clipHandle);
-                }
-            }
+            void ForEachTrackRunner(Action<TrackRunner> func) => ForeachSubRunner(func);
 
             protected override void OnClear()
             {
                 base.OnClear();
 
-                if (_trackRunners != null)
+                if (_subRunners != null)
                 {
-                    CollectionPool<List<TrackRunner>, TrackRunner>.Release(_trackRunners);
-                    _trackRunners = null;
+                    CollectionPool<List<TrackRunner>, TrackRunner>.Release(_subRunners);
+                    _subRunners = null;
                 }
 
                 _sequenceAsset = null;

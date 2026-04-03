@@ -10,6 +10,7 @@ namespace PJR.Timeline
     /// </summary>
     public abstract class UnitRunner : PoolableObject
     {
+        public ISequence Sequence { get; protected set; }
         private ERunnerState _runnerState;
 
         public virtual ERunnerState runnerState
@@ -127,6 +128,7 @@ namespace PJR.Timeline
             OnStateChanged = null;
             _totalTime = 0f;
             _unscaleTotalTime = 0f;
+            Sequence = null;
         }
 
         protected virtual void OnClear() { }

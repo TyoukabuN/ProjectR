@@ -4,7 +4,9 @@ using UnityEngine;
 namespace PJR.Timeline
 {
     /// <summary>
-    /// 时间驱动策略：负责产出 UpdateContext 并通过回调传出
+    /// 时间驱动策略
+    /// 怎样调用SequenceRunner之类的Runner提供的Update方法
+    /// 负责产出 UpdateContext 并通过回调传出
     /// </summary>
     public interface ITimeDriver
     {
@@ -18,8 +20,8 @@ namespace PJR.Timeline
     public struct TimeDriverContext
     {
         public double timeScale;
-        public double totalTime;
-        public int totalFrame;
+        public double currentTime;
+        public int currentFrame;
         public GameObject gameObject;
     }
 }

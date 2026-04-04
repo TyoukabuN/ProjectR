@@ -26,9 +26,14 @@ namespace PJR.Timeline
 
         protected abstract void OnDriveUpdate(float deltaTime);
 
+        protected float GetSequenceDuration()
+        {
+            return Sequence?.Duration ?? 0;
+        }
         protected double GetTimeScale()
         {
 #if UNITY_EDITOR
+            // EditMode 下 Time.timeScale 确实是 0
             if (!UnityEditor.EditorApplication.isPlaying)
                 return 1.0;
 #endif

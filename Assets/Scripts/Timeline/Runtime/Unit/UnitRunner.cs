@@ -57,10 +57,10 @@ namespace PJR.Timeline
         }
 
         // 时间计数
-        public float TotalTime
+        public float CurrentTime
         {
-            get => _totalTime;
-            set => _totalTime = value;
+            get => _currentTime;
+            set => _currentTime = value;
         }
 
         public float UnscaleTotalTime
@@ -69,7 +69,7 @@ namespace PJR.Timeline
             set => _unscaleTotalTime = value;
         }
 
-        private float _totalTime;
+        private float _currentTime;
         private float _unscaleTotalTime;
 
         // SubRunner 抽象接口
@@ -126,7 +126,7 @@ namespace PJR.Timeline
             runnerState = ERunnerState.Diposed;
             _error = null;
             OnStateChanged = null;
-            _totalTime = 0f;
+            _currentTime = 0f;
             _unscaleTotalTime = 0f;
             Sequence = null;
         }

@@ -16,12 +16,12 @@ namespace PJR.Timeline
                 get
                 {
                     if (!Valid) return 0;
-                    return _director.Runner?.TotalTime ?? 0;
+                    return _director.Runner?.CurrentTime ?? 0;
                 }
                 set
                 {
                     if (!Valid || _director.Runner == null) return;
-                    _director.Runner.TotalTime = value;
+                    _director.Runner.CurrentTime = value;
                 }
             }
             public bool Valid => Director != null;

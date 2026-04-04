@@ -89,13 +89,12 @@ namespace PJR.Timeline
     public struct UpdateContext
     {
         public double timeScale;
-        public double totalTime;
-        public int totalFrame;
-
+        public double currentTime;
+        public int currentFrame;
         public double unscaledDeltaTime;
         public double deltaTime;
 
-        public bool frameChanged;
+        public int frameCount;
 
         /// <summary>
         /// 不用更新间隔类型，所更新字段不一样

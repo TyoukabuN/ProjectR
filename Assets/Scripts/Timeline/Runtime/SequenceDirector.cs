@@ -78,7 +78,7 @@ namespace PJR.Timeline
                 return;
 
             var prevState = _runner.runnerState;
-            _runner.TotalTime = seekTime;
+            _runner.CurrentTime = seekTime;
             _runner.Play();
             _runner.DriveUpdate(0);
 

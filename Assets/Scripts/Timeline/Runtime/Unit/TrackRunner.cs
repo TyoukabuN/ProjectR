@@ -111,7 +111,7 @@ namespace PJR.Timeline
 
                 clipRunner.SetUpdateContext(context);
                 
-                if (clipRunner.Clip.OutOfRange(context.totalTime, Sequence.FrameRateType.SPF()))
+                if (clipRunner.Clip.OutOfRange(context.currentTime, Sequence.FrameRateType.SPF()))
                 {
                     if (clipRunner.Running)
                         clipRunner.End();

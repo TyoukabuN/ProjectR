@@ -53,12 +53,12 @@ namespace PJR.Timeline
             protected override void OnDriveUpdate(float deltaTime)
             {
                 float scaledDeltaTime = deltaTime * (float)GetTimeScale();
-                TotalTime += scaledDeltaTime;
+                CurrentTime += scaledDeltaTime;
 
                 var shared = new TimeDriverContext
                 {
                     timeScale = GetTimeScale(),
-                    totalTime = TotalTime,
+                    currentTime = CurrentTime,
                     gameObject = _gameObject,
                 };
                 _secondDriver.Drive(deltaTime, shared, OnUpdateInternal);

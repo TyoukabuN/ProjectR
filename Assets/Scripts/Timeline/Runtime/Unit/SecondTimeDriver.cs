@@ -10,8 +10,8 @@ namespace PJR.Timeline
             var ctx = new UpdateContext
             {
                 timeScale = shared.timeScale,
-                totalTime = shared.totalTime,
-                totalFrame = shared.totalFrame,
+                currentTime = shared.currentTime,
+                currentFrame = shared.currentFrame,
                 deltaTime = scaled,
                 unscaledDeltaTime = deltaTime,
                 updateIntervalType = IntervalType.Second,

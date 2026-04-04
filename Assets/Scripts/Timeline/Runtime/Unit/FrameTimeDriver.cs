@@ -21,10 +21,10 @@ namespace PJR.Timeline
                 var ctx = new UpdateContext
                 {
                     timeScale = shared.timeScale,
-                    totalTime = shared.totalTime,
-                    totalFrame = shared.totalFrame,
+                    currentTime = shared.currentTime,
+                    currentFrame = shared.currentFrame,
                     deltaTime = _secondPerFrame,
-                    frameChanged = true,
+                    frameCount = UnityEngine.Time.frameCount,
                     updateIntervalType = IntervalType.Frame,
                     gameObject = shared.gameObject,
                 };

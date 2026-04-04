@@ -21,7 +21,7 @@ namespace PJR.Timeline
 
             SecondTimeDriver _secondDriver;
             FrameTimeDriver _frameDriver;
-            int _totalFrame;
+            int _currentFrame;
 
             protected SequenceAsset _sequenceAsset;
 
@@ -64,7 +64,7 @@ namespace PJR.Timeline
                 _secondPerFrame = GetSecondPerFrame_Float();
                 runnerState = ERunnerState.None;
 
-                _totalFrame = 0;
+                _currentFrame = 0;
                 _secondDriver = new SecondTimeDriver();
                 _frameDriver = new FrameTimeDriver(_secondPerFrame);
             }
@@ -80,9 +80,9 @@ namespace PJR.Timeline
                 var initContext = new UpdateContext
                 {
                     timeScale = GetTimeScale(),
-                    totalTime = 0,
-                    totalFrame = 0,
-                    frameChanged = true,
+                    currentTime = 0,
+                    currentFrame = 0,
+                    frameCount = UnityEngine.Time.frameCount,
                     updateIntervalType = IntervalType.Second,
                     gameObject = _gameObject,
                 };
@@ -100,13 +100,13 @@ namespace PJR.Timeline
                 }
 
                 float scaledDeltaTime = deltaTime * (float)GetTimeScale();
-                TotalTime += scaledDeltaTime;
+                CurrentTime += scaledDeltaTime;
 
                 var shared = new TimeDriverContext
                 {
                     timeScale = GetTimeScale(),
-                    totalTime = TotalTime,
-                    totalFrame = _totalFrame,
+                    currentTime = CurrentTime,
+                    currentFrame = _currentFrame,
                     gameObject = _gameObject,
                 };
 
@@ -122,8 +122,8 @@ namespace PJR.Timeline
             
             void OnFrameUpdateInternal(UpdateContext context)
             {
-                _totalFrame++;
-                context.totalFrame = _totalFrame;
+                _currentFrame++;
+                context.currentFrame = _currentFrame;
                 OnUpdateInternal(context);
             }
 
@@ -182,7 +182,7 @@ namespace PJR.Timeline
 
                 _sequenceAsset = null;
                 _secondPerFrame = 0;
-                _totalFrame = 0;
+                _currentFrame = 0;
                 _secondDriver = null;
                 _frameDriver = null;
             }

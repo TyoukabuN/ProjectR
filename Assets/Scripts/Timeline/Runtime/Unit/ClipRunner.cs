@@ -74,7 +74,7 @@ namespace PJR.Timeline
         {
             if (updateContext == null)
                 return 0;
-            return (float)updateContext.Value.totalTime - (float)Clip.start;
+            return (float)updateContext.Value.currentTime - (float)Clip.start;
         }
 
         protected override void Internal_OnDone()

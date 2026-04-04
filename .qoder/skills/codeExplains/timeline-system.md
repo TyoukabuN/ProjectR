@@ -368,6 +368,10 @@ float posX = State.TimeToPixel(State.SequenceHandle.Time);  // 读 ISequenceHand
 2. **`ISequenceHandle.Time` 与 Runner 断开** — `SequenceDirector.SequenceHandle` 中显式接口 `float ISequenceHandle.Time` 必须转发到 `time`（小写属性），不能是独立自动属性
 3. **OnEditorUpdate 在 PlayMode 被跳过** — 正常行为，PlayMode 由 `SequenceDirector.Update()` 驱动
 
+### 游标可以拖到负帧数
+- 拖拽游标时鼠标位置减去 Ruler 起点的 x 偏移可能为负数，导致 `PixelRoundToFrame` 返回负帧
+- 修复：在 `Draw_TimeRulerCursor` 的两处 `DragEventCheck` 回调中，对计算出的帧数做 `Mathf.Max(0, f)` 截断，最小只能拖到第 0 帧
+
 ### Runner 不推进（TotalTime 不变）
 - 检查 `runnerState` 是否为 `Running`，`ManualUpdate` 中只有 Running 才调 `DriveUpdate`
 - 检查 `_subRunners` 是否为 null

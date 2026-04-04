@@ -5,6 +5,9 @@ using UnityEngine.Pool;
 
 namespace PJR.Timeline
 {
+    /// <summary>
+    /// runtime拼凑的sequence
+    /// </summary>
     public partial class RuntimeTemplateSequence : PoolableObject, ISequence , ITrack
     {
         public bool RuntimeTempInstance => true;

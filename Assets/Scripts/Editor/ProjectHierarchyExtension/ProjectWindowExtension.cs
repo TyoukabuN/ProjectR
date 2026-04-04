@@ -164,7 +164,8 @@ namespace PJR.Editor
 
             Rect rect = item.rect;
             Rect r = new Rect(rect.xMax - 16, rect.y, 16, rect.height);
-            if (Cinemachine.ContainBrain(item.gameObject)) r.x -= 16;
+            if (Cinemachine.ContainBrain(item.gameObject)) 
+                r.x -= 16;
 
             string tooltip = "Open PJR.TimelineWindow";
             GUIContent content = TempContent.Get(DirectorIcon.image, tooltip);

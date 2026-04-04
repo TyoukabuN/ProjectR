@@ -77,7 +77,7 @@ namespace PJR.Timeline
                 runnerState = ERunnerState.Running;
 
                 ForEachTrackRunner(StartTrackRunner);
-                var initCtx = new UpdateContext
+                var initContext = new UpdateContext
                 {
                     timeScale = GetTimeScale(),
                     totalTime = 0,
@@ -86,7 +86,7 @@ namespace PJR.Timeline
                     updateIntervalType = IntervalType.Second,
                     gameObject = _gameObject,
                 };
-                OnUpdateInternal(initCtx);
+                OnUpdateInternal(initContext);
             }
             
             protected override void OnDriveUpdate(float deltaTime)

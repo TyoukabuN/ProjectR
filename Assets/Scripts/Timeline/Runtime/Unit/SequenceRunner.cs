@@ -26,7 +26,14 @@ namespace PJR.Timeline
 
         protected abstract void OnDriveUpdate(float deltaTime);
 
-        protected double GetTimeScale() => Time.timeScale;
+        protected double GetTimeScale()
+        {
+#if UNITY_EDITOR
+            if (!UnityEditor.EditorApplication.isPlaying)
+                return 1.0;
+#endif
+            return Time.timeScale;
+        }
         protected double GetSecondPerFrame() => Utility.GetSecondPerFrame(Sequence?.FrameRateType ?? Define.EFrameRate.Game);
         protected float GetSecondPerFrame_Float() => (float)GetSecondPerFrame();
 

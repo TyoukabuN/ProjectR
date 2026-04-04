@@ -26,7 +26,7 @@ namespace PJR.Timeline.Editor
         public void Selection_CheckSpecificObject(Object obj)
         {
             ISequenceHandle handle = null;
-            if (IsSequenceAssetSelected(obj, out handle))
+            if (IsSelectedSequenceAsset(obj, out handle))
             {
                 //选中Project里的SequenceAsset
             }
@@ -40,8 +40,43 @@ namespace PJR.Timeline.Editor
             instance.State.RefreshWindow(true);
         }
 
+        /// <summary>
+        /// 尝试编辑让时间轴Object
+        /// </summary>
+        /// <param name="obj"></param>
+        public void Selection_TrySelectObject(Object obj)
+        {
+            ISequenceHandle handle = null;
 
-        static bool IsSequenceAssetSelected(Object activeObject,out ISequenceHandle holder)
+            if (!Selection_TryGetSequenceHandle(obj, out handle))
+                return;
+            
+            instance.State.SequenceHandle = handle;
+            instance.State.RefreshWindow(true);
+        }
+        
+        /// <summary>
+        /// 尝试从Object中获取ISequenceHandle
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="handle"></param>
+        /// <returns></returns>
+        public bool Selection_TryGetSequenceHandle(Object obj,out ISequenceHandle handle)
+        {
+            if (IsSelectedSequenceAsset(obj, out handle))
+                return true;
+            if (IsSelectedDirector(obj, out handle))
+                return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 是不是选中了SequenceAsset
+        /// </summary>
+        /// <param name="activeObject"></param>
+        /// <param name="holder"></param>
+        /// <returns></returns>
+        static bool IsSelectedSequenceAsset(Object activeObject,out ISequenceHandle holder)
         {
             holder = null;
             if (activeObject is not SequenceAsset)
@@ -53,7 +88,13 @@ namespace PJR.Timeline.Editor
             return true;
         }
         
-        static bool IsGameObjectSelected(Object activeObject,out ISequenceHandle holder)
+        /// <summary>
+        /// 是不是选中了SequenceDirector
+        /// </summary>
+        /// <param name="activeObject"></param>
+        /// <param name="holder"></param>
+        /// <returns></returns>
+        static bool IsSelectedDirector(Object activeObject,out ISequenceHandle holder)
         {
             holder = null;
             if (activeObject is not GameObject)
@@ -69,24 +110,6 @@ namespace PJR.Timeline.Editor
             }
             holder = director.GetHandle();
             return true;
-        }
-        public void Selection_TrySelectObject(Object obj)
-        {
-            ISequenceHandle handle = null;
-
-            if (!Selection_TryGetSequenceHandle(obj, out handle))
-                return;
-            
-            instance.State.SequenceHandle = handle;
-            instance.State.RefreshWindow(true);
-        }
-        public bool Selection_TryGetSequenceHandle(Object obj,out ISequenceHandle handle)
-        {
-            if (IsSequenceAssetSelected(obj, out handle))
-                return true;
-            if (IsGameObjectSelected(obj, out handle))
-                return true;
-            return false;
         }
 
         public static bool Selection_IsObjectFocused<T>(T obj) where T : Object

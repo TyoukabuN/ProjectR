@@ -11,7 +11,7 @@ namespace PJR.Timeline
         /// </summary>
         public abstract class SequenceHandle : PoolableObject, ISequencePlayableHandle
         {
-            public float time
+            float ISequenceHandle.Time
             {
                 get
                 {
@@ -24,8 +24,6 @@ namespace PJR.Timeline
                     _director.Runner.TotalTime = value;
                 }
             }
-
-            float ISequenceHandle.Time { get; set; }
             public bool Valid => Director != null;
             public ISequence Sequence => Director?.SequenceAsset;
             public SequenceAsset SequenceAsset => (SequenceAsset)Director?.SequenceAsset;
@@ -41,7 +39,8 @@ namespace PJR.Timeline
             }
             public virtual bool IsPlaying()
             {
-                if (!Valid) return false;
+                if (!Valid) 
+                    return false;
                 return _director.Runner?.IsRunning ?? false;
             }
             public virtual void Play()
@@ -54,12 +53,14 @@ namespace PJR.Timeline
             }
             public virtual void Pause()
             {
-                if (!Valid) return;
+                if (!Valid) 
+                    return;
                 _director.Pause();
             }
             public virtual void Stop()
             {
-                if (!Valid) return;
+                if (!Valid) 
+                    return;
                 _director.Stop();
             }
             /// <summary>
@@ -67,7 +68,8 @@ namespace PJR.Timeline
             /// </summary>
             public virtual void SeekTo(float seekTime)
             {
-                if (!Valid) return;
+                if (!Valid) 
+                    return;
                 _director.SeekTo(seekTime);
             }
             public virtual void ManualUpdate(float deltaTime)

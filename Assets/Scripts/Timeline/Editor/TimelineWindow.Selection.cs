@@ -26,7 +26,7 @@ namespace PJR.Timeline.Editor
         public void Selection_CheckSpecificObject(Object obj)
         {
             ISequenceHandle handle = null;
-            if (IsSelectedSequenceAsset(obj, out handle))
+            if (IsSequenceAssetSelected(obj, out handle))
             {
                 //选中Project里的SequenceAsset
             }
@@ -63,9 +63,9 @@ namespace PJR.Timeline.Editor
         /// <returns></returns>
         public bool Selection_TryGetSequenceHandle(Object obj,out ISequenceHandle handle)
         {
-            if (IsSelectedSequenceAsset(obj, out handle))
+            if (IsSequenceAssetSelected(obj, out handle))
                 return true;
-            if (IsSelectedDirector(obj, out handle))
+            if (IsDirectorSelected(obj, out handle))
                 return true;
             return false;
         }
@@ -76,7 +76,7 @@ namespace PJR.Timeline.Editor
         /// <param name="activeObject"></param>
         /// <param name="holder"></param>
         /// <returns></returns>
-        static bool IsSelectedSequenceAsset(Object activeObject,out ISequenceHandle holder)
+        static bool IsSequenceAssetSelected(Object activeObject,out ISequenceHandle holder)
         {
             holder = null;
             if (activeObject is not SequenceAsset)
@@ -94,7 +94,7 @@ namespace PJR.Timeline.Editor
         /// <param name="activeObject"></param>
         /// <param name="holder"></param>
         /// <returns></returns>
-        static bool IsSelectedDirector(Object activeObject,out ISequenceHandle holder)
+        static bool IsDirectorSelected(Object activeObject,out ISequenceHandle holder)
         {
             holder = null;
             if (activeObject is not GameObject)

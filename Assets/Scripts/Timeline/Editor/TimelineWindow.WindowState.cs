@@ -188,15 +188,17 @@ namespace PJR.Timeline.Editor
                 }
                 set
                 {
-                    if (value == null)
-                    {
-                        _sequenceHandle?.Release();
-                        _sequencePlayableHandle = null;
-                    }
-                    else if(value is ISequencePlayableHandle temp)
+                    _sequencePlayableHandle?.Stop();
+                    _sequencePlayableHandle?.Release();
+                    _sequencePlayableHandle = null;
+
+                    _sequenceHandle?.Release();
+                    _sequenceHandle = null;
+                   
+                    _sequenceHandle = value;
+                    if (value is ISequencePlayableHandle temp)
                         _sequencePlayableHandle = temp;
 
-                    _sequenceHandle = value;
                     CurrentPixelPerFrame = Const.DefaultPixelPerFrame;
                     CurrentPixelPerFrameScaleFactor = Const.DefaultPixelPerFrameScaleFactor;
                     
@@ -218,6 +220,12 @@ namespace PJR.Timeline.Editor
                     return;
                 CurrentPixelPerFrame = instance.trackRectTrackSide.width / maxFrame;
                 CurrentPixelPerFrameScaleFactor = CurrentPixelPerFrame / Const.MaxPixelPerFrame;
+            }
+
+            void OnSequencHandleChanged(ISequenceHandle oldHandle, ISequenceHandle newHandle)
+            {
+                if (oldHandle is ISequencePlayableHandle playable)
+                    playable.Stop();
             }
 
             /// <summary>

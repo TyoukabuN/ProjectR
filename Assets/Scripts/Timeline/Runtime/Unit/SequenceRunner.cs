@@ -17,6 +17,11 @@ namespace PJR.Timeline
 
         public abstract void OnStart();
 
+        /// <summary>
+        /// 跳转到指定时间并在该时间点采样一次，内部负责状态的临时切换与恢复
+        /// </summary>
+        public abstract void SeekTo(float seekTime);
+
         public void DriveUpdate(float deltaTime)
         {
             if (deltaTime > maximumDeltaTime)

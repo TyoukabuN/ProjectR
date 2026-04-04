@@ -421,6 +421,8 @@ namespace PJR.Timeline.Editor
         {
             var content = new GUIContent(obj.name, icon);
             var rect = GUILayoutUtility.GetRect(content, style, GUILayout.MaxWidth(200));
+            content.text = Styles.Elipsify(obj.name, rect, style);
+            content.tooltip = obj.name; // 截断时悬停可看到完整名字
             if (Event.current.type == EventType.Repaint)
                 bgStyle.Draw(rect, GUIContent.none, 0);
             if (GUI.Button(rect, content, style))

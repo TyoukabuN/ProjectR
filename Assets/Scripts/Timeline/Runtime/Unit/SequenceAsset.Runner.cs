@@ -166,6 +166,36 @@ namespace PJR.Timeline
             
             void StartTrackRunner(TrackRunner trackHandle) => trackHandle?.OnStart();
 
+            public override void SeekTo(float seekTime)
+            {
+                if (_subRunners == null)
+                    return;
+
+                CurrentTime = seekTime;
+                var savedState = runnerState;
+                runnerState = ERunnerState.Running; // OnUpdateInternal 内部有 Running 守卫
+
+                ForeachSubRunner(track => track.PrepareForSeek());
+
+                var ctx = new UpdateContext
+                {
+                    timeScale = GetTimeScale(),
+                    currentTime = seekTime,
+                    currentFrame = _currentFrame,
+                    updateIntervalType = IntervalType.Second,
+                    gameObject = _gameObject,
+                };
+                OnUpdateInternal(ctx);
+
+                // 恢复 SequenceRunner 和 TrackRunner 状态，ClipRunner 保持 OnUpdate 评估结果
+                ForeachSubRunner(track =>
+                {
+                    if (!track.IsDone)
+                        track.runnerState = savedState;
+                });
+                runnerState = savedState;
+            }
+
             protected override void OnPlay()
             {
                 runnerState = ERunnerState.Running;
@@ -184,6 +214,8 @@ namespace PJR.Timeline
 
                 if (_subRunners != null)
                 {
+                    foreach (var runner in _subRunners)
+                        runner.Release(); // 归还 TrackRunner 到对象池
                     CollectionPool<List<TrackRunner>, TrackRunner>.Release(_subRunners);
                     _subRunners = null;
                 }

@@ -76,14 +76,7 @@ namespace PJR.Timeline
             EnsureRunnerReady();
             if (_runner == null)
                 return;
-
-            var prevState = _runner.runnerState;
-            _runner.CurrentTime = seekTime;
-            _runner.Play();
-            _runner.DriveUpdate(0);
-
-            if (prevState != ERunnerState.Running)
-                _runner.SetRunnerStateRecursive(prevState);
+            _runner.SeekTo(seekTime);
         }
 
         [NonSerialized] private RuntimeSequenceHandle _sequenceHandle;

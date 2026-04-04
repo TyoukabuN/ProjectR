@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System;
 using Animancer;
+using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
 
@@ -35,6 +36,9 @@ namespace PJR.Timeline
                 if(IsFailure)
                     return;
 
+                if (!AnimationMode.InAnimationMode())
+                    AnimationMode.StartAnimationMode();
+
                 EditModeSampleAnimation(clip.animationClip, _animator);
             }
             protected override void OnFrameUpdate(UpdateContext context)
@@ -43,30 +47,32 @@ namespace PJR.Timeline
             protected override void OnDeltaUpdate(UpdateContext context)
             {
                 var time = GetLocalSecond();
+                AnimationMode.BeginSampling();
                 EditModeSampleAnimation(clip.animationClip, _animator, time);
+                AnimationMode.EndSampling();
             }
             private static bool ShouldEditModeSample(AnimationClip clip, Component component)
             {
-                return
-                    !EditorApplication.isPlayingOrWillChangePlaymode &&
-                    clip != null &&
-                    component != null &&
-                    !EditorUtility.IsPersistent(component);
+                if(EditorApplication.isPlayingOrWillChangePlaymode)
+                    return false;
+                if(clip == null || component == null)
+                    return false;
+                if(EditorUtility.IsPersistent(component))
+                    return false;
+                return true;
             }
 
             private static void EditModeSampleAnimation(AnimationClip clip, Animator component, float time = 0f)
             {
                 if (!ShouldEditModeSample(clip, component))
                     return;
-
-                clip.SampleAnimation(component.gameObject, time);
+                AnimationMode.SampleAnimationClip(component.gameObject, clip, time);
             }
             protected override void OnClear()
             {
                 base.OnClear();
-                if (_animancerState != null)
-                    _animancerState.IsPlaying = false;
-                _animator?.Rebind();
+                if (AnimationMode.InAnimationMode())
+                    AnimationMode.StopAnimationMode();
                 _animancer = null;
                 _animator = null;
                 _animancerState = null;

@@ -33,6 +33,32 @@ namespace PJR.Timeline
                 runnerState = ERunnerState.Running;
             }
 
+            public override void SeekTo(float seekTime)
+            {
+                var trackRunner = TrackRunner;
+                if (trackRunner == null)
+                    return;
+
+                CurrentTime = seekTime;
+                var savedState = runnerState;
+                runnerState = ERunnerState.Running;
+
+                trackRunner.PrepareForSeek();
+
+                var ctx = new UpdateContext
+                {
+                    timeScale = GetTimeScale(),
+                    currentTime = seekTime,
+                    updateIntervalType = IntervalType.Second,
+                    gameObject = _gameObject,
+                };
+                OnUpdateInternal(ctx);
+
+                if (!trackRunner.IsDone)
+                    trackRunner.runnerState = savedState;
+                runnerState = savedState;
+            }
+
             protected override void OnPlay()
             {
                 runnerState = ERunnerState.Running;

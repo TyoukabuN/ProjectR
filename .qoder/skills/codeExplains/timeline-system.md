@@ -119,9 +119,9 @@ Runner 状态变更通过 `OnStateChanged` Action 触发外部监听回调。
 - `ERunnerState runnerState` — 状态机，变更时触发 `OnStateChanged`
 - `TotalTime` / `UnscaleTotalTime` — 时间累计
 - `Play()` — 设自身 Running，通过 `ForeachSubRunner` 调 `OnPlay()` 递归传播
-- `Pause()` — 设自身 Paused，通过 `ForeachSubRunner` 调 `OnPause()` 递归传播
-- `SetRunnerStateRecursive(state)` — 强制递归设置所有子Runner状态（SeekTo用）
-- `Clear()` — sealed，递归清理子Runner → OnClear() → 重置基类字段
+- `Pause()` — 设自身 Paused，通过 `ForeachSubRunner` 调 `OnPause()` 递归传播；**有终态守卫：`runnerState >= Done` 时直接 return，防止覆盖 Done 状态**
+- `SetRunnerStateRecursive(state)` — 强制递归设置所有子Runner状态
+- `Clear()` — sealed，先调 `ForeachSubRunner(sub => sub.Clear())` 递归清理，再调 `OnClear()`，最后重置基类字段
 - `abstract OnPlay()` / `abstract OnPause()` — 子类实现具体状态响应
 
 ### `UnitRunner<TSubRunner>` — 泛型中间层
@@ -141,8 +141,10 @@ Runner 状态变更通过 `OnStateChanged` Action 触发外部监听回调。
 继承 `UnitRunner<ClipRunner>`，通过 `_subRunners` 管理 ClipRunner 列表。
 - `public List<ClipRunner> clipRunners => _subRunners` — 只读暴露
 - `Reset(ISequence, ITrack)` — 创建所有 ClipRunner，赋值 `Sequence`
-- `OnUpdate(context)` — 判断每个 Clip 的时间范围，驱动 Start/Update/End
-- `OnPlay()` 和 `OnPause()` 会通过 `ForeachSubRunner` 调 `sub.Play()` / `sub.Pause()` 向下传播
+- `OnUpdate(context)` — 判断每个 Clip 的时间范围，驱动 Start/Update/End；OutOfRange 时区分 future clip（currentTime < clip.start，保持 allDone=false）和 past clip（视为已完成）
+- `OnPlay()` — **不调 sub.Play()**，只将 Done 和 Paused 状态的 ClipRunner 重置为 None，让 OnUpdate 按时间范围自然驱动生命周期（直接 Play() 会导致 OutOfRange 的 Clip 被立即 End）
+- `OnPause()` 通过 `ForeachSubRunner` 调 `sub.OnPause()` 向下传播
+- `PrepareForSeek()` — SeekTo 专用，将自身设为 Running，所有 ClipRunner 重置为 None，供 OnUpdate 重新评估
 
 ---
 
@@ -232,7 +234,7 @@ float posX = State.TimeToPixel(State.SequenceHandle.Time);  // 读 ISequenceHand
 - MonoBehaviour，挂载在 GameObject 上
 - `ManualUpdate(deltaTime)` — 核心驱动，判断 None→OnStart，Running→DriveUpdate，Disposed→Release Runner
 - `EnsureRunnerReady()` — 确保 Runner 已初始化并 OnStart
-- `SeekTo(seekTime)` — 保存前一状态，Play + DriveUpdate(0) 强制刷新，再恢复状态
+- `SeekTo(seekTime)` — 纯委托到 `_runner.SeekTo(seekTime)`，不再操作状态
 - `GetHandle()` — EditMode 返回 `PreviewSequenceHandle`，PlayMode 返回 `RuntimeSequenceHandle`
 
 ### `SequenceAsset.cs` — 序列资产
@@ -243,11 +245,14 @@ float posX = State.TimeToPixel(State.SequenceHandle.Time);  // 读 ISequenceHand
 - `Reset(gameObject, sequenceAsset)` — 创建所有 TrackRunner，赋值 `Sequence = sequenceAsset`
 - `OnDriveUpdate(deltaTime)` — SecondTimeDriver 驱动 deltaTime 更新，FrameTimeDriver 驱动帧更新
 - 同时维护 `TotalTime`（秒累计）和 `_totalFrame`（帧累计）
+- `SeekTo(float seekTime)` — 保存 runnerState，临时设为 Running，调 `ForeachSubRunner(track => track.PrepareForSeek())`，执行一次 `OnUpdateInternal(ctx)` 采样，最后恢复各 Runner 状态（TrackRunner IsDone 的不恢复）
 
 ### `TrackRunner.cs` — 轨道执行器
 - `Reset(ISequence, ITrack)` — 创建 ClipRunner 列表（EditMode 用 PreviewRunner，PlayMode 用 Runner）
 - `OnUpdate(context)` — 遍历 Clip，调 `OutOfRange()` 判断时间，驱动 Start/Update/End
+- `PrepareForSeek()` — SeekTo 专用重置方法，将 TrackRunner 设为 Running，所有 ClipRunner 重置为 None
 - `IsClipRunnerUpdatable()` — 过滤 null 和已完成的 ClipRunner
+- `OnClear()` — 释放 `_subRunners` List 前先对每个 ClipRunner 调 `Release()`，确保对象归还到池
 
 ### `Clip.cs` — Clip 抽象基类
 - 定义时间信息: `start`/`end`（秒）
@@ -263,10 +268,10 @@ float posX = State.TimeToPixel(State.SequenceHandle.Time);  // 读 ISequenceHand
 ### `AnimancerClip` — 动画 Clip 实现
 - **AnimancerClip.cs**: 数据层，持有 `AnimationClip` 引用和速度等参数
 - **AnimancerClip.Runner.cs**: 运行时用 AnimancerComponent 播放动画
-- **AnimancerClip.PreviewRunner.cs**: 编辑器用 `AnimationClip.SampleAnimation()` 采样预览
+- **AnimancerClip.PreviewRunner.cs**: 编辑器用 `AnimationMode.SampleAnimationClip()` 采样预览；`OnStart` 时调 `AnimationMode.StartAnimationMode()`，`OnClear` 时调 `AnimationMode.StopAnimationMode()` 自动还原姿势。**注意：必须用 `SampleAnimationClip` 而非 `AnimationClip.SampleAnimation()`，后者不被 AnimationMode 系统追踪，Stop 后无法还原**
 
 ### `WindowState` — 编辑器窗口状态
-- `SequenceHandle` — 当前编辑中的 Handle，设置时自动缓存 `_sequencePlayableHandle`
+- `SequenceHandle` — 当前编辑中的 Handle，设置时：**先调 `OnSequencHandleChanged(old, value)`（在 Release 前），再 Release 旧 Handle**；`OnSequencHandleChanged` 负责对旧 Playable Handle 调 Stop，避免 Release 后访问已释放的 Director
 - `IsPlaying` — `_sequencePlayableHandle?.IsPlaying()`
 - `Play()` / `Pause()` — **有 `EditorApplication.isPlaying` 守卫，PlayMode 下无效**
 - `ManualUpdateDirector(deltaTime)` — 转发到 `SequencePlayableHandle.ManualUpdate()`
@@ -341,6 +346,13 @@ float posX = State.TimeToPixel(State.SequenceHandle.Time);  // 读 ISequenceHand
 - `Clear()` 由 `PoolableObject` 基类定义，Runner 的 `Clear()` 是 sealed
 - 减少 GC 开销
 
+### Release 传递规则
+`UnitRunner.Clear()` 只调 `sub.Clear()`，不调 `sub.Release()`。因此各级 `OnClear()` 必须在释放 List 前手动对每个子 Runner 调 `Release()`：
+- `SequenceAsset.Runner.OnClear()` → 先 `foreach runner.Release()`，再 `CollectionPool.Release(_subRunners)`
+- `TrackRunner.OnClear()` → 先 `foreach runner.Release()`，再 `CollectionPool.Release(_subRunners)`
+
+> 如果 `OnClear` 只释放 List 而不调 `Release()`，子 Runner 对象会内存泄漏，不会归还到对象池。
+
 ---
 
 ## 如何扩展新的 Clip 类型
@@ -379,3 +391,11 @@ float posX = State.TimeToPixel(State.SequenceHandle.Time);  // 读 ISequenceHand
 ### ClipRunner 不执行
 - 检查 `Sequence.FrameRateType` 是否正确，影响 `OutOfRange` 判断中的 SPF 值
 - 检查 `TrackRunner.Sequence` 是否在 Reset 时赋值（`Sequence = sequence`）
+
+### 拖游标无响应（SeekTo 后 ClipRunner 卡住）
+- **根因 A**：`Pause()` 没有终态守卫，Done 的 ClipRunner 被设为 Paused，OnPlay() 未重置 → 已修复（Pause 加 `>= Done` 守卫，OnPlay 重置 Done/Paused → None）
+- **根因 B**：SeekTo 使用 Play() 语义，Play() 有 `IsRunning` 守卫，Runner 已 Running 时无法传播 → 已修复（SeekTo 独立为专用方法，PrepareForSeek 负责 ClipRunner 重置）
+
+### 编辑器预览停止后模型姿势未还原
+- **根因**：`AnimationClip.SampleAnimation()` 直接写入 Transform，不被 AnimationMode 追踪，StopAnimationMode 无法还原
+- **修复**：改用 `AnimationMode.SampleAnimationClip()`，配合 StartAnimationMode / StopAnimationMode 完整还原

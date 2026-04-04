@@ -1,47 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6625657147971528694
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adf808bbadaf913459b971daa0838d9d, type: 3}
-  m_Name: Track
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 3465839815378506269}
-    - {fileID: 11400000}
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: _clips
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[PJR.Timeline.Clip, PJR.Timeline.Runtime]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _sequenceAsset
-      Entry: 10
-      Data: 1
 --- !u!114 &-5924321450747703863
 MonoBehaviour:
   m_ObjectHideFlags: 2
@@ -136,7 +94,6 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: -1644592549630497685}
-    - {fileID: -6625657147971528694}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -148,13 +105,10 @@ MonoBehaviour:
         mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 1
     - Name: 
       Entry: 10
       Data: 0
-    - Name: 
-      Entry: 10
-      Data: 1
     - Name: 
       Entry: 13
       Data: 
@@ -163,40 +117,3 @@ MonoBehaviour:
       Data: 
   frameRateType: 0
   Frames: 50
---- !u!114 &3465839815378506269
-MonoBehaviour:
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a963fb878a998c84cb6b4e7517bdbfff, type: 3}
-  m_Name: AnimancerClip
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000}
-    - {fileID: -6625657147971528694}
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: _sequenceAsset
-      Entry: 10
-      Data: 0
-    - Name: _track
-      Entry: 10
-      Data: 1
-  _frameRateType: 0
-  _mute: 0
-  _description: 
-  _start: 0
-  _end: 0.0833333469927311
-  _startFrame: 0
-  _endFrame: 5
-  animationClip: {fileID: 0}

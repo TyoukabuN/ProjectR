@@ -97,6 +97,8 @@ namespace PJR.Timeline
         {
             if (IsPaused)
                 return;
+            if (runnerState >= ERunnerState.Done)
+                return;
             runnerState = ERunnerState.Paused;
             ForeachSubRunner(sub => sub.OnPause());
         }

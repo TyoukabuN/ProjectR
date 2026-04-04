@@ -23,6 +23,8 @@ namespace PJR.Timeline
         {
             if (_subRunners != null)
             {
+                foreach (var runner in _subRunners)
+                    runner.Release(); // 归还 ClipRunner 到对象池
                 CollectionPool<List<ClipRunner>, ClipRunner>.Release(_subRunners);
                 _subRunners = null;
             }
@@ -110,21 +112,30 @@ namespace PJR.Timeline
                     continue;
 
                 clipRunner.SetUpdateContext(context);
-                
-                if (clipRunner.Clip.OutOfRange(context.currentTime, Sequence.FrameRateType.SPF()))
+
+                bool isOutOfRange = clipRunner.Clip.OutOfRange(context.currentTime, Sequence.FrameRateType.SPF());
+                if (isOutOfRange)
                 {
                     if (clipRunner.Running)
                         clipRunner.End();
-                }
-                else
-                { 
-                    if (clipRunner.WaitingForStart)
-                        clipRunner.OnStart(context);
-                    if (clipRunner.Running)
-                        clipRunner.OnUpdate(context);
+                    else if (clipRunner.WaitingForStart)
+                    {
+                        // future clip（还没到开始时间）：保持 allDone=false，不能让轨道提前结束
+                        // past clip（已过结束时间但从未被执行，如 SeekTo 跳过）：视为已完成，不影响 allDone
+                        if (context.currentTime < clipRunner.Clip.start)
+                            allDone = false;
+                    }
+                    else if (clipRunner.IsPaused)
+                        allDone = false;
+                    continue;
                 }
 
-                if(clipRunner.runnerState < ERunnerState.Done)
+                if (clipRunner.WaitingForStart)
+                    clipRunner.OnStart(context);
+                if (clipRunner.Running)
+                    clipRunner.OnUpdate(context);
+
+                if (clipRunner.runnerState < ERunnerState.Done)
                     allDone = false;
             }
 
@@ -138,7 +149,13 @@ namespace PJR.Timeline
         protected override void OnPlay()
         {
             runnerState = ERunnerState.Running;
-            ForeachSubRunner(sub => sub.Play());
+            // 重置 Done 和 Paused 状态的 ClipRunner 到 None，让 OnUpdate 按时间范围自然驱动生命周期
+            // 不能直接 Play() 所有 ClipRunner，否则未到时间的 Clip 会被 OutOfRange 判定立即 End
+            ForeachSubRunner(sub =>
+            {
+                if (sub.IsDone || sub.IsPaused)
+                    sub.runnerState = ERunnerState.None;
+            });
         }
 
         protected override void OnPause()
@@ -148,6 +165,15 @@ namespace PJR.Timeline
         }
 
         void InitClipRunner(ClipRunner clipHandle) => clipHandle?.OnInit();
+
+        /// <summary>
+        /// 为 SeekTo 做准备：重置所有 ClipRunner 为 None，让 OnUpdate 在指定时间点重新评估
+        /// </summary>
+        public void PrepareForSeek()
+        {
+            runnerState = ERunnerState.Running;
+            ForeachSubRunner(sub => sub.runnerState = ERunnerState.None);
+        }
 
         public bool IsClipRunnerUpdatable(ClipRunner clipHandle)
         {

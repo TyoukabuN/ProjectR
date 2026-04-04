@@ -52,7 +52,7 @@ namespace PJR.Timeline.Editor
         public const float clipMinHandleWidth = 1f;
 
         //track左边
-        public const float trackMenuDefaultAreaWidth = 315f;
+        public const float trackMenuDefaultAreaWidth = 195.0f;
         public const float trackMenuMinAreaWidth = 195.0f;
         public const float trackMenuMaxAreaWidth = 650.0f;
 

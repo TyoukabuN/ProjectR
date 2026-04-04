@@ -61,10 +61,6 @@ namespace PJR.Timeline
 
                 clip.SampleAnimation(component.gameObject, time);
             }
-
-            public override void End()
-            {
-            }
             protected override void OnClear()
             {
                 base.OnClear();

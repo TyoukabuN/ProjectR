@@ -32,16 +32,13 @@ namespace PJR.Timeline
                 OnDeltaUpdate(context);
         }
 
-        public virtual void End() 
+        public void End() 
         { 
             runnerState = ERunnerState.Done; 
             OnEnd();
         }
-        public virtual void Dispose() 
-        { 
-            runnerState = ERunnerState.Diposed; 
-            Dispose();
-        }
+        protected virtual void OnEnd(){}
+
         protected override void OnPlay()
         {
             runnerState = ERunnerState.Running;
@@ -51,9 +48,6 @@ namespace PJR.Timeline
         {
             runnerState = ERunnerState.Paused;
         }
-
-        protected virtual void OnEnd(){}
-        protected virtual void OnDispose(){}
 
         protected override void OnClear()
         {

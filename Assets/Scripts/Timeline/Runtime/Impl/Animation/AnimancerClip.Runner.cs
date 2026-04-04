@@ -43,10 +43,10 @@ namespace PJR.Timeline
                     return;
                 animancerState.Time = GetLocalSecond();
             }
-            public override void End()
+            protected override void OnEnd()
             {
-                base.End();
-                Clear();
+                if (animancerState != null)
+                    animancerState.IsPlaying = false;
             }
             protected override void OnClear()
             {

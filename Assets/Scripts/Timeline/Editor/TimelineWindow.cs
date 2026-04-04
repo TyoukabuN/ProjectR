@@ -152,7 +152,7 @@ namespace PJR.Timeline.Editor
                 {
                     State.draggingRulerCursor = true;
                     float px = Event.current.mousePosition.x - rt.x;
-                    int f = State.PixelRoundToFrame(px);
+                    int f = Mathf.Max(0, State.PixelRoundToFrame(px));
                     if(State.debugging)
                         Debug.Log($"[px:{px}] [f:{f}]");
                     State.SeekTo((float)State.FromFrames(f));
@@ -161,7 +161,7 @@ namespace PJR.Timeline.Editor
                 rt =>
                 {
                     float px = Event.current.mousePosition.x - rt.x;
-                    int f = State.PixelRoundToFrame(px);
+                    int f = Mathf.Max(0, State.PixelRoundToFrame(px));
                     State.SeekTo((float)State.FromFrames(f));
                     State.Pause();
                     State.RefreshWindow(true);
@@ -218,7 +218,9 @@ namespace PJR.Timeline.Editor
                 Draw_GotoEndButton();
                 
                 Draw_TimeCodeGUI();
+                Draw_DirectorObjectLabel();
                 GUILayout.FlexibleSpace();
+                Draw_RecalculateFramesButton();
             }
         }
         
@@ -383,6 +385,67 @@ namespace PJR.Timeline.Editor
                 State.SeekTo((float)State.FromFrames(tFrame));
         }
 
+        static GUIStyle s_BreadcrumbLeft => "GUIEditor.BreadcrumbLeft";
+        static GUIStyle s_BreadcrumbLeftBg => "GUIEditor.BreadcrumbLeftBackground";
+        static GUIStyle s_BreadcrumbMid => "GUIEditor.BreadcrumbMid";
+        static GUIStyle s_BreadcrumbMidBg => "GUIEditor.BreadcrumbMidBackground";
+
+        void Draw_DirectorObjectLabel()
+        {
+            GUILayout.Space(5f);
+            var handle = State.SequenceHandle;
+            if (handle == null)
+                return;
+            var obj = handle.Object;
+            if (obj == null)
+                return;
+
+            var isDirector = obj is GameObject;
+            if (isDirector)
+            {
+                // 先画 Director 所在 GameObject
+                DrawBreadcrumbButton(obj, EditorGUIUtility.IconContent("GameObject Icon").image, s_BreadcrumbLeft, s_BreadcrumbLeftBg);
+                // 再画 SequenceAsset
+                var sequenceAsset = handle.SequenceAsset;
+                if (sequenceAsset != null)
+                    DrawBreadcrumbButton(sequenceAsset, EditorGUIUtility.IconContent("ScriptableObject Icon").image, s_BreadcrumbMid, s_BreadcrumbMidBg);
+            }
+            else
+            {
+                // 直接选中 SequenceAsset，只画一个
+                DrawBreadcrumbButton(obj, EditorGUIUtility.IconContent("ScriptableObject Icon").image, s_BreadcrumbLeft, s_BreadcrumbLeftBg);
+            }
+        }
+
+        static void DrawBreadcrumbButton(UnityEngine.Object obj, Texture icon, GUIStyle style, GUIStyle bgStyle)
+        {
+            var content = new GUIContent(obj.name, icon);
+            var rect = GUILayoutUtility.GetRect(content, style, GUILayout.MaxWidth(200));
+            if (Event.current.type == EventType.Repaint)
+                bgStyle.Draw(rect, GUIContent.none, 0);
+            if (GUI.Button(rect, content, style))
+            {
+                if (Event.current.control)
+                    EditorUtility.OpenPropertyEditor(obj);
+                else
+                    EditorGUIUtility.PingObject(obj);
+            }
+        }
+
+        void Draw_RecalculateFramesButton()
+        {
+            var sequenceAsset = State.SequenceHandle?.SequenceAsset;
+            if (sequenceAsset == null)
+                return;
+            if (GUILayout.Button("↺", EditorStyles.toolbarButton, GUILayout.Width(22)))
+            {
+                Undo.RecordObject(sequenceAsset, "Recalculate Frames");
+                sequenceAsset.Frames = sequenceAsset.Editor_GetSequenceMaxFrame();
+                EditorUtility.SetDirty(sequenceAsset);
+                State.FitViewToSequence();
+            }
+        }
+
         void Draw_AddTrackButton()
         {
             if (EditorGUILayout.DropdownButton(Styles.newContent, FocusType.Passive, EditorStyles.toolbarPopup))
@@ -465,7 +528,7 @@ namespace PJR.Timeline.Editor
             //每个主刻度占多少像素
             float pixelPerMainScaleMark = pixelPerFrame * framePerMainScaleMark;
             //找到可以正常绘制的刻度线像素间隔，以及对应的时间尺主刻度线间隔模式索引
-            //{5，2，3，2} i=1循环累乘可以得到下面的主刻度帧数间隔 
+            //{5，2，3，2} i=1循环累乘可以得到下面的主刻度帧数间隔 (简化后的Unity的Timeline的缩放规律)
             //1，5，10，30，60，300，600，1800，3600，18000，36000，108000，216000...
             //这里是为了找到一个所占像素大于MinMainScaleMarkPixel的主刻度线帧数间隔
             while (pixelPerMainScaleMark < Const.MinMainScaleMarkPixel)
@@ -474,7 +537,7 @@ namespace PJR.Timeline.Editor
                 pixelPerMainScaleMark = pixelPerFrame * framePerMainScaleMark;
             }
 
-
+            //防止绘制时间尺死循环 
             int overflowNum = 500;
             
             float totalPixel = 0;

@@ -55,6 +55,14 @@ namespace PJR.Timeline
                 float scaledDeltaTime = deltaTime * (float)GetTimeScale();
                 CurrentTime += scaledDeltaTime;
 
+                double duration = Sequence?.CalculateDuration() ?? 0;
+                if (duration > 0 && CurrentTime >= duration)
+                {
+                    CurrentTime = (float)duration;
+                    runnerState = ERunnerState.Done;
+                    return;
+                }
+
                 var shared = new TimeDriverContext
                 {
                     timeScale = GetTimeScale(),

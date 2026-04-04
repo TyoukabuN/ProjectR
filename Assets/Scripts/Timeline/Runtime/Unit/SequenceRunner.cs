@@ -26,9 +26,9 @@ namespace PJR.Timeline
 
         protected abstract void OnDriveUpdate(float deltaTime);
 
-        protected float GetSequenceDuration()
+        protected double GetSequenceDuration()
         {
-            return Sequence?.Duration ?? 0;
+            return Sequence?.CalculateDuration() ?? 0f;
         }
         protected double GetTimeScale()
         {

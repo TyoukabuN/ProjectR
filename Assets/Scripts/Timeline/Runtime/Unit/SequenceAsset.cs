@@ -17,6 +17,8 @@ namespace PJR.Timeline
         private List<Track> _tracks;
         public EFrameRate FrameRateType { get => frameRateType; set => frameRateType = value; }
         public double FrameRate => FrameRateType.FPS();
+        public int Frames;
+        int ISequence.Frames { get => Frames; }
 
         // ISequence 接口实现：只读接口列表
         IReadOnlyList<ITrack> ISequence.Tracks => _tracks as IReadOnlyList<ITrack> ?? (_tracks ??= new List<Track>());
@@ -83,58 +85,21 @@ namespace PJR.Timeline
         public bool RuntimeTempInstance { get; }
         public EFrameRate FrameRateType { get; set; }
         public IReadOnlyList<ITrack> Tracks { get; }
-        public bool Valid { get;}
+        public bool Valid { get; }
+        /// <summary>
+        /// 序列总帧数（所有 Clip 中最大的 EndFrame）
+        /// </summary>
+        public int Frames { get; }
         public SequenceRunner GetRunner(GameObject gameObject);
     }
     public static class ISequenceExtensions
     {
         public static double CalculateDuration(this ISequence sequence)
         {
-            if (sequence?.Tracks == null)
+            if (sequence == null)
                 return 0;
             double secondPerFrame = Utility.GetSecondPerFrame(sequence.FrameRateType);
-            int maxEndFrame = 0;
-            var tracks = sequence.Tracks;
-            for (int i = 0; i < tracks.Count; i++)
-            {
-                var track = tracks[i];
-                if (track?.Clips == null)
-                    continue;
-                var clips = track.Clips;
-                for (int j = 0; j < clips.Count; j++)
-                {
-                    var clip = clips[j];
-                    if (clip == null)
-                        continue;
-                    if (clip.EndFrame > maxEndFrame)
-                        maxEndFrame = clip.EndFrame;
-                }
-            }
-            return maxEndFrame * secondPerFrame;
-        }
-
-        public static int CalculateFrameCount(this ISequence sequence)
-        {
-            if (sequence?.Tracks == null)
-                return 0;
-            int maxEndFrame = 0;
-            var tracks = sequence.Tracks;
-            for (int i = 0; i < tracks.Count; i++)
-            {
-                var track = tracks[i];
-                if (track?.Clips == null)
-                    continue;
-                var clips = track.Clips;
-                for (int j = 0; j < clips.Count; j++)
-                {
-                    var clip = clips[j];
-                    if (clip == null)
-                        continue;
-                    if (clip.EndFrame > maxEndFrame)
-                        maxEndFrame = clip.EndFrame;
-                }
-            }
-            return maxEndFrame;
+            return sequence.Frames * secondPerFrame;
         }
     }
 }

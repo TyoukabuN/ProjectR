@@ -201,16 +201,23 @@ namespace PJR.Timeline.Editor
                     CurrentPixelPerFrameScaleFactor = Const.DefaultPixelPerFrameScaleFactor;
                     
                     if (value != null)
-                    {
-                        //计算一个能看到所有clip的pixelPerFrame
-                        var maxFrame = value.SequenceAsset?.Editor_GetSequenceMaxFrame() ?? -1;
-                        if (maxFrame > 0)
-                        {
-                            CurrentPixelPerFrame = instance.trackRectTrackSide.width / maxFrame;
-                            CurrentPixelPerFrameScaleFactor = CurrentPixelPerFrame / Const.MaxPixelPerFrame;
-                        }
-                    }
+                        FitViewToSequence(value);
                 }
+            }
+
+            /// <summary>
+            /// 根据序列帧数自动调整 PixelPerFrame，让所有 Clip 都能在视口内显示
+            /// </summary>
+            public void FitViewToSequence(ISequenceHandle handle = null)
+            {
+                handle ??= SequenceHandle;
+                if (handle == null)
+                    return;
+                var maxFrame = handle.SequenceAsset?.Frames ?? -1;
+                if (maxFrame <= 0)
+                    return;
+                CurrentPixelPerFrame = instance.trackRectTrackSide.width / maxFrame;
+                CurrentPixelPerFrameScaleFactor = CurrentPixelPerFrame / Const.MaxPixelPerFrame;
             }
 
             /// <summary>

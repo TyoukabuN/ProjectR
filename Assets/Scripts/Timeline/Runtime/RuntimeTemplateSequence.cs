@@ -22,6 +22,25 @@ namespace PJR.Timeline
         
         public bool Valid => (_clips?.Count ?? 0) > 0;
 
+        public int Frames
+        {
+            get
+            {
+                if (_clips == null)
+                    return 0;
+                int maxEndFrame = 0;
+                for (int i = 0; i < _clips.Count; i++)
+                {
+                    var clip = _clips[i];
+                    if (clip == null)
+                        continue;
+                    if (clip.EndFrame > maxEndFrame)
+                        maxEndFrame = clip.EndFrame;
+                }
+                return maxEndFrame;
+            }
+        }
+
         public SequenceRunner GetRunner(GameObject gameObject)
         {
             var temp = Runner.Get();

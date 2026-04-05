@@ -1,0 +1,12 @@
+{
+  "name": "codex-review-skill",
+  "version": "1.0.0",
+  "description": "使用 Codex CLI 审查 Qoder 生成的计划",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js --content test.md"
+  },
+  "keywords": ["codex", "review", "skill"],
+  "author": "",
+  "license": "MIT"
+}

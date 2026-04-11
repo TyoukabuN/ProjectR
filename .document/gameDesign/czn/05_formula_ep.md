@@ -1,3 +1,6 @@
+﻿## 十二、伤害计算公式 & EP系统
+
+[<< 上一章](04_systems.md) · [返回索引](00_index.md) · [下一章 >>](06_equipment_memory.md)
 
 > 来源：https://www.gamekee.com/czn/682515.html
 
@@ -66,4 +69,4 @@
 
 ---
 
-## 十四、装备系统详解（来自 czn.gg）
+[← 上一章](04_systems.md) · [↑ 索引](00_index.md) · [下一章 →](06_equipment_memory.md)

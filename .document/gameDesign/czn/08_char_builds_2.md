@@ -1,3 +1,6 @@
+﻿## 十九、角色机制深析（二）
+
+[<< 上一章](07_char_builds_1.md) · [返回索引](00_index.md) · [下一章 >>](09_partners.md)
 
 > 来源：czn.gg 各角色 Build 页面
 
@@ -509,3 +512,7 @@
 **设计模型**：「费用经济飞轮」——Chrono Archon把"激活高费牌"这个行为本身变成Chronicle资源的输入；Time Paradox把Chronicle转化为可以打高费牌的Chronal Ascension；Time Axis Collapse让手牌里囤积的高费牌直接转化为伤害系数。三个环节形成闭环：激活高费牌→Chronicle→Chronal Ascension→维持高费手牌→更高伤害。
 
 *数据来源：gamekee wiki、bwiki、哈瓦游攻略站，整理日期 2026.04.06*
+
+---
+
+[<< 上一章](07_char_builds_1.md) · [返回索引](00_index.md) · [下一章 >>](09_partners.md)

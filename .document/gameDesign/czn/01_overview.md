@@ -1,4 +1,6 @@
-# 卡厄思梦境（Chaos Zero Nightmare）参考笔记
+﻿# 卡厄思梦境（Chaos Zero Nightmare）参考笔记
+
+[返回索引](00_index.md) · [下一章 >>](02_cards.md)
 
 > 来源：官方wiki（gamekee/bwiki）及各攻略站整理，用于本游戏策划参考。
 > 开发商：Smilegate（《第七史诗》原班人马）
@@ -72,3 +74,5 @@
 - 「连续」词条：上一张使用的卡牌为相同属性时触发额外效果
 
 ---
+
+[返回索引](00_index.md) · [下一章 >>](02_cards.md)

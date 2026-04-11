@@ -1,3 +1,6 @@
+﻿## 十四、装备系统 & 记忆碎片系统
+
+[<< 上一章](05_formula_ep.md) · [返回索引](00_index.md) · [下一章 >>](07_char_builds_1.md)
 
 > 来源：https://czn.gg/equipments/
 
@@ -57,4 +60,4 @@
 
 ---
 
-## 十六、代表角色机制深析
+[← 上一章](05_formula_ep.md) · [↑ 索引](00_index.md) · [下一章 →](07_char_builds_1.md)

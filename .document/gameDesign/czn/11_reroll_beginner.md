@@ -1,4 +1,6 @@
-# 十一、新手引导与 Reroll 分析
+﻿# 新手引导与 Reroll 分析
+
+[<< 上一章](10_cards_reference.md) · [返回索引](00_index.md)
 
 > 来源：czn.gg/czn-reroll-guide-best-characters/ + czn.gg/banners/
 > 整理日期：2026.04.06
@@ -75,3 +77,7 @@
 | **Zeronium** | 特殊商店货币 | 活动/特定内容 |
 
 *数据来源：czn.gg/czn-reroll-guide-best-characters/，整理日期 2026.04.06*
+
+---
+
+[<< 上一章](10_cards_reference.md) · [返回索引](00_index.md)

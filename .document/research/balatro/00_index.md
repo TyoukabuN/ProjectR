@@ -6,6 +6,7 @@
 
 | 文件 | 内容 |
 |---|---|
+| [00_glossary.md](00_glossary.md) | **术语表**：计分/Joker/修改器/消耗品/流程/经济/触发/负面效果全术语中英对照 |
 | [01_overview.md](01_overview.md) | 游戏基本定位、核心循环、运行流程 |
 | [02_scoring.md](02_scoring.md) | 评分系统：Chips/Mult/牌型/公式 |
 | [03_jokers.md](03_jokers.md) | Joker 系统：稀有度/版本/关键术语/分类 |
@@ -17,6 +18,8 @@
 | [10_jokers_catalog.md](10_jokers_catalog.md) | **Joker全图鉴**：全150张完整数值表（4稀有度分类）|
 | [11_consumables_catalog.md](11_consumables_catalog.md) | **消耗品全图鉴**：塔罗22张/星球12张/幻灵18张完整数值表 |
 | [12_game_mechanics.md](12_game_mechanics.md) | **游戏机制全览**：评分/触发顺序/Blind结构/经济/各种槽位/负面效果/概率系统 |
+| [13_jokers_value_analysis.md](13_jokers_value_analysis.md) | **Joker数值设计分析**：+Mult/×Mult换算、定价锁点、条件期望、累积曲线、风险设计、设计参考结论 |
+| [14_consumables_value_analysis.md](14_consumables_value_analysis.md) | **消耗品数值设计分析**：槽位经济、塗罗定价、星球复利、幻灵风险结构、三类横向对比、设计参考结论 |
 
 ## 游戏简介
 

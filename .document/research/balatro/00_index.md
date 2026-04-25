@@ -14,6 +14,9 @@
 | [06_shop_economy.md](06_shop_economy.md) | 商店与经济：商品/定价/Voucher/彩签 |
 | [07_decks_stakes.md](07_decks_stakes.md) | 卡组与难度：15 种牌组/8 种难度/挑战模式 |
 | [08_design_insights.md](08_design_insights.md) | 设计启示：核心机制总结与参考建议 |
+| [10_jokers_catalog.md](10_jokers_catalog.md) | **Joker全图鉴**：全150张完整数值表（4稀有度分类）|
+| [11_consumables_catalog.md](11_consumables_catalog.md) | **消耗品全图鉴**：塔罗22张/星球12张/幻灵18张完整数值表 |
+| [12_game_mechanics.md](12_game_mechanics.md) | **游戏机制全览**：评分/触发顺序/Blind结构/经济/各种槽位/负面效果/概率系统 |
 
 ## 游戏简介
 
